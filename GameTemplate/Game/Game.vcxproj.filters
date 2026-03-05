@@ -4,6 +4,15 @@
     <Filter Include="system">
       <UniqueIdentifier>{22dd8095-74f9-46df-81a1-36675a040b1f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src">
+      <UniqueIdentifier>{cea2ee3e-7e3a-4bbd-9877-0458d4aaf457}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Actor">
+      <UniqueIdentifier>{adc7348c-6f5f-4bd7-a503-5b9e5ed27330}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Actor\Stage">
+      <UniqueIdentifier>{60023f67-0c22-4b38-95ee-72485160eb80}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -12,6 +21,12 @@
       <Filter>system</Filter>
     </ClCompile>
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="Src\Actor\Stage\Stage.cpp">
+      <Filter>Src\Actor\Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Stage\LoadStageData.cpp">
+      <Filter>Src\Actor\Stage</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -19,5 +34,14 @@
       <Filter>system</Filter>
     </ClInclude>
     <ClInclude Include="Game.h" />
+    <ClInclude Include="Src\Actor\Stage\StageData.h">
+      <Filter>Src\Actor\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Stage\Stage.h">
+      <Filter>Src\Actor\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Stage\LoadStageData.h">
+      <Filter>Src\Actor\Stage</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

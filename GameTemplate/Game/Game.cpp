@@ -1,21 +1,39 @@
 #include "stdafx.h"
 #include "Game.h"
 
+#include "Src/Actor/Stage/LoadStageData.h"
 
-bool Game::Start()
+namespace nsApp
 {
-	m_modelRender.Init("Assets/modelData/unityChan.tkm");
-	
-	return true;
-}
+	namespace nsGame
+	{
+		bool Game::Start()
+		{
+			/* 初期ステージのセット。*/
+			/* @TODO ステージ選択画面からこの処理を呼ぶようにする。*/
+			nsApp::nsStage::LoadStageData::GetInstance().ChangeStage(nsApp::nsStage::StageID::stage1);
 
-void Game::Update()
-{
-	// g_renderingEngine->DisableRaytracing();
-	m_modelRender.Update();
-}
+			/* @TODO カメラクラスを用意する。*/
+			g_camera3D->SetPosition(Vector3(0.0f, 75.0f, 125.0f));
+			g_camera3D->SetTarget(Vector3::Zero);
 
-void Game::Render(RenderContext& rc)
-{
-	m_modelRender.Draw(rc);
+			PhysicsWorld::GetInstance()->EnableDrawDebugWireFrame();
+			return true;
+		}
+
+
+		void Game::Update()
+		{
+			/* 現在のステージの更新を行う。*/
+			nsApp::nsStage::LoadStageData::GetInstance().Update();
+		}
+
+
+		void Game::Render(RenderContext& rc)
+		{
+			/* 現在のステージを描画する。*/
+			nsApp::nsStage::LoadStageData::GetInstance().Draw(rc);
+		}
+	}
+
 }

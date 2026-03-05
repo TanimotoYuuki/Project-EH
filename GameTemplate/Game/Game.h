@@ -4,17 +4,23 @@
 
 class Player;
 
-class Game : public IGameObject
-{
-public:
-	Game() {}
-	~Game() {}
-	bool Start();
-	void Update();
-	void Render(RenderContext& rc);
 
-private:
-	ModelRender m_modelRender;
-	Vector3 m_pos;
-};
+namespace nsApp
+{
+	namespace nsGame
+	{
+		class Game : public IGameObject
+		{
+		public:
+			Game() = default;
+			~Game() = default;
+
+
+		public:
+			bool Start();
+			void Update();
+			void Render(RenderContext& rc)override;
+		};
+	}
+}
 
