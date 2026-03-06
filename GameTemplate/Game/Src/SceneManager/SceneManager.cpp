@@ -116,7 +116,7 @@ namespace nsApp
 				break;
 			case IScene::enSceneID_QuestSelect://ステージ選択シーン。
 				m_currentSceneID = enSceneID_QuestSelect;
-				m_scene = NewGO<nsQuestSelect::QuestSelectScene>(0, "stageSelectScene");
+				m_scene = NewGO<nsQuestSelect::QuestSelectScene>(0, "questSelectScene");
 				break;
 			case IScene::enSceneID_InGame://インゲームシーン。
 				m_currentSceneID = enSceneID_InGame;
