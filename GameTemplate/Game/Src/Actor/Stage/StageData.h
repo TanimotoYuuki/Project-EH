@@ -13,8 +13,7 @@ namespace nsApp
 			Invalid
 		};
 
-
-		// ステージオブジェクトのデータ。
+		/* ステージオブジェクトのデータ。*/ 
 		struct StageObjectConfig
 		{
 			std::string modelFilePath;               // モデルのファイル名。
@@ -23,7 +22,7 @@ namespace nsApp
 			Quaternion angle;                        // 角度。
 		};
 
-		// ステージのデータ。
+		/* ステージのデータ。*/ 
 		struct StageData
 		{
 			StageID stageID;

@@ -13,6 +13,9 @@
     <Filter Include="Src\Actor\Stage">
       <UniqueIdentifier>{60023f67-0c22-4b38-95ee-72485160eb80}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\StateMachine">
+      <UniqueIdentifier>{b15b83ef-5e0f-43e7-8ada-b052463706aa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -26,6 +29,12 @@
     </ClCompile>
     <ClCompile Include="Src\Actor\Stage\LoadStageData.cpp">
       <Filter>Src\Actor\Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Actor.cpp">
+      <Filter>Src\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\StateMachine\StateMachine.cpp">
+      <Filter>Src\StateMachine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -42,6 +51,16 @@
     </ClInclude>
     <ClInclude Include="Src\Actor\Stage\LoadStageData.h">
       <Filter>Src\Actor\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Actor.h">
+      <Filter>Src\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="IState.h" />
+    <ClInclude Include="Src\StateMachine\StateMachine.h">
+      <Filter>Src\StateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\StateMachine\NullState.h">
+      <Filter>Src\StateMachine</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
