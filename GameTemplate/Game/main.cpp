@@ -4,7 +4,7 @@
 #include<InitGUID.h>
 #include<dxgidebug.h>
 
-#include "Game.h"
+#include "SceneManager.h"
 
 
 
@@ -33,8 +33,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	// ここから初期化を行うコードを記述する。
 	//////////////////////////////////////
 
-	//Gameクラスのオブジェクトを作成。
-	NewGO<Game>(0, "game");
+	//シーンマネージャーの生成
+	SceneManager::CreateInstance();
+	SceneManager::GetInstance()->Start();
 
 	//////////////////////////////////////
 	// 初期化を行うコードを書くのはここまで！！！
@@ -46,6 +47,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		if (g_pad[0]->IsTrigger(enButtonA) ){
 			g_pad[0]->SetVibration(/*durationSec=*/0.5f, /*normalizedPower=*/1.0f);
 		}
+		SceneManager::GetInstance()->Update();
 		K2Engine::GetInstance()->Execute();
 	}
 
