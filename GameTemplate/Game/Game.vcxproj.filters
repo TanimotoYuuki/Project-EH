@@ -4,6 +4,21 @@
     <Filter Include="system">
       <UniqueIdentifier>{22dd8095-74f9-46df-81a1-36675a040b1f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src">
+      <UniqueIdentifier>{cea2ee3e-7e3a-4bbd-9877-0458d4aaf457}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Actor">
+      <UniqueIdentifier>{adc7348c-6f5f-4bd7-a503-5b9e5ed27330}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Actor\Stage">
+      <UniqueIdentifier>{60023f67-0c22-4b38-95ee-72485160eb80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\StateMachine">
+      <UniqueIdentifier>{b15b83ef-5e0f-43e7-8ada-b052463706aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\SceneManager">
+      <UniqueIdentifier>{dfcbec45-629c-4b00-8331-b1ff159f600d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -12,8 +27,22 @@
       <Filter>system</Filter>
     </ClCompile>
     <ClCompile Include="Game.cpp" />
-    <ClCompile Include="SceneManager.cpp" />
+    <ClCompile Include="Src\Actor\Stage\Stage.cpp">
+      <Filter>Src\Actor\Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Stage\LoadStageData.cpp">
+      <Filter>Src\Actor\Stage</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Actor.cpp">
+      <Filter>Src\Actor</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\StateMachine\StateMachine.cpp">
+      <Filter>Src\StateMachine</Filter>
+    </ClCompile>
     <ClCompile Include="Title.cpp" />
+    <ClCompile Include="Src\SceneManager\SceneManager.cpp">
+      <Filter>Src\SceneManager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -21,7 +50,28 @@
       <Filter>system</Filter>
     </ClInclude>
     <ClInclude Include="Game.h" />
-    <ClInclude Include="SceneManager.h" />
+    <ClInclude Include="Src\Actor\Stage\StageData.h">
+      <Filter>Src\Actor\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Stage\Stage.h">
+      <Filter>Src\Actor\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Stage\LoadStageData.h">
+      <Filter>Src\Actor\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Actor.h">
+      <Filter>Src\Actor</Filter>
+    </ClInclude>
+    <ClInclude Include="IState.h" />
+    <ClInclude Include="Src\StateMachine\StateMachine.h">
+      <Filter>Src\StateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\StateMachine\NullState.h">
+      <Filter>Src\StateMachine</Filter>
+    </ClInclude>
     <ClInclude Include="Title.h" />
+    <ClInclude Include="Src\SceneManager\SceneManager.h">
+      <Filter>Src\SceneManager</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
