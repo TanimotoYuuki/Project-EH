@@ -17,10 +17,10 @@ namespace nsApp
 			/* ステージ土台モデルのファイルパスが指定されていなければ初期化する。*/ 
 			if (!m_stageData.stageBackGroundModel.empty())
 			{
-				/*ステージの土台モデルを作成する。*/
+				/* ステージの土台モデルを作成する。*/
 				m_BackGroundModel = std::make_unique<ModelRender>();
 
-				// ModelRenderのInitを呼び出す。
+				/* ModelRenderのInitを呼び出す。*/ 
 				m_BackGroundModel->Init(
 					m_stageData.stageBackGroundModel.c_str(), /* モデルのファイルパス。*/
 					nullptr,                                  /* アニメーションの指定。*/
@@ -48,6 +48,7 @@ namespace nsApp
 
 		void Stage::Draw(RenderContext& rc)
 		{
+			/* ステージモデルを描画する。*/
 			if(m_BackGroundModel)
 				m_BackGroundModel->Draw(rc);
 		}
