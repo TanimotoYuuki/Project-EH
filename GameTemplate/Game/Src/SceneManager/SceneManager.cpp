@@ -25,20 +25,20 @@ namespace nsApp
 		}
 	}
 
-	namespace nsStageSelect
+	namespace nsQuestSelect
 	{
-		//ステージ選択シーン。
-		StageSelectScene::~StageSelectScene()
+		//クエスト選択シーン。
+		QuestSelectScene::~QuestSelectScene()
 		{
 
 		}
 
-		bool StageSelectScene::Start()
+		bool QuestSelectScene::Start()
 		{
 			return true;
 		}
 
-		void StageSelectScene::Update()
+		void QuestSelectScene::Update()
 		{
 
 		}
@@ -114,9 +114,9 @@ namespace nsApp
 				m_currentSceneID = enSceneID_Title;
 				m_scene = NewGO<nsTitle::TitleScene>(0, "titleScene");
 				break;
-			case IScene::enSceneID_StageSelect://ステージ選択シーン。
-				m_currentSceneID = enSceneID_StageSelect;
-				m_scene = NewGO<nsStageSelect::StageSelectScene>(0, "stageSelectScene");
+			case IScene::enSceneID_QuestSelect://ステージ選択シーン。
+				m_currentSceneID = enSceneID_QuestSelect;
+				m_scene = NewGO<nsQuestSelect::QuestSelectScene>(0, "stageSelectScene");
 				break;
 			case IScene::enSceneID_InGame://インゲームシーン。
 				m_currentSceneID = enSceneID_InGame;

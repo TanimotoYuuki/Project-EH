@@ -17,7 +17,7 @@ namespace nsApp
 		enum EnSceneID
 		{
 			enSceneID_Title,//タイトルシーン。
-			enSceneID_StageSelect,//ステージ選択シーン。
+			enSceneID_QuestSelect,//クエスト選択シーン。
 			enSceneID_InGame,//インゲームシーン。
 			enSceneID_Result,//リザルトシーン。
 			enSceneID_None,//シーンなし。
@@ -51,16 +51,16 @@ namespace nsApp
 		};
 	}
 
-	namespace nsStageSelect
+	namespace nsQuestSelect
 	{
 		/// <summary>
-		/// ステージ選択シーンクラス。
+		/// クエスト選択シーンクラス。
 		/// </summary>
-		class StageSelectScene : public IScene
+		class QuestSelectScene : public IScene
 		{
 		public:
-			StageSelectScene() {};//コンストラクタ。
-			~StageSelectScene();//デストラクタ。
+			QuestSelectScene() {};//コンストラクタ。
+			~QuestSelectScene();//デストラクタ。
 
 			bool Start() override;//開始処理。
 			void Update() override;//更新処理。
