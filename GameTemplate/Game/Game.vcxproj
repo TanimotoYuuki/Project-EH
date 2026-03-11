@@ -226,6 +226,8 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Src\Actor\Actor.cpp" />
+    <ClCompile Include="Src\Actor\Character\CharacterModel.cpp" />
+    <ClCompile Include="Src\Actor\Character\ICharacter.cpp" />
     <ClCompile Include="Src\Actor\Stage\LoadStageData.cpp" />
     <ClCompile Include="Src\Actor\Stage\Stage.cpp" />
     <ClCompile Include="Src\SceneLoader\SceneLoader.cpp" />
@@ -242,6 +244,8 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="IState.h" />
     <ClInclude Include="Src\Actor\Actor.h" />
+    <ClInclude Include="Src\Actor\Character\CharacterModel.h" />
+    <ClInclude Include="Src\Actor\Character\ICharacter.h" />
     <ClInclude Include="Src\Actor\Stage\LoadStageData.h" />
     <ClInclude Include="Src\Actor\Stage\Stage.h" />
     <ClInclude Include="Src\Actor\Stage\StageData.h" />
