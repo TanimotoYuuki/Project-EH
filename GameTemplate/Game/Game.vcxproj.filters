@@ -40,7 +40,7 @@
       <Filter>Src\StateMachine</Filter>
     </ClCompile>
     <ClCompile Include="Title.cpp" />
-    <ClCompile Include="Src\SceneManager\SceneManager.cpp">
+    <ClCompile Include="Src\SceneLoader\SceneLoader.cpp">
       <Filter>Src\SceneManager</Filter>
     </ClCompile>
   </ItemGroup>
@@ -70,7 +70,7 @@
       <Filter>Src\StateMachine</Filter>
     </ClInclude>
     <ClInclude Include="Title.h" />
-    <ClInclude Include="Src\SceneManager\SceneManager.h">
+    <ClInclude Include="Src\SceneLoader\SceneLoader.h">
       <Filter>Src\SceneManager</Filter>
     </ClInclude>
   </ItemGroup>

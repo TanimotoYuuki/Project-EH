@@ -228,7 +228,7 @@
     <ClCompile Include="Src\Actor\Actor.cpp" />
     <ClCompile Include="Src\Actor\Stage\LoadStageData.cpp" />
     <ClCompile Include="Src\Actor\Stage\Stage.cpp" />
-    <ClCompile Include="Src\SceneManager\SceneManager.cpp" />
+    <ClCompile Include="Src\SceneLoader\SceneLoader.cpp" />
     <ClCompile Include="Src\StateMachine\StateMachine.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -245,7 +245,7 @@
     <ClInclude Include="Src\Actor\Stage\LoadStageData.h" />
     <ClInclude Include="Src\Actor\Stage\Stage.h" />
     <ClInclude Include="Src\Actor\Stage\StageData.h" />
-    <ClInclude Include="Src\SceneManager\SceneManager.h" />
+    <ClInclude Include="Src\SceneLoader\SceneLoader.h" />
     <ClInclude Include="Src\StateMachine\NullState.h" />
     <ClInclude Include="Src\StateMachine\StateMachine.h" />
     <ClInclude Include="stdafx.h" />

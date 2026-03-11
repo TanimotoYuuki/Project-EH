@@ -4,7 +4,7 @@
 #include<InitGUID.h>
 #include<dxgidebug.h>
 
-#include "Src/SceneManager/SceneManager.h"
+#include "Src/SceneLoader/SceneLoader.h"
 
 
 
@@ -34,8 +34,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	//////////////////////////////////////
 
 	//シーンマネージャーの生成
-	nsApp::nsScene::SceneManager::CreateInstance();
-	nsApp::nsScene::SceneManager::GetInstance()->Start();
+	nsApp::nsScene::SceneLoader::CreateInstance();
+	nsApp::nsScene::SceneLoader::GetInstance()->Start();
 
 	//////////////////////////////////////
 	// 初期化を行うコードを書くのはここまで！！！
@@ -47,7 +47,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 		if (g_pad[0]->IsTrigger(enButtonA) ){
 			g_pad[0]->SetVibration(/*durationSec=*/0.5f, /*normalizedPower=*/1.0f);
 		}
-		nsApp::nsScene::SceneManager::GetInstance()->Update();
+		nsApp::nsScene::SceneLoader::GetInstance()->Update();
 		K2Engine::GetInstance()->Execute();
 	}
 
