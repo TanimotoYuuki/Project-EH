@@ -16,6 +16,9 @@
     <Filter Include="Src\StateMachine">
       <UniqueIdentifier>{b15b83ef-5e0f-43e7-8ada-b052463706aa}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\SceneManager">
+      <UniqueIdentifier>{dfcbec45-629c-4b00-8331-b1ff159f600d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -35,6 +38,10 @@
     </ClCompile>
     <ClCompile Include="Src\StateMachine\StateMachine.cpp">
       <Filter>Src\StateMachine</Filter>
+    </ClCompile>
+    <ClCompile Include="Title.cpp" />
+    <ClCompile Include="Src\SceneLoader\SceneLoader.cpp">
+      <Filter>Src\SceneManager</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -61,6 +68,10 @@
     </ClInclude>
     <ClInclude Include="Src\StateMachine\NullState.h">
       <Filter>Src\StateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="Title.h" />
+    <ClInclude Include="Src\SceneLoader\SceneLoader.h">
+      <Filter>Src\SceneManager</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
