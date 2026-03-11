@@ -12,11 +12,11 @@ namespace nsApp
 {
 	namespace nsActor
 	{
-		class Actor : public Noncopyable
+		class Actor : public IGameObject
 		{
 		public:
 			/* コンストラクタとデストラクタ。*/
-			Actor();
+			Actor();          
 			virtual ~Actor();
 
 

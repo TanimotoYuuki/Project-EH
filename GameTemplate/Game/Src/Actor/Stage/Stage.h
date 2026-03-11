@@ -1,6 +1,5 @@
 ﻿#pragma once
 #include "StageData.h"
-/**/
 
 
 namespace nsApp
