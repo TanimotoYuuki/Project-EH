@@ -223,6 +223,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CharacterAnimation.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Src\Actor\Actor.cpp" />
@@ -241,6 +242,7 @@
     <ClCompile Include="Title.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CharacterAnimation.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="IState.h" />
     <ClInclude Include="Src\Actor\Actor.h" />
