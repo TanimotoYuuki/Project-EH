@@ -19,6 +19,9 @@
     <Filter Include="Src\SceneManager">
       <UniqueIdentifier>{dfcbec45-629c-4b00-8331-b1ff159f600d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Actor\Character">
+      <UniqueIdentifier>{743383ec-63f0-4f97-9da3-2b42c1c5354a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -43,6 +46,13 @@
     <ClCompile Include="Src\SceneLoader\SceneLoader.cpp">
       <Filter>Src\SceneManager</Filter>
     </ClCompile>
+    <ClCompile Include="Src\Actor\Character\CharacterModel.cpp">
+      <Filter>Src\Actor\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\ICharacter.cpp">
+      <Filter>Src\Actor\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="CharacterAnimation.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -73,5 +83,12 @@
     <ClInclude Include="Src\SceneLoader\SceneLoader.h">
       <Filter>Src\SceneManager</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Actor\Character\CharacterModel.h">
+      <Filter>Src\Actor\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\ICharacter.h">
+      <Filter>Src\Actor\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="CharacterAnimation.h" />
   </ItemGroup>
 </Project>
