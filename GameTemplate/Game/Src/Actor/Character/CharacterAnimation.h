@@ -6,7 +6,8 @@
 * @date   2026/03/11
 */
 
-namespace
+
+namespace nsApp
 {
 	/* キャラクターの基本動作用アニメーションを管理する列挙型。*/
 	enum class CharacterBasicAnimationList : uint8_t
@@ -15,8 +16,8 @@ namespace
 		Walk,       /* 歩き。*/
 		Run,        /* 走り。*/
 		Jump,       /* ジャンプ。*/
-		Attack,     /* 攻撃。*/
-		Hit,        /* 被弾。*/
+		Hit_Fly,    /* 被弾。*/
+		Hit_UP,     /* 起き上がり。*/
 		Death,      /* 死亡。*/
 	};
 
@@ -26,7 +27,9 @@ namespace
 		NormalAttack,   /* 通常攻撃。*/
 		ChargeAttack,   /* チャージ攻撃。*/
 		AirAttack,      /* 空中攻撃。*/
-		ComboAttack,    /* コンボ攻撃。*/
+		ComboAttack1,   /* コンボ攻撃1撃目。*/
+		ComboAttack2,   /* コンボ攻撃2撃目。*/
+		ComboAttack3,   /* コンボ攻撃3撃目。*/
 		None,		    /* 攻撃なし。*/
 	};
 
@@ -51,11 +54,9 @@ namespace
 		/* 攻撃の武器の動きのみを管理する配列。*/
 		std::unordered_map<AttackType, std::string> weaponAnimationList; /* 攻撃の種類ごとの武器アニメーションのファイルパス。*/
 	};
-}
 
 
-namespace nsApp
-{
+
 	class CharacterAnimation
 	{
 	public:
@@ -105,32 +106,33 @@ namespace nsApp
 		/* ModelRenderにアニメーションを渡す配列。*/
 		inline AnimationClip* GetAnimatiocClip()
 		{
-			return m_animationClipList.data();
+			return m_animationClipList.get();
 		}
 
 		/* AnimationClipの数を取得。*/
 		inline int GetAnimationClips() const
 		{
-			return static_cast<int>(m_animationClipList.size());
+			return m_animationNum;
 		}
 
+		/* 武器のデータを取得。*/
+		inline const WeaponData& GetWeaponData(WeaponType type)const
+		{
+			return m_weaponDataList.at(type);
+		}
 
 	/* セッター。*/
 	public:
 		/* アニメーションの共通設定項目をセット。*/
 		int SetAnimationClip(const std::string filePath, bool isLoop)
 		{
-			/* アニメーションリストの空箱を確保。*/
-			m_animationClipList.emplace_back();
-			/* アニメーションを読み込む。*/
-			m_animationClipList.back().Load(filePath.c_str());
-			/* アニメーションのループ設定。*/
-			m_animationClipList.back().SetLoopFlag(isLoop);
-
+			/* アニメーションをロード。*/
+			m_animationClipList[m_currentIndex].Load(filePath.c_str());
+			/* アニメーションをループするか設定。*/
+			m_animationClipList[m_currentIndex].SetLoopFlag(isLoop);
 			/* 配列を加算する。*/
 			return m_currentIndex++;
 		}
-
 
 
 	private:
@@ -149,17 +151,20 @@ namespace nsApp
 		std::unordered_map<CharacterBasicAnimationList, int> m_basicIndexMap;
 		std::unordered_map<AttackType, int> m_attackIndexMap;
 
-		std::vector<AnimationClip> m_animationClipList;                                                             /* 読み込んだアニメーションを管理する配列。*/
+		std::unique_ptr<AnimationClip[]> m_animationClipList;                                                       /* 読み込んだアニメーションを管理する配列。*/
+
 
 		/* ファイルパスを定数化するための変数群。*/
-		const std::string m_basicAnimationFilePath = "Assets/modelData/animData/Player/BasicAnimation/";            /* 基本動作用アニメーションのファイルパスの共通部分。*/
-		const std::string m_weaponAnimationFilePath = "AssetsmodelData/animData/Player/";                           /* 武器ごとのアニメーションのファイルパスの共通部分。*/
+		const std::string m_basicAnimationFilePath = "Assets/animData/Player/BasicAnimation/";                      /* 基本動作用アニメーションのファイルパスの共通部分。*/
+		const std::string m_weaponAnimationFilePath = "Assets/animData/Player/";                                    /* 武器ごとのアニメーションのファイルパスの共通部分。*/
 		const std::string m_animationExtension = ".tka";                                                            /* アニメーションファイルの拡張子。*/
 
 		/* 武器の種類ごとに代入用変数を設定。*/
 		WeaponData m_greatSwordData;                                                                                /* 大剣のアニメーションと表示のズレを管理する変数。*/
 
 		int m_currentIndex = 0;
+		int m_animationNum = 0;                                                                                     /* 読み込んだアニメーションの数を管理する変数。*/
+		
 	};
 }
 

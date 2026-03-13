@@ -2,6 +2,7 @@
 #include "Game.h"
 
 #include "Src/Actor/Stage/LoadStageData.h"
+#include "Src/Actor/Character/Player/Player.h"
 
 namespace nsApp
 {
@@ -14,10 +15,12 @@ namespace nsApp
 			nsApp::nsStage::LoadStageData::GetInstance().ChangeStage(nsApp::nsStage::StageID::stage1);
 
 			/* @TODO カメラクラスを用意する。*/
-			g_camera3D->SetPosition(Vector3(0.0f, 75.0f, 125.0f));
+			g_camera3D->SetPosition(Vector3(0.0f, 150.0f, 100.0f));
 			g_camera3D->SetTarget(Vector3::Zero);
 
 			PhysicsWorld::GetInstance()->EnableDrawDebugWireFrame();
+
+			NewGO<nsActor::Player>(0, "player");
 			return true;
 		}
 

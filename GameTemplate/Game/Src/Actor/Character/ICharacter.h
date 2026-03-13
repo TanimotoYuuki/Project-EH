@@ -61,7 +61,7 @@ namespace nsApp
 			/* 更新処理。*/
 			virtual void Update() override;
 			/* 描画処理。*/
-			virtual void Draw(RenderContext& rc) override;
+			virtual void Render(RenderContext& rc) override;
 
 
 		/* ゲッター。*/
