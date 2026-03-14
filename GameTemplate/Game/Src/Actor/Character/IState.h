@@ -55,6 +55,7 @@ namespace nsApp
 			* @brief 別のステートに入る際、切り替わる直前に呼ぶ終了処理。
 			*/
 			virtual void Exit() = 0;
+
 		};
 	}
 }

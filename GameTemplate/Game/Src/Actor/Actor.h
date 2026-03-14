@@ -27,7 +27,7 @@ namespace nsApp
 			/* 更新処理。*/ 
 			virtual void Update();
 			/* 描画処理。*/
-			virtual void Draw(RenderContext& rc) = 0;
+			virtual void Render(RenderContext& rc) = 0;
 
 
 		protected:

@@ -6,7 +6,7 @@
  * @date   2026/03/05。
  */
 
-#include "IState.h"
+#include "Src/Actor/Character/IState.h"
 
 namespace nsApp
 {
@@ -54,9 +54,7 @@ namespace nsApp
 
 			/* 現在実行中のステートポインタ。*/
 			IState<CharacterTemplete>* m_currentState = nullptr;
-
 		};
-
 	}
 }
 
