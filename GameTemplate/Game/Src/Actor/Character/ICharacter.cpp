@@ -12,7 +12,7 @@ namespace nsApp
 		}
 
 
-		void ICharacter::Draw(RenderContext& rc)
+		void ICharacter::Render(RenderContext& rc)
 		{
 			m_model.DrawCharacterModel(rc);
 		}

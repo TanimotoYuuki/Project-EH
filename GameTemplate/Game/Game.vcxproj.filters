@@ -22,6 +22,9 @@
     <Filter Include="Src\Actor\Character">
       <UniqueIdentifier>{743383ec-63f0-4f97-9da3-2b42c1c5354a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Actor\Character\Player">
+      <UniqueIdentifier>{da70a1fa-0efa-48ea-9133-adc7e85184f2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -52,7 +55,15 @@
     <ClCompile Include="Src\Actor\Character\ICharacter.cpp">
       <Filter>Src\Actor\Character</Filter>
     </ClCompile>
-    <ClCompile Include="CharacterAnimation.cpp" />
+    <ClCompile Include="Src\Actor\Character\CharacterAnimation.cpp">
+      <Filter>Src\Actor\Character</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\Player\PlayerIdleState.cpp">
+      <Filter>Src\Actor\Character\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\Player\Player.cpp">
+      <Filter>Src\Actor\Character\Player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -72,7 +83,6 @@
     <ClInclude Include="Src\Actor\Actor.h">
       <Filter>Src\Actor</Filter>
     </ClInclude>
-    <ClInclude Include="IState.h" />
     <ClInclude Include="Src\StateMachine\StateMachine.h">
       <Filter>Src\StateMachine</Filter>
     </ClInclude>
@@ -89,6 +99,17 @@
     <ClInclude Include="Src\Actor\Character\ICharacter.h">
       <Filter>Src\Actor\Character</Filter>
     </ClInclude>
-    <ClInclude Include="CharacterAnimation.h" />
+    <ClInclude Include="Src\Actor\Character\CharacterAnimation.h">
+      <Filter>Src\Actor\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\IState.h">
+      <Filter>Src\Actor\Character</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Player\PlayerIdleState.h">
+      <Filter>Src\Actor\Character\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Player\Player.h">
+      <Filter>Src\Actor\Character\Player</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

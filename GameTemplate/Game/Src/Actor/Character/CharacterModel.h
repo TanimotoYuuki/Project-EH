@@ -43,8 +43,23 @@ namespace nsApp
 
 
 	public:
-		/* モデルを読み込む。*/
-		bool LoadCharacterModel(CharacterModelType characterType);
+	    /* モデルを読み込む。
+		* @param characterType モデルの種類をしているする。
+		* @param animationClip アニメーションクリップの配列。
+		* @param numClips      アニメーションクリップの数。
+		*/
+		bool LoadCharacterModel(CharacterModelType characterType, AnimationClip* animationClip, int numClips);
+
+		/**
+		* 武器を読み込む。
+		*/
+		bool LoadWeaponModel(CharacterModelType weaponType);
+
+		/* アニメーションを再生する。
+		* @param animationNumber 再生するアニメーションの配列の要素数を指定する。
+		* @param interpolateTime アニメーションの補間時間を指定する。デフォルトは0.2秒。
+		*/
+		void PlayAnimation(int animationNumber, float interpolateTime);
 
 		/* キャラクターを描画する。*/
 		void DrawCharacterModel(RenderContext& rc);
@@ -62,8 +77,30 @@ namespace nsApp
 				m_characterModelRender->SetPosition(position);
 		}
 
+		/* 回転を設定。*/
+		inline void SettRotation(const Quaternion& rotation)
+		{
+			if (m_characterModelRender)
+				m_characterModelRender->SetRotation(rotation);
+		}
 
-	
+		/* 大きさを設定。*/
+		inline void SetScale(const Vector3& scale)
+		{
+			if (m_characterModelRender)
+				m_characterModelRender->SetScale(scale);
+
+			if (m_weaponModelRender)
+				m_weaponModelRender->SetScale(scale);
+		}
+
+		/* 武器を創始するボーンの名前を変更する。*/
+		inline void SetWeaponAttackBone(const std::wstring& boneName)
+		{
+			m_attackBoneName = boneName;
+		}
+
+	/* ゲッター。*/
 	public:
 		/* キャラモデルのファイルパスを格納。*/
 		inline const std::string GetCharacterModelFilePath(std::string filePath)
@@ -79,15 +116,26 @@ namespace nsApp
 			return weaponFilePath;
 		}
 
+		/* 指定したボーンのワールド行列を取得する。
+		* @param boneName 取得したいボーンの名前を指定する。
+		*/
+	    Matrix GetWorldMatrix(const wchar_t* boneName);
+
 
 	private:	
 		std::unordered_map<CharacterModelType, std::string> m_filePathList;		                                               /* モデルIDからファイルパスを文字列に変化。*/
 		std::unique_ptr<ModelRender> m_characterModelRender;                                                                   /* モデルを管理。*/
+		std::unique_ptr<ModelRender> m_weaponModelRender;                                                                      /* 武器モデルを管理。*/
+		std::wstring m_attackBoneName;
 
 		/* ファイルパスを定数化するための変数群。*/
 		std::string m_modelFilePath;                                                                                           /* モデルのファイルパスを格納。*/
 		std::string m_characterModelFilePath = "Assets/modelData/Character/CharacterModel/";                                   /* プレイヤー/NPCモデルのファイルパスを格納。*/
 		std::string m_modelExtension = ".tkm";                                                                                 /* プレイヤー/NPCモデルの拡張子を格納。*/
-		std::string m_weaponModelFilePath = "Assets/modelData/Weapon/";                                                        /* 武器モデルのファイルパスを格納。*/
+		std::string m_weaponModelFilePath = "Assets/modelData/Character/Weapon/";                                              /* 武器モデルのファイルパスを格納。*/
+
+		int boneID;                                                                                                            /* ボーンIDを格納。*/
+		Vector3 m_matrixPosition;
+		Quaternion m_matrixRotation;
 	};	
 }
