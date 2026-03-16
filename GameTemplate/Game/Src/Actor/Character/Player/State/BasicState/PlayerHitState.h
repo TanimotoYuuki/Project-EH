@@ -1,8 +1,8 @@
 #pragma once
 /**
 * @file   PlayerHitState.h
-* @brief  ƒ_ƒ[ƒW‚ğó‚¯‚½Û‚Ìó‘Ô‚ğŠÇ—‚·‚éƒNƒ‰ƒXB
-* @author Yamaguchi HayatoB
+* @brief  ãƒ€ãƒ¡ãƒ¼ã‚¸ã‚’å—ã‘ãŸéš›ã®çŠ¶æ…‹ã‚’ç®¡ç†ã™ã‚‹ã‚¯ãƒ©ã‚¹ã€‚
+* @author Yamaguchi Hayatoã€‚
 * @date   2026/03/16
 */
 
@@ -21,45 +21,45 @@ namespace nsApp
 		class PlayerHitState : public IState<nsActor::Actor>
 		{
 		public:
-			/* ƒRƒ“ƒXƒgƒ‰ƒNƒ^‚ÆƒfƒXƒgƒ‰ƒNƒ^B*/
+			/* ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã¨ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã€‚*/
 			PlayerHitState() = default;
 			virtual ~PlayerHitState() = default;
 
 
 		public:
-			/* ƒ‰ƒCƒtƒTƒCƒNƒ‹B*/
+			/* ãƒ©ã‚¤ãƒ•ã‚µã‚¤ã‚¯ãƒ«ã€‚*/
 			void Enter() override;
 			void Update() override;
 			void Exit() override {};
 
-			/* ƒXƒe[ƒg‚ğ‘JˆÚ‚³‚¹‚éB*/
+			/* ã‚¹ãƒ†ãƒ¼ãƒˆã‚’é·ç§»ã•ã›ã‚‹ã€‚*/
 			bool RequestID(uint8_t& id) override;
 
 
-		/* ƒZƒbƒ^[B*/
+		/* ã‚»ãƒƒã‚¿ãƒ¼ã€‚*/
 		public:
-			/* ƒ_ƒ[ƒW‚ğó‚¯‚Ä‚©‚ç‚ÌŠÔ‚ğİ’èB*/
+			/* ãƒ€ãƒ¡ãƒ¼ã‚¸ã‚’å—ã‘ã¦ã‹ã‚‰ã®æ™‚é–“ã‚’è¨­å®šã€‚*/
 			inline void SetHitTimer(int timer)
 			{
 				m_hitTimer = timer;
 			}
 
-			/* ‹N‚«ã‚ª‚èƒtƒ‰ƒO‚ğİ’èB*/
+			/* èµ·ãä¸ŠãŒã‚Šãƒ•ãƒ©ã‚°ã‚’è¨­å®šã€‚*/
 			inline void SetGetUpFlag(bool flag)
 			{
 				m_isGetUP = flag;
 			}
 
-			/* ‚Á”ò‚Ô‘¬“x‚ğİ’èB
-			* @param speed ‚Á”ò‚Ô‘¬“x‚ÌƒxƒNƒgƒ‹B
-			* ¡‰ñ‚Íx²‚ğ§ŒäB
+			/* å¹ã£é£›ã¶é€Ÿåº¦ã‚’è¨­å®šã€‚
+			* @param speed å¹ã£é£›ã¶é€Ÿåº¦ã®ãƒ™ã‚¯ãƒˆãƒ«ã€‚
+			* ä»Šå›ã¯xè»¸ã‚’åˆ¶å¾¡ã€‚
 			*/
 			inline void SetKnockBackSpeed(const Vector3 speed)
 			{
 				m_knockBackSpeed.x = speed.x;
 			}
 
-			/* ‚Á”ò‚Ô‰‘¬‚ğİ’èB*/
+			/* å¹ã£é£›ã¶åˆé€Ÿã‚’è¨­å®šã€‚*/
 			inline void SetKnockBackVelocity(float velocity)
 			{
 				m_knockBackVelocity = velocity;
@@ -67,17 +67,17 @@ namespace nsApp
 
 
 		private:
-			nsActor::Player* m_player;  /* ƒvƒŒƒCƒ„[‚ÌÀ‘Ô‚Ö‚Ìƒ|ƒCƒ“ƒ^B*/
+			nsActor::Player* m_player;  /* ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®å®Ÿæ…‹ã¸ã®ãƒã‚¤ãƒ³ã‚¿ã€‚*/
 
 
 		private:	
-			int m_hitTimer = 0.0f;                    /* ƒ_ƒ[ƒW‚ğó‚¯‚Ä‚©‚ç‚ÌŒo‰ßŠÔB*/
+			int m_hitTimer = 0;                       /* ãƒ€ãƒ¡ãƒ¼ã‚¸ã‚’å—ã‘ã¦ã‹ã‚‰ã®çµŒéæ™‚é–“ã€‚*/
 
-			bool m_isGetUP = false;                   /* ƒ_ƒ[ƒW‚ğó‚¯‚Ä‚©‚ç‹N‚«ã‚ª‚é‚Ü‚Å‚Ìƒtƒ‰ƒOB*/
+			bool m_isGetUP = false;                   /* ãƒ€ãƒ¡ãƒ¼ã‚¸ã‚’å—ã‘ã¦ã‹ã‚‰èµ·ãä¸ŠãŒã‚‹ã¾ã§ã®ãƒ•ãƒ©ã‚°ã€‚*/
 
-			float m_knockBackVelocity = 0.0f;         /* ‚Á”ò‚Ñ‚Ì‰‘¬B*/
+			float m_knockBackVelocity = 0.0f;         /* å¹ã£é£›ã³ã®åˆé€Ÿã€‚*/
 
-			Vector3 m_knockBackSpeed = Vector3::Zero; /* ‚Á”ò‚Ñ‚Ì‘¬“xB*/
+			Vector3 m_knockBackSpeed = Vector3::Zero; /* å¹ã£é£›ã³ã®é€Ÿåº¦ã€‚*/
 
 		};
 	}
