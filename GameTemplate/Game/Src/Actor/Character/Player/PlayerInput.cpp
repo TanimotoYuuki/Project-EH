@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "PlayerInput.h"
 
 namespace nsApp
@@ -46,4 +46,3 @@ namespace nsApp
 		m_isRun = (g_pad[0]->IsPress(enButtonLB1) && m_isMove);
 	}
 }
-

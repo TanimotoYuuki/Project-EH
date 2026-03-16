@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "Title.h"
 #include "Src/SceneLoader/SceneLoader.h"
 
@@ -106,7 +106,7 @@ namespace nsApp
 			m_titleNameUI.Update();/*更新処理。*/
 		}
 
-		/*Aボタンを押してくださいを促すUIの初期化。*/
+		/* Aボタンを押してくださいを促すUIの初期化。*/
 		void Title::InitPressAButtonUI()
 		{
 			m_pressAButtonUIPosition = PRESS_A_BUTTON_UI_INIT_POSITION;/*Aボタンを押してくださいを促すUIの位置を初期化。*/

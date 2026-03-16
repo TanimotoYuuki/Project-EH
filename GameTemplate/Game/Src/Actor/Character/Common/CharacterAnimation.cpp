@@ -44,7 +44,7 @@ namespace nsApp
 	{
 		/* GreatSwordのアニメーションファイルパスを登録。*/
 		/* 待機状態。*/
-		m_greatSwordData.weaponAnimationList[AttackType::NormalAttack] = "Assets/animData/Player/WeaponAnimatio/GreatSword/GreatSword_NormalAttack.tka";
+		m_greatSwordData.weaponAnimationList[AttackType::NormalAttack] = "Assets/animData/Player/WeaponAnimation/GreatSword/GreatSword_NormalAttack.tka";
 
 		//m_greatSwordData.weaponAnimationList[AttackType::NormalAttack] = GetWeaponAnimationFilePath("WeaponAnimation/GreatSword/GreatSword_NormalAttack");
 		///* チャージ攻撃。*/

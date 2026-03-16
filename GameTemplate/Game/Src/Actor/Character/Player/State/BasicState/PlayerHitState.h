@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 /**
 * @file   PlayerHitState.h
 * @brief  ダメージを受けた際の状態を管理するクラス。
