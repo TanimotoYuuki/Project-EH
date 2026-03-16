@@ -1,6 +1,20 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "Player.h"
-#include "Src/Actor/Character/Player/PlayerIdleState.h"
+
+#include "Src/Actor/Character/Player/State/BasicState/PlayerIdleState.h"
+#include "Src/Actor/Character/Player/State/BasicState/PlayerWalkState.h"
+#include "Src/Actor/Character/Player/State/BasicState/PlayerJumpState.h"
+#include "Src/Actor/Character/Player/State/BasicState/PlayerRunState.h"
+#include "Src/Actor/Character/Player/State/BasicState/PlayerHitState.h"
+#include "Src/Actor/Character/Player/State/BasicState/PlayerDethState.h"
+
+#include "Src/Actor/Character/Player/State/AttackState/PlayerNormalAttackState.h"
+
+namespace
+{
+	const auto ANGLE_Y = 90.0f; /* ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®åˆæœŸè§’åº¦ã€‚*/
+	const Vector3 POS = Vector3(0.0f, 50.0f, 0.0f);
+}
 
 namespace nsApp
 {
@@ -8,13 +22,13 @@ namespace nsApp
 	{
 		bool Player::Start()
 		{
-			/* ƒAƒjƒ[ƒVƒ‡ƒ“‚Æƒ‚ƒfƒ‹‚ğ€”õ‚·‚éB*/
-			/* ƒAƒjƒ[ƒVƒ‡ƒ“ƒNƒ‰ƒX‚Ì‰Šú‰»ˆ—‚ğƒR[ƒ‹B*/
+			/* ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã¨ãƒ¢ãƒ‡ãƒ«ã‚’æº–å‚™ã™ã‚‹ã€‚*/
+			/* ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚¯ãƒ©ã‚¹ã®åˆæœŸåŒ–å‡¦ç†ã‚’ã‚³ãƒ¼ãƒ«ã€‚*/
 			m_playerAnimation.Initialize();
-			/* ¡‚Ì•Ší‚ğƒZƒbƒg‚·‚éB*/
+			/* ä»Šã®æ­¦å™¨ã‚’ã‚»ãƒƒãƒˆã™ã‚‹ã€‚*/
 			m_playerAnimation.LoadAnimation(m_currentWeapon);
 
-			/* ƒAƒjƒ[ƒVƒ‡ƒ“‚Æƒ‚ƒfƒ‹‚ğƒZƒbƒg‚·‚éB*/
+			/* ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã¨ãƒ¢ãƒ‡ãƒ«ã‚’ã‚»ãƒƒãƒˆã™ã‚‹ã€‚*/
 			m_model.LoadCharacterModel
 			(
 				CharacterModelType::Player_3P,
@@ -22,20 +36,23 @@ namespace nsApp
 				m_playerAnimation.GetAnimationClips()
 			);
 
-			/* •Ší‚Ìí—Ş‚ğƒZƒbƒg‚·‚éB*/
-//			m_model.LoadWeaponModel(CharacterModelType::Weapon_GreatSword);
+			/* æ­¦å™¨ã®ç¨®é¡ã‚’ã‚»ãƒƒãƒˆã™ã‚‹ã€‚*/
+			m_model.LoadWeaponModel(CharacterModelType::Weapon_GreatSword);
 
-			/* ƒLƒƒƒ‰ƒXƒP[ƒ‹‚ğƒZƒbƒg‚·‚éB*/
+			/* ã‚­ãƒ£ãƒ©ã‚¹ã‚±ãƒ¼ãƒ«ã‚’ã‚»ãƒƒãƒˆã™ã‚‹ã€‚*/
 			m_model.SetScale(Vector3::One * 0.5f);
-			m_model.SetPosition(Vector3(0.0f,50.0f, 0.0f));
+			m_model.SetPosition(POS);
 
-			Quaternion rot = Quaternion::Identity;
-			rot.AddRotationDegY(-90.0f);
-			m_model.SettRotation(rot);
+			m_angle.AddRotationDegY(ANGLE_Y);
+			m_model.SettRotation(m_angle);
 
-			/* ‰ŠúƒXƒe[ƒg‚ğƒZƒbƒg‚·‚éB*/
-			/* ‘Ò‹@ó‘ÔƒXƒe[ƒgB*/
-			m_stateMachine->ChangeState(new nsState::PlayerIdleState);
+			m_characterController.Init(5.0f, 8.0f, POS);
+
+			/* ã‚¹ãƒ†ãƒ¼ãƒˆã‚’ç”Ÿæˆã™ã‚‹ã€‚*/
+			RegisterState();
+			m_stateMachine->ChangeState(m_stateFactory[PlayerStateID::enIdle]());
+
+			SetWaitInputTimer(10);
 
 			return true;
 		}
@@ -43,7 +60,39 @@ namespace nsApp
 
 		void Player::Update()
 		{
-			/* ICharacterƒNƒ‰ƒX‚ÌXVˆ—‚ğƒR[ƒ‹B*/
+			/* ã‚²ãƒ¼ãƒ é–‹å§‹ç›´å¾Œæ•°ãƒ•ãƒ¬ãƒ¼ãƒ ã¯å…¥åŠ›ã‚’å—ã‘ä»˜ã‘ãªã„*/
+			/*@å…¨ä½“å…±æœ‰: ãã®ç¡¬ç›´ã¯ãƒœã‚¹æˆ¦ã®é–‹å§‹æ¼”å‡ºã§ã‚«ãƒãƒ¼ã™ã‚‹*/
+			if (m_inputWaitTimer > 0)
+			{
+				m_inputWaitTimer--;
+				m_playerInput.SetInputEnable(false);
+			}
+
+			else
+				m_playerInput.SetInputEnable(true);
+
+
+			/* ãƒ¢ãƒ‡ãƒ«ã®æ›´æ–°ã‚ˆã‚Šå…ˆã«å…¥åŠ›åˆ¤å®šã‚’æ›´æ–°ã™ã‚‹ã€‚*/
+			m_playerInput.Update();
+
+			/* ã‚¹ãƒ†ãƒ¼ãƒˆãƒã‚·ãƒ¼ãƒ³ã‚’æ›´æ–°ã™ã‚‹ã€‚*/
+			m_stateMachine->Update();
+
+			/* ãƒªã‚¯ã‚¨ã‚¹ãƒˆã‚’å—ã‘å–ã£ã¦å¿…è¦ãªã‚¹ãƒ†ãƒ¼ãƒˆã‚’ã‚³ãƒ¼ãƒ«ã€‚*/
+			if (m_stateMachine->GetCurrentState()->RequestID(m_currentStateID))
+			{
+				/* ã‚¹ãƒ†ãƒ¼ãƒˆã®ç¨®é¡ã‚’ã‚­ãƒ£ã‚¹ãƒˆã™ã‚‹ã€‚*/
+				m_playerStateID = static_cast<PlayerStateID>(m_currentStateID);
+
+				/* ç™»éŒ²ã•ã‚Œã¦ã„ã‚‹ã‚¹ãƒ†ãƒ¼ãƒˆãªã‚‰ChangeStateã«æƒ…å ±ã‚’æ¸¡ã™ã€‚*/
+				if (m_stateFactory.count(m_playerStateID) > 0)
+					m_stateMachine->ChangeState(m_stateFactory[m_playerStateID]());
+
+			}
+
+			m_model.SetPosition(m_currentPosition);
+
+			/* ICharacterã‚¯ãƒ©ã‚¹ã®æ›´æ–°å‡¦ç†ã‚’ã‚³ãƒ¼ãƒ«ã€‚*/
 			ICharacter::Update();
 			m_model.Update();
 		}
@@ -51,7 +100,7 @@ namespace nsApp
 
 		void Player::Render(RenderContext& rc)
 		{
-			/* •`‰æB*/
+			/* æç”»ã€‚*/
 			ICharacter::Render(rc);
 		}
 
@@ -60,6 +109,31 @@ namespace nsApp
 		{
 			int animIndex = m_playerAnimation.GetBasicAnimationIndex(state);
 			m_model.PlayAnimation(animIndex, 0.2f);
+		}
+
+
+		void Player::RegisterState()
+		{
+			/* å¾…æ©ŸçŠ¶æ…‹ã€‚*/
+			m_stateFactory[PlayerStateID::enIdle] = []() { return new nsState::PlayerIdleState(); };
+
+			/* æ­©è¡ŒçŠ¶æ…‹ã€‚*/ 
+			m_stateFactory[PlayerStateID::enWalk] = []() { return new nsState::PlayerWalkState(); };
+
+			/* ã‚¸ãƒ£ãƒ³ãƒ—çŠ¶æ…‹ã€‚*/
+			m_stateFactory[PlayerStateID::enJump] = []() { return new nsState::PlayerJumpState(); };
+
+			/* èµ°ã‚ŠçŠ¶æ…‹ã€‚*/
+			m_stateFactory[PlayerStateID::enRun] = []() { return new nsState::PlayerRunState(); };
+
+			/* ãƒ€ãƒ¡ãƒ¼ã‚¸çŠ¶æ…‹ã€‚*/
+			m_stateFactory[PlayerStateID::enHit] = []() { return new nsState::PlayerHitState(); };
+
+			/* æ­»äº¡çŠ¶æ…‹ã€‚*/
+			m_stateFactory[PlayerStateID::enDeath] = []() { return new nsState::PlayerDethState(); };
+
+			/* é€šå¸¸æ”»æ’ƒçŠ¶æ…‹ã€‚*/
+			m_stateFactory[PlayerStateID::enAttack] = []() { return new nsState::PlayerNormalAttackState(); };
 		}
 	}
 }
