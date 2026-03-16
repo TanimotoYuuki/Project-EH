@@ -1,121 +1,121 @@
 #include "stdafx.h"
 #include "Title.h"
 #include "Src/SceneLoader/SceneLoader.h"
-#include "Src/Actor/Character/Player/Player.h"
+
 
 
 namespace {
-	/*”wŒiB*/
-	const float BACK_GROUND_WIDTH = 1920;/*”wŒi‚Ì•B*/
+	/*èƒŒæ™¯ã€‚*/
+	const float BACK_GROUND_WIDTH = 1920;/*èƒŒæ™¯ã®å¹…ã€‚*/
 
-	const float BACK_GROUND_HEIGHT = 1080;/*”wŒi‚Ì‚‚³B* /
+	const float BACK_GROUND_HEIGHT = 1080;/*èƒŒæ™¯ã®é«˜ã•ã€‚* /
 
-	/*ƒ^ƒCƒgƒ‹–¼UIB*/
-	const float TITLE_NAME_UI_WIDTH = 1024.0f;/*ƒ^ƒCƒgƒ‹–¼UI‚Ì•B*/
+	/*ã‚¿ã‚¤ãƒˆãƒ«åUIã€‚*/
+	const float TITLE_NAME_UI_WIDTH = 1024.0f;/*ã‚¿ã‚¤ãƒˆãƒ«åUIã®å¹…ã€‚*/
 
-	const float TITLE_NAME_UI_HEIGHT = 512.0f;/*ƒ^ƒCƒgƒ‹–¼UI‚Ì‚‚³B*/
+	const float TITLE_NAME_UI_HEIGHT = 512.0f;/*ã‚¿ã‚¤ãƒˆãƒ«åUIã®é«˜ã•ã€‚*/
 
-	const Vector3 TITLE_NAME_UI_INIT_POSITION = { 0.0f,150.0f,0.0f };/*ƒ^ƒCƒgƒ‹–¼UI‚Ì‰ŠúˆÊ’uB*/
+	const Vector3 TITLE_NAME_UI_INIT_POSITION = { 0.0f,150.0f,0.0f };/*ã‚¿ã‚¤ãƒˆãƒ«åUIã®åˆæœŸä½ç½®ã€‚*/
 
-	const Vector3 TITLE_NAME_UI_INIT_SCALE = { 1.5f,1.5f,1.0f };/*ƒ^ƒCƒgƒ‹–¼UI‚Ì‰Šú‘å‚«‚³B*/
+	const Vector3 TITLE_NAME_UI_INIT_SCALE = { 1.5f,1.5f,1.0f };/*ã‚¿ã‚¤ãƒˆãƒ«åUIã®åˆæœŸå¤§ãã•ã€‚*/
 
-	/*Aƒ{ƒ^ƒ“‚ð‰Ÿ‚µ‚Ä‚­‚¾‚³‚¢‚ð‘£‚·UIB*/
-	const float PRESS_A_BUTTON_UI_WIDTH = 1024.0f;/*Aƒ{ƒ^ƒ“‚ð‰Ÿ‚µ‚Ä‚­‚¾‚³‚¢‚ð‘£‚·UI‚Ì•B*/
+	/*Aãƒœã‚¿ãƒ³ã‚’æŠ¼ã—ã¦ãã ã•ã„ã‚’ä¿ƒã™UIã€‚*/
+	const float PRESS_A_BUTTON_UI_WIDTH = 1024.0f;/*Aãƒœã‚¿ãƒ³ã‚’æŠ¼ã—ã¦ãã ã•ã„ã‚’ä¿ƒã™UIã®å¹…ã€‚*/
 
-	const float PRESS_A_BUTTON_UI_HEIGHT = 256.0f;/*Aƒ{ƒ^ƒ“‚ð‰Ÿ‚µ‚Ä‚­‚¾‚³‚¢‚ð‘£‚·UI‚Ì‚‚³B*/
+	const float PRESS_A_BUTTON_UI_HEIGHT = 256.0f;/*Aãƒœã‚¿ãƒ³ã‚’æŠ¼ã—ã¦ãã ã•ã„ã‚’ä¿ƒã™UIã®é«˜ã•ã€‚*/
 
-	const Vector3 PRESS_A_BUTTON_UI_INIT_POSITION = { 0.0f,-150.0f,0.0f };/*Aƒ{ƒ^ƒ“‚ð‰Ÿ‚µ‚Ä‚­‚¾‚³‚¢‚ð‘£‚·UI‚Ì‰ŠúˆÊ’uB*/
+	const Vector3 PRESS_A_BUTTON_UI_INIT_POSITION = { 0.0f,-150.0f,0.0f };/*Aãƒœã‚¿ãƒ³ã‚’æŠ¼ã—ã¦ãã ã•ã„ã‚’ä¿ƒã™UIã®åˆæœŸä½ç½®ã€‚*/
 
-	const Vector3 PRESS_A_BUTTON_UI_INIT_SCALE = { 1.0f,1.0f,1.0f };/*Aƒ{ƒ^ƒ“‚ð‰Ÿ‚µ‚Ä‚­‚¾‚³‚¢‚ð‘£‚·UI‚Ì‰Šú‘å‚«‚³B*/
+	const Vector3 PRESS_A_BUTTON_UI_INIT_SCALE = { 1.0f,1.0f,1.0f };/*Aãƒœã‚¿ãƒ³ã‚’æŠ¼ã—ã¦ãã ã•ã„ã‚’ä¿ƒã™UIã®åˆæœŸå¤§ãã•ã€‚*/
 }
 
 namespace nsApp
 {
 	namespace nsTitle
 	{
-		/*ŠJŽnˆ—B*/
+		/*é–‹å§‹å‡¦ç†ã€‚*/
 		bool Title::Start()
 		{
-			/*ƒXƒvƒ‰ƒCƒg‚Ì‰Šú‰»B*/
+			/*ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã®åˆæœŸåŒ–ã€‚*/
 			InitSprite();
 
 			return true;
 		}
 
-		/*XVˆ—B*/
+		/*æ›´æ–°å‡¦ç†ã€‚*/
 		void Title::Update()
 		{
-			/*Œ»Ý‚ÍAƒ{ƒ^ƒ“‚ð‰Ÿ‚µ‚½‚çƒCƒ“ƒQ[ƒ€ƒV[ƒ“‚É‘JˆÚ‚·‚é‚æ‚¤‚É‚µ‚Ä‚¢‚éB*/
-			/*TODO : ¡Œã‚ÍAƒ{ƒ^ƒ“‚ð‰Ÿ‚µ‚½‚çƒXƒe[ƒW‘I‘ðƒV[ƒ“‚É‘JˆÚ‚·‚é‚æ‚¤‚É‚·‚éB*/
+			/*ç¾åœ¨ã¯Aãƒœã‚¿ãƒ³ã‚’æŠ¼ã—ãŸã‚‰ã‚¤ãƒ³ã‚²ãƒ¼ãƒ ã‚·ãƒ¼ãƒ³ã«é·ç§»ã™ã‚‹ã‚ˆã†ã«ã—ã¦ã„ã‚‹ã€‚*/
+			/*TODO : ä»Šå¾Œã¯Aãƒœã‚¿ãƒ³ã‚’æŠ¼ã—ãŸã‚‰ã‚¹ãƒ†ãƒ¼ã‚¸é¸æŠžã‚·ãƒ¼ãƒ³ã«é·ç§»ã™ã‚‹ã‚ˆã†ã«ã™ã‚‹ã€‚*/
 			if (g_pad[0]->IsTrigger(enButtonA))
 			{
 				nsApp::nsScene::SceneLoader::GetInstance()->ChangeScene(nsApp::IScene::EnSceneID::enSceneID_InGame);
 			}
 
-			/*”wŒi‚ÌXVˆ—B*/
+			/*èƒŒæ™¯ã®æ›´æ–°å‡¦ç†ã€‚*/
 			m_backGround.Update();
 
-			/*ƒ^ƒCƒgƒ‹–¼UI‚ÌXVˆ—B*/
+			/*ã‚¿ã‚¤ãƒˆãƒ«åUIã®æ›´æ–°å‡¦ç†ã€‚*/
 			m_titleNameUI.Update();
 
-			/*Aƒ{ƒ^ƒ“‚ð‰Ÿ‚µ‚Ä‚­‚¾‚³‚¢‚ð‘£‚·UI‚ÌXVˆ—B*/
+			/*Aãƒœã‚¿ãƒ³ã‚’æŠ¼ã—ã¦ãã ã•ã„ã‚’ä¿ƒã™UIã®æ›´æ–°å‡¦ç†ã€‚*/
 			m_pressAButtonUI.Update();
 		}
 
-		/*•`‰æˆ—B*/
+		/*æç”»å‡¦ç†ã€‚*/
 		void Title::Render(RenderContext& rc)
 		{
-			/*”wŒi‚Ì•`‰æB*/
+			/*èƒŒæ™¯ã®æç”»ã€‚*/
 			m_backGround.Draw(rc);
 
-			/*ƒ^ƒCƒgƒ‹–¼‚ð•\Ž¦‚·‚éUI‚Ì•`‰æB*/
+			/*ã‚¿ã‚¤ãƒˆãƒ«åã‚’è¡¨ç¤ºã™ã‚‹UIã®æç”»ã€‚*/
 			m_titleNameUI.Draw(rc);
 
-			/*Aƒ{ƒ^ƒ“‚ð‰Ÿ‚µ‚Ä‚­‚¾‚³‚¢‚ð‘£‚·UI‚Ì•`‰æB*/
+			/*Aãƒœã‚¿ãƒ³ã‚’æŠ¼ã—ã¦ãã ã•ã„ã‚’ä¿ƒã™UIã®æç”»ã€‚*/
 			m_pressAButtonUI.Draw(rc);
 		}
 
-		/*ƒXƒvƒ‰ƒCƒg‚Ì‰Šú‰»B*/
+		/*ã‚¹ãƒ—ãƒ©ã‚¤ãƒˆã®åˆæœŸåŒ–ã€‚*/
 		void Title::InitSprite()
 		{
-			/*”wŒiB*/
+			/*èƒŒæ™¯ã€‚*/
 			InitBackGround();
 
-			/*ƒ^ƒCƒgƒ‹–¼B*/
+			/*ã‚¿ã‚¤ãƒˆãƒ«åã€‚*/
 			InitTitleNameUI();
 
-			/*Aƒ{ƒ^ƒ“‚ð‰Ÿ‚µ‚Ä‚­‚¾‚³‚¢‚ð‘£‚·UIB*/
+			/*Aãƒœã‚¿ãƒ³ã‚’æŠ¼ã—ã¦ãã ã•ã„ã‚’ä¿ƒã™UIã€‚*/
 			InitPressAButtonUI();
 		}
 
-		/*”wŒi‚Ì‰Šú‰»B*/
+		/*èƒŒæ™¯ã®åˆæœŸåŒ–ã€‚*/
 		void Title::InitBackGround()
 		{
-			m_backGround.Init(m_backGroundFilePath.c_str(), BACK_GROUND_WIDTH, BACK_GROUND_HEIGHT);/*‰Šú‰»B*/
+			m_backGround.Init(m_backGroundFilePath.c_str(), BACK_GROUND_WIDTH, BACK_GROUND_HEIGHT);/*åˆæœŸåŒ–ã€‚*/
 		}
 
-		/*ƒ^ƒCƒgƒ‹–¼UI‚Ì‰Šú‰»B*/
+		/*ã‚¿ã‚¤ãƒˆãƒ«åUIã®åˆæœŸåŒ–ã€‚*/
 		void Title::InitTitleNameUI()
 		{
-			m_titleNameUIPosition = TITLE_NAME_UI_INIT_POSITION;/*ƒ^ƒCƒgƒ‹–¼UI‚ÌˆÊ’u‚ð‰Šú‰»B*/
-			m_titleNameUIScale = TITLE_NAME_UI_INIT_SCALE;/*ƒ^ƒCƒgƒ‹–¼UI‚Ì‘å‚«‚³‚ð‰Šú‰»B*/
+			m_titleNameUIPosition = TITLE_NAME_UI_INIT_POSITION;/*ã‚¿ã‚¤ãƒˆãƒ«åUIã®ä½ç½®ã‚’åˆæœŸåŒ–ã€‚*/
+			m_titleNameUIScale = TITLE_NAME_UI_INIT_SCALE;/*ã‚¿ã‚¤ãƒˆãƒ«åUIã®å¤§ãã•ã‚’åˆæœŸåŒ–ã€‚*/
 
-			m_titleNameUI.Init(m_titleNameUIFilePath.c_str(), TITLE_NAME_UI_WIDTH, TITLE_NAME_UI_HEIGHT);/*‰Šú‰»B*/
-			m_titleNameUI.SetPosition(m_titleNameUIPosition);/*ˆÊ’uÝ’èB*/
-			m_titleNameUI.SetScale(m_titleNameUIScale);/*‘å‚«‚³Ý’èB*/
-			m_titleNameUI.Update();/*XVˆ—B*/
+			m_titleNameUI.Init(m_titleNameUIFilePath.c_str(), TITLE_NAME_UI_WIDTH, TITLE_NAME_UI_HEIGHT);/*åˆæœŸåŒ–ã€‚*/
+			m_titleNameUI.SetPosition(m_titleNameUIPosition);/*ä½ç½®è¨­å®šã€‚*/
+			m_titleNameUI.SetScale(m_titleNameUIScale);/*å¤§ãã•è¨­å®šã€‚*/
+			m_titleNameUI.Update();/*æ›´æ–°å‡¦ç†ã€‚*/
 		}
 
-		/*Aƒ{ƒ^ƒ“‚ð‰Ÿ‚µ‚Ä‚­‚¾‚³‚¢‚ð‘£‚·UI‚Ì‰Šú‰»B*/
+		/*Aãƒœã‚¿ãƒ³ã‚’æŠ¼ã—ã¦ãã ã•ã„ã‚’ä¿ƒã™UIã®åˆæœŸåŒ–ã€‚*/
 		void Title::InitPressAButtonUI()
 		{
-			m_pressAButtonUIPosition = PRESS_A_BUTTON_UI_INIT_POSITION;/*Aƒ{ƒ^ƒ“‚ð‰Ÿ‚µ‚Ä‚­‚¾‚³‚¢‚ð‘£‚·UI‚ÌˆÊ’u‚ð‰Šú‰»B*/
-			m_pressAButtonUIScale = PRESS_A_BUTTON_UI_INIT_SCALE;/*Aƒ{ƒ^ƒ“‚ð‰Ÿ‚µ‚Ä‚­‚¾‚³‚¢‚ð‘£‚·UI‚Ì‘å‚«‚³‚ð‰Šú‰»B*/
+			m_pressAButtonUIPosition = PRESS_A_BUTTON_UI_INIT_POSITION;/*Aãƒœã‚¿ãƒ³ã‚’æŠ¼ã—ã¦ãã ã•ã„ã‚’ä¿ƒã™UIã®ä½ç½®ã‚’åˆæœŸåŒ–ã€‚*/
+			m_pressAButtonUIScale = PRESS_A_BUTTON_UI_INIT_SCALE;/*Aãƒœã‚¿ãƒ³ã‚’æŠ¼ã—ã¦ãã ã•ã„ã‚’ä¿ƒã™UIã®å¤§ãã•ã‚’åˆæœŸåŒ–ã€‚*/
 
-			m_pressAButtonUI.Init(m_pressAButtonUIFilePath.c_str(), PRESS_A_BUTTON_UI_WIDTH, PRESS_A_BUTTON_UI_HEIGHT);/*‰Šú‰»B*/
-			m_pressAButtonUI.SetPosition(m_pressAButtonUIPosition);/*ˆÊ’uÝ’èB*/
-			m_pressAButtonUI.SetScale(m_pressAButtonUIScale);/*‘å‚«‚³Ý’èB*/
-			m_pressAButtonUI.Update();/*XVˆ—B*/
+			m_pressAButtonUI.Init(m_pressAButtonUIFilePath.c_str(), PRESS_A_BUTTON_UI_WIDTH, PRESS_A_BUTTON_UI_HEIGHT);/*åˆæœŸåŒ–ã€‚*/
+			m_pressAButtonUI.SetPosition(m_pressAButtonUIPosition);/*ä½ç½®è¨­å®šã€‚*/
+			m_pressAButtonUI.SetScale(m_pressAButtonUIScale);/*å¤§ãã•è¨­å®šã€‚*/
+			m_pressAButtonUI.Update();/*æ›´æ–°å‡¦ç†ã€‚*/
 		}
 	}
 }
