@@ -6,7 +6,7 @@
  * @date   2026/03/05ÅB
  */
 
-#include "Src/Actor/Character/IState.h"
+#include "Src/Actor/Character/Common/IState.h"
 
 namespace nsApp
 {

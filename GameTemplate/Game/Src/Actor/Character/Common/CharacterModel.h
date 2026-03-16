@@ -67,6 +67,17 @@ namespace nsApp
 		/* 更新処理。*/
 		void Update();
 
+		/* アニメーションが再生終了したか。*/
+	    bool IsPlayAnimation()
+		{
+			/* nullチェック。*/
+			if (m_characterModelRender != nullptr)
+				/* アニメーションが再生終了しているかを返す。*/
+				return m_characterModelRender->IsPlayingAnimation();
+
+			return false;
+		}
+
 
 	/* セッター。*/
 	public:
@@ -85,7 +96,7 @@ namespace nsApp
 		}
 
 		/* 大きさを設定。*/
-		inline void SetScale(const Vector3& scale)
+	    void SetScale(const Vector3& scale)
 		{
 			if (m_characterModelRender)
 				m_characterModelRender->SetScale(scale);
@@ -135,7 +146,16 @@ namespace nsApp
 		std::string m_weaponModelFilePath = "Assets/modelData/Character/Weapon/";                                              /* 武器モデルのファイルパスを格納。*/
 
 		int boneID;                                                                                                            /* ボーンIDを格納。*/
-		Vector3 m_matrixPosition;
+
 		Quaternion m_matrixRotation;
+
+		Matrix m_handMatrix; 																					               /* 武器を装備させるときの右手のボーンの行列を管理する変数。*/
+		Matrix m_rotationMatrix;                                                                                               /* 武器を装備させたときの武器の傾きを制御。*/
+
+		Vector3 m_xAxis;                                                                                                       /* 武器を装備させるときの右手のボーンの行列から抽出したX軸を管理する変数。*/
+		Vector3 m_yAxis;                                                                                                       /* 武器を装備させるときの右手のボーンの行列から抽出したY軸を管理する変数。*/
+		Vector3 m_zAxis;                                                                                                       /* 武器を装備させるときの右手のボーンの行列から抽出したZ軸を管理する変数。*/
+		Vector3 m_matrixPosition;
+
 	};	
 }

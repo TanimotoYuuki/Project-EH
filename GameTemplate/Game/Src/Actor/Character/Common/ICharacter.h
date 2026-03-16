@@ -9,7 +9,7 @@
 */
 
 #include "Src/Actor/Actor.h"
-#include "Src/Actor/Character/CharacterModel.h"
+#include "Src/Actor/Character/Common/CharacterModel.h"
 
 namespace
 {

@@ -153,11 +153,11 @@ namespace nsApp
 
 		std::unique_ptr<AnimationClip[]> m_animationClipList;                                                       /* 読み込んだアニメーションを管理する配列。*/
 
-
 		/* ファイルパスを定数化するための変数群。*/
 		const std::string m_basicAnimationFilePath = "Assets/animData/Player/BasicAnimation/";                      /* 基本動作用アニメーションのファイルパスの共通部分。*/
 		const std::string m_weaponAnimationFilePath = "Assets/animData/Player/";                                    /* 武器ごとのアニメーションのファイルパスの共通部分。*/
 		const std::string m_animationExtension = ".tka";                                                            /* アニメーションファイルの拡張子。*/
+
 
 		/* 武器の種類ごとに代入用変数を設定。*/
 		WeaponData m_greatSwordData;                                                                                /* 大剣のアニメーションと表示のズレを管理する変数。*/
@@ -165,6 +165,7 @@ namespace nsApp
 		int m_currentIndex = 0;
 		int m_animationNum = 0;                                                                                     /* 読み込んだアニメーションの数を管理する変数。*/
 		
+		bool m_isLoop = false;                                                                                      /* アニメーションをループするか管理する変数。*/
 	};
 }
 
