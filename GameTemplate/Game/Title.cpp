@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "Title.h"
 #include "Src/SceneLoader/SceneLoader.h"
+#include "Src/Actor/Character/Player/Player.h"
+
 
 namespace {
 	/*îwåiÅB*/

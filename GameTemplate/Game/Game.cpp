@@ -2,21 +2,27 @@
 #include "Game.h"
 
 #include "Src/Actor/Stage/LoadStageData.h"
+#include "Camera.h"
 #include "Src/Actor/Character/Player/Player.h"
 
 namespace nsApp
 {
 	namespace nsGame
 	{
+		Game::~Game()
+		{
+			DeleteGO(m_camera);
+		}
+
+
 		bool Game::Start()
 		{
 			/* 初期ステージのセット。*/
 			/* @TODO ステージ選択画面からこの処理を呼ぶようにする。*/
 			nsApp::nsStage::LoadStageData::GetInstance().ChangeStage(nsApp::nsStage::StageID::stage1);
 
-			/* @TODO カメラクラスを用意する。*/
-			g_camera3D->SetPosition(Vector3(0.0f, 150.0f, 100.0f));
-			g_camera3D->SetTarget(Vector3::Zero);
+			/* カメラを生成。*/
+			m_camera = NewGO<Camera>(0, "camera");
 
 			PhysicsWorld::GetInstance()->EnableDrawDebugWireFrame();
 

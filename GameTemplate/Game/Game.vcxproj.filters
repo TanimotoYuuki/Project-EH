@@ -25,6 +25,21 @@
     <Filter Include="Src\Actor\Character\Player">
       <UniqueIdentifier>{da70a1fa-0efa-48ea-9133-adc7e85184f2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Actor\Character\Player\State">
+      <UniqueIdentifier>{2a134188-d631-4f3b-8cbd-9d3445023e7f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Actor\Character\Player\State\AttackState">
+      <UniqueIdentifier>{e2193c71-ce4a-4474-a54a-8e5bca49af90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Actor\Character\Player\State\BasicState">
+      <UniqueIdentifier>{646065d7-eef5-4de5-9203-537ad129f7a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Actor\Character\Player\Component">
+      <UniqueIdentifier>{d4aaf225-f33d-4529-af00-671cab60fcf5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Actor\Character\Common">
+      <UniqueIdentifier>{7cfcdc79-c2bd-4857-8f61-d42aeeb96300}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -49,20 +64,45 @@
     <ClCompile Include="Src\SceneLoader\SceneLoader.cpp">
       <Filter>Src\SceneManager</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Actor\Character\CharacterModel.cpp">
-      <Filter>Src\Actor\Character</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Actor\Character\ICharacter.cpp">
-      <Filter>Src\Actor\Character</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Actor\Character\CharacterAnimation.cpp">
-      <Filter>Src\Actor\Character</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Actor\Character\Player\PlayerIdleState.cpp">
-      <Filter>Src\Actor\Character\Player</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Actor\Character\Player\Player.cpp">
       <Filter>Src\Actor\Character\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\PlayerInput.cpp">
+      <Filter>Src\Actor\Character\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\Common\CharacterAnimation.cpp">
+      <Filter>Src\Actor\Character\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\Common\CharacterModel.cpp">
+      <Filter>Src\Actor\Character\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\Common\ICharacter.cpp">
+      <Filter>Src\Actor\Character\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\Player\State\BasicState\PlayerIdleState.cpp">
+      <Filter>Src\Actor\Character\Player\State\BasicState</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\Player\State\BasicState\PlayerWalkState.cpp">
+      <Filter>Src\Actor\Character\Player\State\BasicState</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\Player\State\AttackState\PlayerAttackBaseState.cpp">
+      <Filter>Src\Actor\Character\Player\State\AttackState</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\Player\State\AttackState\PlayerNormalAttackState.cpp">
+      <Filter>Src\Actor\Character\Player\State\AttackState</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\Player\State\BasicState\PlayerJumpState.cpp">
+      <Filter>Src\Actor\Character\Player\State\BasicState</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\Player\State\BasicState\PlayerRunState.cpp">
+      <Filter>Src\Actor\Character\Player\State\BasicState</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\Player\State\BasicState\PlayerHitState.cpp">
+      <Filter>Src\Actor\Character\Player\State\BasicState</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\Player\State\BasicState\PlayerDethState.cpp">
+      <Filter>Src\Actor\Character\Player\State\BasicState</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -93,23 +133,48 @@
     <ClInclude Include="Src\SceneLoader\SceneLoader.h">
       <Filter>Src\SceneManager</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Actor\Character\CharacterModel.h">
-      <Filter>Src\Actor\Character</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Actor\Character\ICharacter.h">
-      <Filter>Src\Actor\Character</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Actor\Character\CharacterAnimation.h">
-      <Filter>Src\Actor\Character</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Actor\Character\IState.h">
-      <Filter>Src\Actor\Character</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Actor\Character\Player\PlayerIdleState.h">
-      <Filter>Src\Actor\Character\Player</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Actor\Character\Player\Player.h">
       <Filter>Src\Actor\Character\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h" />
+    <ClInclude Include="Src\Actor\Character\Player\PlayerInput.h">
+      <Filter>Src\Actor\Character\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Common\CharacterAnimation.h">
+      <Filter>Src\Actor\Character\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Common\CharacterModel.h">
+      <Filter>Src\Actor\Character\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Common\ICharacter.h">
+      <Filter>Src\Actor\Character\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Common\IState.h">
+      <Filter>Src\Actor\Character\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Player\State\BasicState\PlayerIdleState.h">
+      <Filter>Src\Actor\Character\Player\State\BasicState</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Player\State\BasicState\PlayerWalkState.h">
+      <Filter>Src\Actor\Character\Player\State\BasicState</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Player\State\AttackState\PlayerAttackBaseState.h">
+      <Filter>Src\Actor\Character\Player\State\AttackState</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Player\State\AttackState\PlayerNormalAttackState.h">
+      <Filter>Src\Actor\Character\Player\State\AttackState</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Player\State\BasicState\PlayerJumpState.h">
+      <Filter>Src\Actor\Character\Player\State\BasicState</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Player\State\BasicState\PlayerRunState.h">
+      <Filter>Src\Actor\Character\Player\State\BasicState</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Player\State\BasicState\PlayerHitState.h">
+      <Filter>Src\Actor\Character\Player\State\BasicState</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Player\State\BasicState\PlayerDethState.h">
+      <Filter>Src\Actor\Character\Player\State\BasicState</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "CharacterAnimation.h"
 
+
 namespace nsApp
 {
 	void CharacterAnimation::Initialize()
@@ -9,7 +10,7 @@ namespace nsApp
 		InitBasicAnimationFilePath();
 		
 		/* 大剣用のアニメーションのファイルパスを初期化。*/
-//		InitGreatSwordAnimationFilePath();
+		InitGreatSwordAnimationFilePath();
 	}
 
 
@@ -42,17 +43,19 @@ namespace nsApp
 	void CharacterAnimation::InitGreatSwordAnimationFilePath()
 	{
 		/* GreatSwordのアニメーションファイルパスを登録。*/
-		/* 通常攻撃。*/
-		m_greatSwordData.weaponAnimationList[AttackType::NormalAttack] = GetWeaponAnimationFilePath("GreatSword/GreatSword_Idle");
-		/* チャージ攻撃。*/
-		m_greatSwordData.weaponAnimationList[AttackType::ChargeAttack] = GetWeaponAnimationFilePath("GreatSword/GreatSword_ChargeAttack");
+		/* 待機状態。*/
+		m_greatSwordData.weaponAnimationList[AttackType::NormalAttack] = "Assets/animData/Player/WeaponAnimatio/GreatSword/GreatSword_NormalAttack.tka";
+
+		//m_greatSwordData.weaponAnimationList[AttackType::NormalAttack] = GetWeaponAnimationFilePath("WeaponAnimation/GreatSword/GreatSword_NormalAttack");
+		///* チャージ攻撃。*/
+		//m_greatSwordData.weaponAnimationList[AttackType::ChargeAttack] = GetWeaponAnimationFilePath("WeaponAnimation/GreatSword/GreatSword_ChargeAttack");
 		/* コンボ攻撃。*/
-		/* 1段目コンボ。*/
-		m_greatSwordData.weaponAnimationList[AttackType::ComboAttack1] = GetWeaponAnimationFilePath("GreatSword/GreatSword_Combo_01");
-		/* 2段目コンボ。*/
-		m_greatSwordData.weaponAnimationList[AttackType::ComboAttack2] = GetWeaponAnimationFilePath("GreatSword/GreatSword_Combo_02");
-		/* 3段目コンボ。*/
-		m_greatSwordData.weaponAnimationList[AttackType::ComboAttack3] = GetWeaponAnimationFilePath("GreatSword/GreatSword_Combo_03");
+		///* 1段目コンボ。*/
+		//m_greatSwordData.weaponAnimationList[AttackType::ComboAttack1] = GetWeaponAnimationFilePath("GreatSword/GreatSword_Combo_01");
+		///* 2段目コンボ。*/
+		//m_greatSwordData.weaponAnimationList[AttackType::ComboAttack2] = GetWeaponAnimationFilePath("GreatSword/GreatSword_Combo_02");
+		///* 3段目コンボ。*/
+		//m_greatSwordData.weaponAnimationList[AttackType::ComboAttack3] = GetWeaponAnimationFilePath("GreatSword/GreatSword_Combo_03");
 		/* 登録データをリストに登録する。*/
 		m_weaponDataList[WeaponType::GreatSword] = m_greatSwordData;
 	}
@@ -76,7 +79,21 @@ namespace nsApp
 		/* 基本動作をロード */
 		for (auto& pair : m_basicAnimationFilePathList)
 		{
-			m_basicIndexMap[pair.first] = SetAnimationClip(pair.second, true);
+			/* 特定のアニメーションは再生ループをオフにする。
+			 * 今回はダメージアニメーション。  
+			 */
+			if (pair.first == CharacterBasicAnimationList::Hit_Fly ||
+				pair.first == CharacterBasicAnimationList::Hit_UP)
+				/* ダメージと死亡はループさせない。*/
+				/* true だと ループ。*/
+				m_isLoop = false;
+
+			else
+				/* それ以外はループするように。*/
+				m_isLoop = true;
+
+			/* ループ方式を m_isLoopに任せる。*/
+			m_basicIndexMap[pair.first] = SetAnimationClip(pair.second, m_isLoop);
 		}
 
 		/* 武器用アニメーションをロード */

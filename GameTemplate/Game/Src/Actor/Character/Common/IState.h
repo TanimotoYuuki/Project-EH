@@ -56,6 +56,13 @@ namespace nsApp
 			*/
 			virtual void Exit() = 0;
 
+			/**
+			* @brief ステートの状態を切り替え処理。
+			*/
+			virtual bool RequestID(uint8_t& request)
+			{
+				return false;
+			}
 		};
 	}
 }
