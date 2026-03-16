@@ -12,7 +12,7 @@
 
 namespace
 {
-	const auto ANGLE_Y = 90.0f; /* ƒvƒŒƒCƒ„[‚Ì‰ŠúŠp“xB*/
+	const auto ANGLE_Y = 90.0f; /* ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®åˆæœŸè§’åº¦ã€‚*/
 	const Vector3 POS = Vector3(0.0f, 50.0f, 0.0f);
 }
 
@@ -22,13 +22,13 @@ namespace nsApp
 	{
 		bool Player::Start()
 		{
-			/* ƒAƒjƒ[ƒVƒ‡ƒ“‚Æƒ‚ƒfƒ‹‚ğ€”õ‚·‚éB*/
-			/* ƒAƒjƒ[ƒVƒ‡ƒ“ƒNƒ‰ƒX‚Ì‰Šú‰»ˆ—‚ğƒR[ƒ‹B*/
+			/* ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã¨ãƒ¢ãƒ‡ãƒ«ã‚’æº–å‚™ã™ã‚‹ã€‚*/
+			/* ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚¯ãƒ©ã‚¹ã®åˆæœŸåŒ–å‡¦ç†ã‚’ã‚³ãƒ¼ãƒ«ã€‚*/
 			m_playerAnimation.Initialize();
-			/* ¡‚Ì•Ší‚ğƒZƒbƒg‚·‚éB*/
+			/* ä»Šã®æ­¦å™¨ã‚’ã‚»ãƒƒãƒˆã™ã‚‹ã€‚*/
 			m_playerAnimation.LoadAnimation(m_currentWeapon);
 
-			/* ƒAƒjƒ[ƒVƒ‡ƒ“‚Æƒ‚ƒfƒ‹‚ğƒZƒbƒg‚·‚éB*/
+			/* ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã¨ãƒ¢ãƒ‡ãƒ«ã‚’ã‚»ãƒƒãƒˆã™ã‚‹ã€‚*/
 			m_model.LoadCharacterModel
 			(
 				CharacterModelType::Player_3P,
@@ -36,10 +36,10 @@ namespace nsApp
 				m_playerAnimation.GetAnimationClips()
 			);
 
-			/* •Ší‚Ìí—Ş‚ğƒZƒbƒg‚·‚éB*/
+			/* æ­¦å™¨ã®ç¨®é¡ã‚’ã‚»ãƒƒãƒˆã™ã‚‹ã€‚*/
 			m_model.LoadWeaponModel(CharacterModelType::Weapon_GreatSword);
 
-			/* ƒLƒƒƒ‰ƒXƒP[ƒ‹‚ğƒZƒbƒg‚·‚éB*/
+			/* ã‚­ãƒ£ãƒ©ã‚¹ã‚±ãƒ¼ãƒ«ã‚’ã‚»ãƒƒãƒˆã™ã‚‹ã€‚*/
 			m_model.SetScale(Vector3::One * 0.5f);
 			m_model.SetPosition(POS);
 
@@ -48,11 +48,11 @@ namespace nsApp
 
 			m_characterController.Init(5.0f, 8.0f, POS);
 
-			/* ƒXƒe[ƒg‚ğ¶¬‚·‚éB*/
+			/* ã‚¹ãƒ†ãƒ¼ãƒˆã‚’ç”Ÿæˆã™ã‚‹ã€‚*/
 			RegisterState();
 			m_stateMachine->ChangeState(m_stateFactory[PlayerStateID::enIdle]());
 
-			SetWaitInputTimer(10.0f);
+			SetWaitInputTimer(10);
 
 			return true;
 		}
@@ -60,8 +60,8 @@ namespace nsApp
 
 		void Player::Update()
 		{
-			/* ƒQ[ƒ€ŠJn’¼Œã”ƒtƒŒ[ƒ€‚Í“ü—Í‚ğó‚¯•t‚¯‚È‚¢*/
-			/*@‘S‘Ì‹¤—L: ‚»‚Ìd’¼‚Íƒ{ƒXí‚ÌŠJn‰‰o‚ÅƒJƒo[‚·‚é*/
+			/* ã‚²ãƒ¼ãƒ é–‹å§‹ç›´å¾Œæ•°ãƒ•ãƒ¬ãƒ¼ãƒ ã¯å…¥åŠ›ã‚’å—ã‘ä»˜ã‘ãªã„*/
+			/*@å…¨ä½“å…±æœ‰: ãã®ç¡¬ç›´ã¯ãƒœã‚¹æˆ¦ã®é–‹å§‹æ¼”å‡ºã§ã‚«ãƒãƒ¼ã™ã‚‹*/
 			if (m_inputWaitTimer > 0)
 			{
 				m_inputWaitTimer--;
@@ -72,19 +72,19 @@ namespace nsApp
 				m_playerInput.SetInputEnable(true);
 
 
-			/* ƒ‚ƒfƒ‹‚ÌXV‚æ‚èæ‚É“ü—Í”»’è‚ğXV‚·‚éB*/
+			/* ãƒ¢ãƒ‡ãƒ«ã®æ›´æ–°ã‚ˆã‚Šå…ˆã«å…¥åŠ›åˆ¤å®šã‚’æ›´æ–°ã™ã‚‹ã€‚*/
 			m_playerInput.Update();
 
-			/* ƒXƒe[ƒgƒ}ƒV[ƒ“‚ğXV‚·‚éB*/
+			/* ã‚¹ãƒ†ãƒ¼ãƒˆãƒã‚·ãƒ¼ãƒ³ã‚’æ›´æ–°ã™ã‚‹ã€‚*/
 			m_stateMachine->Update();
 
-			/* ƒŠƒNƒGƒXƒg‚ğó‚¯æ‚Á‚Ä•K—v‚ÈƒXƒe[ƒg‚ğƒR[ƒ‹B*/
+			/* ãƒªã‚¯ã‚¨ã‚¹ãƒˆã‚’å—ã‘å–ã£ã¦å¿…è¦ãªã‚¹ãƒ†ãƒ¼ãƒˆã‚’ã‚³ãƒ¼ãƒ«ã€‚*/
 			if (m_stateMachine->GetCurrentState()->RequestID(m_currentStateID))
 			{
-				/* ƒXƒe[ƒg‚Ìí—Ş‚ğƒLƒƒƒXƒg‚·‚éB*/
+				/* ã‚¹ãƒ†ãƒ¼ãƒˆã®ç¨®é¡ã‚’ã‚­ãƒ£ã‚¹ãƒˆã™ã‚‹ã€‚*/
 				m_playerStateID = static_cast<PlayerStateID>(m_currentStateID);
 
-				/* “o˜^‚³‚ê‚Ä‚¢‚éƒXƒe[ƒg‚È‚çChangeState‚Éî•ñ‚ğ“n‚·B*/
+				/* ç™»éŒ²ã•ã‚Œã¦ã„ã‚‹ã‚¹ãƒ†ãƒ¼ãƒˆãªã‚‰ChangeStateã«æƒ…å ±ã‚’æ¸¡ã™ã€‚*/
 				if (m_stateFactory.count(m_playerStateID) > 0)
 					m_stateMachine->ChangeState(m_stateFactory[m_playerStateID]());
 
@@ -92,7 +92,7 @@ namespace nsApp
 
 			m_model.SetPosition(m_currentPosition);
 
-			/* ICharacterƒNƒ‰ƒX‚ÌXVˆ—‚ğƒR[ƒ‹B*/
+			/* ICharacterã‚¯ãƒ©ã‚¹ã®æ›´æ–°å‡¦ç†ã‚’ã‚³ãƒ¼ãƒ«ã€‚*/
 			ICharacter::Update();
 			m_model.Update();
 		}
@@ -100,7 +100,7 @@ namespace nsApp
 
 		void Player::Render(RenderContext& rc)
 		{
-			/* •`‰æB*/
+			/* æç”»ã€‚*/
 			ICharacter::Render(rc);
 		}
 
@@ -114,25 +114,25 @@ namespace nsApp
 
 		void Player::RegisterState()
 		{
-			/* ‘Ò‹@ó‘ÔB*/
+			/* å¾…æ©ŸçŠ¶æ…‹ã€‚*/
 			m_stateFactory[PlayerStateID::enIdle] = []() { return new nsState::PlayerIdleState(); };
 
-			/* •àsó‘ÔB*/ 
+			/* æ­©è¡ŒçŠ¶æ…‹ã€‚*/ 
 			m_stateFactory[PlayerStateID::enWalk] = []() { return new nsState::PlayerWalkState(); };
 
-			/* ƒWƒƒƒ“ƒvó‘ÔB*/
+			/* ã‚¸ãƒ£ãƒ³ãƒ—çŠ¶æ…‹ã€‚*/
 			m_stateFactory[PlayerStateID::enJump] = []() { return new nsState::PlayerJumpState(); };
 
-			/* ‘–‚èó‘ÔB*/
+			/* èµ°ã‚ŠçŠ¶æ…‹ã€‚*/
 			m_stateFactory[PlayerStateID::enRun] = []() { return new nsState::PlayerRunState(); };
 
-			/* ƒ_ƒ[ƒWó‘ÔB*/
+			/* ãƒ€ãƒ¡ãƒ¼ã‚¸çŠ¶æ…‹ã€‚*/
 			m_stateFactory[PlayerStateID::enHit] = []() { return new nsState::PlayerHitState(); };
 
-			/* €–Só‘ÔB*/
+			/* æ­»äº¡çŠ¶æ…‹ã€‚*/
 			m_stateFactory[PlayerStateID::enDeath] = []() { return new nsState::PlayerDethState(); };
 
-			/* ’ÊíUŒ‚ó‘ÔB*/
+			/* é€šå¸¸æ”»æ’ƒçŠ¶æ…‹ã€‚*/
 			m_stateFactory[PlayerStateID::enAttack] = []() { return new nsState::PlayerNormalAttackState(); };
 		}
 	}
