@@ -18,14 +18,20 @@ namespace nsApp
 			/* タイマーを加算する。*/
 			m_attackTimer++;
 
-			if (m_attackTimer > 5)
+
+			if (g_pad[0]->IsTrigger(enButtonB))
 			{
-				/* 攻撃が終了後、Idle状態へ戻るように。*/
-				if (!m_player->IsPlayAnimation())
-				{
-					/* Idle状態へ遷移。*/
-					m_stateMachine->ChangeState(new PlayerIdleState());
-				}
+				/* 
+				 *タイマーを加算する。
+				 * Bボタンを押すごとにタイマーを加算し、当てはまるなら連続攻撃に繋げる。
+				 */
+				m_rushCount++;
+			}
+
+			if (m_attackTimer > 5 && !m_player->IsPlayAnimation())
+			{
+				/* Idle状態へ遷移。*/
+				m_stateMachine->ChangeState(new PlayerIdleState());
 			}
 		}
 

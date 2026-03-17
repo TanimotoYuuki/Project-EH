@@ -32,6 +32,10 @@ namespace nsApp
 				/* ステージ土台モデルを原点に配置する。*/
 				m_backGroundModel->SetPosition(Vector3::Zero);
 
+				/* モデルを拡大。*/
+				m_backGroundModel->SetScale(m_stageData.stageSacle);
+				m_backGroundModel->Update();
+
 				/* 当たり判定の作成。*/
 				m_stagePhysicsStaticObject.CreateFromModel(m_backGroundModel->GetModel(), m_backGroundModel->GetModel().GetWorldMatrix());
 			}
@@ -40,7 +44,7 @@ namespace nsApp
 
 		void Stage::Update()
 		{
-			/* ステージの更新。s*/
+			/* ステージの更新。*/
 			if(m_backGroundModel)
 			   m_backGroundModel->Update();
 		}

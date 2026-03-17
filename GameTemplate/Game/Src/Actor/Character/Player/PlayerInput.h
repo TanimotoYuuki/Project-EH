@@ -31,6 +31,42 @@ namespace nsApp
 			return m_isAttack;
 		}
 
+		/* 通常攻撃判定。*/
+		inline bool IsNormalAttack() const
+		{
+			return m_isNormalAttack;
+		}
+
+		/* チャージ攻撃判定。*/
+		inline bool IsChargeAttack() const
+		{
+			return m_isChargeAttack;
+		}
+
+		/* 空中攻撃判定。*/
+		inline bool IsAirAttack() const
+		{
+			return m_isAirAttack;
+		}
+
+		/* 連続攻撃開始判定。*/
+		inline bool IsRushStart() const
+		{
+			return m_isRushStart;
+		}
+
+		/* 連続攻撃終了判定。*/
+		inline bool IsRushEnd() const
+		{
+			return m_isRushEnd;
+		}
+
+		/* コンボ攻撃判定。*/
+		inline bool IsComboAttack() const
+		{
+			return m_isComboAttack;
+		}
+
 		/* ジャンプ判定。*/ 
 		inline bool IsJump() const
 		{
@@ -69,17 +105,26 @@ namespace nsApp
 
 
 	private:
-		bool m_isAttack = false;     /* 攻撃したかどうかを判定。*/
-		bool m_isJump = false;       /* ジャンプしたかどうかを判定。*/
-		bool m_isMove = false;       /* 移動したかどうかを判定。*/
-		bool m_isRun = false;        /* 走ったかどうかを判定。*/
-		bool m_isDamage = false;     /* ダメージを受けたかどうかを判定。*/
-		bool m_isDeath = false;      /* 死亡したかどうかを判定。*/
-		bool m_isInputEnable = true; /* 入力を検知。*/
+		bool m_isAttack = false;             /* 攻撃したかどうかを判定。*/
+		bool m_isJump = false;               /* ジャンプしたかどうかを判定。*/
+		bool m_isMove = false;               /* 移動したかどうかを判定。*/
+		bool m_isRun = false;                /* 走ったかどうかを判定。*/
+		bool m_isDamage = false;             /* ダメージを受けたかどうかを判定。*/
+		bool m_isDeath = false;              /* 死亡したかどうかを判定。*/
+		bool m_isNormalAttack = false;       /* 攻撃入力を検知。*/
+		bool m_isChargeAttack = false;       /* チャージ攻撃入力を検知。*/
+		bool m_isAirAttack = false;          /* 空中攻撃入力を検知。*/
+		bool m_isComboAttack = false;        /* コンボ攻撃入力を検知。*/
+		bool m_isInputEnable = true;         /* 入力を検知。*/
+		bool m_isPressButton = false;        /* Bボタンが押されているかどうかを判定。*/
+		bool m_isRushStart = false;          /* 連続攻撃が始まっているかを検知。*/
+		bool m_isRushEnd = false;            /* 連続攻撃が終わっているかを検知。*/
 
-		float m_stickX = 0.0f;        /* スティックのX軸の値。*/
-		float m_stickY = 0.0f;        /* スティックのY軸の値。*/
 
-		Vector3 m_moveVec;           /* 移動ベクトル。*/
+		float m_stickX = 0.0f;               /* スティックのX軸の値。*/
+		float m_stickY = 0.0f;               /* スティックのY軸の値。*/
+		float m_chargeButtonTimer = 0.0f;    /* チャージ攻撃と判定するために必要なBボタンを長押ししなければならない時間。*/
+
+		Vector3 m_moveVec = Vector3::Right;  /* 移動ベクトル。*/
 	};
 }

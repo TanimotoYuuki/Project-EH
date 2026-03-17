@@ -44,18 +44,18 @@ namespace nsApp
 	{
 		/* GreatSwordのアニメーションファイルパスを登録。*/
 		/* 待機状態。*/
-		m_greatSwordData.weaponAnimationList[AttackType::NormalAttack] = "Assets/animData/Player/WeaponAnimation/GreatSword/GreatSword_NormalAttack.tka";
+		m_greatSwordData.weaponAnimationList[AttackType::NormalAttack] = GetWeaponAnimationFilePath("GreatSword/GreatSword_NormalAttack");
 
-		//m_greatSwordData.weaponAnimationList[AttackType::NormalAttack] = GetWeaponAnimationFilePath("WeaponAnimation/GreatSword/GreatSword_NormalAttack");
-		///* チャージ攻撃。*/
-		//m_greatSwordData.weaponAnimationList[AttackType::ChargeAttack] = GetWeaponAnimationFilePath("WeaponAnimation/GreatSword/GreatSword_ChargeAttack");
-		/* コンボ攻撃。*/
-		///* 1段目コンボ。*/
-		//m_greatSwordData.weaponAnimationList[AttackType::ComboAttack1] = GetWeaponAnimationFilePath("GreatSword/GreatSword_Combo_01");
-		///* 2段目コンボ。*/
-		//m_greatSwordData.weaponAnimationList[AttackType::ComboAttack2] = GetWeaponAnimationFilePath("GreatSword/GreatSword_Combo_02");
-		///* 3段目コンボ。*/
-		//m_greatSwordData.weaponAnimationList[AttackType::ComboAttack3] = GetWeaponAnimationFilePath("GreatSword/GreatSword_Combo_03");
+		/* チャージ攻撃。*/
+		m_greatSwordData.weaponAnimationList[AttackType::ChargeAttack] = GetWeaponAnimationFilePath("GreatSword/GreatSword_ChargeAttack");
+
+		/* 空中攻撃。*/
+		m_greatSwordData.weaponAnimationList[AttackType::AirAttack] = "Assets/animData/Player/WeaponAnimation/GreatSword/GreatSword_AirAttack.tka";
+
+		/* 連続攻撃。*/
+		m_greatSwordData.weaponAnimationList[AttackType::RushAttack_Start] = GetWeaponAnimationFilePath("GreatSword/GreatSword_Rush_Start");
+		m_greatSwordData.weaponAnimationList[AttackType::RushAttack_End] = GetWeaponAnimationFilePath("GreatSword/GreatSword_Rush_End");
+
 		/* 登録データをリストに登録する。*/
 		m_weaponDataList[WeaponType::GreatSword] = m_greatSwordData;
 	}

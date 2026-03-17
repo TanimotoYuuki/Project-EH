@@ -1,10 +1,21 @@
 ﻿#include "stdafx.h"
 #include "PlayerInput.h"
 
+namespace
+{
+	const auto CHARGE_ATTACK_DETECTION = 30.0f; /* チャージ攻撃の判定時間。*/
+	const auto CHARGE_FLAG_TRUE = 1;
+	const auto CHARGE_FLAG_FALSE = 0;
+}
+
 namespace nsApp
 {
 	void PlayerInput::Update()
 	{
+		/* Bボタンを押しているかを取得。*/
+		m_isPressButton = g_pad[0]->IsPress(enButtonB);
+
+
 		/* 入力判定。*/
 		if (!m_isInputEnable)
 		{
@@ -14,12 +25,15 @@ namespace nsApp
 			m_isRun = false;             /* 走りフラグ。*/
 			m_isDamage = false;          /* ダメージフラグ。*/
 			m_isDeath = false;           /* 死亡フラグ。*/
+			m_isNormalAttack = false;    /* 通常攻撃フラグ。*/
+			m_isChargeAttack = false;    /* チャージ攻撃フラグ。*/
+			m_isAirAttack = false;       /* 空中攻撃フラグ。*/
+			m_isComboAttack = false;     /* コンボ攻撃フラグ。*/
+			m_isRushStart = false;       /* 連続攻撃開始フラグ。*/
+			m_isRushEnd = false;         /* 連続攻撃終了フラグ。*/
 			m_moveVec = Vector3::Zero;   
 			return;
 		}
-
-		/* 攻撃入力判定。*/
-		m_isAttack = g_pad[0]->IsTrigger(enButtonB);
 
 		/* ジャンプ判定。*/
 		m_isJump = g_pad[0]->IsTrigger(enButtonA);
@@ -44,5 +58,31 @@ namespace nsApp
 
 		/* スティックの押し具合は厳しいので特定のボタン同士で走れるようにする。*/
 		m_isRun = (g_pad[0]->IsPress(enButtonLB1) && m_isMove);
+
+
+		/* 攻撃入力判定。*/
+
+        /* 通常攻撃。 
+		 * 30F 押しているかを判定とする。
+		 */
+		m_isNormalAttack = (!m_isPressButton && m_chargeButtonTimer > 0 && m_chargeButtonTimer < CHARGE_ATTACK_DETECTION);
+
+		/* チャージ攻撃。
+		* 30F以上(長押し) Bボタンを押しているかを判定。
+		*/
+		m_isChargeAttack = (!m_isPressButton && m_chargeButtonTimer >= CHARGE_ATTACK_DETECTION);
+
+		/* 空中攻撃。
+		* 空中でBボタンを押しているかを判定。
+		*/
+		m_isAirAttack = g_pad[0]->IsTrigger(enButtonB);
+
+		/* タイマー処理。
+		* 押せば加算。
+		* 離せばリセット。
+		*/
+		m_chargeButtonTimer = m_isPressButton ? m_chargeButtonTimer + CHARGE_FLAG_TRUE : CHARGE_FLAG_FALSE;
+
+
 	}
 }

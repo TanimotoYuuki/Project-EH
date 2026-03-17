@@ -2,11 +2,13 @@
 #include "PlayerWalkState.h"
 #include "Src/Actor/Character/Player/Player.h"
 #include "Src/Actor/Character/Player/PlayerInput.h"
+#include "Src/Actor/Character/Player/Component/StateTransitionDiagram.h"
 
 namespace
 {
-	const auto WALK_SPEED = 1.0;    /* 歩行速度。*/
-	const auto MODEL_ANGLE = 90.0f; /* モデルの回転角度。*/
+	const auto WALK_SPEED = 50;                /* 歩行速度。*/
+	const auto MODEL_ANGLE = 90.0f;            /* モデルの回転角度。*/
+	const auto MOVE_FRAME_TIME = 1.0f / 60.0f; /* 1フレームあたりの固定時間。*/
 }
 
 namespace nsApp
@@ -28,56 +30,46 @@ namespace nsApp
 			/* 入力判定クラスを取得。*/
 			const auto& inputClass = m_player->GetInputClass();
 
-			/* */
+			/* 動作判定を確認。*/
 			if (inputClass.IsMove())
 			{
 				/* 歩行速度をセット。*/
 				SetWalkSpeed(WALK_SPEED);
 
+				/* 現在の座標を取得する。*/
 				m_currentPosition = m_player->GetPosition();
 				m_moveDirection = inputClass.GetMoveVector();
 
 				/* 現在の座標にスティックの入力量と速度を加算。*/
-				m_player->SetPosition(m_currentPosition + (m_moveDirection * m_walkSpeed));
+				m_moveVector = m_moveDirection * m_walkSpeed;
+				m_player->GetCharacterController().Execute(m_moveVector, MOVE_FRAME_TIME);
+				m_player->SetPosition(m_player->GetCharacterController().GetPosition());
 
-
-                /* 回転軸を制御。*/
+				/* 回転軸を制御。*/
 				if (m_moveDirection.x > 0.01f)
+				{
 					m_player->SetAngle(MODEL_ANGLE);
+					m_player->SetForwardVector(Vector3::Right);
+				}
 
-				else if(m_moveDirection.x < -0.01f)
+				else if (m_moveDirection.x < -0.01f)
+				{
 					m_player->SetAngle(-MODEL_ANGLE);
+					m_player->SetForwardVector(Vector3::Left);
+				}
 			}
 		}
 
 
 		bool PlayerWalkState::RequestID(uint8_t& id)
 		{
-			const auto& inputClass = m_player->GetInputClass();
-
-			/* 攻撃ボタンが押されたら攻撃ステートへ。*/
-			if (inputClass.IsAttack())
-			{
-				id = static_cast<uint8_t>(nsActor::PlayerStateID::enAttack);
+			/* 状態遷移全体を確認。*/
+			if (StateTransitionDiagram::CheckCommonTransition(m_player->GetInputClass(), id))
 				return true;
-			}
 
-			if (inputClass.IsJump())
-			{
-				id = static_cast<uint8_t>(nsActor::PlayerStateID::enJump);
-				return true;
-			}
-
-			/* スティックの入力量が無くなったら待機ステートに戻る。*/
-			if (!inputClass.IsMove())
+			if (!m_player->GetInputClass().IsMove())
 			{
 				id = static_cast<uint8_t>(nsActor::PlayerStateID::enIdle);
-				return true;
-			}
-
-			if (inputClass.IsRun())
-			{
-				id = static_cast<uint8_t>(nsActor::PlayerStateID::enRun);
 				return true;
 			}
 

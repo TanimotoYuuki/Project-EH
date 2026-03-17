@@ -1,6 +1,7 @@
 ﻿#include "stdafx.h"
 #include "Player.h"
 
+/* 基本動作ステート。*/
 #include "Src/Actor/Character/Player/State/BasicState/PlayerIdleState.h"
 #include "Src/Actor/Character/Player/State/BasicState/PlayerWalkState.h"
 #include "Src/Actor/Character/Player/State/BasicState/PlayerJumpState.h"
@@ -8,7 +9,13 @@
 #include "Src/Actor/Character/Player/State/BasicState/PlayerHitState.h"
 #include "Src/Actor/Character/Player/State/BasicState/PlayerDethState.h"
 
+/* 攻撃ステート。*/
 #include "Src/Actor/Character/Player/State/AttackState/PlayerNormalAttackState.h"
+#include "Src/Actor/Character/Player/State/AttackState/PlayerChargeAttackState.h"
+#include "Src/Actor/Character/Player/State/AttackState/PlayerAirAttackState.h"
+#include "Src/Actor/Character/Player/State/AttackState/ComboState/PlayerRushStartState.h"
+#include "Src/Actor/Character/Player/State/AttackState/ComboState/PlayerRushEndState.h"
+
 
 namespace
 {
@@ -40,7 +47,12 @@ namespace nsApp
 			m_model.LoadWeaponModel(CharacterModelType::Weapon_GreatSword);
 
 			/* キャラスケールをセットする。*/
-			m_model.SetScale(Vector3::One * 0.5f);
+			m_model.SetCharacterScale(Vector3::One * 0.5f);
+
+			/* 武器の調整。*/
+			m_model.SetWeaponScale(Vector3::One * 0.3f);
+			m_model.SetWeaponOffset(Vector3(0.0f, 15.0f, 0.0f));
+
 			m_model.SetPosition(POS);
 
 			m_angle.AddRotationDegY(ANGLE_Y);
@@ -117,7 +129,7 @@ namespace nsApp
 			/* 待機状態。*/
 			m_stateFactory[PlayerStateID::enIdle] = []() { return new nsState::PlayerIdleState(); };
 
-			/* 歩行状態。*/ 
+			/* 歩行状態。*/
 			m_stateFactory[PlayerStateID::enWalk] = []() { return new nsState::PlayerWalkState(); };
 
 			/* ジャンプ状態。*/
@@ -133,7 +145,20 @@ namespace nsApp
 			m_stateFactory[PlayerStateID::enDeath] = []() { return new nsState::PlayerDethState(); };
 
 			/* 通常攻撃状態。*/
-			m_stateFactory[PlayerStateID::enAttack] = []() { return new nsState::PlayerNormalAttackState(); };
+			m_stateFactory[PlayerStateID::enNormalAttack] = []() { return new nsState::PlayerNormalAttackState(); };
+
+			/* チャージ攻撃状態。*/
+			m_stateFactory[PlayerStateID::enChargeAttack] = []() { return new nsState::PlayerChargeAttackState(); };
+
+			//////////////////////////////////////////////////////////////////
+			/* ※空中攻撃は ジャンプ中のみ遷移するようにしたいため、未登録。*/
+			//////////////////////////////////////////////////////////////////
+
+            /* 連続攻撃開始状態。*/
+			m_stateFactory[PlayerStateID::enRushStart] = []() { return new nsState::PlayerRushStartState(); };
+
+			/* 連続攻撃ループ状態。*/ 
+			m_stateFactory[PlayerStateID::enRushEnd] = []() { return new nsState::PlayerRushEndState(); };
 		}
 	}
 }
