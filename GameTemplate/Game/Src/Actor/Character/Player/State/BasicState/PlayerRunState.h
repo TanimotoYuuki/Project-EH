@@ -67,6 +67,7 @@ namespace nsApp
 		private:
 			float m_runSpeed;                           /* 走る速度。*/
 
+			Vector3 m_moveVector = Vector3::Zero;       /* 走る際の移動ベクトル。*/
 			Vector3 m_currentPosition = Vector3::Zero;  /* 現在の座標。*/
 			Vector3 m_moveDirection = Vector3::Zero;    /* 移動ベクトル。*/
 		};

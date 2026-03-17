@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "PlayerIdleState.h"
-
+#include "Src/Actor/Character/Player/Component/StateTransitionDiagram.h"
 #include "Src/Actor/Character/Player/State/AttackState/PlayerNormalAttackState.h"
 
 namespace nsApp
@@ -38,44 +38,7 @@ namespace nsApp
 
 		bool PlayerIdleState::RequestID(uint8_t& id)
 		{
-			const auto& inputClass = m_player->GetInputClass();
-
-			/* 死亡判定。*/
-			if (inputClass.IsDeath())
-			{
-				id = static_cast<uint8_t>(nsActor::PlayerStateID::enDeath);
-				return true;
-			}
-
-			/* ダメージ状態。*/
-			if (inputClass.IsDamage())
-			{
-				id = static_cast<uint8_t>(nsActor::PlayerStateID::enHit);
-				return true;
-			}
-
-			/* ジャンプ状態。*/
-			if (inputClass.IsJump())
-			{
-				id = static_cast<uint8_t>(nsActor::PlayerStateID::enJump);
-				return true;
-			}
-
-			/* 走り状態。*/
-			if (inputClass.IsRun())
-			{
-				id = static_cast<uint8_t>(nsActor::PlayerStateID::enRun);
-				return true;
-			}
-
-			/* 歩き状態。*/
-			if(inputClass.IsMove())
-			{
-				id = static_cast<uint8_t>(nsActor::PlayerStateID::enWalk);
-				return true;
-			}
-
-			return false;
+			return StateTransitionDiagram::CheckCommonTransition(m_player->GetInputClass(), id);
 		}
 	}
 }

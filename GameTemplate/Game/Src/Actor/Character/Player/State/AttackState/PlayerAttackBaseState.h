@@ -46,6 +46,7 @@ namespace nsApp
 
 		protected:
 			int m_attackTimer = 0;                  /* 攻撃の時間管理用タイマー。*/
+			int m_rushCount = 0;                    /* 連続攻撃の回数管理用カウンター。*/
 		};
 	}
 }

@@ -1,5 +1,13 @@
 #include "stdafx.h"
 #include "PlayerJumpState.h"
+#include "Src/Actor/Character/Player/State/AttackState/PlayerAirAttackState.h"
+#include "Src/Actor/Character/Player/Component/StateTransitionDiagram.h"
+
+namespace
+{
+	const auto JUMP_POWER = 500.0f;            /* ジャンプの初速（高さ）。*/
+	const auto MOVE_FRAME_SPEED = 1.0 / 60.0f; /* 前進するフレーム数。*/
+}
 
 namespace nsApp
 {
@@ -13,8 +21,11 @@ namespace nsApp
 			/* ジャンプアニメーションを再生する。 */
 			m_player->PlayBasicAnimation(CharacterBasicAnimationList::Jump);
 
-			/* ジャンプの初速（高さ）を設定する。 */
-			SetJumpVelocity(500.0f);
+			if (m_jumpVelocity == 0.0f)
+			{
+				/* ジャンプの初速（高さ）を設定する。 */
+				SetJumpVelocity(JUMP_POWER);
+			}
 		}
 
 
@@ -22,9 +33,18 @@ namespace nsApp
 		{
 			/* 毎フレーム、移動速度をゼロにリセットする。 */
 			m_moveSpeed = Vector3::Zero;
-
 			/* 入力情報を取得する。 */
 			const auto& inputClass = m_player->GetInputClass();
+
+			/* 空中でのボタンアクションで攻撃状態に遷移。*/
+			if (inputClass.IsAirAttack())
+			{
+				auto airAttack = new PlayerAirAttackState();
+				airAttack->SetFallVelocity(m_jumpVelocity);
+				m_stateMachine->ChangeState(airAttack);
+				return;
+			}
+
 
 			/* スティック入力があれば、空中のX・Z軸の移動量を計算する。 */
 			if (inputClass.IsMove())
@@ -40,18 +60,13 @@ namespace nsApp
 
 			/* 落下スピードの限界を設定（すり抜けなどのバグ防止）。 */
 			if (m_jumpVelocity < -1200.0f)
-			{
 				m_jumpVelocity = -1200.0f;
-			}
 
 			/* 計算したY軸の速度を移動速度ベクトルに設定する。 */
 			m_moveSpeed.y = m_jumpVelocity;
 
-			/* 1フレームあたりの固定時間を設定する。 */
-			auto frameTime = 1.0f / 60.0f;
-
 			/* キャラクターコントローラーを使って移動処理を実行する。 */
-			m_player->GetCharacterController().Execute(m_moveSpeed, frameTime);
+			m_player->GetCharacterController().Execute(m_moveSpeed, MOVE_FRAME_SPEED);
 
 			/* 計算結果の安全な座標をプレイヤー本体に設定する。 */
 			m_player->SetPosition(m_player->GetCharacterController().GetPosition());
@@ -63,12 +78,13 @@ namespace nsApp
 
 		bool PlayerJumpState::RequestID(uint8_t& id)
 		{
-			/* 地面に着地しており、かつ落下速度がゼロ以下の場合に待機状態へ遷移する。 */
-			if (m_player->GetCharacterController().IsOnGround() && m_jumpVelocity <= 0.0f)
+			/* 着地したらIdleに戻る。*/
+			if (m_player->GetCharacterController().IsOnGround())
 			{
 				id = static_cast<uint8_t>(nsActor::PlayerStateID::enIdle);
 				return true;
 			}
+
 			return false;
 		}
 	}

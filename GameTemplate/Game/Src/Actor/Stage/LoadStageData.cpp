@@ -85,6 +85,9 @@ namespace nsApp
 			/* スケールをセット。*/
 			m_currentStageData.playerInitPosition = Vector3::Zero;
 
+			/* 大きさをセット。*/
+			m_currentStageData.stageSacle = Vector3(3.0f, 2.0f, 3.0f);
+
 			/* リストに追加する。*/
 			m_stageDataList.push_back(m_currentStageData);
 		}
