@@ -40,6 +40,9 @@
     <Filter Include="Src\Actor\Character\Common">
       <UniqueIdentifier>{7cfcdc79-c2bd-4857-8f61-d42aeeb96300}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Actor\Character\Player\State\AttackState\ComboState">
+      <UniqueIdentifier>{61a55a4c-305f-4379-89b6-589646086c58}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -103,6 +106,21 @@
     </ClCompile>
     <ClCompile Include="Src\Actor\Character\Player\State\BasicState\PlayerDethState.cpp">
       <Filter>Src\Actor\Character\Player\State\BasicState</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\Player\State\AttackState\PlayerChargeAttackState.cpp">
+      <Filter>Src\Actor\Character\Player\State\AttackState</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\Player\State\AttackState\PlayerAirAttackState.cpp">
+      <Filter>Src\Actor\Character\Player\State\AttackState</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerRushStartState.cpp">
+      <Filter>Src\Actor\Character\Player\State\AttackState\ComboState</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerRushEndState.cpp">
+      <Filter>Src\Actor\Character\Player\State\AttackState\ComboState</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerComboAttackState.cpp">
+      <Filter>Src\Actor\Character\Player\State\AttackState\ComboState</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -175,6 +193,24 @@
     </ClInclude>
     <ClInclude Include="Src\Actor\Character\Player\State\BasicState\PlayerDethState.h">
       <Filter>Src\Actor\Character\Player\State\BasicState</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Player\State\AttackState\PlayerChargeAttackState.h">
+      <Filter>Src\Actor\Character\Player\State\AttackState</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Player\Component\StateTransitionDiagram.h">
+      <Filter>Src\Actor\Character\Player\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Player\State\AttackState\PlayerAirAttackState.h">
+      <Filter>Src\Actor\Character\Player\State\AttackState</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerRushStartState.h">
+      <Filter>Src\Actor\Character\Player\State\AttackState\ComboState</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerRushEndState.h">
+      <Filter>Src\Actor\Character\Player\State\AttackState\ComboState</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerComboAttackState.h">
+      <Filter>Src\Actor\Character\Player\State\AttackState\ComboState</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

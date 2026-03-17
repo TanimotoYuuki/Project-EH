@@ -3,8 +3,9 @@
 
 namespace
 {
-	const auto RUN_SPEED = 2.0;     /* 走行速度。*/
-	const auto MODEL_ANGLE = 90.0f; /* モデルの回転角度。*/
+	const auto RUN_SPEED = 120.0;              /* 走行速度。*/
+	const auto MODEL_ANGLE = 90.0f;            /* モデルの回転角度。*/
+	const auto MOVE_FRAME_TIME = 1.0f / 60.0f; /* 1フレームあたりの固定時間。*/
 }
 
 namespace nsApp
@@ -31,14 +32,22 @@ namespace nsApp
 				SetPosition(m_player->GetPosition());
 				SetMoveDirection(inputClass.GetMoveVector());
 
-				m_player->SetPosition(m_currentPosition + (m_moveDirection * m_runSpeed));
+				m_moveVector = m_moveDirection * m_runSpeed;
+				m_player->GetCharacterController().Execute(m_moveVector, MOVE_FRAME_TIME);
+				m_player->SetPosition(m_player->GetCharacterController().GetPosition());
 
 				/* 回転軸を制御。*/
-				if(m_moveDirection.x > 0.01f)
+				if (m_moveDirection.x > 0.01f)
+				{
 					m_player->SetAngle(MODEL_ANGLE);
+					m_player->SetForwardVector(Vector3::Right);
+				}
 
-				else if(m_moveDirection.x < -0.01f)
+				else if (m_moveDirection.x < -0.01f)
+				{
 					m_player->SetAngle(-MODEL_ANGLE);
+					m_player->SetForwardVector(Vector3::Left);
+				}
 			}
 		}
 
@@ -49,7 +58,7 @@ namespace nsApp
 
 			if (inputClass.IsAttack())
 			{
-				id = static_cast<uint8_t>(nsActor::PlayerStateID::enAttack);
+				id = static_cast<uint8_t>(nsActor::PlayerStateID::enNormalAttack);
 				return true;
 			}
 

@@ -95,17 +95,27 @@ namespace nsApp
 				m_characterModelRender->SetRotation(rotation);
 		}
 
-		/* 大きさを設定。*/
-	    void SetScale(const Vector3& scale)
+		/* キャラモデルの大きさを設定。*/
+	    inline void SetCharacterScale(const Vector3& scale)
 		{
 			if (m_characterModelRender)
 				m_characterModelRender->SetScale(scale);
+		}
 
+		/* 武器モデルの大きさを設定。*/
+		inline void SetWeaponScale(const Vector3& scale)
+		{
 			if (m_weaponModelRender)
 				m_weaponModelRender->SetScale(scale);
 		}
 
-		/* 武器を創始するボーンの名前を変更する。*/
+		/* 武器のずれを調整。*/
+		inline void SetWeaponOffset(const Vector3& offset) 
+		{
+			m_weaponOffset = offset;
+		}
+
+		/* 武器を装備するボーンの名前を変更する。*/
 		inline void SetWeaponAttackBone(const std::wstring& boneName)
 		{
 			m_attackBoneName = boneName;
@@ -156,6 +166,7 @@ namespace nsApp
 		Vector3 m_yAxis;                                                                                                       /* 武器を装備させるときの右手のボーンの行列から抽出したY軸を管理する変数。*/
 		Vector3 m_zAxis;                                                                                                       /* 武器を装備させるときの右手のボーンの行列から抽出したZ軸を管理する変数。*/
 		Vector3 m_matrixPosition;
-
+		Vector3 m_weaponOffset;                                                                                                /* 武器の位置のずれを管理する変数。*/
+		Vector3 m_offsetPosition;                                                                                              /* 武器の位置のずれを管理する変数。*/
 	};	
 }

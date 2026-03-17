@@ -27,6 +27,9 @@ namespace nsApp
 			void Enter() override;
 			/* ステートにいる間、毎フレーム処理を行う。*/
 			void Update() override;
+
+			/* 他の攻撃に遷移。*/
+			bool RequestID(uint8_t& id);
 		};
 	}
 }

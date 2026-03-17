@@ -24,13 +24,15 @@ namespace nsApp
 	/* 攻撃の種類を管理する列挙型。*/
 	enum class AttackType : uint8_t
 	{
-		NormalAttack,   /* 通常攻撃。*/
-		ChargeAttack,   /* チャージ攻撃。*/
-		AirAttack,      /* 空中攻撃。*/
-		ComboAttack1,   /* コンボ攻撃1撃目。*/
-		ComboAttack2,   /* コンボ攻撃2撃目。*/
-		ComboAttack3,   /* コンボ攻撃3撃目。*/
-		None,		    /* 攻撃なし。*/
+		NormalAttack,          /* 通常攻撃。*/
+		ChargeAttack,          /* チャージ攻撃。*/
+		AirAttack,             /* 空中攻撃。*/
+		RushAttack_Start,      /* 連続攻撃。*/
+		RushAttack_End,        /* 連続攻撃のループ部分。*/
+		ComboAttack1,          /* コンボ攻撃1撃目。*/
+		ComboAttack2,          /* コンボ攻撃2撃目。*/
+		ComboAttack3,          /* コンボ攻撃3撃目。*/
+		None,		           /* 攻撃なし。*/
 	};
 
 	/* 武器のタイプを設定。*/
@@ -155,7 +157,7 @@ namespace nsApp
 
 		/* ファイルパスを定数化するための変数群。*/
 		const std::string m_basicAnimationFilePath = "Assets/animData/Player/BasicAnimation/";                      /* 基本動作用アニメーションのファイルパスの共通部分。*/
-		const std::string m_weaponAnimationFilePath = "Assets/animData/Player/";                                    /* 武器ごとのアニメーションのファイルパスの共通部分。*/
+		const std::string m_weaponAnimationFilePath = "Assets/animData/Player/WeaponAnimation/";                    /* 武器ごとのアニメーションのファイルパスの共通部分。*/
 		const std::string m_animationExtension = ".tka";                                                            /* アニメーションファイルの拡張子。*/
 
 

@@ -18,14 +18,25 @@ namespace nsApp
 		/* プレイヤーの状態を管理する列挙型。*/
 		enum class PlayerStateID : uint8_t
 		{
-			enIdle,     /* 待機状態。*/
-			enWalk,     /* 歩行状態。*/
-			enRun,      /* 走行状態。*/
-			enJump,     /* ジャンプ状態。*/
-			enAttack,   /* 攻撃状態。*/
-			enHit,      /* 被弾状態。*/
-			enDeath,    /* 死亡状態。*/
+			/* 基本動作。*/
+			enIdle,           /* 待機状態。*/
+			enWalk,           /* 歩行状態。*/
+			enRun,            /* 走行状態。*/
+			enJump,           /* ジャンプ状態。*/
+			enHit,            /* 被弾状態。*/
+			enDeath,          /* 死亡状態。*/
+
+			/* 攻撃状態。*/
+			enNormalAttack,   /* 攻撃状態。*/
+			enChargeAttack,   /* チャージ攻撃状態。*/
+			enAirAttack,	  /* 空中攻撃状態。*/
+			enComboAttack,	  /* コンボ攻撃状態 1段目。*/
+			enComboLink,	  /* コンボ攻撃状態 2段目。*/
+			enComboFinish,	  /* コンボ攻撃状態 3段目。*/
+			enRushStart,	  /* 連続攻撃状態。*/
+			enRushEnd,		  /* 連続攻撃のループ状態。*/
 		};
+
 
 		class Player : public ICharacter
 		{
@@ -87,6 +98,13 @@ namespace nsApp
 				m_model.SettRotation(m_angle);
 			}
 
+			/* 前方向ベクトルを設定。*/
+			inline void SetForwardVector(const Vector3& forward)
+			{
+				m_forwardVector = forward;
+			}
+
+
 		/* ゲッター。*/
 		public:
 			/* アニメーションが再生終了しているかどうか。*/
@@ -114,6 +132,12 @@ namespace nsApp
 				return m_characterController;
 			}
 
+			/* 前方向ベクトルを取得。*/
+			inline const Vector3& GetForwardVector()
+			{
+				return m_forwardVector;
+			}
+
 
 		private:
 			CharacterAnimation m_playerAnimation;                                                                  /* プレイヤーのアニメーション。*/
@@ -127,9 +151,11 @@ namespace nsApp
 			Quaternion m_angle = Quaternion::Identity ;                                                            /* プレイヤーの回転角。*/
 
 			Vector3 m_currentPosition = Vector3::Zero;                                                             /* プレイヤーの現在位置。*/
-            
+			Vector3 m_forwardVector = Vector3::Zero;                                                               /* プレイヤーの前方向ベクトル。*/
+
 			int animIndex = 0;
 			int m_inputWaitTimer;
+
 
 		/* ステート生成。*/
 		private:

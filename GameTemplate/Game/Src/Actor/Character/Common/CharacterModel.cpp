@@ -107,16 +107,19 @@ namespace nsApp
 			m_matrixPosition.x = m_handMatrix.m[3][0];
 			m_matrixPosition.y = m_handMatrix.m[3][1];
 			m_matrixPosition.z = m_handMatrix.m[3][2];
-			m_weaponModelRender->SetPosition(m_matrixPosition);
-
 			
 			m_xAxis = Vector3(m_handMatrix.m[0][0], m_handMatrix.m[0][1], m_handMatrix.m[0][2]);
 			m_yAxis = Vector3(m_handMatrix.m[1][0], m_handMatrix.m[1][1], m_handMatrix.m[1][2]);
 			m_zAxis = Vector3(m_handMatrix.m[2][0], m_handMatrix.m[2][1], m_handMatrix.m[2][2]);
 
+			/* ³‹K‰»B*/
 			m_xAxis.Normalize();
 			m_yAxis.Normalize();
 			m_zAxis.Normalize();
+
+			m_offsetPosition = m_matrixPosition + (m_xAxis * m_weaponOffset.x), (m_yAxis * m_weaponOffset.y), (m_zAxis * m_weaponOffset.z);
+			m_weaponModelRender->SetPosition(m_offsetPosition);
+				                 
 
 		    m_rotationMatrix = m_handMatrix;
 			m_rotationMatrix.m[0][0] = m_xAxis.x; m_rotationMatrix.m[0][1] = m_xAxis.y; m_rotationMatrix.m[0][2] = m_xAxis.z;

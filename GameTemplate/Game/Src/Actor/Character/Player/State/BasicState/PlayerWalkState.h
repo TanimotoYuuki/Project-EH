@@ -50,6 +50,7 @@ namespace nsApp
 		private:
 			float m_walkSpeed = 0.0f;                  /* 歩行速度。*/
 
+			Vector3 m_moveVector = Vector3::Zero;      /* 歩行する際の移動ベクトル。*/
 			Vector3 m_currentPosition = Vector3::Zero; /* 現在の位置。*/
 			Vector3 m_moveDirection = Vector3::Zero;   /* 移動方向。*/
 		};
