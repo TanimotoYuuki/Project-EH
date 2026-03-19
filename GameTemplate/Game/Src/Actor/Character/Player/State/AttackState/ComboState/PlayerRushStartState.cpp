@@ -48,6 +48,12 @@ namespace nsApp
 		}
 
 
+		bool PlayerRushStartState::RequestID(uint8_t& id)
+		{
+			return CheckCombo(nsActor::PlayerStateID::enRushStart, id);
+		}
+
+
 		void PlayerRushStartState::MoveForward()
 		{
 			/* ëOêiÅB*/

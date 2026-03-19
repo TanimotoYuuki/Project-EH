@@ -2,7 +2,7 @@
 #include "Game.h"
 
 #include "Src/Actor/Stage/LoadStageData.h"
-#include "Camera.h"
+#include "Src/Camera/Camera.h"
 #include "Src/Actor/Character/Player/Player.h"
 
 namespace nsApp

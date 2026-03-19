@@ -50,11 +50,17 @@ namespace nsApp
 		m_greatSwordData.weaponAnimationList[AttackType::ChargeAttack] = GetWeaponAnimationFilePath("GreatSword/GreatSword_ChargeAttack");
 
 		/* ‹ó’†UŒ‚B*/
-		m_greatSwordData.weaponAnimationList[AttackType::AirAttack] = "Assets/animData/Player/WeaponAnimation/GreatSword/GreatSword_AirAttack.tka";
+		m_greatSwordData.weaponAnimationList[AttackType::AirAttack] = GetWeaponAnimationFilePath("GreatSword/GreatSword_AirAttack");
 
 		/* ˜A‘±UŒ‚B*/
 		m_greatSwordData.weaponAnimationList[AttackType::RushAttack_Start] = GetWeaponAnimationFilePath("GreatSword/GreatSword_Rush_Start");
 		m_greatSwordData.weaponAnimationList[AttackType::RushAttack_End] = GetWeaponAnimationFilePath("GreatSword/GreatSword_Rush_End");
+
+		/* a‚èã‚°UŒ‚B*/
+		m_greatSwordData.weaponAnimationList[AttackType::SlashUp] = GetWeaponAnimationFilePath("GreatSword/GreatSword_SlashUpward");
+
+		/* “Ë‚«i‚ŞUŒ‚B*/
+		m_greatSwordData.weaponAnimationList[AttackType::PushForward] = GetWeaponAnimationFilePath("GreatSword/GreatSword_Push");
 
 		/* “o˜^ƒf[ƒ^‚ğƒŠƒXƒg‚É“o˜^‚·‚éB*/
 		m_weaponDataList[WeaponType::GreatSword] = m_greatSwordData;
