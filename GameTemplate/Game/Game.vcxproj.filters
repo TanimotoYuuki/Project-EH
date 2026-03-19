@@ -22,6 +22,9 @@
     <Filter Include="Src\Actor\Character">
       <UniqueIdentifier>{743383ec-63f0-4f97-9da3-2b42c1c5354a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Actor\Character\Boss">
+      <UniqueIdentifier>{7dd9b9c4-3589-4a39-b68c-0abc242c4f22}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -53,6 +56,9 @@
       <Filter>Src\Actor\Character</Filter>
     </ClCompile>
     <ClCompile Include="CharacterAnimation.cpp" />
+    <ClCompile Include="Boss.cpp">
+      <Filter>Src\Actor\Character\Boss</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -90,5 +96,8 @@
       <Filter>Src\Actor\Character</Filter>
     </ClInclude>
     <ClInclude Include="CharacterAnimation.h" />
+    <ClInclude Include="Boss.h">
+      <Filter>Src\Actor\Character\Boss</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -15,6 +15,10 @@ namespace nsApp
 
 		/* ボスモデル。*/
 		/* @TODO: Boss担当にコードを記載してもらうように。*/
+		m_filePathList[CharacterModelType::Enemy_Tutorial] = GetCharacterModelFilePath("TutorialBoss"); /* チュートリアル用の敵モデル。*/
+		m_filePathList[CharacterModelType::GrayDragon] = GetCharacterModelFilePath("GrayDragon/GrayDragon"); /* 灰色のドラゴンモデル。*/
+		m_filePathList[CharacterModelType::GreenDragon] = GetCharacterModelFilePath("GreenDragon/GreenDragon"); /* 緑色のドラゴンモデル。*/
+		m_filePathList[CharacterModelType::RedDragon] = GetCharacterModelFilePath("RedDragon/RedDragon"); /* 赤色のドラゴンモデル。*/
 
 		/* 武器モデル。*/
 		/* @TODO: 現状はPlayerモデルを切り替えれるかの検証のため、武器モデルは次に回す。*/

@@ -22,6 +22,10 @@ namespace nsApp
 		/* 敵モデルを定義。*/
 		/* @TODO Enemy担当者にIDを増やしてもらう。*/
 		Enemy_Tutorial,      /* チュートリアル用の敵。*/
+		GrayDragon,          /* 灰色のドラゴン。*/
+		GreenDragon,         /* 緑色のドラゴン。*/
+		RedDragon,           /* 赤色のドラゴン。*/
+
 
 
 		/* 武器モデルを定義。*/
