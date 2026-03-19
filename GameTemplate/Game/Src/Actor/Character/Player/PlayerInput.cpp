@@ -15,7 +15,6 @@ namespace nsApp
 		/* Bボタンを押しているかを取得。*/
 		m_isPressButton = g_pad[0]->IsPress(enButtonB);
 
-
 		/* 入力判定。*/
 		if (!m_isInputEnable)
 		{
@@ -35,12 +34,41 @@ namespace nsApp
 			return;
 		}
 
-		/* ジャンプ判定。*/
-		m_isJump = g_pad[0]->IsTrigger(enButtonA);
-
 		/* 移動入力判定。*/ 
 		m_stickX = g_pad[0]->GetLStickXF();
 		m_stickY = g_pad[0]->GetLStickYF();
+
+		/* ジャンプ, 斬り上げ判定。*/
+		if (g_pad[0]->IsTrigger(enButtonA))
+		{
+			if (m_stickY > 0.5f)
+			{
+				m_isSlashUp = true;
+				m_isJump = false;
+			}
+
+			else
+			{
+				m_isJump = true;
+				m_isSlashUp = false;
+			}
+		}
+
+		/* Aボタンが押されていないならフラグを変えない。*/
+		else
+		{
+			m_isJump = false;
+			m_isSlashUp = false;
+		}
+
+		/* 斬り上げ判定。*/
+		m_isSlashUp = g_pad[0]->IsTrigger(enButtonLB2);
+
+		/* ジャンプ判定。*/
+		m_isJump = g_pad[0]->IsTrigger(enButtonA);
+
+		/* Bボタンを押した瞬間の攻撃判定を設定。*/
+		m_isAttack = g_pad[0]->IsTrigger(enButtonB);
 
 		/* カメラを考慮せずにとりあえずスティックの入力量で移動する。*/
 		m_moveVec = Vector3(m_stickX, 0.0, 0.0);
@@ -82,7 +110,6 @@ namespace nsApp
 		* 離せばリセット。
 		*/
 		m_chargeButtonTimer = m_isPressButton ? m_chargeButtonTimer + CHARGE_FLAG_TRUE : CHARGE_FLAG_FALSE;
-
 
 	}
 }

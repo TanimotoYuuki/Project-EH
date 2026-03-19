@@ -128,7 +128,7 @@ namespace nsApp
 
 			/* 正規化した行列から回転を抽出。*/
 			m_matrixRotation.SetRotation(m_rotationMatrix);
-			m_weaponModelRender->SetRotation(m_matrixRotation);
+			m_weaponModelRender->SetRotation(m_matrixRotation * m_weaponRotationOffset);
 
 			/* 武器を更新。*/
 			m_weaponModelRender->Update();

@@ -13,9 +13,12 @@
 #include "Src/Actor/Character/Player/State/AttackState/PlayerNormalAttackState.h"
 #include "Src/Actor/Character/Player/State/AttackState/PlayerChargeAttackState.h"
 #include "Src/Actor/Character/Player/State/AttackState/PlayerAirAttackState.h"
+
+
 #include "Src/Actor/Character/Player/State/AttackState/ComboState/PlayerRushStartState.h"
 #include "Src/Actor/Character/Player/State/AttackState/ComboState/PlayerRushEndState.h"
-
+#include "Src/Actor/Character/Player/State/AttackState/ComboState/PlayerSlashUpState.h"
+#include "Src/Actor/Character/Player/State/AttackState/ComboState/PlayerPushState.h"
 
 namespace
 {
@@ -99,7 +102,6 @@ namespace nsApp
 				/* 登録されているステートならChangeStateに情報を渡す。*/
 				if (m_stateFactory.count(m_playerStateID) > 0)
 					m_stateMachine->ChangeState(m_stateFactory[m_playerStateID]());
-
 			}
 
 			m_model.SetPosition(m_currentPosition);
@@ -150,15 +152,20 @@ namespace nsApp
 			/* チャージ攻撃状態。*/
 			m_stateFactory[PlayerStateID::enChargeAttack] = []() { return new nsState::PlayerChargeAttackState(); };
 
-			//////////////////////////////////////////////////////////////////
-			/* ※空中攻撃は ジャンプ中のみ遷移するようにしたいため、未登録。*/
-			//////////////////////////////////////////////////////////////////
+			/* 空中攻撃状態。*/
+			m_stateFactory[PlayerStateID::enAirAttack] = []() { return new nsState::PlayerAirAttackState(); };
 
             /* 連続攻撃開始状態。*/
 			m_stateFactory[PlayerStateID::enRushStart] = []() { return new nsState::PlayerRushStartState(); };
 
 			/* 連続攻撃ループ状態。*/ 
 			m_stateFactory[PlayerStateID::enRushEnd] = []() { return new nsState::PlayerRushEndState(); };
+
+			/* 斬り上げ状態。*/
+			m_stateFactory[PlayerStateID::enSlashUp] = []() { return new nsState::PlayerSlashUpState(); };
+
+			/* 突き進む状態。*/
+			m_stateFactory[PlayerStateID::enPushForward] = []() { return new nsState::PlayerPushState(); };
 		}
 	}
 }

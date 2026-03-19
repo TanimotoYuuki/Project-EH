@@ -35,6 +35,8 @@ namespace nsApp
 			enComboFinish,	  /* コンボ攻撃状態 3段目。*/
 			enRushStart,	  /* 連続攻撃状態。*/
 			enRushEnd,		  /* 連続攻撃のループ状態。*/
+			enSlashUp,        /* 斬り上げ状態。*/
+			enPushForward,    /* 突き進む攻撃状態。*/
 		};
 
 
@@ -104,6 +106,20 @@ namespace nsApp
 				m_forwardVector = forward;
 			}
 
+			/* ステートから武器の角度をいじれるように設定。*/
+			inline void SetWeaponRotationAngle(const Vector3& rotDeg, float angle)
+			{
+				m_weaponAngle = Quaternion::Identity;
+				m_weaponAngle.SetRotationDeg(rotDeg, angle);
+				m_model.SetWeaponAngle(m_weaponAngle);
+			}
+
+			/* 落下速度を設定。*/
+			inline void SetFallVelocity(float velocity)
+			{
+				m_fallVelocity = velocity;
+			}
+
 
 		/* ゲッター。*/
 		public:
@@ -138,29 +154,38 @@ namespace nsApp
 				return m_forwardVector;
 			}
 
+			/* 落下速度を取得。*/
+			inline float GetFallVelocity() const
+			{
+				return m_fallVelocity;
+			}
+
 
 		private:
-			CharacterAnimation m_playerAnimation;                                                                  /* プレイヤーのアニメーション。*/
-			CharacterController m_characterController;                                                             /* プレイヤーのキャラコン。*/
+			CharacterAnimation m_playerAnimation;                                                                  //! プレイヤーのアニメーション。
+			CharacterController m_characterController;                                                             //! プレイヤーのキャラコン。
 
-			WeaponType m_currentWeapon = WeaponType::GreatSword;                                                   /* 現在の武器。@TODO 武器の種類を増やす際に要調整。*/
+			WeaponType m_currentWeapon = WeaponType::GreatSword;                                                   //! 現在の武器。@TODO 武器の種類を増やす際に要調整。
 
-			PlayerInput m_playerInput;                                                                             /* プレイヤーの入力を管理するクラス。*/
-			PlayerStateID m_playerStateID;                                                                         /* プレイヤーの状態ID。*/
+			PlayerInput m_playerInput;                                                                             //! プレイヤーの入力を管理するクラス。
+			PlayerStateID m_playerStateID;                                                                         //! プレイヤーの状態ID。
 
-			Quaternion m_angle = Quaternion::Identity ;                                                            /* プレイヤーの回転角。*/
+			Quaternion m_angle = Quaternion::Identity ;                                                            //! プレイヤーの回転角。
+			Quaternion m_weaponAngle = Quaternion::Identity;                                                       //! 武器の回転角。
 
-			Vector3 m_currentPosition = Vector3::Zero;                                                             /* プレイヤーの現在位置。*/
-			Vector3 m_forwardVector = Vector3::Zero;                                                               /* プレイヤーの前方向ベクトル。*/
+			Vector3 m_currentPosition = Vector3::Zero;                                                             //! プレイヤーの現在位置。
+			Vector3 m_forwardVector = Vector3::Zero;                                                               //! プレイヤーの前方向ベクトル。
 
 			int animIndex = 0;
 			int m_inputWaitTimer;
 
+			float m_fallVelocity = 0.0f;                                                                           //! 落下速度。
+
 
 		/* ステート生成。*/
 		private:
-			std::unordered_map<PlayerStateID, std::function<nsState::IState<nsActor::Actor>* ()>> m_stateFactory;  /* ステートの種類を格納。*/
-			uint8_t m_currentStateID = 0;                                                                          /* 現在のステートID。*/
+			std::unordered_map<PlayerStateID, std::function<nsState::IState<nsActor::Actor>* ()>> m_stateFactory;  //! ステートの種類を格納。
+			uint8_t m_currentStateID = 0;                                                                          //! 現在のステートID。
 
 			/* 必要なステートを登録。*/
 			void RegisterState();
