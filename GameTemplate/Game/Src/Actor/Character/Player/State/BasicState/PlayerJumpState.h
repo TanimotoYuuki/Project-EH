@@ -53,23 +53,24 @@ namespace nsApp
 			 */
 			bool RequestID(uint8_t& id) override;
 
+
+		/* セッター。*/
 		public:
-			/**
-			 * @brief ジャンプの初速（Y軸のパワー）を設定する
-			 * @param jumpVelocity 設定する初速の値
-			 */
-			inline void SetJumpVelocity(float jumpVelocity)
+			/* ジャンプの初速を設定。*/
+			inline void SetJumpVelocity(float velocity) 
 			{
-				m_jumpVelocity = jumpVelocity;
+				m_jumpVelocity = velocity; 
 			}
 
+
 		private:
-			nsActor::Player* m_player = nullptr;  /* プレイヤーの実体へのポインタ。 */
+			nsActor::Player* m_player = nullptr;    //!プレイヤーの実体へのポインタ。
 
 
 		private:
-			float m_jumpVelocity = 0.0f;          /* ジャンプの移動速度。 */
-			Vector3 m_moveSpeed = Vector3::Zero;  /* ジャンプ中の移動速度。 */
+			Vector3 m_moveSpeed = Vector3::Zero;    //! ジャンプ中の移動速度。
+
+			float m_jumpVelocity = 0.0f;            //! ジャンプの初速。 
 		};
 	}
 }

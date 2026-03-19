@@ -24,7 +24,7 @@ namespace nsApp
 			/* ライフサイクル。*/
 			void Enter() override;
 			void Update() override;
-
+			bool RequestID(uint8_t& id) override;
 
 
 		private:

@@ -2,6 +2,7 @@
 #include "PlayerJumpState.h"
 #include "Src/Actor/Character/Player/State/AttackState/PlayerAirAttackState.h"
 #include "Src/Actor/Character/Player/Component/StateTransitionDiagram.h"
+#include "Src/Actor/Character/Player/State/AttackState/ComboState/PlayerSlashUpState.h"
 
 namespace
 {
@@ -21,10 +22,10 @@ namespace nsApp
 			/* ジャンプアニメーションを再生する。 */
 			m_player->PlayBasicAnimation(CharacterBasicAnimationList::Jump);
 
-			if (m_jumpVelocity == 0.0f)
+			if (m_player->GetCharacterController().IsOnGround())
 			{
-				/* ジャンプの初速（高さ）を設定する。 */
-				SetJumpVelocity(JUMP_POWER);
+				/* 初速を設定。 */
+				m_jumpVelocity = JUMP_POWER;
 			}
 		}
 
@@ -52,6 +53,13 @@ namespace nsApp
 				float airMoveSpeed = 120.0f; /* 空中での前後左右のスピード。 */
 				m_moveSpeed.x = inputClass.GetMoveVector().x * airMoveSpeed;
 				m_moveSpeed.z = inputClass.GetMoveVector().y * airMoveSpeed;
+			}
+
+			/* 空中でスティック上 + Aを押した斬り上げ状態に*/
+			if (inputClass.IsSlashUp())
+			{
+				m_stateMachine->ChangeState(new PlayerSlashUpState());
+				return;
 			}
 
 			/* 重力計算（毎フレーム固定の力で下へ引っ張る）。 */
@@ -84,6 +92,7 @@ namespace nsApp
 				id = static_cast<uint8_t>(nsActor::PlayerStateID::enIdle);
 				return true;
 			}
+
 
 			return false;
 		}

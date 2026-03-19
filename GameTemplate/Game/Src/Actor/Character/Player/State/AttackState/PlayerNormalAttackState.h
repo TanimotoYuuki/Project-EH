@@ -1,5 +1,4 @@
 #pragma once
-
 /**
 * @file   PlayerNormalAttackState.h
 * @brief  プレイヤーの通常攻撃状態を管理するクラス。

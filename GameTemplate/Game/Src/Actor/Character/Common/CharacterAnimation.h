@@ -29,9 +29,8 @@ namespace nsApp
 		AirAttack,             /* 空中攻撃。*/
 		RushAttack_Start,      /* 連続攻撃。*/
 		RushAttack_End,        /* 連続攻撃のループ部分。*/
-		ComboAttack1,          /* コンボ攻撃1撃目。*/
-		ComboAttack2,          /* コンボ攻撃2撃目。*/
-		ComboAttack3,          /* コンボ攻撃3撃目。*/
+		SlashUp,               /* 斬り上げ攻撃。*/
+		PushForward,           /* 突き進む攻撃。*/
 		None,		           /* 攻撃なし。*/
 	};
 

@@ -43,6 +43,9 @@
     <Filter Include="Src\Actor\Character\Player\State\AttackState\ComboState">
       <UniqueIdentifier>{61a55a4c-305f-4379-89b6-589646086c58}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Camera">
+      <UniqueIdentifier>{3fca804b-a4f7-4afd-b142-3c15a7730a90}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -70,7 +73,6 @@
     <ClCompile Include="Src\Actor\Character\Player\Player.cpp">
       <Filter>Src\Actor\Character\Player</Filter>
     </ClCompile>
-    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Src\Actor\Character\Player\PlayerInput.cpp">
       <Filter>Src\Actor\Character\Player</Filter>
     </ClCompile>
@@ -119,8 +121,17 @@
     <ClCompile Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerRushEndState.cpp">
       <Filter>Src\Actor\Character\Player\State\AttackState\ComboState</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerComboAttackState.cpp">
+    <ClCompile Include="Src\Actor\Character\Player\Component\ComboRouteTable.cpp">
+      <Filter>Src\Actor\Character\Player\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerSlashUpState.cpp">
       <Filter>Src\Actor\Character\Player\State\AttackState\ComboState</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerPushState.cpp">
+      <Filter>Src\Actor\Character\Player\State\AttackState</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Camera\Camera.cpp">
+      <Filter>Src\Camera</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -154,7 +165,6 @@
     <ClInclude Include="Src\Actor\Character\Player\Player.h">
       <Filter>Src\Actor\Character\Player</Filter>
     </ClInclude>
-    <ClInclude Include="Camera.h" />
     <ClInclude Include="Src\Actor\Character\Player\PlayerInput.h">
       <Filter>Src\Actor\Character\Player</Filter>
     </ClInclude>
@@ -209,8 +219,17 @@
     <ClInclude Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerRushEndState.h">
       <Filter>Src\Actor\Character\Player\State\AttackState\ComboState</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerComboAttackState.h">
+    <ClInclude Include="Src\Actor\Character\Player\Component\ComboRouteTable.h">
+      <Filter>Src\Actor\Character\Player\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerSlashUpState.h">
       <Filter>Src\Actor\Character\Player\State\AttackState\ComboState</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerPushState.h">
+      <Filter>Src\Actor\Character\Player\State\AttackState</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Camera\Camera.h">
+      <Filter>Src\Camera</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

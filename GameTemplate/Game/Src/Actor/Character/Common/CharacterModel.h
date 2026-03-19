@@ -121,6 +121,13 @@ namespace nsApp
 			m_attackBoneName = boneName;
 		}
 
+		/* 武器の傾きを設定。*/
+		inline void SetWeaponAngle(const Quaternion offset)
+		{
+			m_weaponRotationOffset = offset;	
+		}
+
+
 	/* ゲッター。*/
 	public:
 		/* キャラモデルのファイルパスを格納。*/
@@ -158,6 +165,7 @@ namespace nsApp
 		int boneID;                                                                                                            /* ボーンIDを格納。*/
 
 		Quaternion m_matrixRotation;
+		Quaternion m_weaponRotationOffset;                                                                                     /* 武器の傾きを制御。*/
 
 		Matrix m_handMatrix; 																					               /* 武器を装備させるときの右手のボーンの行列を管理する変数。*/
 		Matrix m_rotationMatrix;                                                                                               /* 武器を装備させたときの武器の傾きを制御。*/

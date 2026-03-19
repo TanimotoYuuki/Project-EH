@@ -58,7 +58,8 @@ namespace nsApp
 
 			if (inputClass.IsAttack())
 			{
-				id = static_cast<uint8_t>(nsActor::PlayerStateID::enNormalAttack);
+				/* a‚èi‚Şó‘Ô‚ÉB*/
+				id = static_cast<uint8_t>(nsActor::PlayerStateID::enPushForward);
 				return true;
 			}
 

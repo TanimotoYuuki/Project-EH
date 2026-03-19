@@ -61,6 +61,12 @@ namespace nsApp
 			return m_isRushEnd;
 		}
 
+		/* 斬り上げ判定。*/
+		inline bool IsSlashUp() const
+		{
+			return m_isSlashUp;
+		}
+
 		/* コンボ攻撃判定。*/
 		inline bool IsComboAttack() const
 		{
@@ -119,6 +125,8 @@ namespace nsApp
 		bool m_isPressButton = false;        /* Bボタンが押されているかどうかを判定。*/
 		bool m_isRushStart = false;          /* 連続攻撃が始まっているかを検知。*/
 		bool m_isRushEnd = false;            /* 連続攻撃が終わっているかを検知。*/
+		bool m_isJumpRequested = false;      /* ジャンプの入力があったかどうかを判定。*/
+		bool m_isSlashUp = false;            /* 斬り上げの入力を検知。*/
 
 
 		float m_stickX = 0.0f;               /* スティックのX軸の値。*/

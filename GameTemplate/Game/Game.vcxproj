@@ -223,18 +223,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Src\Actor\Actor.cpp" />
     <ClCompile Include="Src\Actor\Character\Common\CharacterAnimation.cpp" />
     <ClCompile Include="Src\Actor\Character\Common\CharacterModel.cpp" />
     <ClCompile Include="Src\Actor\Character\Common\ICharacter.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\Component\ComboRouteTable.cpp" />
     <ClCompile Include="Src\Actor\Character\Player\Player.cpp" />
     <ClCompile Include="Src\Actor\Character\Player\PlayerInput.cpp" />
-    <ClCompile Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerComboAttackState.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerPushState.cpp" />
     <ClCompile Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerRushEndState.cpp" />
     <ClCompile Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerRushStartState.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerSlashUpState.cpp" />
     <ClCompile Include="Src\Actor\Character\Player\State\AttackState\PlayerAirAttackState.cpp" />
     <ClCompile Include="Src\Actor\Character\Player\State\AttackState\PlayerAttackBaseState.cpp" />
     <ClCompile Include="Src\Actor\Character\Player\State\AttackState\PlayerChargeAttackState.cpp" />
@@ -247,6 +248,7 @@
     <ClCompile Include="Src\Actor\Character\Player\State\BasicState\PlayerWalkState.cpp" />
     <ClCompile Include="Src\Actor\Stage\LoadStageData.cpp" />
     <ClCompile Include="Src\Actor\Stage\Stage.cpp" />
+    <ClCompile Include="Src\Camera\Camera.cpp" />
     <ClCompile Include="Src\SceneLoader\SceneLoader.cpp" />
     <ClCompile Include="Src\StateMachine\StateMachine.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -258,19 +260,20 @@
     <ClCompile Include="Title.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Camera.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Src\Actor\Actor.h" />
     <ClInclude Include="Src\Actor\Character\Common\CharacterAnimation.h" />
     <ClInclude Include="Src\Actor\Character\Common\CharacterModel.h" />
     <ClInclude Include="Src\Actor\Character\Common\ICharacter.h" />
     <ClInclude Include="Src\Actor\Character\Common\IState.h" />
+    <ClInclude Include="Src\Actor\Character\Player\Component\ComboRouteTable.h" />
     <ClInclude Include="Src\Actor\Character\Player\Component\StateTransitionDiagram.h" />
     <ClInclude Include="Src\Actor\Character\Player\Player.h" />
     <ClInclude Include="Src\Actor\Character\Player\PlayerInput.h" />
-    <ClInclude Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerComboAttackState.h" />
+    <ClInclude Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerPushState.h" />
     <ClInclude Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerRushEndState.h" />
     <ClInclude Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerRushStartState.h" />
+    <ClInclude Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerSlashUpState.h" />
     <ClInclude Include="Src\Actor\Character\Player\State\AttackState\PlayerAirAttackState.h" />
     <ClInclude Include="Src\Actor\Character\Player\State\AttackState\PlayerAttackBaseState.h" />
     <ClInclude Include="Src\Actor\Character\Player\State\AttackState\PlayerChargeAttackState.h" />
@@ -284,6 +287,7 @@
     <ClInclude Include="Src\Actor\Stage\LoadStageData.h" />
     <ClInclude Include="Src\Actor\Stage\Stage.h" />
     <ClInclude Include="Src\Actor\Stage\StageData.h" />
+    <ClInclude Include="Src\Camera\Camera.h" />
     <ClInclude Include="Src\SceneLoader\SceneLoader.h" />
     <ClInclude Include="Src\StateMachine\NullState.h" />
     <ClInclude Include="Src\StateMachine\StateMachine.h" />

@@ -29,17 +29,17 @@ namespace nsApp
 
 		bool PlayerNormalAttackState::RequestID(uint8_t& id)
 		{
-			/* 1段目の攻撃で連打数をチェック。*/
-			if (m_attackTimer > 15)
-			{
-				/* n回以上連打しているなら連続攻撃状態へ*/
-				if (m_rushCount >= RUSH_COUNT)
-				{
-					id = static_cast<uint8_t>(nsActor::PlayerStateID::enRushStart);
-					return true;
-				}
-			}
-			return false;
+			///* 1段目の攻撃で連打数をチェック。*/
+			//if (m_attackTimer > 15)
+			//{
+			//	/* n回以上連打しているなら連続攻撃状態へ*/
+			//	if (m_rushCount >= RUSH_COUNT)
+			//	{
+			//		id = static_cast<uint8_t>(nsActor::PlayerStateID::enRushStart);
+			//		return true;
+			//	}
+			//}
+			return CheckCombo(nsActor::PlayerStateID::enNormalAttack, id);
 		}
 	}
 }

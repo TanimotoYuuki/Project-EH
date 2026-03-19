@@ -19,14 +19,6 @@ namespace nsApp
 
 		void PlayerIdleState::Update()
 		{
-			const auto& inputClass = m_player->GetInputClass();
-			/* Bボタンが押されているか検出。*/
-			if (inputClass.IsAttack())
-			{
-				/* 攻撃ボタンが押されたら通常攻撃に切り替える。*/
-				m_stateMachine->ChangeState(new PlayerNormalAttackState());
-				return;
-			}
 		}
 
 
