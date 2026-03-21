@@ -11,12 +11,13 @@
 #include "Src/Actor/Actor.h"
 #include "Src/Actor/Character/Common/CharacterModel.h"
 
-namespace
+
+namespace nsApp
 {
 	/* キャラクターのステータスを管理する構造体。*/
 
-	/* 攻撃のパラメータを定義。*/
-	/* クリティカルダメージ, 通常の攻撃力, クリティカル率を保持。*/
+    /* 攻撃のパラメータを定義。*/
+    /* クリティカルダメージ, 通常の攻撃力, クリティカル率を保持。*/
 	struct AttackStatus
 	{
 		float normalDamage;       /* 通常の攻撃力。*/
@@ -32,18 +33,14 @@ namespace
 	};
 
 
-	/* 現在HP, 最大HP, 攻撃力, 移動速度を定義。*/
+	/* 現在HP, 最大HP, 攻撃力を定義。*/
 	struct CharacterStatus
 	{
 		AttackStatus attack;      /* 攻撃のステータス。*/
 		HPStatus hp;              /* 体力のステータス。*/
-		float moveSpeed;          /* 移動速度。@TODO 要調整。*/
 	};
-}
 
 
-namespace nsApp
-{
 	namespace nsActor
 	{
 		class ICharacter : public Actor
@@ -64,6 +61,15 @@ namespace nsApp
 			virtual void Render(RenderContext& rc) override;
 
 
+		/* セッター。*/
+		public:
+			/* ヒットストップを設定。*/
+			inline void SetHitStop(int flame)
+			{
+				m_hitStopFlame = flame;
+			}
+
+
 		/* ゲッター。*/
 		public:
 			/* ステータスの受け取り口。*/
@@ -72,10 +78,21 @@ namespace nsApp
 				return m_characterStatus;
 			}
 
+			/* 座標を取得。*/
+			virtual Vector3& GetPosition() = 0;
+
+			/* ヒットストップ状態か検知する。*/
+			inline bool IsHitStop() const
+			{
+				return m_hitStopFlame > 0;
+			}
+
 
 		protected:
-			CharacterStatus m_characterStatus; /* キャラクターのステータス。*/
-			CharacterModel m_model;            /* キャラクターモデル。*/
+			CharacterStatus m_characterStatus; //! キャラクターのステータス。
+			CharacterModel m_model;            //! キャラクターモデル。
+
+			int m_hitStopFlame;                //! ヒットストップのフレーム数。
 		};
 	}
 }

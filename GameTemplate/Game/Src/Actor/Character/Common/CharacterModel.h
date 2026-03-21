@@ -12,6 +12,9 @@ namespace nsApp
 {
 	enum class CharacterModelType
 	{
+		/* デバッグ用モデル*/
+		Sandbag,            /* サンドバッグ。*/
+
 		/* プレイヤーモデル1P～4Pを定義。*/
 		Player_1P,           /* 1P。*/
 		Player_2P,           /* 2P。*/
@@ -147,10 +150,17 @@ namespace nsApp
 			return weaponFilePath;
 		}
 
-		/* 指定したボーンのワールド行列を取得する。
+		/*
+		* 指定したボーンのワールド行列を取得する。
 		* @param boneName 取得したいボーンの名前を指定する。
 		*/
 	    Matrix GetWorldMatrix(const wchar_t* boneName);
+
+		/* 武器の座標を取得。*/
+		inline const Vector3& GetWeaponPosition() const
+		{
+			return m_offsetPosition;
+		}
 
 
 	private:	

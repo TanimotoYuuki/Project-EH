@@ -6,6 +6,9 @@ namespace nsApp
 	CharacterModel::CharacterModel()
 	{
 		/* モデルのファイルパスを格納。*/
+		/* デバッグ用のサンドバッグモデル。*/
+		m_filePathList[CharacterModelType::Sandbag] = "Assets/modelData/Character/Debag/PunchBagKun.tkm";
+
 		/* キャラモデルの格納。*/
 		/* プレイヤーモデル。*/
 		m_filePathList[CharacterModelType::Player_1P] = GetCharacterModelFilePath("1p/player"); /* 1Pモデル。*/
@@ -122,7 +125,7 @@ namespace nsApp
 			m_yAxis.Normalize();
 			m_zAxis.Normalize();
 
-			m_offsetPosition = m_matrixPosition + (m_xAxis * m_weaponOffset.x), (m_yAxis * m_weaponOffset.y), (m_zAxis * m_weaponOffset.z);
+			m_offsetPosition = m_matrixPosition + (m_xAxis * m_weaponOffset.x) +  (m_yAxis * m_weaponOffset.y)+ (m_zAxis * m_weaponOffset.z);
 			m_weaponModelRender->SetPosition(m_offsetPosition);
 				                 
 

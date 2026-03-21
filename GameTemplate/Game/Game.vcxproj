@@ -223,10 +223,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Boss.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="PresentDamageIndicator.cpp" />
     <ClCompile Include="Src\Actor\Actor.cpp" />
+    <ClCompile Include="Src\Actor\Character\Status\AttackParameterTable.cpp" />
+    <ClCompile Include="Src\Actor\Stage\BackGround.cpp" />
+    <ClCompile Include="Src\Camera\Camera.cpp" />
     <ClCompile Include="Src\Actor\Character\Common\CharacterAnimation.cpp" />
     <ClCompile Include="Src\Actor\Character\Common\CharacterModel.cpp" />
     <ClCompile Include="Src\Actor\Character\Common\ICharacter.cpp" />
@@ -249,7 +252,7 @@
     <ClCompile Include="Src\Actor\Character\Player\State\BasicState\PlayerWalkState.cpp" />
     <ClCompile Include="Src\Actor\Stage\LoadStageData.cpp" />
     <ClCompile Include="Src\Actor\Stage\Stage.cpp" />
-    <ClCompile Include="Src\Camera\Camera.cpp" />
+    <ClCompile Include="Src\Debug\Sandbag.cpp" />
     <ClCompile Include="Src\SceneLoader\SceneLoader.cpp" />
     <ClCompile Include="Src\StateMachine\StateMachine.cpp" />
     <ClCompile Include="stdafx.cpp">
@@ -259,11 +262,15 @@
     </ClCompile>
     <ClCompile Include="system\system.cpp" />
     <ClCompile Include="Title.cpp" />
+    <ClCompile Include="Src\Actor\Character\Common\WeaponHitDetection.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Boss.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="PresentDamageIndicator.h" />
     <ClInclude Include="Src\Actor\Actor.h" />
+    <ClInclude Include="Src\Actor\Character\Status\AttackParameterTable.h" />
+    <ClInclude Include="Src\Actor\Stage\BackGround.h" />
+    <ClInclude Include="Src\Camera\Camera.h" />
     <ClInclude Include="Src\Actor\Character\Common\CharacterAnimation.h" />
     <ClInclude Include="Src\Actor\Character\Common\CharacterModel.h" />
     <ClInclude Include="Src\Actor\Character\Common\ICharacter.h" />
@@ -289,13 +296,14 @@
     <ClInclude Include="Src\Actor\Stage\LoadStageData.h" />
     <ClInclude Include="Src\Actor\Stage\Stage.h" />
     <ClInclude Include="Src\Actor\Stage\StageData.h" />
-    <ClInclude Include="Src\Camera\Camera.h" />
+    <ClInclude Include="Src\Debug\Sandbag.h" />
     <ClInclude Include="Src\SceneLoader\SceneLoader.h" />
     <ClInclude Include="Src\StateMachine\NullState.h" />
     <ClInclude Include="Src\StateMachine\StateMachine.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="system\system.h" />
     <ClInclude Include="Title.h" />
+    <ClInclude Include="Src\Actor\Character\Common\WeaponHitDetection.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

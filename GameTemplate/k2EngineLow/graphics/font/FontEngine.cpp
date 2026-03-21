@@ -52,7 +52,8 @@ namespace nsK2EngineLow {
 		m_spriteFont = make_unique<SpriteFont>(
 			d3dDevice,
 			re,
-			L"Assets/font/myfile.spritefont",
+		//	L"Assets/font/myfile.spritefont", //! 初期フォント。
+			L"Assets/font/GameFont",
 			cpuHandle,
 			gpuHandle);
 

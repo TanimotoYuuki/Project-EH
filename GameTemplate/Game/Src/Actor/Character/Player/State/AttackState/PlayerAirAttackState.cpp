@@ -30,6 +30,7 @@ namespace nsApp
 			/* ‘½’iƒWƒƒƒ“ƒv‚ð–hŽ~‚·‚é‚½‚ßƒWƒƒƒ“ƒv—Í‚ðˆø‚«Œp‚ª‚È‚¢B*/
 			if (m_fallVelocity == 0.0f)
 				SetFallVelocity(150.0f);
+			m_player->GetWeaponHitDetection().Enable();
 		}
 
 

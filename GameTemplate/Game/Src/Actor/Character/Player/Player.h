@@ -10,6 +10,7 @@
 #include "Src/Actor/Character/Player/PlayerInput.h"
 #include "Src/Actor/Character/Common/ICharacter.h"
 #include "Src/Actor/Character/Common/CharacterAnimation.h"
+#include "Src/Actor/Character/Common/WeaponHitDetection.h"
 
 namespace nsApp
 {
@@ -39,7 +40,6 @@ namespace nsApp
 			enPushForward,    /* 突き進む攻撃状態。*/
 		};
 
-
 		class Player : public ICharacter
 		{
 		public:
@@ -56,6 +56,11 @@ namespace nsApp
 			void Update() override;
 			/* 描画処理。*/
 			void Render(RenderContext& rc) override;
+
+
+		private:
+			/* 攻撃力の初期化処理。*/
+			void InitAttackStatus();
 
 
 		public:
@@ -136,12 +141,6 @@ namespace nsApp
 				return m_playerInput;
 			}
 
-			/* 座標を取得。*/
-			inline Vector3& GetPosition()
-			{
-				return m_currentPosition;
-			}
-
 			/* キャラコンを取得。*/
 			inline CharacterController& GetCharacterController()
 			{
@@ -159,6 +158,22 @@ namespace nsApp
 			{
 				return m_fallVelocity;
 			}
+
+			/* 座標を取得(親クラス経由で)。*/
+			virtual inline Vector3& GetPosition() override
+			{
+				return m_currentPosition;
+			}
+
+			/* 武器の当たり判定を取得。*/
+			inline WeaponHitDetection& GetWeaponHitDetection()
+			{
+				return m_weaponHitDetection;
+			}
+
+
+		private:
+			WeaponHitDetection m_weaponHitDetection;
 
 
 		private:

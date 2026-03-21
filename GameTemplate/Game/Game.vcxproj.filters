@@ -133,12 +133,15 @@
     <ClCompile Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerPushState.cpp">
       <Filter>Src\Actor\Character\Player\State\AttackState</Filter>
     </ClCompile>
+    <ClCompile Include="Src\Camera\Camera.cpp" />
+    <ClCompile Include="PresentDamageIndicator.cpp" />
+    <ClCompile Include="Src\Actor\Character\Common\WeaponHitDetection.cpp" />
+    <ClCompile Include="Src\Debug\Sandbag.cpp" />
     <ClCompile Include="Src\Camera\Camera.cpp">
       <Filter>Src\Camera</Filter>
     </ClCompile>
-    <ClCompile Include="Boss.cpp">
-      <Filter>Src\Actor\Character\Boss</Filter>
-    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\Status\AttackParameterTable.cpp" />
+    <ClCompile Include="Src\Actor\Stage\BackGround.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -237,8 +240,10 @@
     <ClInclude Include="Src\Camera\Camera.h">
       <Filter>Src\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="Boss.h">
-      <Filter>Src\Actor\Character\Boss</Filter>
-    </ClInclude>
+    <ClInclude Include="PresentDamageIndicator.h" />
+    <ClInclude Include="Src\Debug\Sandbag.h" />
+    <ClInclude Include="Src\Actor\Character\Common\WeaponHitDetection.h" />
+    <ClInclude Include="Src\Actor\Character\Status\AttackParameterTable.h" />
+    <ClInclude Include="Src\Actor\Stage\BackGround.h" />
   </ItemGroup>
 </Project>

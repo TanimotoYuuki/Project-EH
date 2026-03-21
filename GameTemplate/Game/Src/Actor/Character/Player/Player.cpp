@@ -13,12 +13,12 @@
 #include "Src/Actor/Character/Player/State/AttackState/PlayerNormalAttackState.h"
 #include "Src/Actor/Character/Player/State/AttackState/PlayerChargeAttackState.h"
 #include "Src/Actor/Character/Player/State/AttackState/PlayerAirAttackState.h"
-
-
 #include "Src/Actor/Character/Player/State/AttackState/ComboState/PlayerRushStartState.h"
 #include "Src/Actor/Character/Player/State/AttackState/ComboState/PlayerRushEndState.h"
 #include "Src/Actor/Character/Player/State/AttackState/ComboState/PlayerSlashUpState.h"
 #include "Src/Actor/Character/Player/State/AttackState/ComboState/PlayerPushState.h"
+
+#include "Src/Actor/Character/Common/WeaponHitDetection.h"
 
 namespace
 {
@@ -54,14 +54,18 @@ namespace nsApp
 
 			/* 武器の調整。*/
 			m_model.SetWeaponScale(Vector3::One * 0.3f);
-			m_model.SetWeaponOffset(Vector3(0.0f, 15.0f, 0.0f));
+			m_model.SetWeaponOffset(Vector3::Zero);
 
 			m_model.SetPosition(POS);
 
 			m_angle.AddRotationDegY(ANGLE_Y);
 			m_model.SettRotation(m_angle);
 
+			m_currentPosition = POS;
 			m_characterController.Init(5.0f, 8.0f, POS);
+
+			/* ステータスを初期化。*/
+			InitAttackStatus();
 
 			/* ステートを生成する。*/
 			RegisterState();
@@ -75,6 +79,13 @@ namespace nsApp
 
 		void Player::Update()
 		{
+			/* ICharacterクラスの更新処理をコール。*/
+			ICharacter::Update();
+
+			/* ヒットストップ状態なら*/
+			if (IsHitStop())
+				return;
+
 			/* ゲーム開始直後数フレームは入力を受け付けない*/
 			/*@全体共有: その硬直はボス戦の開始演出でカバーする*/
 			if (m_inputWaitTimer > 0)
@@ -82,7 +93,6 @@ namespace nsApp
 				m_inputWaitTimer--;
 				m_playerInput.SetInputEnable(false);
 			}
-
 			else
 				m_playerInput.SetInputEnable(true);
 
@@ -104,11 +114,14 @@ namespace nsApp
 					m_stateMachine->ChangeState(m_stateFactory[m_playerStateID]());
 			}
 
+			/* モデルの座標を更新する。*/
 			m_model.SetPosition(m_currentPosition);
 
-			/* ICharacterクラスの更新処理をコール。*/
-			ICharacter::Update();
+			/* モデルを更新する。*/
 			m_model.Update();
+
+			/* モデルの更新が終わった後に剣の当たり判定をテーブルに渡す。*/
+			m_weaponHitDetection.Update(m_model.GetWeaponPosition());
 		}
 
 
@@ -116,6 +129,19 @@ namespace nsApp
 		{
 			/* 描画。*/
 			ICharacter::Render(rc);
+		}
+
+
+		void Player::InitAttackStatus()
+		{
+			/* 基本ダメージ数の初期化。*/
+			m_characterStatus.attack.normalDamage = 100.0f;	
+
+			/* クリティカル率の初期化。*/ 
+			m_characterStatus.attack.criticalRate = 0.1f;
+
+			/* クリティカルダメージの初期化。*/
+			m_characterStatus.attack.criticalDamage = 2.0f;
 		}
 
 
