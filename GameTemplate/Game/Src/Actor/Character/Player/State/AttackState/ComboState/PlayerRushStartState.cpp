@@ -18,6 +18,7 @@ namespace nsApp
 
 			/* アニメーションを再生。*/
 			m_player->PlayWeaponAnimation(AttackType::RushAttack_Start);
+			m_player->GetWeaponHitDetection().Enable();
 		}
 
 

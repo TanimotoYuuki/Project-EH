@@ -13,6 +13,7 @@ namespace nsApp
 
 			/* アニメーションの再生。*/
 			m_player->PlayWeaponAnimation(AttackType::RushAttack_End);
+			m_player->GetWeaponHitDetection().Enable();
 		}
 
 		void PlayerRushEndState::Update()

@@ -13,6 +13,7 @@ namespace nsApp
 
 			/* アニメーションを再生させる。*/
 			m_player->PlayWeaponAnimation(AttackType::ChargeAttack);
+			m_player->GetWeaponHitDetection().Enable();
 		}
 
 
