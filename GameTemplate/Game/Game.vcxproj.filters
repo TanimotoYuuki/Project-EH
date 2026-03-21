@@ -46,6 +46,9 @@
     <Filter Include="Src\Camera">
       <UniqueIdentifier>{3fca804b-a4f7-4afd-b142-3c15a7730a90}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Actor\Character\Boss">
+      <UniqueIdentifier>{be4b2ca9-0734-4f99-b20b-a39e6acf329c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -132,6 +135,9 @@
     </ClCompile>
     <ClCompile Include="Src\Camera\Camera.cpp">
       <Filter>Src\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Boss.cpp">
+      <Filter>Src\Actor\Character\Boss</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -230,6 +236,9 @@
     </ClInclude>
     <ClInclude Include="Src\Camera\Camera.h">
       <Filter>Src\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Boss.h">
+      <Filter>Src\Actor\Character\Boss</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
