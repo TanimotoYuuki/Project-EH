@@ -15,6 +15,11 @@ namespace nsApp
 
 		/* ボスモデル。*/
 		/* @TODO: Boss担当にコードを記載してもらうように。*/
+		m_filePathList[CharacterModelType::Enemy_Tutorial] = GetCharacterModelFilePath("TutorialBoss/TutorialBoss");
+		m_filePathList[CharacterModelType::GrayDragon] = GetCharacterModelFilePath("GrayDragon/GrayDragon");
+		m_filePathList[CharacterModelType::GreenDragon] = GetWeaponModelFilePath("GreenDragon/GreenDragon");
+		m_filePathList[CharacterModelType::RedDragon] = GetWeaponModelFilePath("RedDragon/RedDragon");
+
 
 		/* 武器モデル。*/
 		/* 大剣。*/
