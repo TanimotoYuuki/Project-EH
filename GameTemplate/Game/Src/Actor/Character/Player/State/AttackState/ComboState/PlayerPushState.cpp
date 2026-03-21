@@ -20,22 +20,25 @@ namespace nsApp
 
 			/* 武器の角度を調整。*/
 			m_player->SetWeaponRotationAngle(Vector3::Front, -90.0);
+			m_player->GetWeaponHitDetection().Enable();
 		}
 
 
 		void PlayerPushState::Update()
 		{
-			/* 親クラスの更新。*/
-			PlayerAttackBaseState::Update();
-
 			/* 前進する。*/
 			MoveForward();
+
+			/* 親クラスの更新。*/
+			PlayerAttackBaseState::Update();
 		}
 
 
 		void PlayerPushState::Exit()
 		{
 			m_player->SetWeaponRotationAngle(Vector3::Right, 0.0f);
+
+			PlayerAttackBaseState::Exit();
 		}
 
 

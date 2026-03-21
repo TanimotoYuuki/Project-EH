@@ -2,6 +2,11 @@
 #include "PlayerAttackBaseState.h"
 #include "Src/Actor/Character/Player/State/BasicState/PlayerIdleState.h"
 
+#include "Src/Actor/Character/Status/AttackParameterTable.h"
+#include "PresentDamageIndicator.h"
+
+#include "Src/Debug/Sandbag.h"
+
 namespace nsApp
 {
 	namespace nsState
@@ -10,6 +15,9 @@ namespace nsApp
 		{
 			/* 攻撃の種類ごとにキャストを行う。*/
 			m_player = static_cast<nsActor::Player*>(m_owner);
+
+			/* 攻撃後にダメージ量のテキストを描画。*/
+			OnHitDamageText();
 		}
 
 
@@ -48,6 +56,23 @@ namespace nsApp
 			{
 				/* Idle状態へ遷移。*/
 				m_stateMachine->ChangeState(new PlayerIdleState());
+				return;
+			}
+
+			auto sandBag = FindGO<nsActor::Sandbag>("Sandbag");
+			if (sandBag != nullptr && reinterpret_cast<uintptr_t>(sandBag) != 0xFFFFFFFFFFFFFFFF)
+			{
+				if (m_player->GetWeaponHitDetection().IsHit(sandBag))
+				{
+					/* ダメージ数テキストを描画。*/
+					OnHitDamageText();
+
+					/* ヒットストップを発生させる。*/
+					m_player->SetHitStop(8);
+					sandBag->SetHitStop(8);
+
+					return;
+				}
 			}
 		}
 
@@ -56,7 +81,52 @@ namespace nsApp
 		{
 			/* Stateを抜ける際の処理。*/
 			/* 効果音とかエフェクトとかの再生をストップさせる*/
+			if (m_player)
+				m_player->GetWeaponHitDetection().Disable();
 		}
+
+
+		void PlayerAttackBaseState::OnHitDamageText()
+		{
+			if (!m_player)
+				return;
+
+			/* プレイヤーの座標と向きを取得する。*/ 
+			m_getPlayerPosition = m_player->GetPosition();
+			m_forwardDirection = m_player->GetForwardVector();
+
+			/* プレイヤークラスのステータスを取得。*/
+			const auto& playerStatus = m_player->GetCharacterStatus().attack;
+
+			/* テーブルから現在発動中のパラメータを貰う。*/
+			const auto& attackParameter = AttackParameterTable::GetAttackParameter(m_currentAttackType);
+
+			/* 
+			 * 最終的なダメージ量を計算する。
+			 * ダメージ量 = 基本ダメージ * 攻撃の倍率。
+			 */
+			m_finalDamage = static_cast<int>(playerStatus.normalDamage * attackParameter.damageMultiplier);
+
+			/* 確率でクリティカル補正をかける。*/
+			m_criticalRate = playerStatus.criticalRate + attackParameter.criticalRatel;
+			if ((rand() % 100) < (m_criticalRate * 100.0f))
+				m_finalDamage = static_cast<int>(m_finalDamage * playerStatus.criticalDamage);
+
+
+			/* テキストの座標を設定する。*/
+			m_screenPosition = m_getPlayerPosition;
+			m_screenPosition.x += m_forwardDirection.x * 30.0f;
+			m_screenPosition.y += m_forwardDirection.y * 30.0f;
+			m_screenPosition.y += 120.0f; 
+			m_screenPosition.z -= 40.0f;
+
+
+			/* ダメージテキストを表示する。*/ 
+			m_damageIndicator = NewGO<PresentDamageIndicator>(0, "DamageUI");
+			m_damageIndicator->Init(m_finalDamage, m_screenPosition);
+
+		}
+
 
 
 		bool PlayerAttackBaseState::CheckCombo(PLAYER_STATE_ID currentStateID, uint8_t& id)

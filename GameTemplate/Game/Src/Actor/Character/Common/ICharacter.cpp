@@ -7,6 +7,10 @@ namespace nsApp
 	{
 		void ICharacter::Update()
 		{
+			/* ヒットストップタイマーを減らす。*/
+			if (m_hitStopFlame > 0)
+				m_hitStopFlame--;
+
 			/* Actorクラスの更新。*/
 			Actor::Update();
 		}

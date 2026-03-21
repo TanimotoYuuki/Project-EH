@@ -26,6 +26,7 @@ namespace nsApp
 
 			/* ‰‘¬‚ðÝ’èB*/
 			SetJumpVelocity(200.0f);
+			m_player->GetWeaponHitDetection().Enable();
 		}
 
 
