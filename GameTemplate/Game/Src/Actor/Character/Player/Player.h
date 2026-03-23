@@ -12,8 +12,13 @@
 #include "Src/Actor/Character/Common/CharacterAnimation.h"
 #include "Src/Actor/Character/Common/WeaponHitDetection.h"
 
+#include "Src/Effect/EffectList.h"
 namespace nsApp
 {
+	namespace nsEffect {
+		class EffectList;
+	}
+
 	namespace nsActor
 	{
 		/* プレイヤーの状態を管理する列挙型。*/
@@ -29,6 +34,7 @@ namespace nsApp
 
 			/* 攻撃状態。*/
 			enNormalAttack,   /* 攻撃状態。*/
+			enCharging,       /* チャージ状態。*/
 			enChargeAttack,   /* チャージ攻撃状態。*/
 			enAirAttack,	  /* 空中攻撃状態。*/
 			enComboAttack,	  /* コンボ攻撃状態 1段目。*/
@@ -68,13 +74,7 @@ namespace nsApp
 			void PlayBasicAnimation(CharacterBasicAnimationList state);
 
 			/* 攻撃用アニメーションを再生。*/
-			inline void PlayWeaponAnimation(AttackType attack)
-			{
-				/* 攻撃アニメーションの数を取得。*/
-				animIndex = m_playerAnimation.GetAttackAnimationIndex(attack);
-				/* 攻撃アニメーションはボタンを押した瞬間に切り替わってほしいため補完割合を低めに設定。*/
-				m_model.PlayAnimation(animIndex, 0.05f);
-			}
+			void PlayWeaponAnimation(AttackType attack);
 
 
 		/* セッター。*/
@@ -171,19 +171,28 @@ namespace nsApp
 				return m_weaponHitDetection;
 			}
 
+			/* エフェクトリストを取得。*/
+			inline nsEffect::EffectList& GetEffectList()
+			{
+				return m_effectList;
+			}
+
 
 		private:
-			WeaponHitDetection m_weaponHitDetection;
+			nsK2EngineLow::EffectEmitter* m_chargeEffect = nullptr;                                                //! チャージエフェクトのリモコン       
+
+
+		private:
+			nsApp::nsEffect::EffectList m_effectList;                                                              //! エフェクト管理クラス
+			WeaponHitDetection m_weaponHitDetection;                                                               //! 武器の当たり判定を管理するクラス。
+			WeaponType m_currentWeapon = WeaponType::GreatSword;                                                   //! 現在の武器。@TODO 武器の種類を増やす際に要調整。
+			PlayerInput m_playerInput;                                                                             //! プレイヤーの入力を管理するクラス。
+			PlayerStateID m_playerStateID;                                                                         //! プレイヤーの状態ID。
 
 
 		private:
 			CharacterAnimation m_playerAnimation;                                                                  //! プレイヤーのアニメーション。
 			CharacterController m_characterController;                                                             //! プレイヤーのキャラコン。
-
-			WeaponType m_currentWeapon = WeaponType::GreatSword;                                                   //! 現在の武器。@TODO 武器の種類を増やす際に要調整。
-
-			PlayerInput m_playerInput;                                                                             //! プレイヤーの入力を管理するクラス。
-			PlayerStateID m_playerStateID;                                                                         //! プレイヤーの状態ID。
 
 			Quaternion m_angle = Quaternion::Identity ;                                                            //! プレイヤーの回転角。
 			Quaternion m_weaponAngle = Quaternion::Identity;                                                       //! 武器の回転角。

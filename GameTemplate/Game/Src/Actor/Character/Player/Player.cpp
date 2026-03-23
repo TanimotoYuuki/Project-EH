@@ -17,8 +17,10 @@
 #include "Src/Actor/Character/Player/State/AttackState/ComboState/PlayerRushEndState.h"
 #include "Src/Actor/Character/Player/State/AttackState/ComboState/PlayerSlashUpState.h"
 #include "Src/Actor/Character/Player/State/AttackState/ComboState/PlayerPushState.h"
+#include "Src/Actor/Character/Player/State/AttackState/PlayerChargingState.h"
 
 #include "Src/Actor/Character/Common/WeaponHitDetection.h"
+#include "Src/Sound/SoundLister.h"
 
 namespace
 {
@@ -72,6 +74,9 @@ namespace nsApp
 			m_stateMachine->ChangeState(m_stateFactory[PlayerStateID::enIdle]());
 
 			SetWaitInputTimer(10);
+
+			/* エフェクトを初期化する。*/
+			m_effectList.Init();
 
 			return true;
 		}
@@ -152,6 +157,32 @@ namespace nsApp
 		}
 
 
+		void Player::PlayWeaponAnimation(AttackType attack)
+		{
+			/* 攻撃アニメーションの数を取得。*/
+			animIndex = m_playerAnimation.GetAttackAnimationIndex(attack);
+			/* 攻撃アニメーションはボタンを押した瞬間に切り替わってほしいため補完割合を低めに設定。*/
+			m_model.PlayAnimation(animIndex, 0.05f);
+
+			/* --- ここからSE再生処理 --- */
+			/* サウンド管理クラスを探す */
+			auto soundManager = FindGO<nsSound::SoundLister>("SoundManager");
+			if (soundManager != nullptr)
+			{
+				/* 連続攻撃の時だけ専用のSEを鳴らす */
+				if (attack == AttackType::RushAttack_Start || attack == AttackType::RushAttack_End)
+				{
+					soundManager->GetSEList().PlaySE(nsSound::SE_ID::RushAttack, 1.0f);
+				}
+				/* それ以外の攻撃（通常、空中、チャージ、斬り上げ、突き進みなど）はデフォルトSE */
+				else
+				{
+					soundManager->GetSEList().PlaySE(nsSound::SE_ID::NormalAttack, 1.0f);
+				}
+			}
+		}
+
+
 		void Player::RegisterState()
 		{
 			/* 待機状態。*/
@@ -177,6 +208,9 @@ namespace nsApp
 
 			/* チャージ攻撃状態。*/
 			m_stateFactory[PlayerStateID::enChargeAttack] = []() { return new nsState::PlayerChargeAttackState(); };
+
+			/* チャージ中状態。*/
+			m_stateFactory[PlayerStateID::enCharging] = []() { return new nsState::PlayerChargingState(); };
 
 			/* 空中攻撃状態。*/
 			m_stateFactory[PlayerStateID::enAirAttack] = []() { return new nsState::PlayerAirAttackState(); };

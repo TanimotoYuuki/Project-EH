@@ -48,6 +48,8 @@ namespace nsApp
 					{ inputClass.IsMove(), nsActor::PlayerStateID::enWalk },
 					/* 通常攻撃状態。*/
 					{ inputClass.IsNormalAttack(), nsActor::PlayerStateID::enNormalAttack },
+					/* チャージ状態。*/
+					{ inputClass.IsCharging(), nsActor::PlayerStateID::enCharging},
 					/* チャージ攻撃状態。*/
 					{ inputClass.IsChargeAttack(), nsActor::PlayerStateID::enChargeAttack },
 					/* コンボ攻撃状態。*/

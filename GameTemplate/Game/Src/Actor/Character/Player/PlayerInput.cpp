@@ -111,5 +111,6 @@ namespace nsApp
 		*/
 		m_chargeButtonTimer = m_isPressButton ? m_chargeButtonTimer + CHARGE_FLAG_TRUE : CHARGE_FLAG_FALSE;
 
+		m_isChargeStart = (m_isPressButton && m_chargeButtonTimer >= 5);
 	}
 }
