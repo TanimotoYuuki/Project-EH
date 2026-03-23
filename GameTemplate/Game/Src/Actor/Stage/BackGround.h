@@ -17,12 +17,11 @@ namespace nsApp
 			virtual ~BackGround();
 
 		public:
-			bool Start() override;
-			void Update() override;
+			bool Start() ;
 
 
 		private:
-			nsK2Engine::SkyCube* m_skyCube = nullptr;
+			nsK2Engine::SkyCube* m_skyCube = nullptr; //! スカイキューブ。
 		};
 	}
 }
