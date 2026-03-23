@@ -25,6 +25,7 @@ namespace nsApp
 	enum class AttackType : uint8_t
 	{
 		NormalAttack,          /* 通常攻撃。*/
+		Charging,              /* チャージ中。*/
 		ChargeAttack,          /* チャージ攻撃。*/
 		AirAttack,             /* 空中攻撃。*/
 		RushAttack_Start,      /* 連続攻撃。*/

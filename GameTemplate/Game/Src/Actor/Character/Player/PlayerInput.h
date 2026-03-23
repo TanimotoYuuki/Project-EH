@@ -37,6 +37,12 @@ namespace nsApp
 			return m_isNormalAttack;
 		}
 
+		/* チャージ中判定。*/
+		inline bool IsCharging() const
+		{
+			return m_isChargeStart;
+		}
+
 		/* チャージ攻撃判定。*/
 		inline bool IsChargeAttack() const
 		{
@@ -109,6 +115,12 @@ namespace nsApp
 			return m_moveVec;
 		}
 
+		/* チャージ時間を取得する。*/
+		inline float GetChargeTimer() const
+		{
+			return m_isChargeStart;
+		}
+
 
 	private:
 		bool m_isAttack = false;             /* 攻撃したかどうかを判定。*/
@@ -118,7 +130,6 @@ namespace nsApp
 		bool m_isDamage = false;             /* ダメージを受けたかどうかを判定。*/
 		bool m_isDeath = false;              /* 死亡したかどうかを判定。*/
 		bool m_isNormalAttack = false;       /* 攻撃入力を検知。*/
-		bool m_isChargeAttack = false;       /* チャージ攻撃入力を検知。*/
 		bool m_isAirAttack = false;          /* 空中攻撃入力を検知。*/
 		bool m_isComboAttack = false;        /* コンボ攻撃入力を検知。*/
 		bool m_isInputEnable = true;         /* 入力を検知。*/
@@ -127,7 +138,8 @@ namespace nsApp
 		bool m_isRushEnd = false;            /* 連続攻撃が終わっているかを検知。*/
 		bool m_isJumpRequested = false;      /* ジャンプの入力があったかどうかを判定。*/
 		bool m_isSlashUp = false;            /* 斬り上げの入力を検知。*/
-
+		bool m_isChargeStart = false;        /* チャージ攻撃の入力を検知。*/
+		bool m_isChargeAttack = false;       /* チャージ攻撃の入力を検知。*/
 
 		float m_stickX = 0.0f;               /* スティックのX軸の値。*/
 		float m_stickY = 0.0f;               /* スティックのY軸の値。*/

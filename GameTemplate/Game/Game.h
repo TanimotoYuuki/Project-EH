@@ -8,9 +8,6 @@ class Player;
 namespace nsApp
 {
 	class Camera;
-	namespace nsStage	{
-		class BackGround;
-	}
 
 	namespace nsActor {
 		class Player;
@@ -34,7 +31,6 @@ namespace nsApp
 
 		private:
 			nsApp::Camera* m_camera = nullptr;
-			nsStage::BackGround* m_backGround = nullptr;
 			nsActor::Player* m_player = nullptr;
 			nsActor::Sandbag* m_sandbag = nullptr;
 		};

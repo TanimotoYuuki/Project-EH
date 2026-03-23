@@ -142,6 +142,11 @@
     </ClCompile>
     <ClCompile Include="Src\Actor\Character\Status\AttackParameterTable.cpp" />
     <ClCompile Include="Src\Actor\Stage\BackGround.cpp" />
+    <ClCompile Include="Src\Sound\SEList.cpp" />
+    <ClCompile Include="Src\Sound\BGMList.cpp" />
+    <ClCompile Include="Src\Sound\SoundLister.cpp" />
+    <ClCompile Include="Src\Effect\EffectList.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\State\AttackState\PlayerChargingState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -245,5 +250,10 @@
     <ClInclude Include="Src\Actor\Character\Common\WeaponHitDetection.h" />
     <ClInclude Include="Src\Actor\Character\Status\AttackParameterTable.h" />
     <ClInclude Include="Src\Actor\Stage\BackGround.h" />
+    <ClInclude Include="Src\Sound\SEList.h" />
+    <ClInclude Include="Src\Sound\BGMList.h" />
+    <ClInclude Include="Src\Sound\SoundLister.h" />
+    <ClInclude Include="Src\Effect\EffectList.h" />
+    <ClInclude Include="Src\Actor\Character\Player\State\AttackState\PlayerChargingState.h" />
   </ItemGroup>
 </Project>
