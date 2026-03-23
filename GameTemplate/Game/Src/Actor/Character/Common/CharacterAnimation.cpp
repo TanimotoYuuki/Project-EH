@@ -46,6 +46,9 @@ namespace nsApp
 		/* 待機状態。*/
 		m_greatSwordData.weaponAnimationList[AttackType::NormalAttack] = GetWeaponAnimationFilePath("GreatSword/GreatSword_NormalAttack");
 
+		/* チャージ中。*/
+		m_greatSwordData.weaponAnimationList[AttackType::Charging] = GetWeaponAnimationFilePath("GreatSword/GreatSword_Charge");
+
 		/* チャージ攻撃。*/
 		m_greatSwordData.weaponAnimationList[AttackType::ChargeAttack] = GetWeaponAnimationFilePath("GreatSword/GreatSword_ChargeAttack");
 

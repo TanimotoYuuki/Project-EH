@@ -4,8 +4,8 @@
 #include "Src/Actor/Stage/LoadStageData.h"
 #include "Src/Camera/Camera.h"
 #include "Src/Actor/Character/Player/Player.h"
-#include "Src/Actor/Stage/BackGround.h"
 #include "Src/Debug/Sandbag.h"
+#include "Src/Sound/SoundLister.h"
 
 namespace nsApp
 {
@@ -14,7 +14,6 @@ namespace nsApp
 		Game::~Game()
 		{
 			DeleteGO(m_camera);
-			DeleteGO(m_backGround);
 			DeleteGO(m_player);
 			DeleteGO(m_sandbag);
 		}
@@ -26,12 +25,13 @@ namespace nsApp
 			/* @TODO ステージ選択画面からこの処理を呼ぶようにする。*/
 			nsApp::nsStage::LoadStageData::GetInstance().ChangeStage(nsApp::nsStage::StageID::stage1);
 
+			NewGO<nsSound::SoundLister>(0, "SoundManager");
+
 			/* カメラを生成。*/
 			m_camera = NewGO<Camera>(0, "camera");
 
 			PhysicsWorld::GetInstance()->EnableDrawDebugWireFrame();
 
-		//	m_backGround = NewGO<nsStage::BackGround>(0, "backGround");
 			m_player = NewGO<nsActor::Player>(0, "player");
 			m_sandbag = NewGO<nsActor::Sandbag>(0, "Sandbag");
 			return true;
