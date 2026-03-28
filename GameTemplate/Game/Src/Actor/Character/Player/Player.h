@@ -31,6 +31,9 @@ namespace nsApp
 			enJump,           /* ジャンプ状態。*/
 			enHit,            /* 被弾状態。*/
 			enDeath,          /* 死亡状態。*/
+			enGuard,          /* ガード状態。*/
+			enHelp,           /* 助け中。*/
+			enGetUp,          /* 起き上がり状態。*/
 
 			/* 攻撃状態。*/
 			enNormalAttack,   /* 攻撃状態。*/
@@ -68,6 +71,8 @@ namespace nsApp
 			/* 攻撃力の初期化処理。*/
 			void InitAttackStatus();
 
+			/* ダミーモデルの初期化。*/
+			void InitDummyModel();
 
 		public:
 			/* 基本動作用アニメーションを再生。*/
@@ -75,6 +80,12 @@ namespace nsApp
 
 			/* 攻撃用アニメーションを再生。*/
 			void PlayWeaponAnimation(AttackType attack);
+
+			/* 起き上がり状態。*/
+			void ReceiveHelp();
+
+			/* 助ける対象のキャラクターを探索する。*/
+			nsActor::Player* SearchCharacter();
 
 
 		/* セッター。*/

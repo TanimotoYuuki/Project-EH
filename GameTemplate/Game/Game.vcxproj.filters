@@ -147,6 +147,9 @@
     <ClCompile Include="Src\Sound\SoundLister.cpp" />
     <ClCompile Include="Src\Effect\EffectList.cpp" />
     <ClCompile Include="Src\Actor\Character\Player\State\AttackState\PlayerChargingState.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\State\BasicState\PlayerGuardState.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\State\BasicState\PlayerReBoneState.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\State\BasicState\PlayerGetUpState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -255,6 +258,9 @@
     <ClInclude Include="Src\Sound\SoundLister.h" />
     <ClInclude Include="Src\Effect\EffectList.h" />
     <ClInclude Include="Src\Actor\Character\Player\State\AttackState\PlayerChargingState.h" />
+    <ClInclude Include="Src\Actor\Character\Player\State\BasicState\PlayerGuardState.h" />
+    <ClInclude Include="Src\Actor\Character\Player\State\BasicState\PlayerReBoneState.h" />
+    <ClInclude Include="Src\Actor\Character\Player\State\BasicState\PlayerGetUpState.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\shader\model_no_ibl.fx" />

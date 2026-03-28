@@ -16,6 +16,7 @@ namespace nsApp
 		{
 			DeleteGO(m_camera);
 			DeleteGO(m_player);
+			DeleteGO(m_player2);
 			DeleteGO(m_sandbag);
 		}
 
@@ -34,6 +35,8 @@ namespace nsApp
 			PhysicsWorld::GetInstance()->EnableDrawDebugWireFrame();
 
 			m_player = NewGO<nsActor::Player>(0, "player");
+			m_player2 = NewGO<nsActor::Player>(0, "player2");
+
 			m_sandbag = NewGO<nsActor::Sandbag>(0, "Sandbag");
 			return true;
 		}
