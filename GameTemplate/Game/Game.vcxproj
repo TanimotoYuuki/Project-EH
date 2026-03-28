@@ -315,6 +315,11 @@
     <ClInclude Include="Title.h" />
     <ClInclude Include="Src\Actor\Character\Common\WeaponHitDetection.h" />
   </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Assets\shader\model_no_ibl.fx">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </FxCompile>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
