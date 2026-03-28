@@ -15,6 +15,9 @@ namespace nsApp
 			/* キャスト。*/
 			m_player = static_cast<nsActor::Player*>(m_owner);
 
+			/* 攻撃のタイプを設定する。*/
+			m_currentAttackType = AttackType::PushForward;
+
 			/* キャスト。*/
 			m_player->PlayWeaponAnimation(AttackType::PushForward);
 

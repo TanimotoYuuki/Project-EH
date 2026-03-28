@@ -42,6 +42,7 @@ namespace nsApp
             /* 遷移。*/
             bool RequestID(uint8_t& id);
 
+
         private:
 			nsActor::Player* m_player;          //! プレイヤーのポインタ。
             nsK2EngineLow::EffectEmitter* m_chargeEffect = nullptr;
