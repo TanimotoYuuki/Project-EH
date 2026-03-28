@@ -6,6 +6,7 @@
 #include "Src/Actor/Character/Player/Player.h"
 #include "Src/Debug/Sandbag.h"
 #include "Src/Sound/SoundLister.h"
+#include "Src/Actor/Stage/BackGround.h"
 
 namespace nsApp
 {
@@ -26,7 +27,7 @@ namespace nsApp
 			nsApp::nsStage::LoadStageData::GetInstance().ChangeStage(nsApp::nsStage::StageID::stage1);
 
 			NewGO<nsSound::SoundLister>(0, "SoundManager");
-
+			NewGO<nsStage::BackGround>(0, "BackGround");
 			/* ƒJƒƒ‰‚ğ¶¬B*/
 			m_camera = NewGO<Camera>(0, "camera");
 

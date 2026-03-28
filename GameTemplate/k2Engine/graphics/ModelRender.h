@@ -76,7 +76,7 @@ namespace nsK2Engine {
 		/// 特殊なシェーディングを行いたい場合の初期化処理。
 		/// </summary>
 		/// <param name="initData">モデルデータ。</param>
-		void InitForwardRendering(ModelInitData& initData);
+		void InitForwardRendering(ModelInitData& initData, AnimationClip* animClip = nullptr, int numAnimationClip = 0);
 		/// <summary>
 		/// 更新処理。
 		/// </summary>
