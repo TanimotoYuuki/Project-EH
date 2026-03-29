@@ -224,8 +224,19 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="CharacterHP.cpp" />
+    <ClCompile Include="ConfirmationSelect.cpp" />
+    <ClCompile Include="GameClearDirection.cpp" />
+    <ClCompile Include="GameEndSelect.cpp" />
+    <ClCompile Include="GameOverDirection.cpp" />
+    <ClCompile Include="GameStartDirection.cpp" />
+    <ClCompile Include="Result.cpp" />
+    <ClCompile Include="Src\Fade\Fade.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MemberSelect.cpp" />
+    <ClCompile Include="QuestSelect.cpp" />
+    <ClCompile Include="Select.cpp" />
     <ClCompile Include="Src\Actor\Actor.cpp" />
     <ClCompile Include="Src\Actor\Character\Common\CharacterAnimation.cpp" />
     <ClCompile Include="Src\Actor\Character\Common\CharacterModel.cpp" />
@@ -255,11 +266,25 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Preview|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="system\system.cpp" />
+    <ClCompile Include="GameTimeLimit.cpp" />
+    <ClCompile Include="GameTimeUpDirection.cpp" />
     <ClCompile Include="Title.cpp" />
+    <ClCompile Include="Src\UIAnimation\UIAnimation.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="CharacterHP.h" />
+    <ClInclude Include="ConfirmationSelect.h" />
+    <ClInclude Include="GameClearDirection.h" />
+    <ClInclude Include="GameEndSelect.h" />
+    <ClInclude Include="GameOverDirection.h" />
+    <ClInclude Include="GameStartDirection.h" />
+    <ClInclude Include="Result.h" />
+    <ClInclude Include="Src\Fade\Fade.h" />
     <ClInclude Include="Game.h" />
+    <ClInclude Include="MemberSelect.h" />
+    <ClInclude Include="QuestSelect.h" />
+    <ClInclude Include="Select.h" />
     <ClInclude Include="Src\Actor\Actor.h" />
     <ClInclude Include="Src\Actor\Character\Common\CharacterAnimation.h" />
     <ClInclude Include="Src\Actor\Character\Common\CharacterModel.h" />
@@ -289,7 +314,10 @@
     <ClInclude Include="Src\StateMachine\StateMachine.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="system\system.h" />
+    <ClInclude Include="GameTimeLimit.h" />
+    <ClInclude Include="GameTimeUpDirection.h" />
     <ClInclude Include="Title.h" />
+    <ClInclude Include="Src\UIAnimation\UIAnimation.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
