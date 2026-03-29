@@ -15,9 +15,6 @@ namespace nsApp
 		{
 			/* 攻撃の種類ごとにキャストを行う。*/
 			m_player = static_cast<nsActor::Player*>(m_owner);
-
-			/* 攻撃後にダメージ量のテキストを描画。*/
-			OnHitDamageText();
 		}
 
 
@@ -65,7 +62,7 @@ namespace nsApp
 				if (m_player->GetWeaponHitDetection().IsHit(sandBag))
 				{
 					/* ダメージ数テキストを描画。*/
-					OnHitDamageText();
+					OnHitDamageText(sandBag);
 
 					/* ヒットストップを発生させる。*/
 					m_player->SetHitStop(8);
@@ -86,47 +83,32 @@ namespace nsApp
 		}
 
 
-		void PlayerAttackBaseState::OnHitDamageText()
+		void PlayerAttackBaseState::OnHitDamageText(nsActor::ICharacter* target)
 		{
-			if (!m_player)
+			// m_player や target が無い時は何もしない
+			if (!m_player || !target)
 				return;
 
-			/* プレイヤーの座標と向きを取得する。*/ 
+			/* --- ダメージ計算はそのまま --- */
 			m_getPlayerPosition = m_player->GetPosition();
 			m_forwardDirection = m_player->GetForwardVector();
-
-			/* プレイヤークラスのステータスを取得。*/
 			const auto& playerStatus = m_player->GetCharacterStatus().attack;
-
-			/* テーブルから現在発動中のパラメータを貰う。*/
 			const auto& attackParameter = AttackParameterTable::GetAttackParameter(m_currentAttackType);
 
-			/* 
-			 * 最終的なダメージ量を計算する。
-			 * ダメージ量 = 基本ダメージ * 攻撃の倍率。
-			 */
 			m_finalDamage = static_cast<int>(playerStatus.normalDamage * attackParameter.damageMultiplier);
 
-			/* 確率でクリティカル補正をかける。*/
 			m_criticalRate = playerStatus.criticalRate + attackParameter.criticalRatel;
 			if ((rand() % 100) < (m_criticalRate * 100.0f))
 				m_finalDamage = static_cast<int>(m_finalDamage * playerStatus.criticalDamage);
 
 
-			/* テキストの座標を設定する。*/
-			m_screenPosition = m_getPlayerPosition;
-			m_screenPosition.x += m_forwardDirection.x * 30.0f;
-			m_screenPosition.y += m_forwardDirection.y * 30.0f;
-			m_screenPosition.y += 120.0f; 
-			m_screenPosition.z -= 40.0f;
+			m_screenPosition = target->GetPosition();
+			m_screenPosition.y += 120.0f;
 
-
-			/* ダメージテキストを表示する。*/ 
+			/* ダメージテキストを表示する。*/
 			m_damageIndicator = NewGO<PresentDamageIndicator>(0, "DamageUI");
 			m_damageIndicator->Init(m_finalDamage, m_screenPosition);
-
 		}
-
 
 
 		bool PlayerAttackBaseState::CheckCombo(PLAYER_STATE_ID currentStateID, uint8_t& id)

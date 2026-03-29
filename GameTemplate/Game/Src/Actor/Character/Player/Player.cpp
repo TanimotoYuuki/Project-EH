@@ -8,6 +8,9 @@
 #include "Src/Actor/Character/Player/State/BasicState/PlayerRunState.h"
 #include "Src/Actor/Character/Player/State/BasicState/PlayerHitState.h"
 #include "Src/Actor/Character/Player/State/BasicState/PlayerDethState.h"
+#include "Src/Actor/Character/Player/State/BasicState/PlayerGuardState.h"
+#include "Src/Actor/Character/Player/State/BasicState/PlayerReBoneState.h"
+#include "Src/Actor/Character/Player/State/BasicState/PlayerGetUpState.h"
 
 /* 攻撃ステート。*/
 #include "Src/Actor/Character/Player/State/AttackState/PlayerNormalAttackState.h"
@@ -24,8 +27,12 @@
 
 namespace
 {
-	const auto ANGLE_Y = 90.0f; /* プレイヤーの初期角度。*/
-	const Vector3 POS = Vector3(0.0f, 50.0f, 0.0f);
+	const auto CHARACON_RADIUS = 12.5f;                 //! キャラクターコントローラーの半径。
+	const auto CHARACON_HEIGHT = 30.0f;                 //! キャラクターコントローラーの高さ。
+	const auto WEAPON_HIT_RADIUS = 40.0f;               //! 武器の当たり判定の半径。
+	
+	const auto ANGLE_Y = 90.0f;                         //! プレイヤーの初期角度。
+	const Vector3 POS = Vector3(0.0f, 50.0f, 0.0f);     //! プレイヤーの初期座標。
 }
 
 namespace nsApp
@@ -63,20 +70,36 @@ namespace nsApp
 			m_angle.AddRotationDegY(ANGLE_Y);
 			m_model.SettRotation(m_angle);
 
-			m_currentPosition = POS;
-			m_characterController.Init(5.0f, 8.0f, POS);
-
 			/* ステータスを初期化。*/
 			InitAttackStatus();
 
 			/* ステートを生成する。*/
 			RegisterState();
-			m_stateMachine->ChangeState(m_stateFactory[PlayerStateID::enIdle]());
+
+
+			/* 
+			 * ダミーモデル配置用。
+			 * MPCの実装が完了後、削除可。
+			 */
+
+		    ///////////////////////////////////////////////////////////////////////////////////////
+			if (IsMatchName("player2"))
+				InitDummyModel();
+
+			else
+				m_stateMachine->ChangeState(m_stateFactory[PlayerStateID::enIdle]());
+
+			////////////////////////////////////////////////////////////////////////////////////////
+
+			m_currentPosition = POS;
+			m_characterController.Init(CHARACON_RADIUS, CHARACON_HEIGHT, m_currentPosition);
+			m_model.SetPosition(m_currentPosition);
 
 			SetWaitInputTimer(10);
-
-			/* エフェクトを初期化する。*/
 			m_effectList.Init();
+
+			/* 武器の当たり判定を設定。*/
+			m_weaponHitDetection.Init(WEAPON_HIT_RADIUS);
 
 			return true;
 		}
@@ -150,6 +173,19 @@ namespace nsApp
 		}
 
 
+		void Player::InitDummyModel()
+		{
+			/* 座標をメインプレイヤーからずらす。*/
+			m_currentPosition.x -= 150.0f;
+
+			/* HPを0にしておく。*/
+			m_characterStatus.hp.currentHP = 0;
+
+			/* 最初から死亡ステートへ遷移させる。*/
+			m_stateMachine->ChangeState(m_stateFactory[PlayerStateID::enDeath]());
+		}
+
+
 		void Player::PlayBasicAnimation(CharacterBasicAnimationList state)
 		{
 			int animIndex = m_playerAnimation.GetBasicAnimationIndex(state);
@@ -171,15 +207,41 @@ namespace nsApp
 			{
 				/* 連続攻撃の時だけ専用のSEを鳴らす */
 				if (attack == AttackType::RushAttack_Start || attack == AttackType::RushAttack_End)
-				{
 					soundManager->GetSEList().PlaySE(nsSound::SE_ID::RushAttack, 1.0f);
-				}
+
 				/* それ以外の攻撃（通常、空中、チャージ、斬り上げ、突き進みなど）はデフォルトSE */
 				else
-				{
 					soundManager->GetSEList().PlaySE(nsSound::SE_ID::NormalAttack, 1.0f);
+			}
+		}
+
+
+		void Player::ReceiveHelp()
+		{
+
+			m_characterStatus.hp.currentHP = 1000;
+
+			/* 自分のHPを回復させる。*/
+			/* 起き上がりステート（PlayerGetUpState）へ強制移行。*/
+			m_stateMachine->ChangeState(m_stateFactory[PlayerStateID::enGetUp]());
+
+
+		}
+
+
+		nsActor::Player* Player::SearchCharacter()
+		{
+			auto target = FindGO<nsActor::Player>("player2");
+			if (target != nullptr)
+			{
+				if (target->GetCharacterStatus().hp.currentHP <= 0)
+				{
+					Vector3 diff = GetPosition() - target->GetPosition();
+					if(diff.Length() < 150.0f)
+						return target;
 				}
 			}
+			return nullptr;
 		}
 
 
@@ -202,6 +264,15 @@ namespace nsApp
 
 			/* 死亡状態。*/
 			m_stateFactory[PlayerStateID::enDeath] = []() { return new nsState::PlayerDethState(); };
+
+			/* ガード状態。*/
+			m_stateFactory[PlayerStateID::enGuard] = []() { return new nsState::PlayerGuardState(); };
+
+			/* 復活状態。*/
+			m_stateFactory[PlayerStateID::enHelp] = []() { return new nsState::PlayerReBoneState(); };
+
+			/* 助けられ状態。*/
+			m_stateFactory[PlayerStateID::enGetUp] = []() { return new nsState::PlayerGetUpState(); };
 
 			/* 通常攻撃状態。*/
 			m_stateFactory[PlayerStateID::enNormalAttack] = []() { return new nsState::PlayerNormalAttackState(); };

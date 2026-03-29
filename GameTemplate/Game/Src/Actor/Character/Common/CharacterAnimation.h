@@ -19,6 +19,8 @@ namespace nsApp
 		Hit_Fly,    /* 被弾。*/
 		Hit_UP,     /* 起き上がり。*/
 		Death,      /* 死亡。*/
+		Guard,      /* ガード。*/
+		Help,       /* 助け中。*/
 	};
 
 	/* 攻撃の種類を管理する列挙型。*/

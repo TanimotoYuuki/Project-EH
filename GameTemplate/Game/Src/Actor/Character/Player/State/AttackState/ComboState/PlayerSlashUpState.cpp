@@ -18,6 +18,9 @@ namespace nsApp
 			/* キャスト。*/
 			m_player = static_cast<nsActor::Player*>(m_owner);
 
+			/* 攻撃のタイプを設定する。*/
+			m_currentAttackType = AttackType::SlashUp;
+
 			/* アニメーションを再生。*/
 			m_player->PlayWeaponAnimation(AttackType::SlashUp);
 

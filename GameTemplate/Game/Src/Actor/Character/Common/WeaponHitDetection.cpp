@@ -13,7 +13,6 @@ namespace nsApp
 	{
 		/* 当たり判定をセットする。*/
 		m_radius = radius;
-		m_radius = HIT_RADIUS;
 		SetRadius(m_radius);
 	}
 

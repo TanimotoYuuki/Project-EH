@@ -11,11 +11,15 @@ namespace nsApp
 			/* キャスト。*/
 			m_player = static_cast<nsActor::Player*>(m_owner);
 
+			/* 攻撃のタイプをセット。*/
+			m_currentAttackType = AttackType::ChargeAttack;
+
 			/* アニメーションを再生させる。*/
 			m_player->PlayWeaponAnimation(AttackType::ChargeAttack);
 
 			/* 当たり判定を有効にする。*/
 			m_player->GetWeaponHitDetection().Enable();
+
 		}
 
 

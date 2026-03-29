@@ -37,6 +37,12 @@ namespace nsApp
 
 		/* Deathアニメーション。*/ 
 		m_basicAnimationFilePathList[CharacterBasicAnimationList::Death] = GetBasicAnimationFilePath("GreatSword/Deth");
+
+       /* Guardアニメーション。*/
+		m_basicAnimationFilePathList[CharacterBasicAnimationList::Guard] = GetBasicAnimationFilePath("GreatSword/Guard");
+
+        /* Helpアニメーション。*/
+		m_basicAnimationFilePathList[CharacterBasicAnimationList::Help] = GetBasicAnimationFilePath("GreatSword/Help");
 	}
 
 
@@ -92,7 +98,8 @@ namespace nsApp
 			 * 今回はダメージアニメーション。  
 			 */
 			if (pair.first == CharacterBasicAnimationList::Hit_Fly ||
-				pair.first == CharacterBasicAnimationList::Hit_UP)
+				pair.first == CharacterBasicAnimationList::Hit_UP ||
+				pair.first == CharacterBasicAnimationList::Help)
 				/* ダメージと死亡はループさせない。*/
 				/* true だと ループ。*/
 				m_isLoop = false;
