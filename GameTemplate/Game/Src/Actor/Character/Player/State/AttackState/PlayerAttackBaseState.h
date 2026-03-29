@@ -62,7 +62,7 @@ namespace nsApp
              * @param hitPosition ダメージテキストを表示する位置。
              * @param currentAttackType 現在の攻撃タイプ。
              */
-			void OnHitDamageText();
+			void OnHitDamageText(nsActor::ICharacter* target);
 
 
 		protected:

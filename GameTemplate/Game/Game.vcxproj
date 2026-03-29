@@ -228,6 +228,9 @@
     <ClCompile Include="PresentDamageIndicator.cpp" />
     <ClCompile Include="Src\Actor\Actor.cpp" />
     <ClCompile Include="Src\Actor\Character\Player\State\AttackState\PlayerChargingState.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\State\BasicState\PlayerGetUpState.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\State\BasicState\PlayerGuardState.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\State\BasicState\PlayerReBoneState.cpp" />
     <ClCompile Include="Src\Actor\Character\Status\AttackParameterTable.cpp" />
     <ClCompile Include="Src\Actor\Stage\BackGround.cpp" />
     <ClCompile Include="Src\Camera\Camera.cpp" />
@@ -274,6 +277,9 @@
     <ClInclude Include="PresentDamageIndicator.h" />
     <ClInclude Include="Src\Actor\Actor.h" />
     <ClInclude Include="Src\Actor\Character\Player\State\AttackState\PlayerChargingState.h" />
+    <ClInclude Include="Src\Actor\Character\Player\State\BasicState\PlayerGetUpState.h" />
+    <ClInclude Include="Src\Actor\Character\Player\State\BasicState\PlayerGuardState.h" />
+    <ClInclude Include="Src\Actor\Character\Player\State\BasicState\PlayerReBoneState.h" />
     <ClInclude Include="Src\Actor\Character\Status\AttackParameterTable.h" />
     <ClInclude Include="Src\Actor\Stage\BackGround.h" />
     <ClInclude Include="Src\Camera\Camera.h" />

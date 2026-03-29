@@ -11,6 +11,9 @@ namespace nsApp
 			/* キャスト。*/
 			m_player = static_cast<nsActor::Player*>(m_owner);
 
+			/* 攻撃のタイプを設定する。*/
+			m_currentAttackType = AttackType::RushAttack_End;
+
 			/* アニメーションの再生。*/
 			m_player->PlayWeaponAnimation(AttackType::RushAttack_End);
 			m_player->GetWeaponHitDetection().Enable();

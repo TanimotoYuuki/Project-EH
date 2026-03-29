@@ -121,6 +121,18 @@ namespace nsApp
 			return m_isChargeStart;
 		}
 
+		/* ガード判定。*/
+		inline bool IsGuard() const
+		{
+			return m_isGuard;
+		}
+
+		/* 助ける判定。*/
+		inline bool IsHelp() const
+		{
+			return m_isHelp;
+		}
+
 
 	private:
 		bool m_isAttack = false;             /* 攻撃したかどうかを判定。*/
@@ -140,6 +152,8 @@ namespace nsApp
 		bool m_isSlashUp = false;            /* 斬り上げの入力を検知。*/
 		bool m_isChargeStart = false;        /* チャージ攻撃の入力を検知。*/
 		bool m_isChargeAttack = false;       /* チャージ攻撃の入力を検知。*/
+		bool m_isGuard = false;              /* ガードの入力を検知。*/
+		bool m_isHelp = false;               /* 助ける入力を検知。*/
 
 		float m_stickX = 0.0f;               /* スティックのX軸の値。*/
 		float m_stickY = 0.0f;               /* スティックのY軸の値。*/

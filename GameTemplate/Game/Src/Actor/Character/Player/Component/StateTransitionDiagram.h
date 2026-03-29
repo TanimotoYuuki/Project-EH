@@ -3,7 +3,7 @@
 * @file StateTransitionDiagram.h
 * @brief 状態遷移図を管理するクラス。
 * @author Yamaguchi Hayato
-* @date 2026/03/16
+* @date 2026/03/24
 */
 
 #include "stdint.h"
@@ -58,6 +58,10 @@ namespace nsApp
 					{ inputClass.IsRushStart(), nsActor::PlayerStateID::enRushStart},
 					/* 連続攻撃終了判定。*/
 					{ inputClass.IsRushEnd(), nsActor::PlayerStateID::enRushEnd},
+					/* ガード状態。*/
+					{ inputClass.IsGuard(), nsActor::PlayerStateID::enGuard},
+					/* 助ける状態。*/
+					{ inputClass.IsHelp(), nsActor::PlayerStateID::enHelp},
 				};
 
 

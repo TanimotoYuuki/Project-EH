@@ -42,6 +42,7 @@ namespace nsApp
 		private:
 			nsApp::Camera* m_camera = nullptr;     //! カメラ。
 			nsActor::Player* m_player = nullptr;   //! プレイヤー。
+			nsActor::Player* m_player2 = nullptr;  //! プレイヤー2。
 			nsActor::Sandbag* m_sandbag = nullptr; //! サンドバッグ。
 		};
 	}

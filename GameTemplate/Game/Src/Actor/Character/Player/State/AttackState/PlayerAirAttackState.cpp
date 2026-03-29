@@ -21,6 +21,9 @@ namespace nsApp
 			/* キャスト。*/
 			m_player = static_cast<nsActor::Player*>(m_owner);
 
+			/* 攻撃のタイプを設定する。*/
+			m_currentAttackType = AttackType::AirAttack;
+
 			/* アニメーションを再生。*/
 			m_player->PlayWeaponAnimation(AttackType::AirAttack);
 
@@ -30,6 +33,8 @@ namespace nsApp
 			/* 多段ジャンプを防止するためジャンプ力を引き継がない。*/
 			if (m_fallVelocity == 0.0f)
 				SetFallVelocity(150.0f);
+
+			/* 当たり判定を付与。*/
 			m_player->GetWeaponHitDetection().Enable();
 		}
 
@@ -39,23 +44,10 @@ namespace nsApp
 			/* タイマーを加算する。*/
 			m_attackTimer++;
 
-			if (m_attackTimer < CHARGE_TIME)
-			{
-				m_fallVelocity -= 5.0f;
-				if(m_fallVelocity < ZERO_MOVE_SPEED)
-					m_fallVelocity = ZERO_MOVE_SPEED;
-			}
-
+			if (m_attackTimer < 10)
+				m_fallVelocity = 0.0f;
 			else
-				m_fallVelocity -= 200.0f;
-
-
-			/* */
-			if (m_attackTimer < 60)
-				m_fallVelocity -= 10.0f;
-
-			else
-				m_fallVelocity -= 150.0f;
+				m_fallVelocity -= 200.0f; 
 
 			/* ステージにめり込まないように制限。*/
 			if(m_fallVelocity < -1200.0)

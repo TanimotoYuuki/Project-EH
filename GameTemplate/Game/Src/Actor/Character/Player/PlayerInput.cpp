@@ -78,11 +78,11 @@ namespace nsApp
 
 		/* ダメージ判定。*/
 		/* ※ボスが実装されるまで仮置き。*/
-		m_isDamage = g_pad[0]->IsTrigger(enButtonX);
+		m_isDamage = g_pad[0]->IsTrigger(enButtonLeft);
 
 		/* 死亡判定。*/
 		/* ※テストでYボタン判定とする。*/
-		m_isDeath = g_pad[0]->IsTrigger(enButtonY);
+		m_isDeath = g_pad[0]->IsTrigger(enButtonDown);
 
 		/* スティックの押し具合は厳しいので特定のボタン同士で走れるようにする。*/
 		m_isRun = (g_pad[0]->IsPress(enButtonLB1) && m_isMove);
@@ -111,6 +111,16 @@ namespace nsApp
 		*/
 		m_chargeButtonTimer = m_isPressButton ? m_chargeButtonTimer + CHARGE_FLAG_TRUE : CHARGE_FLAG_FALSE;
 
+		/* チャージ攻撃開始。
+		 * 5F以上(長押し) Bボタンを押しているかを判定。
+		 */ 
 		m_isChargeStart = (m_isPressButton && m_chargeButtonTimer >= 5);
+
+
+		/* ガード判定。*/ 
+		m_isGuard = g_pad[0]->IsPress(enButtonLB2);
+
+		/* 助ける判定。*/ 
+		m_isHelp = g_pad[0]->IsTrigger(enButtonY);
 	}
 }
