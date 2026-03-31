@@ -150,6 +150,20 @@
     <ClCompile Include="Src\Actor\Character\Player\State\BasicState\PlayerGuardState.cpp" />
     <ClCompile Include="Src\Actor\Character\Player\State\BasicState\PlayerReBoneState.cpp" />
     <ClCompile Include="Src\Actor\Character\Player\State\BasicState\PlayerGetUpState.cpp" />
+    <ClCompile Include="Src\Fade\Fade.cpp" />
+    <ClCompile Include="Src\UIAnimation\UIAnimation.cpp" />
+    <ClCompile Include="Select.cpp" />
+    <ClCompile Include="QuestSelect.cpp" />
+    <ClCompile Include="MemberSelect.cpp" />
+    <ClCompile Include="CharacterHP.cpp" />
+    <ClCompile Include="ConfirmationSelect.cpp" />
+    <ClCompile Include="GameStartDirection.cpp" />
+    <ClCompile Include="GameTimeLimit.cpp" />
+    <ClCompile Include="Result.cpp" />
+    <ClCompile Include="GameEndSelect.cpp" />
+    <ClCompile Include="GameClearDirection.cpp" />
+    <ClCompile Include="GameTimeUpDirection.cpp" />
+    <ClCompile Include="GameOverDirection.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -261,8 +275,19 @@
     <ClInclude Include="Src\Actor\Character\Player\State\BasicState\PlayerGuardState.h" />
     <ClInclude Include="Src\Actor\Character\Player\State\BasicState\PlayerReBoneState.h" />
     <ClInclude Include="Src\Actor\Character\Player\State\BasicState\PlayerGetUpState.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="Assets\shader\model_no_ibl.fx" />
+    <ClInclude Include="Src\Fade\Fade.h" />
+    <ClInclude Include="Src\UIAnimation\UIAnimation.h" />
+    <ClInclude Include="Select.h" />
+    <ClInclude Include="QuestSelect.h" />
+    <ClInclude Include="MemberSelect.h" />
+    <ClInclude Include="CharacterHP.h" />
+    <ClInclude Include="ConfirmationSelect.h" />
+    <ClInclude Include="GameStartDirection.h" />
+    <ClInclude Include="GameTimeLimit.h" />
+    <ClInclude Include="Result.h" />
+    <ClInclude Include="GameEndSelect.h" />
+    <ClInclude Include="GameClearDirection.h" />
+    <ClInclude Include="GameTimeUpDirection.h" />
+    <ClInclude Include="GameOverDirection.h" />
   </ItemGroup>
 </Project>
