@@ -103,6 +103,7 @@ namespace nsApp
 				ALPHA_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
 				false,/*ループするか？*/
 				0.0f,/*アニメーションを開始する前の遅延時間。*/
+				1.5f,/*アニメーションを終了した後の遅延時間。*/
 				baseAlpha,/*元の透明度。*/
 				targetAlpha/*ターゲットの透明度。*/
 			);

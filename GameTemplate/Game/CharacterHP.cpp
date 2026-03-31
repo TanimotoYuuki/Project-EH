@@ -179,6 +179,7 @@ namespace nsApp
 				DAMAGE_GAUGE_SCALE_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
 				false,/*ループするか？*/
 				0.0f,/*アニメーションを開始する前の遅延時間。*/
+				0.0f,/*アニメーションを終了した後の遅延時間。*/
 				baseScale,/*元の大きさ*/
 				targetScale/*ターゲットの大きさ。*/
 			);

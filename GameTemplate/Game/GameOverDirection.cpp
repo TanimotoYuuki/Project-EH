@@ -136,6 +136,7 @@ namespace nsApp
 				POSITION_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
 				false,/*ループするか？*/
 				0.0f,/*アニメーションを開始する前の遅延時間。*/
+				0.0f,/*アニメーションを終了した後の遅延時間。*/
 				basePosition,/*元の位置。*/
 				targetPosition/*ターゲットの位置。*/
 			);
@@ -151,6 +152,7 @@ namespace nsApp
 				POSITION_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
 				false,/*ループするか？*/
 				0.0f,/*アニメーションを開始する前の遅延時間。*/
+				0.0f,/*アニメーションを終了した後の遅延時間。*/
 				basePosition,/*元の位置。*/
 				targetPosition/*ターゲットの位置。*/
 			);
@@ -166,6 +168,7 @@ namespace nsApp
 				POSITION_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
 				false,/*ループするか？*/
 				0.0f,/*アニメーションを開始する前の遅延時間。*/
+				0.0f,/*アニメーションを終了した後の遅延時間。*/
 				basePosition,/*元の位置。*/
 				targetPosition/*ターゲットの位置。*/
 			);
@@ -181,6 +184,7 @@ namespace nsApp
 				POSITION_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
 				false,/*ループするか？*/
 				0.0f,/*アニメーションを開始する前の遅延時間。*/
+				0.0f,/*アニメーションを終了した後の遅延時間。*/
 				basePosition,/*元の位置。*/
 				targetPosition/*ターゲットの位置。*/
 			);
@@ -196,6 +200,7 @@ namespace nsApp
 				POSITION_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
 				false,/*ループするか？*/
 				0.0f,/*アニメーションを開始する前の遅延時間。*/
+				0.0f,/*アニメーションを終了した後の遅延時間。*/
 				basePosition,/*元の位置。*/
 				targetPosition/*ターゲットの位置。*/
 			);
@@ -211,6 +216,7 @@ namespace nsApp
 				POSITION_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
 				false,/*ループするか？*/
 				0.0f,/*アニメーションを開始する前の遅延時間。*/
+				1.0f,/*アニメーションを終了した後の遅延時間。*/
 				basePosition,/*元の位置。*/
 				targetPosition/*ターゲットの位置。*/
 			);
@@ -231,6 +237,7 @@ namespace nsApp
 				ROTATION_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
 				false,/*ループするか？*/
 				0.0f,/*アニメーションを開始する前の遅延時間。*/
+				0.0f,/*アニメーションを終了した後の遅延時間。*/
 				baseRotation,/*元の透明度。*/
 				targetRotation/*ターゲットの透明度。*/
 			);
@@ -246,6 +253,7 @@ namespace nsApp
 				ROTATION_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
 				false,/*ループするか？*/
 				0.0f,/*アニメーションを開始する前の遅延時間。*/
+				0.0f,/*アニメーションを終了した後の遅延時間。*/
 				baseRotation,/*元の透明度。*/
 				targetRotation/*ターゲットの透明度。*/
 			);
@@ -261,6 +269,7 @@ namespace nsApp
 				ROTATION_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
 				false,/*ループするか？*/
 				0.0f,/*アニメーションを開始する前の遅延時間。*/
+				0.0f,/*アニメーションを終了した後の遅延時間。*/
 				baseRotation,/*元の透明度。*/
 				targetRotation/*ターゲットの透明度。*/
 			);
@@ -276,6 +285,7 @@ namespace nsApp
 				ROTATION_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
 				false,/*ループするか？*/
 				0.0f,/*アニメーションを開始する前の遅延時間。*/
+				0.0f,/*アニメーションを終了した後の遅延時間。*/
 				baseRotation,/*元の透明度。*/
 				targetRotation/*ターゲットの透明度。*/
 			);
@@ -291,6 +301,7 @@ namespace nsApp
 				ROTATION_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
 				false,/*ループするか？*/
 				0.0f,/*アニメーションを開始する前の遅延時間。*/
+				0.0f,/*アニメーションを終了した後の遅延時間。*/
 				baseRotation,/*元の透明度。*/
 				targetRotation/*ターゲットの透明度。*/
 			);
@@ -310,6 +321,7 @@ namespace nsApp
 				ALPHA_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
 				false,/*ループするか？*/
 				0.0f,/*アニメーションを開始する前の遅延時間。*/
+				0.0f,/*アニメーションを終了した後の遅延時間。*/
 				baseAlpha,/*元の透明度。*/
 				targetAlpha/*ターゲットの透明度。*/
 			);
