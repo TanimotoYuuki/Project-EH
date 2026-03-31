@@ -54,11 +54,16 @@ namespace nsApp
 		};
 	}
 
+	class GameEndSelect;
 	namespace nsSelect
 	{
 		/**
 		*  @brief 選択シーンクラス。
 		*/
+		class Select;
+		class QuestSelect;
+		class MemberSelect;
+		class ConfirmationSelect;
 		class SelectScene : public IScene
 		{
 		public:
@@ -70,7 +75,10 @@ namespace nsApp
 			void Update() override;/*更新処理。*/
 
 		private://メンバ変数。
-			/*TODO:現在はまだ未実装なので後で追加する。*/
+			Select* m_select = nullptr;/*選択シーン用のインスタンス。*/
+			QuestSelect* m_questSelect = nullptr;/*クエスト選択用のインスタンス。*/
+			MemberSelect* m_memberSelect = nullptr;/*メンバー選択用のインスタンス。*/
+			ConfirmationSelect* m_confirmationSelect = nullptr;/*確認選択用のインスタンス。*/
 		};
 	}
 
@@ -80,6 +88,7 @@ namespace nsApp
 		*  @brief インゲーム選択シーンクラス。
 		*/
 		class Game;
+		class GameClearDirection;
 		class InGameScene : public IScene
 		{
 		public:
@@ -92,6 +101,8 @@ namespace nsApp
 
 		private:/*メンバ変数。*/
 			Game* m_game = nullptr;/*インゲーム用のインスタンス。*/
+			GameClearDirection* m_gameClearDirection = nullptr;/*ゲームクリア演出用のインスタンス。*/
+			GameEndSelect* m_gameEndSelect = nullptr;/*ゲーム終了選択用のインスタンス。*/
 		};
 	}
 
@@ -100,6 +111,7 @@ namespace nsApp
 		/**
 		* @brief リザルト選択シーンクラス。
 		*/
+		class Result;
 		class ResultScene : public IScene
 		{
 		public:
@@ -110,7 +122,8 @@ namespace nsApp
 			void Update() override;/*更新処理。*/
 
 		private:/*メンバ変数。*/
-			/*TODO:現在はまだ未実装なので後で追加する。*/
+			Result* m_result = nullptr;/*リザルト用のインスタンス。*/
+			GameEndSelect* m_gameEndSelect = nullptr;/*ゲーム終了選択用のインスタンス。*/
 		};
 	}
 

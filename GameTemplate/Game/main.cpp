@@ -5,6 +5,7 @@
 #include<dxgidebug.h>
 
 #include "Src/SceneLoader/SceneLoader.h"
+#include "Src/Fade/Fade.h"
 
 
 
@@ -36,6 +37,9 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 	//シーンマネージャーの生成
 	nsApp::nsScene::SceneLoader::CreateInstance();
 	nsApp::nsScene::SceneLoader::GetInstance()->Start();
+
+	/*フェードを管理するクラスの生成。*/
+	nsApp::nsFade::Fade::CreateInstance();
 
 	//////////////////////////////////////
 	// 初期化を行うコードを書くのはここまで！！！
