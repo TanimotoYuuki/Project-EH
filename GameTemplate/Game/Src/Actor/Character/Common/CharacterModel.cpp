@@ -6,6 +6,9 @@ namespace nsApp
 	CharacterModel::CharacterModel()
 	{
 		/* モデルのファイルパスを格納。*/
+		/* デバッグ用のサンドバッグモデル。*/
+		m_filePathList[CharacterModelType::Sandbag] = "Assets/modelData/Character/Debag/PunchBagKun.tkm";
+
 		/* キャラモデルの格納。*/
 		/* プレイヤーモデル。*/
 		m_filePathList[CharacterModelType::Player_1P] = GetCharacterModelFilePath("1p/player"); /* 1Pモデル。*/
@@ -15,6 +18,11 @@ namespace nsApp
 
 		/* ボスモデル。*/
 		/* @TODO: Boss担当にコードを記載してもらうように。*/
+		m_filePathList[CharacterModelType::Enemy_Tutorial] = GetCharacterModelFilePath("TutorialBoss/TutorialBoss");
+		m_filePathList[CharacterModelType::GrayDragon] = GetCharacterModelFilePath("GrayDragon/GrayDragon");
+		m_filePathList[CharacterModelType::GreenDragon] = GetWeaponModelFilePath("GreenDragon/GreenDragon");
+		m_filePathList[CharacterModelType::RedDragon] = GetWeaponModelFilePath("RedDragon/RedDragon");
+
 
 		/* 武器モデル。*/
 		/* 大剣。*/
@@ -117,7 +125,7 @@ namespace nsApp
 			m_yAxis.Normalize();
 			m_zAxis.Normalize();
 
-			m_offsetPosition = m_matrixPosition + (m_xAxis * m_weaponOffset.x), (m_yAxis * m_weaponOffset.y), (m_zAxis * m_weaponOffset.z);
+			m_offsetPosition = m_matrixPosition + (m_xAxis * m_weaponOffset.x) +  (m_yAxis * m_weaponOffset.y)+ (m_zAxis * m_weaponOffset.z);
 			m_weaponModelRender->SetPosition(m_offsetPosition);
 				                 
 
@@ -128,7 +136,7 @@ namespace nsApp
 
 			/* 正規化した行列から回転を抽出。*/
 			m_matrixRotation.SetRotation(m_rotationMatrix);
-			m_weaponModelRender->SetRotation(m_matrixRotation);
+			m_weaponModelRender->SetRotation(m_matrixRotation * m_weaponRotationOffset);
 
 			/* 武器を更新。*/
 			m_weaponModelRender->Update();

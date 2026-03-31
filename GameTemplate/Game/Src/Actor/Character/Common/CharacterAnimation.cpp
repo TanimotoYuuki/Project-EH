@@ -37,6 +37,12 @@ namespace nsApp
 
 		/* Deathアニメーション。*/ 
 		m_basicAnimationFilePathList[CharacterBasicAnimationList::Death] = GetBasicAnimationFilePath("GreatSword/Deth");
+
+       /* Guardアニメーション。*/
+		m_basicAnimationFilePathList[CharacterBasicAnimationList::Guard] = GetBasicAnimationFilePath("GreatSword/Guard");
+
+        /* Helpアニメーション。*/
+		m_basicAnimationFilePathList[CharacterBasicAnimationList::Help] = GetBasicAnimationFilePath("GreatSword/Help");
 	}
 
 
@@ -46,15 +52,24 @@ namespace nsApp
 		/* 待機状態。*/
 		m_greatSwordData.weaponAnimationList[AttackType::NormalAttack] = GetWeaponAnimationFilePath("GreatSword/GreatSword_NormalAttack");
 
+		/* チャージ中。*/
+		m_greatSwordData.weaponAnimationList[AttackType::Charging] = GetWeaponAnimationFilePath("GreatSword/GreatSword_Charge");
+
 		/* チャージ攻撃。*/
 		m_greatSwordData.weaponAnimationList[AttackType::ChargeAttack] = GetWeaponAnimationFilePath("GreatSword/GreatSword_ChargeAttack");
 
 		/* 空中攻撃。*/
-		m_greatSwordData.weaponAnimationList[AttackType::AirAttack] = "Assets/animData/Player/WeaponAnimation/GreatSword/GreatSword_AirAttack.tka";
+		m_greatSwordData.weaponAnimationList[AttackType::AirAttack] = GetWeaponAnimationFilePath("GreatSword/GreatSword_AirAttack");
 
 		/* 連続攻撃。*/
 		m_greatSwordData.weaponAnimationList[AttackType::RushAttack_Start] = GetWeaponAnimationFilePath("GreatSword/GreatSword_Rush_Start");
 		m_greatSwordData.weaponAnimationList[AttackType::RushAttack_End] = GetWeaponAnimationFilePath("GreatSword/GreatSword_Rush_End");
+
+		/* 斬り上げ攻撃。*/
+		m_greatSwordData.weaponAnimationList[AttackType::SlashUp] = GetWeaponAnimationFilePath("GreatSword/GreatSword_SlashUpward");
+
+		/* 突き進む攻撃。*/
+		m_greatSwordData.weaponAnimationList[AttackType::PushForward] = GetWeaponAnimationFilePath("GreatSword/GreatSword_Push");
 
 		/* 登録データをリストに登録する。*/
 		m_weaponDataList[WeaponType::GreatSword] = m_greatSwordData;
@@ -83,7 +98,8 @@ namespace nsApp
 			 * 今回はダメージアニメーション。  
 			 */
 			if (pair.first == CharacterBasicAnimationList::Hit_Fly ||
-				pair.first == CharacterBasicAnimationList::Hit_UP)
+				pair.first == CharacterBasicAnimationList::Hit_UP ||
+				pair.first == CharacterBasicAnimationList::Help)
 				/* ダメージと死亡はループさせない。*/
 				/* true だと ループ。*/
 				m_isLoop = false;

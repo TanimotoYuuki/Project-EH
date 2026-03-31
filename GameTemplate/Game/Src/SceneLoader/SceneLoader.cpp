@@ -38,7 +38,7 @@ namespace nsApp
 				/*フェード処理が終わったら選択シーンに遷移する。*/
 				if (nsApp::nsFade::Fade::GetInstance()->IsEnd())
 				{
-					nsApp::nsScene::SceneLoader::GetInstance()->ChangeScene(nsApp::IScene::EnSceneID::enSceneID_InGame);
+					nsApp::nsScene::SceneLoader::GetInstance()->ChangeScene(nsApp::IScene::EnSceneID::enSceneID_Select);
 				}
 			}
 		}

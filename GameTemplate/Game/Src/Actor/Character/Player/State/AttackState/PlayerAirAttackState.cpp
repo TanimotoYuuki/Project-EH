@@ -6,10 +6,11 @@
 
 namespace
 {
-	const auto MOVE_FRAME_TIME = 1.0f / 60.0f;     /* 1フレームあたりの固定時間。*/
-	const auto AIR_MOVE_SPEED = 120.0f;            /* 空中での前後左右のスピード。*/
-	const float ZERO_MOVE_SPEED = 0.0f;            /* 移動速度の初期値。*/
-}
+	const auto MOVE_FRAME_TIME = 1.0f / 60.0f;     //! 1フレームあたりの固定時間。
+	const auto AIR_MOVE_SPEED = 120.0f;            //! 空中での前後左右のスピード。
+	const float ZERO_MOVE_SPEED = 0.0f;            //! 移動速度の初期値。
+	const auto CHARGE_TIME = 20;				   //! 空中攻撃のチャージ時間。
+}	
 
 namespace nsApp
 {
@@ -20,11 +21,21 @@ namespace nsApp
 			/* キャスト。*/
 			m_player = static_cast<nsActor::Player*>(m_owner);
 
+			/* 攻撃のタイプを設定する。*/
+			m_currentAttackType = AttackType::AirAttack;
+
 			/* アニメーションを再生。*/
 			m_player->PlayWeaponAnimation(AttackType::AirAttack);
 
 			/* 攻撃タイマーを初期化。*/
 			SetAttackTimer(0.0f); 
+
+			/* 多段ジャンプを防止するためジャンプ力を引き継がない。*/
+			if (m_fallVelocity == 0.0f)
+				SetFallVelocity(150.0f);
+
+			/* 当たり判定を付与。*/
+			m_player->GetWeaponHitDetection().Enable();
 		}
 
 
@@ -33,9 +44,10 @@ namespace nsApp
 			/* タイマーを加算する。*/
 			m_attackTimer++;
 
-			/* 重力を設定。*/
-			float gravity = 30.0f;
-			m_fallVelocity -= gravity;
+			if (m_attackTimer < 10)
+				m_fallVelocity = 0.0f;
+			else
+				m_fallVelocity -= 200.0f; 
 
 			/* ステージにめり込まないように制限。*/
 			if(m_fallVelocity < -1200.0)
@@ -57,6 +69,9 @@ namespace nsApp
 
 			/* 座標にも反映。*/
 			m_player->SetPosition(m_player->GetCharacterController().GetPosition());
+
+			/* Y軸の速度を変数に代入。*/
+			m_fallVelocity = m_moveSpeed.y;
 
 			/* 攻撃の途中で着地したら待機状態に戻す。*/
 			if (m_player->GetCharacterController().IsOnGround())

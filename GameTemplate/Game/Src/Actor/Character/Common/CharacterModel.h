@@ -12,6 +12,9 @@ namespace nsApp
 {
 	enum class CharacterModelType
 	{
+		/* デバッグ用モデル*/
+		Sandbag,            /* サンドバッグ。*/
+
 		/* プレイヤーモデル1P～4Pを定義。*/
 		Player_1P,           /* 1P。*/
 		Player_2P,           /* 2P。*/
@@ -22,6 +25,9 @@ namespace nsApp
 		/* 敵モデルを定義。*/
 		/* @TODO Enemy担当者にIDを増やしてもらう。*/
 		Enemy_Tutorial,      /* チュートリアル用の敵。*/
+		GrayDragon,        /* 灰色のドラゴン。*/
+		GreenDragon,       /* 緑色のドラゴン。*/
+		RedDragon,         /* 赤色のドラゴン。*/
 
 
 		/* 武器モデルを定義。*/
@@ -121,6 +127,13 @@ namespace nsApp
 			m_attackBoneName = boneName;
 		}
 
+		/* 武器の傾きを設定。*/
+		inline void SetWeaponAngle(const Quaternion offset)
+		{
+			m_weaponRotationOffset = offset;	
+		}
+
+
 	/* ゲッター。*/
 	public:
 		/* キャラモデルのファイルパスを格納。*/
@@ -137,36 +150,45 @@ namespace nsApp
 			return weaponFilePath;
 		}
 
-		/* 指定したボーンのワールド行列を取得する。
+		/*
+		* 指定したボーンのワールド行列を取得する。
 		* @param boneName 取得したいボーンの名前を指定する。
 		*/
 	    Matrix GetWorldMatrix(const wchar_t* boneName);
 
+		/* 武器の座標を取得。*/
+		inline const Vector3& GetWeaponPosition() const
+		{
+			return m_offsetPosition;
+		}
+
 
 	private:	
-		std::unordered_map<CharacterModelType, std::string> m_filePathList;		                                               /* モデルIDからファイルパスを文字列に変化。*/
-		std::unique_ptr<ModelRender> m_characterModelRender;                                                                   /* モデルを管理。*/
-		std::unique_ptr<ModelRender> m_weaponModelRender;                                                                      /* 武器モデルを管理。*/
+		std::unordered_map<CharacterModelType, std::string> m_filePathList;		                                               //! モデルIDからファイルパスを文字列に変化。
+		std::unique_ptr<ModelRender> m_characterModelRender;                                                                   //! モデルを管理。
+		std::unique_ptr<ModelRender> m_weaponModelRender;                                                                      //! 武器モデルを管理。
 		std::wstring m_attackBoneName;
 
 		/* ファイルパスを定数化するための変数群。*/
-		std::string m_modelFilePath;                                                                                           /* モデルのファイルパスを格納。*/
-		std::string m_characterModelFilePath = "Assets/modelData/Character/CharacterModel/";                                   /* プレイヤー/NPCモデルのファイルパスを格納。*/
-		std::string m_modelExtension = ".tkm";                                                                                 /* プレイヤー/NPCモデルの拡張子を格納。*/
-		std::string m_weaponModelFilePath = "Assets/modelData/Character/Weapon/";                                              /* 武器モデルのファイルパスを格納。*/
+		std::string m_modelFilePath;                                                                                           //! モデルのファイルパスを格納。
+		std::string m_characterModelFilePath = "Assets/modelData/Character/CharacterModel/";                                   //! プレイヤー/NPCモデルのファイルパスを格納。
+		std::string m_modelExtension = ".tkm";                                                                                 //! プレイヤー/NPCモデルの拡張子を格納。
+		std::string m_weaponModelFilePath = "Assets/modelData/Character/Weapon/";                                              //! 武器モデルのファイルパスを格納。
 
-		int boneID;                                                                                                            /* ボーンIDを格納。*/
+		int boneID;                                                                                                            //! ボーンIDを格納。
 
 		Quaternion m_matrixRotation;
+		Quaternion m_weaponRotationOffset;                                                                                     //! 武器の傾きを制御。
 
-		Matrix m_handMatrix; 																					               /* 武器を装備させるときの右手のボーンの行列を管理する変数。*/
-		Matrix m_rotationMatrix;                                                                                               /* 武器を装備させたときの武器の傾きを制御。*/
+		Matrix m_handMatrix; 																					               //! 武器を装備させるときの右手のボーンの行列を管理する変数。
+		Matrix m_rotationMatrix;                                                                                               //! 武器を装備させたときの武器の傾きを制御。
 
-		Vector3 m_xAxis;                                                                                                       /* 武器を装備させるときの右手のボーンの行列から抽出したX軸を管理する変数。*/
-		Vector3 m_yAxis;                                                                                                       /* 武器を装備させるときの右手のボーンの行列から抽出したY軸を管理する変数。*/
-		Vector3 m_zAxis;                                                                                                       /* 武器を装備させるときの右手のボーンの行列から抽出したZ軸を管理する変数。*/
+
+		Vector3 m_xAxis;                                                                                                       //! 武器を装備させるときの右手のボーンの行列から抽出したX軸を管理する変数。
+		Vector3 m_yAxis;                                                                                                       //! 武器を装備させるときの右手のボーンの行列から抽出したY軸を管理する変数。
+		Vector3 m_zAxis;                                                                                                       //! 武器を装備させるときの右手のボーンの行列から抽出したZ軸を管理する変数。
 		Vector3 m_matrixPosition;
-		Vector3 m_weaponOffset;                                                                                                /* 武器の位置のずれを管理する変数。*/
-		Vector3 m_offsetPosition;                                                                                              /* 武器の位置のずれを管理する変数。*/
+		Vector3 m_weaponOffset;                                                                                                //! 武器の位置のずれを管理する変数。
+		Vector3 m_offsetPosition;                                                                                              //! 武器の位置のずれを管理する変数。
 	};	
 }

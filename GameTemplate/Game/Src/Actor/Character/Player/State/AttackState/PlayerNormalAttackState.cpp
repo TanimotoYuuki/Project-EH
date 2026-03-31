@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "PlayerNormalAttackState.h"
 
+
 namespace
 {
 	const auto RUSH_COUNT = 2; /* 連続攻撃に繋げるための連打数。*/
@@ -15,13 +16,21 @@ namespace nsApp
 			/* 親クラスのEnterを呼び出してPlayerクラス本体にセットする。*/
 			m_player = static_cast<nsActor::Player*>(m_owner);
 
+			/* 攻撃タイプを保存する。*/
+			m_currentAttackType = AttackType::NormalAttack;
+
 			/* 攻撃アニメーションを再生する。*/ 
 			m_player->PlayWeaponAnimation(AttackType::NormalAttack);
+
+			m_player->GetWeaponHitDetection().Enable();
 		}
 
 
 		void PlayerNormalAttackState::Update()
 		{
+			if (!m_player)
+				return;
+
 			/* 更新作業。*/
 			PlayerAttackBaseState::Update();
 		}
@@ -29,17 +38,7 @@ namespace nsApp
 
 		bool PlayerNormalAttackState::RequestID(uint8_t& id)
 		{
-			/* 1段目の攻撃で連打数をチェック。*/
-			if (m_attackTimer > 15)
-			{
-				/* n回以上連打しているなら連続攻撃状態へ*/
-				if (m_rushCount >= RUSH_COUNT)
-				{
-					id = static_cast<uint8_t>(nsActor::PlayerStateID::enRushStart);
-					return true;
-				}
-			}
-			return false;
+			return CheckCombo(nsActor::PlayerStateID::enNormalAttack, id);
 		}
 	}
 }

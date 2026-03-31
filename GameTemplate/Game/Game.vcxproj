@@ -223,7 +223,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CharacterHP.cpp" />
     <ClCompile Include="ConfirmationSelect.cpp" />
     <ClCompile Include="GameClearDirection.cpp" />
@@ -237,15 +236,25 @@
     <ClCompile Include="MemberSelect.cpp" />
     <ClCompile Include="QuestSelect.cpp" />
     <ClCompile Include="Select.cpp" />
+    <ClCompile Include="PresentDamageIndicator.cpp" />
     <ClCompile Include="Src\Actor\Actor.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\State\AttackState\PlayerChargingState.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\State\BasicState\PlayerGetUpState.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\State\BasicState\PlayerGuardState.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\State\BasicState\PlayerReBoneState.cpp" />
+    <ClCompile Include="Src\Actor\Character\Status\AttackParameterTable.cpp" />
+    <ClCompile Include="Src\Actor\Stage\BackGround.cpp" />
+    <ClCompile Include="Src\Camera\Camera.cpp" />
     <ClCompile Include="Src\Actor\Character\Common\CharacterAnimation.cpp" />
     <ClCompile Include="Src\Actor\Character\Common\CharacterModel.cpp" />
     <ClCompile Include="Src\Actor\Character\Common\ICharacter.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\Component\ComboRouteTable.cpp" />
     <ClCompile Include="Src\Actor\Character\Player\Player.cpp" />
     <ClCompile Include="Src\Actor\Character\Player\PlayerInput.cpp" />
-    <ClCompile Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerComboAttackState.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerPushState.cpp" />
     <ClCompile Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerRushEndState.cpp" />
     <ClCompile Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerRushStartState.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerSlashUpState.cpp" />
     <ClCompile Include="Src\Actor\Character\Player\State\AttackState\PlayerAirAttackState.cpp" />
     <ClCompile Include="Src\Actor\Character\Player\State\AttackState\PlayerAttackBaseState.cpp" />
     <ClCompile Include="Src\Actor\Character\Player\State\AttackState\PlayerChargeAttackState.cpp" />
@@ -258,7 +267,12 @@
     <ClCompile Include="Src\Actor\Character\Player\State\BasicState\PlayerWalkState.cpp" />
     <ClCompile Include="Src\Actor\Stage\LoadStageData.cpp" />
     <ClCompile Include="Src\Actor\Stage\Stage.cpp" />
+    <ClCompile Include="Src\Debug\Sandbag.cpp" />
+    <ClCompile Include="Src\Effect\EffectList.cpp" />
     <ClCompile Include="Src\SceneLoader\SceneLoader.cpp" />
+    <ClCompile Include="Src\Sound\BGMList.cpp" />
+    <ClCompile Include="Src\Sound\SEList.cpp" />
+    <ClCompile Include="Src\Sound\SoundLister.cpp" />
     <ClCompile Include="Src\StateMachine\StateMachine.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -269,10 +283,10 @@
     <ClCompile Include="GameTimeLimit.cpp" />
     <ClCompile Include="GameTimeUpDirection.cpp" />
     <ClCompile Include="Title.cpp" />
+    <ClCompile Include="Src\Actor\Character\Common\WeaponHitDetection.cpp" />
     <ClCompile Include="Src\UIAnimation\UIAnimation.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Camera.h" />
     <ClInclude Include="CharacterHP.h" />
     <ClInclude Include="ConfirmationSelect.h" />
     <ClInclude Include="GameClearDirection.h" />
@@ -285,17 +299,27 @@
     <ClInclude Include="MemberSelect.h" />
     <ClInclude Include="QuestSelect.h" />
     <ClInclude Include="Select.h" />
+    <ClInclude Include="PresentDamageIndicator.h" />
     <ClInclude Include="Src\Actor\Actor.h" />
+    <ClInclude Include="Src\Actor\Character\Player\State\AttackState\PlayerChargingState.h" />
+    <ClInclude Include="Src\Actor\Character\Player\State\BasicState\PlayerGetUpState.h" />
+    <ClInclude Include="Src\Actor\Character\Player\State\BasicState\PlayerGuardState.h" />
+    <ClInclude Include="Src\Actor\Character\Player\State\BasicState\PlayerReBoneState.h" />
+    <ClInclude Include="Src\Actor\Character\Status\AttackParameterTable.h" />
+    <ClInclude Include="Src\Actor\Stage\BackGround.h" />
+    <ClInclude Include="Src\Camera\Camera.h" />
     <ClInclude Include="Src\Actor\Character\Common\CharacterAnimation.h" />
     <ClInclude Include="Src\Actor\Character\Common\CharacterModel.h" />
     <ClInclude Include="Src\Actor\Character\Common\ICharacter.h" />
     <ClInclude Include="Src\Actor\Character\Common\IState.h" />
+    <ClInclude Include="Src\Actor\Character\Player\Component\ComboRouteTable.h" />
     <ClInclude Include="Src\Actor\Character\Player\Component\StateTransitionDiagram.h" />
     <ClInclude Include="Src\Actor\Character\Player\Player.h" />
     <ClInclude Include="Src\Actor\Character\Player\PlayerInput.h" />
-    <ClInclude Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerComboAttackState.h" />
+    <ClInclude Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerPushState.h" />
     <ClInclude Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerRushEndState.h" />
     <ClInclude Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerRushStartState.h" />
+    <ClInclude Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerSlashUpState.h" />
     <ClInclude Include="Src\Actor\Character\Player\State\AttackState\PlayerAirAttackState.h" />
     <ClInclude Include="Src\Actor\Character\Player\State\AttackState\PlayerAttackBaseState.h" />
     <ClInclude Include="Src\Actor\Character\Player\State\AttackState\PlayerChargeAttackState.h" />
@@ -309,7 +333,12 @@
     <ClInclude Include="Src\Actor\Stage\LoadStageData.h" />
     <ClInclude Include="Src\Actor\Stage\Stage.h" />
     <ClInclude Include="Src\Actor\Stage\StageData.h" />
+    <ClInclude Include="Src\Debug\Sandbag.h" />
+    <ClInclude Include="Src\Effect\EffectList.h" />
     <ClInclude Include="Src\SceneLoader\SceneLoader.h" />
+    <ClInclude Include="Src\Sound\BGMList.h" />
+    <ClInclude Include="Src\Sound\SEList.h" />
+    <ClInclude Include="Src\Sound\SoundLister.h" />
     <ClInclude Include="Src\StateMachine\NullState.h" />
     <ClInclude Include="Src\StateMachine\StateMachine.h" />
     <ClInclude Include="stdafx.h" />
@@ -318,6 +347,7 @@
     <ClInclude Include="GameTimeUpDirection.h" />
     <ClInclude Include="Title.h" />
     <ClInclude Include="Src\UIAnimation\UIAnimation.h" />
+    <ClInclude Include="Src\Actor\Character\Common\WeaponHitDetection.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

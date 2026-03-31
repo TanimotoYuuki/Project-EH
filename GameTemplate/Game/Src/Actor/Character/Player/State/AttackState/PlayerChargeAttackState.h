@@ -24,6 +24,7 @@ namespace nsApp
 			/* ライフサイクル。*/
 			void Enter() override;
 			void Update() override;
+
 		};
 	}
 }

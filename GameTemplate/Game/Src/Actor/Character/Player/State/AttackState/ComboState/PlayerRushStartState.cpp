@@ -16,8 +16,12 @@ namespace nsApp
 			/* キャラスト。*/
 			m_player = static_cast<nsActor::Player*>(m_owner);
 
+			/* 攻撃のタイプを設定する。*/
+			m_currentAttackType = AttackType::RushAttack_Start;
+
 			/* アニメーションを再生。*/
 			m_player->PlayWeaponAnimation(AttackType::RushAttack_Start);
+			m_player->GetWeaponHitDetection().Enable();
 		}
 
 
@@ -45,6 +49,12 @@ namespace nsApp
 				else
 					m_stateMachine->ChangeState(new PlayerRushEndState());
 			}
+		}
+
+
+		bool PlayerRushStartState::RequestID(uint8_t& id)
+		{
+			return CheckCombo(nsActor::PlayerStateID::enRushStart, id);
 		}
 
 

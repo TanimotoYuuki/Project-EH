@@ -19,19 +19,21 @@ namespace nsApp
 		Hit_Fly,    /* 被弾。*/
 		Hit_UP,     /* 起き上がり。*/
 		Death,      /* 死亡。*/
+		Guard,      /* ガード。*/
+		Help,       /* 助け中。*/
 	};
 
 	/* 攻撃の種類を管理する列挙型。*/
 	enum class AttackType : uint8_t
 	{
 		NormalAttack,          /* 通常攻撃。*/
+		Charging,              /* チャージ中。*/
 		ChargeAttack,          /* チャージ攻撃。*/
 		AirAttack,             /* 空中攻撃。*/
 		RushAttack_Start,      /* 連続攻撃。*/
 		RushAttack_End,        /* 連続攻撃のループ部分。*/
-		ComboAttack1,          /* コンボ攻撃1撃目。*/
-		ComboAttack2,          /* コンボ攻撃2撃目。*/
-		ComboAttack3,          /* コンボ攻撃3撃目。*/
+		SlashUp,               /* 斬り上げ攻撃。*/
+		PushForward,           /* 突き進む攻撃。*/
 		None,		           /* 攻撃なし。*/
 	};
 

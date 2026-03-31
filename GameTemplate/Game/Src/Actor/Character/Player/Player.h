@@ -10,9 +10,15 @@
 #include "Src/Actor/Character/Player/PlayerInput.h"
 #include "Src/Actor/Character/Common/ICharacter.h"
 #include "Src/Actor/Character/Common/CharacterAnimation.h"
+#include "Src/Actor/Character/Common/WeaponHitDetection.h"
 
+#include "Src/Effect/EffectList.h"
 namespace nsApp
 {
+	namespace nsEffect {
+		class EffectList;
+	}
+
 	namespace nsActor
 	{
 		/* プレイヤーの状態を管理する列挙型。*/
@@ -25,9 +31,13 @@ namespace nsApp
 			enJump,           /* ジャンプ状態。*/
 			enHit,            /* 被弾状態。*/
 			enDeath,          /* 死亡状態。*/
+			enGuard,          /* ガード状態。*/
+			enHelp,           /* 助け中。*/
+			enGetUp,          /* 起き上がり状態。*/
 
 			/* 攻撃状態。*/
 			enNormalAttack,   /* 攻撃状態。*/
+			enCharging,       /* チャージ状態。*/
 			enChargeAttack,   /* チャージ攻撃状態。*/
 			enAirAttack,	  /* 空中攻撃状態。*/
 			enComboAttack,	  /* コンボ攻撃状態 1段目。*/
@@ -35,8 +45,9 @@ namespace nsApp
 			enComboFinish,	  /* コンボ攻撃状態 3段目。*/
 			enRushStart,	  /* 連続攻撃状態。*/
 			enRushEnd,		  /* 連続攻撃のループ状態。*/
+			enSlashUp,        /* 斬り上げ状態。*/
+			enPushForward,    /* 突き進む攻撃状態。*/
 		};
-
 
 		class Player : public ICharacter
 		{
@@ -56,18 +67,25 @@ namespace nsApp
 			void Render(RenderContext& rc) override;
 
 
+		private:
+			/* 攻撃力の初期化処理。*/
+			void InitAttackStatus();
+
+			/* ダミーモデルの初期化。*/
+			void InitDummyModel();
+
 		public:
 			/* 基本動作用アニメーションを再生。*/
 			void PlayBasicAnimation(CharacterBasicAnimationList state);
 
 			/* 攻撃用アニメーションを再生。*/
-			inline void PlayWeaponAnimation(AttackType attack)
-			{
-				/* 攻撃アニメーションの数を取得。*/
-				animIndex = m_playerAnimation.GetAttackAnimationIndex(attack);
-				/* 攻撃アニメーションはボタンを押した瞬間に切り替わってほしいため補完割合を低めに設定。*/
-				m_model.PlayAnimation(animIndex, 0.05f);
-			}
+			void PlayWeaponAnimation(AttackType attack);
+
+			/* 起き上がり状態。*/
+			void ReceiveHelp();
+
+			/* 助ける対象のキャラクターを探索する。*/
+			nsActor::Player* SearchCharacter();
 
 
 		/* セッター。*/
@@ -104,6 +122,20 @@ namespace nsApp
 				m_forwardVector = forward;
 			}
 
+			/* ステートから武器の角度をいじれるように設定。*/
+			inline void SetWeaponRotationAngle(const Vector3& rotDeg, float angle)
+			{
+				m_weaponAngle = Quaternion::Identity;
+				m_weaponAngle.SetRotationDeg(rotDeg, angle);
+				m_model.SetWeaponAngle(m_weaponAngle);
+			}
+
+			/* 落下速度を設定。*/
+			inline void SetFallVelocity(float velocity)
+			{
+				m_fallVelocity = velocity;
+			}
+
 
 		/* ゲッター。*/
 		public:
@@ -120,12 +152,6 @@ namespace nsApp
 				return m_playerInput;
 			}
 
-			/* 座標を取得。*/
-			inline Vector3& GetPosition()
-			{
-				return m_currentPosition;
-			}
-
 			/* キャラコンを取得。*/
 			inline CharacterController& GetCharacterController()
 			{
@@ -138,29 +164,63 @@ namespace nsApp
 				return m_forwardVector;
 			}
 
+			/* 落下速度を取得。*/
+			inline float GetFallVelocity() const
+			{
+				return m_fallVelocity;
+			}
+
+			/* 座標を取得(親クラス経由で)。*/
+			virtual inline Vector3& GetPosition() override
+			{
+				return m_currentPosition;
+			}
+
+			/* 武器の当たり判定を取得。*/
+			inline WeaponHitDetection& GetWeaponHitDetection()
+			{
+				return m_weaponHitDetection;
+			}
+
+			/* エフェクトリストを取得。*/
+			inline nsEffect::EffectList& GetEffectList()
+			{
+				return m_effectList;
+			}
+
 
 		private:
-			CharacterAnimation m_playerAnimation;                                                                  /* プレイヤーのアニメーション。*/
-			CharacterController m_characterController;                                                             /* プレイヤーのキャラコン。*/
+			nsK2EngineLow::EffectEmitter* m_chargeEffect = nullptr;                                                //! チャージエフェクトのリモコン       
 
-			WeaponType m_currentWeapon = WeaponType::GreatSword;                                                   /* 現在の武器。@TODO 武器の種類を増やす際に要調整。*/
 
-			PlayerInput m_playerInput;                                                                             /* プレイヤーの入力を管理するクラス。*/
-			PlayerStateID m_playerStateID;                                                                         /* プレイヤーの状態ID。*/
+		private:
+			nsApp::nsEffect::EffectList m_effectList;                                                              //! エフェクト管理クラス
+			WeaponHitDetection m_weaponHitDetection;                                                               //! 武器の当たり判定を管理するクラス。
+			WeaponType m_currentWeapon = WeaponType::GreatSword;                                                   //! 現在の武器。@TODO 武器の種類を増やす際に要調整。
+			PlayerInput m_playerInput;                                                                             //! プレイヤーの入力を管理するクラス。
+			PlayerStateID m_playerStateID;                                                                         //! プレイヤーの状態ID。
 
-			Quaternion m_angle = Quaternion::Identity ;                                                            /* プレイヤーの回転角。*/
 
-			Vector3 m_currentPosition = Vector3::Zero;                                                             /* プレイヤーの現在位置。*/
-			Vector3 m_forwardVector = Vector3::Zero;                                                               /* プレイヤーの前方向ベクトル。*/
+		private:
+			CharacterAnimation m_playerAnimation;                                                                  //! プレイヤーのアニメーション。
+			CharacterController m_characterController;                                                             //! プレイヤーのキャラコン。
+
+			Quaternion m_angle = Quaternion::Identity ;                                                            //! プレイヤーの回転角。
+			Quaternion m_weaponAngle = Quaternion::Identity;                                                       //! 武器の回転角。
+
+			Vector3 m_currentPosition = Vector3::Zero;                                                             //! プレイヤーの現在位置。
+			Vector3 m_forwardVector = Vector3::Zero;                                                               //! プレイヤーの前方向ベクトル。
 
 			int animIndex = 0;
 			int m_inputWaitTimer;
 
+			float m_fallVelocity = 0.0f;                                                                           //! 落下速度。
+
 
 		/* ステート生成。*/
 		private:
-			std::unordered_map<PlayerStateID, std::function<nsState::IState<nsActor::Actor>* ()>> m_stateFactory;  /* ステートの種類を格納。*/
-			uint8_t m_currentStateID = 0;                                                                          /* 現在のステートID。*/
+			std::unordered_map<PlayerStateID, std::function<nsState::IState<nsActor::Actor>* ()>> m_stateFactory;  //! ステートの種類を格納。
+			uint8_t m_currentStateID = 0;                                                                          //! 現在のステートID。
 
 			/* 必要なステートを登録。*/
 			void RegisterState();

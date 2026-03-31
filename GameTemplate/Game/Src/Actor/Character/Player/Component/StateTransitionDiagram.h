@@ -1,15 +1,16 @@
 #pragma once
-
 /**
 * @file StateTransitionDiagram.h
 * @brief 状態遷移図を管理するクラス。
 * @author Yamaguchi Hayato
-* @date 2026/03/16
+* @date 2026/03/24
 */
 
 #include "stdint.h"
 #include "Src/Actor/Character/Player/PlayerInput.h"
 #include "Src/Actor/Character/Player/Player.h"
+
+
 
 namespace nsApp 
 {
@@ -47,6 +48,8 @@ namespace nsApp
 					{ inputClass.IsMove(), nsActor::PlayerStateID::enWalk },
 					/* 通常攻撃状態。*/
 					{ inputClass.IsNormalAttack(), nsActor::PlayerStateID::enNormalAttack },
+					/* チャージ状態。*/
+					{ inputClass.IsCharging(), nsActor::PlayerStateID::enCharging},
 					/* チャージ攻撃状態。*/
 					{ inputClass.IsChargeAttack(), nsActor::PlayerStateID::enChargeAttack },
 					/* コンボ攻撃状態。*/
@@ -55,6 +58,10 @@ namespace nsApp
 					{ inputClass.IsRushStart(), nsActor::PlayerStateID::enRushStart},
 					/* 連続攻撃終了判定。*/
 					{ inputClass.IsRushEnd(), nsActor::PlayerStateID::enRushEnd},
+					/* ガード状態。*/
+					{ inputClass.IsGuard(), nsActor::PlayerStateID::enGuard},
+					/* 助ける状態。*/
+					{ inputClass.IsHelp(), nsActor::PlayerStateID::enHelp},
 				};
 
 
