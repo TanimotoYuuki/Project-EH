@@ -15,16 +15,18 @@ namespace nsApp{
 			* @brief 引数付きコンストラクタ。
 			* @param render アニメーションさせるスプライト。
 			* @param targetTime ターゲットの割合。
-			* @param playSpeed アニメー所んの再生速度。
+			* @param playSpeed アニメーションの再生速度。
 			* @param isLoop ループするか？
-			* @param delayTime アニメーションを開始する前の遅延時間。
+			* @param startDelayTime アニメーションを開始する前の遅延時間。
+			* @param endDelayTime アニメーションを終了した後の遅延時間。
 			*/
-			UIAnimationBase(SpriteRender* render, const float targetTime, const float playSpeed, const bool isLoop, const float delayTime)
+			UIAnimationBase(SpriteRender* render, const float targetTime, const float playSpeed, const bool isLoop, const float startDelayTime, const float endDelayTime)
 				: m_render(render)
 				, m_targetTime(targetTime)
 				, m_playSpeed(playSpeed)
 				, m_isLoop(isLoop)
-				, m_delayTime(delayTime)
+				, m_startDelayTime(startDelayTime)
+				, m_endDelayTime(endDelayTime)
 			{
 			}
 			virtual ~UIAnimationBase() {};/*純粋仮想デストラクタ。*/
@@ -68,7 +70,8 @@ namespace nsApp{
 			float m_elapsedTime = 0.0f;/*経過した割合。*/
 			float m_targetTime = 0.0f;/*ターゲットの割合。*/
 			float m_playSpeed = 1.0f;/*アニメーションの再生速度。*/
-			float m_delayTime = 0.0f;/*遅延時間。*/
+			float m_startDelayTime = 0.0f;/*アニメーションを開始する前の遅延時間。*/
+			float m_endDelayTime = 0.0f;/*アニメーションを終了した後の遅延時間。*/
 			EnAnimationStep m_currentStep = enAnimationStep_Min;/*現在のステップ。*/
 			bool m_isLoop = false;/*ループするか ?*/
 			bool m_isEnd = false;/*アニメーションの再生終了したか？*/
@@ -85,12 +88,13 @@ namespace nsApp{
 			* @param targetTime ターゲットの割合。
 			* @param playSpeed アニメーションの再生速度。
 			* @param isLoop ループするか？
-			* @param delayTime アニメーションを開始する前の遅延時間。
+			* @param startDelayTime アニメーションを開始する前の遅延時間。
+			* @param endDelayTime アニメーションを終了した後の遅延時間。
 			* @param basePosition 元の位置。
 			* @param targetPosition ターゲットの位置。
 			*/
-			PositionUIAnimation(SpriteRender* render, const float targetTime, const float playSpeed, const bool isLoop, const float delayTime, const Vector3 basePosition, const Vector3 targetPosition)
-				: UIAnimationBase(render, targetTime, playSpeed, isLoop, delayTime)
+			PositionUIAnimation(SpriteRender* render, const float targetTime, const float playSpeed, const bool isLoop, const float startDelayTime, const float endDelayTime, const Vector3 basePosition, const Vector3 targetPosition)
+				: UIAnimationBase(render, targetTime, playSpeed, isLoop, startDelayTime, endDelayTime)
 				, m_basePosition(basePosition)
 				, m_targetPosition(targetPosition)
 			{
@@ -134,12 +138,13 @@ namespace nsApp{
 			* @param targetTime ターゲットの割合。
 			* @param playSpeed アニメーションの再生速度。
 			* @param isLoop ループするか？
-			* @oaram delayTime アニメーションを開始する前の遅延時間。
+			* @oaram startDelayTime アニメーションを開始する前の遅延時間。
+			* @param endDelayTime アニメーションを終了した後の遅延時間。
 			* @param basePosition 元の位置。
 			* @param targetPosition ターゲットの位置。
 			*/
-			RotationUIAnimation(SpriteRender* render, const float targetTime, const float playSpeed, const bool isLoop, const float delayTime, const Quaternion baseRotation, const Quaternion targetRotation)
-				: UIAnimationBase(render, targetTime, playSpeed, isLoop, delayTime)
+			RotationUIAnimation(SpriteRender* render, const float targetTime, const float playSpeed, const bool isLoop, const float startDelayTime, const float endDelayTime, const Quaternion baseRotation, const Quaternion targetRotation)
+				: UIAnimationBase(render, targetTime, playSpeed, isLoop, startDelayTime, endDelayTime)
 				, m_baseRotation(baseRotation)
 				, m_targetRotation(targetRotation)
 			{
@@ -183,12 +188,13 @@ namespace nsApp{
 			* @param targetTime ターゲットの割合。
 			* @param playSpeed アニメーションの再生速度。
 			* @param isLoop ループするか？
-			* @param delayTime アニメーションを開始する前の遅延時間。
+			* @param startDelayTime アニメーションを開始する前の遅延時間。
+			* @param endDelayTime アニメーションを終了した後の遅延時間。
 			* @param basePosition 元の大きさ。
 			* @param targetPosition ターゲットの大きさ。
 			*/
-			ScaleUIAnimation(SpriteRender* render, const float targetTime, const float playSpeed, const bool isLoop, const float delayTime, const Vector2 baseScale, const Vector2 targetScale)
-				: UIAnimationBase(render, targetTime, playSpeed, isLoop, delayTime)
+			ScaleUIAnimation(SpriteRender* render, const float targetTime, const float playSpeed, const bool isLoop, const float startDelayTime, const float endDelayTime, const Vector2 baseScale, const Vector2 targetScale)
+				: UIAnimationBase(render, targetTime, playSpeed, isLoop, startDelayTime, endDelayTime)
 				, m_baseScale(baseScale)
 				, m_targetScale(targetScale)
 			{
@@ -232,12 +238,13 @@ namespace nsApp{
 			* @param targetTime ターゲットの割合。
 			* @param playSpeed アニメーションの再生速度。
 			* @param isLoop ループするか？
-			* @param delayTime アニメーションを開始する前の遅延時間。
+			* @param startDelayTime アニメーションを開始する前の遅延時間。
+			* @param endDelayTime アニメーションを終了した後の遅延時間。
 			* @param basePosition 元の色。
 			* @param targetPosition ターゲットの色。
 			*/
-			ColorUIAnimation(SpriteRender* render, const float targetTime, const float playSpeed, const bool isLoop, const float delayTime, const Vector3 baseColor, const Vector3 targetColor)
-				: UIAnimationBase(render, targetTime, playSpeed, isLoop, delayTime)
+			ColorUIAnimation(SpriteRender* render, const float targetTime, const float playSpeed, const bool isLoop, const float startDelayTime, const float endDelayTime, const Vector3 baseColor, const Vector3 targetColor)
+				: UIAnimationBase(render, targetTime, playSpeed, isLoop, startDelayTime, endDelayTime)
 				, m_baseColor(baseColor)
 				, m_targetColor(targetColor)
 			{
@@ -281,12 +288,13 @@ namespace nsApp{
 			* @param targetTime ターゲットの割合。
 			* @param playSpeed アニメーションの再生速度。
 			* @param isLoop ループするか？
-			* @param delayTime アニメーションを開始する前の遅延時間。
+			* @param startDelayTime アニメーションを開始する前の遅延時間。
+			* @param endDelayTime アニメーションを終了した後の遅延時間。
 			* @param basePosition 元の透明度。
 			* @param targetPosition ターゲットの透明度。
 			*/
-			AlphaUIAnimation(SpriteRender* render, const float targetTime, const float playSpeed, const bool isLoop, const float delayTime, const float baseAlpha, const float targetAlpha)
-				: UIAnimationBase(render, targetTime, playSpeed, isLoop, delayTime)
+			AlphaUIAnimation(SpriteRender* render, const float targetTime, const float playSpeed, const bool isLoop, const float startDelayTime, const float endDelayTime, const float baseAlpha, const float targetAlpha)
+				: UIAnimationBase(render, targetTime, playSpeed, isLoop, startDelayTime, endDelayTime)
 				, m_baseAlpha(baseAlpha)
 				, m_targetAlpha(targetAlpha)
 			{

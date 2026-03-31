@@ -10,9 +10,9 @@ namespace nsApp
 		{
 			/*開始前の遅延時間があるか？*/
 			/*ある場合は、遅延時間を減らしていく。*/
-			if (m_delayTime > 0.0f)
+			if (m_startDelayTime > 0.0f)
 			{
-				m_delayTime -= g_gameTime->GetFrameDeltaTime();
+				m_startDelayTime -= g_gameTime->GetFrameDeltaTime();
 				return;
 			}
 
@@ -22,6 +22,15 @@ namespace nsApp
 				Vector3 completePostion = m_targetPosition;
 				m_render->SetPosition(completePostion);
 				m_render->Update();
+
+				/*終了後の遅延時間があるか？*/
+				/*ある場合は、遅延時間を減らしていく。*/
+				if (m_endDelayTime > 0.0f)
+				{
+					m_endDelayTime -= g_gameTime->GetFrameDeltaTime();
+					return;
+				}
+
 				m_isEnd = true;
 				return;
 			}
@@ -76,9 +85,9 @@ namespace nsApp
 		{
 			/*開始前の遅延時間があるか？*/
 			/*ある場合は、遅延時間を減らしていく。*/
-			if (m_delayTime > 0.0f)
+			if (m_startDelayTime > 0.0f)
 			{
-				m_delayTime -= g_gameTime->GetFrameDeltaTime();
+				m_startDelayTime -= g_gameTime->GetFrameDeltaTime();
 				return;
 			}
 
@@ -88,6 +97,15 @@ namespace nsApp
 				Quaternion completeRotation = m_targetRotation;
 				m_render->SetRotation(completeRotation);
 				m_render->Update();
+
+				/*終了後の遅延時間があるか？*/
+				/*ある場合は、遅延時間を減らしていく。*/
+				if (m_endDelayTime > 0.0f)
+				{
+					m_endDelayTime -= g_gameTime->GetFrameDeltaTime();
+					return;
+				}
+
 				m_isEnd = true;
 				return;
 			}
@@ -139,9 +157,9 @@ namespace nsApp
 		{
 			/*開始前の遅延時間があるか？*/
 			/*ある場合は、遅延時間を減らしていく。*/
-			if (m_delayTime > 0.0f)
+			if (m_startDelayTime > 0.0f)
 			{
-				m_delayTime -= g_gameTime->GetFrameDeltaTime();
+				m_startDelayTime -= g_gameTime->GetFrameDeltaTime();
 				return;
 			}
 
@@ -151,6 +169,15 @@ namespace nsApp
 				Vector2 completeScale = m_targetScale;
 				m_render->SetScale(Vector3(completeScale.x, completeScale.y, 1.0f));
 				m_render->Update();
+
+				/*終了後の遅延時間があるか？*/
+				/*ある場合は、遅延時間を減らしていく。*/
+				if (m_endDelayTime > 0.0f)
+				{
+					m_endDelayTime -= g_gameTime->GetFrameDeltaTime();
+					return;
+				}
+
 				m_isEnd = true;
 				return;
 			}
@@ -202,17 +229,27 @@ namespace nsApp
 		{
 			/*開始前の遅延時間があるか？*/
 			/*ある場合は、遅延時間を減らしていく。*/
-			if (m_delayTime > 0.0f)
+			if (m_startDelayTime > 0.0f)
 			{
-				m_delayTime -= g_gameTime->GetFrameDeltaTime();
+				m_startDelayTime -= g_gameTime->GetFrameDeltaTime();
 				return;
 			}
+
 			/*繰り返し実行するか？*/
 			if (!m_isLoop && m_isCompleted)
 			{
 				Vector4 completeColor = m_targetColor;
 				m_render->SetMulColor(completeColor);
 				m_render->Update();
+
+				/*終了後の遅延時間があるか？*/
+				/*ある場合は、遅延時間を減らしていく。*/
+				if (m_endDelayTime > 0.0f)
+				{
+					m_endDelayTime -= g_gameTime->GetFrameDeltaTime();
+					return;
+				}
+
 				m_isEnd = true;
 				return;
 			}
@@ -263,9 +300,9 @@ namespace nsApp
 		{
 			/*開始前の遅延時間があるか？*/
 			/*ある場合は、遅延時間を減らしていく。*/
-			if (m_delayTime >0.0f)
+			if (m_startDelayTime > 0.0f)
 			{
-				m_delayTime -= g_gameTime->GetFrameDeltaTime();
+				m_startDelayTime -= g_gameTime->GetFrameDeltaTime();
 				return;
 			}
 
@@ -275,6 +312,15 @@ namespace nsApp
 				float completeAlpha = m_targetAlpha;
 				m_render->SetMulColor(Vector4(1.0f, 1.0f, 1.0f, completeAlpha));
 				m_render->Update();
+
+				/*終了後の遅延時間があるか？*/
+				/*ある場合は、遅延時間を減らしていく。*/
+				if (m_endDelayTime > 0.0f)
+				{
+					m_endDelayTime -= g_gameTime->GetFrameDeltaTime();
+					return;
+				}
+
 				m_isEnd = true;
 				return;
 			}
