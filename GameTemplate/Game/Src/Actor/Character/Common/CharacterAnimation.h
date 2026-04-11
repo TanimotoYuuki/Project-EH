@@ -40,11 +40,11 @@ namespace nsApp
 	/* 武器のタイプを設定。*/
 	enum class WeaponType : uint8_t
 	{
-		GreatSword, /* 大剣。*/
-		TwinSword,  /* 双剣。*/
+		GreatSword, //! 大剣。
+		Hammer,     //! ハンマー。
+		TwinSword,  //! 双剣。
 		Axe,        /* 斧。*/
 		Wand,       /* 杖。*/
-		Parasol,    /* 傘。*/
 		None,       /* 武器なし。*/
 	};
 
@@ -52,11 +52,14 @@ namespace nsApp
 	struct WeaponData
 	{
 		/* 武器モデルの描画を管理。*/
-		std::string weaponModelPath; /* 武器モデルのファイルパス。*/
-		std::wstring attackBoneName; /* 攻撃の基準となるボーンの名前。*/
+		std::string weaponModelPath;                                                     //! 武器モデルのファイルパス。
+		std::wstring attackBoneName;                                                     //! 攻撃の基準となるボーンの名前。
 
 		/* 攻撃の武器の動きのみを管理する配列。*/
-		std::unordered_map<AttackType, std::string> weaponAnimationList; /* 攻撃の種類ごとの武器アニメーションのファイルパス。*/
+		std::unordered_map<AttackType, std::string> weaponAnimationList;                 //! 攻撃の種類ごとの武器アニメーションのファイルパス。
+
+		/* 基本動作アニメーションリスト。*/
+		std::unordered_map<CharacterBasicAnimationList, std::string> basicAnimationList; //! 基本動作アニメーションのリスト。
 	};
 
 
@@ -140,11 +143,17 @@ namespace nsApp
 
 
 	private:
-		/* BaseAnimationのファイルパスを格納。*/
-		void InitBasicAnimationFilePath();
+		/* GreatSwordの基本動作アニメーションのファイルパスを格納。*/
+		void InitGreatSwordBasicAnimationFilePath();
 
 		/* GreatSwordのアニメーションファイルパスを格納。*/
 		void InitGreatSwordAnimationFilePath();
+
+		/* Hammerの基本動作アニメーションのファイルパスを格納。*/
+		void InitHammerBasicAnimationFilePath();
+
+		/* Hammerのアニメーションパスを格納。*/
+		void InitHammerAnimationFilePath();
 
 
 	private:
@@ -165,6 +174,7 @@ namespace nsApp
 
 		/* 武器の種類ごとに代入用変数を設定。*/
 		WeaponData m_greatSwordData;                                                                                /* 大剣のアニメーションと表示のズレを管理する変数。*/
+		WeaponData m_hammerData;                                                                                    //! ハンマーのアニメーションと表示のズレを管理する変数。
 
 		int m_currentIndex = 0;
 		int m_animationNum = 0;                                                                                     /* 読み込んだアニメーションの数を管理する変数。*/

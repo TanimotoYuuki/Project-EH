@@ -11,13 +11,10 @@ namespace nsApp
 
 		/* キャラモデルの格納。*/
 		/* プレイヤーモデル。*/
-		m_filePathList[CharacterModelType::Player_1P] = GetCharacterModelFilePath("1p/player"); /* 1Pモデル。*/
-		m_filePathList[CharacterModelType::Player_2P] = GetCharacterModelFilePath("2p/Player_2P"); /* 2Pモデル。*/
-		m_filePathList[CharacterModelType::Player_3P] = GetCharacterModelFilePath("3p/Player_3P"); /* 3Pモデル。*/
-		m_filePathList[CharacterModelType::Player_4P] = GetCharacterModelFilePath("4p/Player_4P"); /* 4Pモデル。*/
+		m_filePathList[CharacterModelType::Player_2P] = "Assets/modelData/Character/CharacterModel/2p/player_2p.tkm";
+		m_filePathList[CharacterModelType::Player_3P] = GetCharacterModelFilePath("3p/Player_3P");     //! 3Pモデル。
 
 		/* ボスモデル。*/
-		/* @TODO: Boss担当にコードを記載してもらうように。*/
 		m_filePathList[CharacterModelType::Enemy_Tutorial] = GetCharacterModelFilePath("TutorialBoss/TutorialBoss");
 		m_filePathList[CharacterModelType::GrayDragon] = GetCharacterModelFilePath("GrayDragon/GrayDragon");
 		m_filePathList[CharacterModelType::GreenDragon] = GetWeaponModelFilePath("GreenDragon/GreenDragon");
@@ -27,10 +24,12 @@ namespace nsApp
 		/* 武器モデル。*/
 		/* 大剣。*/
 		m_filePathList[CharacterModelType::Weapon_GreatSword] = GetWeaponModelFilePath("GreatSword");
+		/* ハンマー。*/
+		m_filePathList[CharacterModelType::Weapon_Hammer] = GetWeaponModelFilePath("Hammer");
+
 		/* 双剣。*/ 
 	    // m_filePathList[CharacterModelType::Weapon_TwinSword] = GetWeaponModelFilePath("TwinSword");
 
-		/* @TODO 他の武器モデルの登録は4月～とする。*/
 	}
 
 
@@ -101,46 +100,50 @@ namespace nsApp
 
 	void CharacterModel::Update()
 	{
-		/* 更新処理。*/
-		if(m_characterModelRender != nullptr)
-			m_characterModelRender->Update();
+		/* キャラモデル本体が無いなら処理を終了させる。*/
+		if (m_characterModelRender == nullptr)
+			return;
 
-		/* 武器を装備させる。*/
-		if (m_characterModelRender != nullptr && m_weaponModelRender != nullptr)
-		{
-			/* 右手のボーンの位置と傾きのデータを取得。*/
-			m_handMatrix = GetWorldMatrix(L"mixamorig:RightHand");
+		/* モデルの更新処理。*/
+		m_characterModelRender->Update();
 
-			/* 行列から座標を抽出。*/
-			m_matrixPosition.x = m_handMatrix.m[3][0];
-			m_matrixPosition.y = m_handMatrix.m[3][1];
-			m_matrixPosition.z = m_handMatrix.m[3][2];
-			
-			m_xAxis = Vector3(m_handMatrix.m[0][0], m_handMatrix.m[0][1], m_handMatrix.m[0][2]);
-			m_yAxis = Vector3(m_handMatrix.m[1][0], m_handMatrix.m[1][1], m_handMatrix.m[1][2]);
-			m_zAxis = Vector3(m_handMatrix.m[2][0], m_handMatrix.m[2][1], m_handMatrix.m[2][2]);
+		/* 武器が確認できない場合、処理を終了させる。*/
+		if (m_weaponModelRender == nullptr)
+			return;
 
-			/* 正規化。*/
-			m_xAxis.Normalize();
-			m_yAxis.Normalize();
-			m_zAxis.Normalize();
 
-			m_offsetPosition = m_matrixPosition + (m_xAxis * m_weaponOffset.x) +  (m_yAxis * m_weaponOffset.y)+ (m_zAxis * m_weaponOffset.z);
-			m_weaponModelRender->SetPosition(m_offsetPosition);
-				                 
+		/* 右手のボーンの位置と傾きのデータを取得。*/
+		m_handMatrix = GetWorldMatrix(m_attackBoneName.c_str());
 
-		    m_rotationMatrix = m_handMatrix;
-			m_rotationMatrix.m[0][0] = m_xAxis.x; m_rotationMatrix.m[0][1] = m_xAxis.y; m_rotationMatrix.m[0][2] = m_xAxis.z;
-			m_rotationMatrix.m[1][0] = m_yAxis.x; m_rotationMatrix.m[1][1] = m_yAxis.y; m_rotationMatrix.m[1][2] = m_yAxis.z;
-			m_rotationMatrix.m[2][0] = m_zAxis.x; m_rotationMatrix.m[2][1] = m_zAxis.y; m_rotationMatrix.m[2][2] = m_zAxis.z;
+		/* 行列から座標を抽出。*/
+		m_matrixPosition.x = m_handMatrix.m[3][0];
+		m_matrixPosition.y = m_handMatrix.m[3][1];
+		m_matrixPosition.z = m_handMatrix.m[3][2];
+		
+		m_xAxis = Vector3(m_handMatrix.m[0][0], m_handMatrix.m[0][1], m_handMatrix.m[0][2]);
+		m_yAxis = Vector3(m_handMatrix.m[1][0], m_handMatrix.m[1][1], m_handMatrix.m[1][2]);
+		m_zAxis = Vector3(m_handMatrix.m[2][0], m_handMatrix.m[2][1], m_handMatrix.m[2][2]);
 
-			/* 正規化した行列から回転を抽出。*/
-			m_matrixRotation.SetRotation(m_rotationMatrix);
-			m_weaponModelRender->SetRotation(m_matrixRotation * m_weaponRotationOffset);
+		/* 正規化。*/
+		m_xAxis.Normalize();
+		m_yAxis.Normalize();
+		m_zAxis.Normalize();
 
-			/* 武器を更新。*/
-			m_weaponModelRender->Update();
-		}
+		m_offsetPosition = m_matrixPosition + (m_xAxis * m_weaponOffset.x) +  (m_yAxis * m_weaponOffset.y)+ (m_zAxis * m_weaponOffset.z);
+		m_weaponModelRender->SetPosition(m_offsetPosition);
+			                 
+
+		m_rotationMatrix = m_handMatrix;
+		m_rotationMatrix.m[0][0] = m_xAxis.x; m_rotationMatrix.m[0][1] = m_xAxis.y; m_rotationMatrix.m[0][2] = m_xAxis.z;
+		m_rotationMatrix.m[1][0] = m_yAxis.x; m_rotationMatrix.m[1][1] = m_yAxis.y; m_rotationMatrix.m[1][2] = m_yAxis.z;
+		m_rotationMatrix.m[2][0] = m_zAxis.x; m_rotationMatrix.m[2][1] = m_zAxis.y; m_rotationMatrix.m[2][2] = m_zAxis.z;
+
+		/* 正規化した行列から回転を抽出。*/
+		m_matrixRotation.SetRotation(m_rotationMatrix);
+		m_weaponModelRender->SetRotation(m_matrixRotation * m_weaponRotationOffset);
+
+		/* 武器を更新。*/
+		m_weaponModelRender->Update();
 	}
 
 

@@ -230,6 +230,9 @@
     <ClCompile Include="GameOverDirection.cpp" />
     <ClCompile Include="GameStartDirection.cpp" />
     <ClCompile Include="Result.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\CharacterByWeapon\HammerCharacter.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\CharacterByWeapon\IWeaponCharacter.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\CharacterByWeapon\SwordCharacter.cpp" />
     <ClCompile Include="Src\Fade\Fade.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="main.cpp" />
@@ -294,6 +297,9 @@
     <ClInclude Include="GameOverDirection.h" />
     <ClInclude Include="GameStartDirection.h" />
     <ClInclude Include="Result.h" />
+    <ClInclude Include="Src\Actor\Character\Player\CharacterByWeapon\HammerCharacter.h" />
+    <ClInclude Include="Src\Actor\Character\Player\CharacterByWeapon\IWeaponCharacter.h" />
+    <ClInclude Include="Src\Actor\Character\Player\CharacterByWeapon\SwordCharacter.h" />
     <ClInclude Include="Src\Fade\Fade.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="MemberSelect.h" />

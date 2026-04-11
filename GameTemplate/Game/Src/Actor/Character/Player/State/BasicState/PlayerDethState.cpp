@@ -26,6 +26,7 @@ namespace nsApp
 			/* 空中で死亡した場合は、地面に落とす。*/
 			if (!m_player->GetCharacterController().IsOnGround())
 			{
+				m_fallSpeed = Vector3::Zero;
 				m_fallSpeed.y = -FALLINGSPEED; /* 落下速度。*/
 
 				/* キャラコンを使って落下させる。*/

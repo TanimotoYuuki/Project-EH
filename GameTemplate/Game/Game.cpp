@@ -17,6 +17,9 @@
 #include "Src/Sound/SoundLister.h"
 #include "Src/Actor/Stage/BackGround.h"
 
+#include "Src/Actor/Character/Player/CharacterByWeapon/SwordCharacter.h"
+#include "Src/Actor/Character/Player/CharacterByWeapon/HammerCharacter.h"
+
 namespace nsApp
 {
 	namespace nsGame
@@ -63,8 +66,13 @@ namespace nsApp
 			/*フェードインに切り替える。*/
 			nsApp::nsFade::Fade::GetInstance()->ChangeFadeType(nsApp::nsFade::Fade::EnFadeType::enFadeType_FadeIn);
 
-			m_player = NewGO<nsActor::Player>(0, "player");
-			m_player2 = NewGO<nsActor::Player>(0, "player2");
+			m_player = NewGO<nsActor::HammerCharacter>(0, "player2");
+
+			////////////////////////////////////////////////////////////////////
+			// ダミーモデル用。////////////////////////////////////////////////
+			/*m_player2 = NewGO<nsActor::HammerCharacter>(0, "player2");
+			m_player2->SetPosition(Vector3(-150.0f, 50.0f, 0.0f));
+			m_player2->SetInputEnable(false);*/
 
 			m_sandbag = NewGO<nsActor::Sandbag>(0, "Sandbag");
 

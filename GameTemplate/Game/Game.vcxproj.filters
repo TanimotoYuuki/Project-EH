@@ -164,6 +164,9 @@
     <ClCompile Include="GameClearDirection.cpp" />
     <ClCompile Include="GameTimeUpDirection.cpp" />
     <ClCompile Include="GameOverDirection.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\CharacterByWeapon\IWeaponCharacter.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\CharacterByWeapon\SwordCharacter.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\CharacterByWeapon\HammerCharacter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -289,5 +292,8 @@
     <ClInclude Include="GameClearDirection.h" />
     <ClInclude Include="GameTimeUpDirection.h" />
     <ClInclude Include="GameOverDirection.h" />
+    <ClInclude Include="Src\Actor\Character\Player\CharacterByWeapon\IWeaponCharacter.h" />
+    <ClInclude Include="Src\Actor\Character\Player\CharacterByWeapon\SwordCharacter.h" />
+    <ClInclude Include="Src\Actor\Character\Player\CharacterByWeapon\HammerCharacter.h" />
   </ItemGroup>
 </Project>

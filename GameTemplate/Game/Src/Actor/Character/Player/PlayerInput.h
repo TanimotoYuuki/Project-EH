@@ -22,6 +22,12 @@ namespace nsApp
 			m_isInputEnable = isEnable;
 		}
 
+		/* gamepadの要素数を取得する。*/
+		inline void SetPadIndex(int index)
+		{
+			m_padInddex = index;
+		}
+
 
 	/* ゲッター。*/
 	public:
@@ -159,6 +165,8 @@ namespace nsApp
 		float m_stickY = 0.0f;               /* スティックのY軸の値。*/
 		float m_chargeButtonTimer = 0.0f;    /* チャージ攻撃と判定するために必要なBボタンを長押ししなければならない時間。*/
 
-		Vector3 m_moveVec = Vector3::Right;  /* 移動ベクトル。*/
+		int m_padInddex = 0;                 //! 入力を検知するパッドのインデックス。
+
+		Vector3 m_moveVec = Vector3::Right;  //! 移動ベクトル。
 	};
 }

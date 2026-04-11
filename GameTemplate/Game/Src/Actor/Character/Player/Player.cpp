@@ -32,7 +32,22 @@ namespace
 	const auto WEAPON_HIT_RADIUS = 40.0f;               //! 武器の当たり判定の半径。
 	
 	const auto ANGLE_Y = 90.0f;                         //! プレイヤーの初期角度。
-	const Vector3 POS = Vector3(0.0f, 50.0f, 0.0f);     //! プレイヤーの初期座標。
+	const Vector3 POS = Vector3(0.0f,100.0f, 0.0f);     //! プレイヤーの初期座標。
+
+	struct PlayerSetupData
+	{
+		const char* name;                               //! モデルの名前。
+		nsApp::CharacterModelType modelType;            //! モデルの種類。
+		int padIndex;                                   //! 要素数の何番目を用いて操作を指示するのか。
+	};
+
+	const PlayerSetupData SET_UP_DATA[4] =
+	{
+		{"player1", nsApp::CharacterModelType::Player_1P, 0},
+		{"player2", nsApp::CharacterModelType::Player_2P, 0},
+		{"player3", nsApp::CharacterModelType::Player_3P, 2},
+		{"player4", nsApp::CharacterModelType::Player_4P, 3}
+	};
 }
 
 namespace nsApp
@@ -41,32 +56,34 @@ namespace nsApp
 	{
 		bool Player::Start()
 		{
+			for (int i = 0; i < 4; i++)
+			{
+				if (IsMatchName(SET_UP_DATA[i].name))
+				{
+					m_playerInput.SetPadIndex(SET_UP_DATA[i].padIndex);
+					m_modelType = SET_UP_DATA[i].modelType;
+					break;
+				}
+			}
+
+
 			/* アニメーションとモデルを準備する。*/
 			/* アニメーションクラスの初期化処理をコール。*/
 			m_playerAnimation.Initialize();
 			/* 今の武器をセットする。*/
 			m_playerAnimation.LoadAnimation(m_currentWeapon);
 
-			/* アニメーションとモデルをセットする。*/
-			m_model.LoadCharacterModel
-			(
-				CharacterModelType::Player_3P,
+			m_model.LoadCharacterModel(
+				m_modelType,
 				m_playerAnimation.GetAnimatiocClip(),
 				m_playerAnimation.GetAnimationClips()
 			);
-
-			/* 武器の種類をセットする。*/
-			m_model.LoadWeaponModel(CharacterModelType::Weapon_GreatSword);
-
-			/* キャラスケールをセットする。*/
 			m_model.SetCharacterScale(Vector3::One * 0.5f);
 
-			/* 武器の調整。*/
-			m_model.SetWeaponScale(Vector3::One * 0.3f);
-			m_model.SetWeaponOffset(Vector3::Zero);
-
+			/* 初期座標をセットする。*/
 			m_model.SetPosition(POS);
 
+			/* 角度をセットする。*/
 			m_angle.AddRotationDegY(ANGLE_Y);
 			m_model.SettRotation(m_angle);
 
@@ -82,14 +99,14 @@ namespace nsApp
 			 * MPCの実装が完了後、削除可。
 			 */
 
-		    ///////////////////////////////////////////////////////////////////////////////////////
+		 //   ///////////////////////////////////////////////////////////////////////////////////////
 			if (IsMatchName("player2"))
 				InitDummyModel();
 
 			else
 				m_stateMachine->ChangeState(m_stateFactory[PlayerStateID::enIdle]());
 
-			////////////////////////////////////////////////////////////////////////////////////////
+			//////////////////////////////////////////////////////////////////////////////////////////
 
 			m_currentPosition = POS;
 			m_characterController.Init(CHARACON_RADIUS, CHARACON_HEIGHT, m_currentPosition);
@@ -182,7 +199,7 @@ namespace nsApp
 			m_characterStatus.hp.currentHP = 0;
 
 			/* 最初から死亡ステートへ遷移させる。*/
-			m_stateMachine->ChangeState(m_stateFactory[PlayerStateID::enDeath]());
+			m_stateMachine->ChangeState(m_stateFactory[PlayerStateID::enIdle]());
 		}
 
 
@@ -273,30 +290,6 @@ namespace nsApp
 
 			/* 助けられ状態。*/
 			m_stateFactory[PlayerStateID::enGetUp] = []() { return new nsState::PlayerGetUpState(); };
-
-			/* 通常攻撃状態。*/
-			m_stateFactory[PlayerStateID::enNormalAttack] = []() { return new nsState::PlayerNormalAttackState(); };
-
-			/* チャージ攻撃状態。*/
-			m_stateFactory[PlayerStateID::enChargeAttack] = []() { return new nsState::PlayerChargeAttackState(); };
-
-			/* チャージ中状態。*/
-			m_stateFactory[PlayerStateID::enCharging] = []() { return new nsState::PlayerChargingState(); };
-
-			/* 空中攻撃状態。*/
-			m_stateFactory[PlayerStateID::enAirAttack] = []() { return new nsState::PlayerAirAttackState(); };
-
-            /* 連続攻撃開始状態。*/
-			m_stateFactory[PlayerStateID::enRushStart] = []() { return new nsState::PlayerRushStartState(); };
-
-			/* 連続攻撃ループ状態。*/ 
-			m_stateFactory[PlayerStateID::enRushEnd] = []() { return new nsState::PlayerRushEndState(); };
-
-			/* 斬り上げ状態。*/
-			m_stateFactory[PlayerStateID::enSlashUp] = []() { return new nsState::PlayerSlashUpState(); };
-
-			/* 突き進む状態。*/
-			m_stateFactory[PlayerStateID::enPushForward] = []() { return new nsState::PlayerPushState(); };
 		}
 	}
 }

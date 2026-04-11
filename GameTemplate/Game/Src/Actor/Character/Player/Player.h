@@ -193,16 +193,30 @@ namespace nsApp
 			nsK2EngineLow::EffectEmitter* m_chargeEffect = nullptr;                                                //! チャージエフェクトのリモコン       
 
 
+		protected:
+			CharacterAnimation m_playerAnimation;                                                                  //! プレイヤーのアニメーション。
+			PlayerInput m_playerInput;                                                                             //! プレイヤーの入力を管理するクラス。
+			CharacterModelType m_modelType;                                                                        //! プレイヤーのモデルの種類。
+
+
+		/* ステート生成。*/
+		protected:
+			std::unordered_map<PlayerStateID, std::function<nsState::IState<nsActor::Actor>* ()>> m_stateFactory;  //! ステートの種類を格納。
+			uint8_t m_currentStateID = 0;                                                                          //! 現在のステートID。
+
+
+			/* 必要なステートを登録。*/
+			virtual void RegisterState();
+
+
 		private:
 			nsApp::nsEffect::EffectList m_effectList;                                                              //! エフェクト管理クラス
 			WeaponHitDetection m_weaponHitDetection;                                                               //! 武器の当たり判定を管理するクラス。
 			WeaponType m_currentWeapon = WeaponType::GreatSword;                                                   //! 現在の武器。@TODO 武器の種類を増やす際に要調整。
-			PlayerInput m_playerInput;                                                                             //! プレイヤーの入力を管理するクラス。
 			PlayerStateID m_playerStateID;                                                                         //! プレイヤーの状態ID。
 
 
 		private:
-			CharacterAnimation m_playerAnimation;                                                                  //! プレイヤーのアニメーション。
 			CharacterController m_characterController;                                                             //! プレイヤーのキャラコン。
 
 			Quaternion m_angle = Quaternion::Identity ;                                                            //! プレイヤーの回転角。
@@ -215,15 +229,6 @@ namespace nsApp
 			int m_inputWaitTimer;
 
 			float m_fallVelocity = 0.0f;                                                                           //! 落下速度。
-
-
-		/* ステート生成。*/
-		private:
-			std::unordered_map<PlayerStateID, std::function<nsState::IState<nsActor::Actor>* ()>> m_stateFactory;  //! ステートの種類を格納。
-			uint8_t m_currentStateID = 0;                                                                          //! 現在のステートID。
-
-			/* 必要なステートを登録。*/
-			void RegisterState();
 		};
 	}
 }

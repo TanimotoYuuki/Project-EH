@@ -23,17 +23,15 @@ namespace nsApp
 
 
 		/* 敵モデルを定義。*/
-		/* @TODO Enemy担当者にIDを増やしてもらう。*/
 		Enemy_Tutorial,      /* チュートリアル用の敵。*/
-		GrayDragon,        /* 灰色のドラゴン。*/
-		GreenDragon,       /* 緑色のドラゴン。*/
-		RedDragon,         /* 赤色のドラゴン。*/
+		GrayDragon,          /* 灰色のドラゴン。*/
+		GreenDragon,         /* 緑色のドラゴン。*/
+		RedDragon,           /* 赤色のドラゴン。*/
 
 
 		/* 武器モデルを定義。*/
 		Weapon_GreatSword,   /* 大剣。*/
 		Weapon_TwinSword,    /* 双剣。*/
-		Weapon_Parasol,      /* パラソル。*/
 		Weapon_Axe,          /* 斧。*/
 		Weapon_Hammer,       /* ハンマー。*/
 		Weapon_Wand,		 /* 杖。 @TODO 3Dモデルを探す。*/
@@ -167,7 +165,7 @@ namespace nsApp
 		std::unordered_map<CharacterModelType, std::string> m_filePathList;		                                               //! モデルIDからファイルパスを文字列に変化。
 		std::unique_ptr<ModelRender> m_characterModelRender;                                                                   //! モデルを管理。
 		std::unique_ptr<ModelRender> m_weaponModelRender;                                                                      //! 武器モデルを管理。
-		std::wstring m_attackBoneName;
+		std::wstring m_attackBoneName = L"mixamorig:RightHand";                                                                //! デフォルトのボーン名。
 
 		/* ファイルパスを定数化するための変数群。*/
 		std::string m_modelFilePath;                                                                                           //! モデルのファイルパスを格納。
