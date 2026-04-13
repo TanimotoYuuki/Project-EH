@@ -1,9 +1,9 @@
 #pragma once
 /**
-* @file StateTransitionDiagram.h
-* @brief 状態遷移図を管理するクラス。
+* @file   StateTransitionDiagram.h
+* @brief  状態遷移図を管理するクラス。
 * @author Yamaguchi Hayato
-* @date 2026/03/24
+* @date 　2026/03/24
 */
 
 #include "stdint.h"

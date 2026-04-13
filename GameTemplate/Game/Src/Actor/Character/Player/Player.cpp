@@ -98,8 +98,7 @@ namespace nsApp
 			 * ダミーモデル配置用。
 			 * MPCの実装が完了後、削除可。
 			 */
-
-		 //   ///////////////////////////////////////////////////////////////////////////////////////
+		    ///////////////////////////////////////////////////////////////////////////////////////
 			if (IsMatchName("player2"))
 				InitDummyModel();
 
@@ -235,14 +234,11 @@ namespace nsApp
 
 		void Player::ReceiveHelp()
 		{
-
 			m_characterStatus.hp.currentHP = 1000;
 
 			/* 自分のHPを回復させる。*/
 			/* 起き上がりステート（PlayerGetUpState）へ強制移行。*/
 			m_stateMachine->ChangeState(m_stateFactory[PlayerStateID::enGetUp]());
-
-
 		}
 
 

@@ -29,6 +29,11 @@ namespace nsApp
 
 		protected:
 			void RegisterState() override;
+
+
+		private:
+			Quaternion m_agnle = Quaternion::Identity; //! ƒ‚ƒfƒ‹‚ÌŠp“xB
+
 		};
 	}
 }

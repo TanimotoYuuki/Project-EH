@@ -6,14 +6,16 @@ namespace nsApp
 {
 	void CharacterAnimation::Initialize()
 	{		
-		/* 大剣用のアニメーションのファイルパスを初期化。*/
+		/* ソードキャラクターのアニメーションのファイルパスを初期化。*/
+		/* 基本動作用。*/
+		InitGreatSwordAnimationFilePath();
+		/* 攻撃動作用。*/
 		InitGreatSwordAnimationFilePath();
 
-		InitGreatSwordAnimationFilePath();
-
+		/* ハンマーキャラクターのアニメーションのファイルパスを初期化。*/
+	    /* 基本動作用。*/
 		InitHammerBasicAnimationFilePath();
-
-		/* ハンマーの基本動作アニメーションのファイルパスを初期化。*/ 
+		/* 攻撃動作用。*/
 		InitHammerAnimationFilePath();
 	}
 
@@ -84,31 +86,31 @@ namespace nsApp
 	{
 		/* Hammerのアニメーションを登録。*/
         /* 待機状態。*/
-		m_basicAnimationFilePathList[CharacterBasicAnimationList::Idle] = "Assets/animData/Player/BasicAnimation/Hammer/Idle.tka";
+		m_basicAnimationFilePathList[CharacterBasicAnimationList::Idle] = GetBasicAnimationFilePath("Hammer/Idle");
 
 		/* 歩き状態。*/
-		m_basicAnimationFilePathList[CharacterBasicAnimationList::Walk] = "Assets/animData/Player/BasicAnimation/Hammer/Idle.tka";
+		m_basicAnimationFilePathList[CharacterBasicAnimationList::Walk] = GetBasicAnimationFilePath("Hammer/Walk");
 
 		/* 走り状態。*/
-		m_basicAnimationFilePathList[CharacterBasicAnimationList::Run] = "Assets/animData/Player/BasicAnimation/Hammer/Idle.tka";
+		m_basicAnimationFilePathList[CharacterBasicAnimationList::Run] = GetBasicAnimationFilePath("Hammer/Run");
 
 		/* ジャンプ状態。*/
-		m_basicAnimationFilePathList[CharacterBasicAnimationList::Jump] = "Assets/animData/Player/BasicAnimation/Hammer/Idle.tka";
+		m_basicAnimationFilePathList[CharacterBasicAnimationList::Jump] = GetBasicAnimationFilePath("Hammer/Jump");
 
 		/* 被弾状態。*/
-		m_basicAnimationFilePathList[CharacterBasicAnimationList::Hit_Fly] = "Assets/animData/Player/BasicAnimation/Hammer/Idle.tka";
+		m_basicAnimationFilePathList[CharacterBasicAnimationList::Hit_Fly] = GetBasicAnimationFilePath("Hammer/Fly_Hit");
 
 		/* 起き上がり状態。*/
-		m_basicAnimationFilePathList[CharacterBasicAnimationList::Hit_UP] = "Assets/animData/Player/BasicAnimation/Hammer/Idle.tka";
+		m_basicAnimationFilePathList[CharacterBasicAnimationList::Hit_UP] = GetBasicAnimationFilePath("Hammer/Fly_GetUp");
 
 		/* 死亡状態。*/
-		m_basicAnimationFilePathList[CharacterBasicAnimationList::Death] = "Assets/animData/Player/BasicAnimation/Hammer/Idle.tka";
+		m_basicAnimationFilePathList[CharacterBasicAnimationList::Death] = GetBasicAnimationFilePath("Hammer/Deth");
 
 		/* ガード状態。*/
-		m_basicAnimationFilePathList[CharacterBasicAnimationList::Guard] = "Assets/animData/Player/BasicAnimation/Hammer/Idle.tka";
+		m_basicAnimationFilePathList[CharacterBasicAnimationList::Guard] = GetBasicAnimationFilePath("Hammer/Guard");
 
 		/* 助ける状態。*/
-		m_basicAnimationFilePathList[CharacterBasicAnimationList::Help] = "Assets/animData/Player/BasicAnimation/Hammer/Idle.tka";
+		m_basicAnimationFilePathList[CharacterBasicAnimationList::Help] = GetBasicAnimationFilePath("Hammer/Help");
 
 		m_weaponDataList[WeaponType::Hammer] = m_hammerData;
 	}

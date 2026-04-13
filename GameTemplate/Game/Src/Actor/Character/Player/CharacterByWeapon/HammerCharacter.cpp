@@ -8,6 +8,14 @@
 #include "Src/Actor/Character/Player/State/AttackState/PlayerAirAttackState.h"
 
 #include "Src/Actor/Character/Player/State/BasicState/PlayerIdleState.h"
+#include "Src/Actor/Character/Player/State/BasicState/PlayerWalkState.h"
+#include "Src/Actor/Character/Player/State/BasicState/PlayerJumpState.h"
+#include "Src/Actor/Character/Player/State/BasicState/PlayerRunState.h"
+#include "Src/Actor/Character/Player/State/BasicState/PlayerHitState.h"
+#include "Src/Actor/Character/Player/State/BasicState/PlayerDethState.h"
+#include "Src/Actor/Character/Player/State/BasicState/PlayerGuardState.h"
+#include "Src/Actor/Character/Player/State/BasicState/PlayerReBoneState.h"
+#include "Src/Actor/Character/Player/State/BasicState/PlayerGetUpState.h"
 
 namespace nsApp
 {
@@ -30,38 +38,65 @@ namespace nsApp
 			/* 装備する武器の種類をセットする。*/
 			m_model.LoadWeaponModel(CharacterModelType::Weapon_Hammer);
 
-		//	m_model.SetWeaponAttackBone(L"mixamorig:RightHand");
-
 			/* 武器のスケールと位置の調整。*/
+			/* スケール。*/
 			m_model.SetWeaponScale(Vector3::One);
+			/* 大きさ。*/
 			m_model.SetWeaponOffset(Vector3(0.0f, 15.0f, 0.0f));
-			
-			Quaternion agnle;
-			agnle.SetRotationDegY(90.0f);
-			m_model.SetWeaponAngle(agnle);
+			/* 武器の角度を設定。*/
+			m_agnle.SetRotationDegY(90.0f);
+			m_model.SetWeaponAngle(m_agnle);
 
 			return true;
 		}
 
 
-		// 基本動作は親に登録してもらう
 		void HammerCharacter::RegisterState()
 		{
 			Player::RegisterState();
 
-
+			/* 基本動作ステート。*/
+			/* 待機状態。*/
 			m_stateFactory[PlayerStateID::enIdle] = []() { return new nsState::PlayerIdleState(); };
 
-			///* 通常攻撃状態。*/ 
+			/* 歩き状態。*/
+			m_stateFactory[PlayerStateID::enWalk] = []() { return new nsState::PlayerWalkState(); };
+
+			/* 走り状態。*/
+			m_stateFactory[PlayerStateID::enRun] = []() { return new nsState::PlayerRunState(); };
+
+			/* ジャンプ状態。*/
+			m_stateFactory[PlayerStateID::enJump] = []() { return new nsState::PlayerJumpState(); };
+
+			/* ガード状態。*/
+			m_stateFactory[PlayerStateID::enGuard] = []() { return new nsState::PlayerGuardState(); };
+
+			/* 被弾状態。*/
+			m_stateFactory[PlayerStateID::enHit] = []() { return new nsState::PlayerHitState(); };
+
+			/* 死亡状態。*/
+			m_stateFactory[PlayerStateID::enDeath] = []() { return new nsState::PlayerDethState(); };
+
+			/* 助ける状態。*/
+			m_stateFactory[PlayerStateID::enHelp] = []() { return new nsState::PlayerReBoneState(); };
+
+			/* 起き上がる状態。*/
+			m_stateFactory[PlayerStateID::enGetUp] = []() { return new nsState::PlayerGetUpState(); };
+
+			/* ガード状態。*/
+			m_stateFactory[PlayerStateID::enGuard] = []() { return new nsState::PlayerGuardState(); };
+
+			/* 攻撃ステート。*/
+			/* 通常攻撃状態。*/ 
 			//m_stateFactory[PlayerStateID::enNormalAttack] = []() { return new nsState::PlayerNormalAttackState(); };
 
-			///* チャージ中状態。*/
+			/* チャージ中状態。*/
 			//m_stateFactory[PlayerStateID::enCharging] = []() { return new nsState::PlayerChargingState(); };
 
-			///* チャージ攻撃状態。*/
+			/* チャージ攻撃状態。*/
 			//m_stateFactory[PlayerStateID::enChargeAttack] = []() { return new nsState::PlayerChargeAttackState(); };
 
-			///* 空中攻撃状態。*/
+			/* 空中攻撃状態。*/
 			//m_stateFactory[PlayerStateID::enAirAttack] = []() { return new nsState::PlayerAirAttackState(); };
 		}
 	}
