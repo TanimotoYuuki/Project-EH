@@ -114,7 +114,7 @@ namespace nsApp
 		/* チャージ攻撃開始。
 		 * 5F以上(長押し) Bボタンを押しているかを判定。
 		 */ 
-		m_isChargeStart = (m_isPressButton && m_chargeButtonTimer >= 5);
+		m_isChargeStart = (m_isPressButton && m_chargeButtonTimer >= 1);
 
 
 		/* ガード判定。*/ 
@@ -122,5 +122,8 @@ namespace nsApp
 
 		/* 助ける判定。*/ 
 		m_isHelp = g_pad[m_padInddex]->IsTrigger(enButtonY);
+
+		/* 重攻撃判定。*/
+		m_isPressX = g_pad[m_padInddex]->IsTrigger(enButtonX);
 	}
 }

@@ -11,8 +11,8 @@ namespace nsApp
 
 		/* キャラモデルの格納。*/
 		/* プレイヤーモデル。*/
-		m_filePathList[CharacterModelType::Player_2P] = "Assets/modelData/Character/CharacterModel/2p/player_2p.tkm";
-		m_filePathList[CharacterModelType::Player_3P] = GetCharacterModelFilePath("3p/Player_3P");     //! 3Pモデル。
+		m_filePathList[CharacterModelType::Player_2P] = GetCharacterModelFilePath("2p/player_2p");                    //! 2Pモデル。
+		m_filePathList[CharacterModelType::Player_3P] = GetCharacterModelFilePath("3p/Player_3P");                    //! 3Pモデル。
 
 		/* ボスモデル。*/
 		m_filePathList[CharacterModelType::Enemy_Tutorial] = GetCharacterModelFilePath("TutorialBoss/TutorialBoss");
@@ -26,10 +26,6 @@ namespace nsApp
 		m_filePathList[CharacterModelType::Weapon_GreatSword] = GetWeaponModelFilePath("GreatSword");
 		/* ハンマー。*/
 		m_filePathList[CharacterModelType::Weapon_Hammer] = GetWeaponModelFilePath("Hammer");
-
-		/* 双剣。*/ 
-	    // m_filePathList[CharacterModelType::Weapon_TwinSword] = GetWeaponModelFilePath("TwinSword");
-
 	}
 
 
@@ -48,10 +44,10 @@ namespace nsApp
 		/* モデルをロードする。*/
 		m_characterModelRender->Init
 		(
-			m_modelFilePath.c_str(), /* モデルのファイルパス。*/
-			animationClip,           /* アニメーション。*/
-			numClips,                /* アニメーションの補完率。*/
-			enModelUpAxisZ           /* モデルの上方向となる軸を設定。 今回はZ軸。*/
+			m_modelFilePath.c_str(), //! モデルのファイルパス。
+			animationClip,           //! アニメーション。
+			numClips,                //! アニメーションの補完率。
+			enModelUpAxisZ           //! モデルの上方向となる軸を設定。 今回はZ軸。
 		);
 
 		return true;
@@ -80,9 +76,7 @@ namespace nsApp
 	void CharacterModel::PlayAnimation(int animationNumber, float interpolateTime)
 	{
 		if (m_characterModelRender != nullptr)
-		{
 			m_characterModelRender->PlayAnimation(animationNumber, interpolateTime);
-		}
 	}
 
 

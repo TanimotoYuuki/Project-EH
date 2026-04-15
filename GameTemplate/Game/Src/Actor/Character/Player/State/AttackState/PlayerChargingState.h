@@ -50,6 +50,10 @@ namespace nsApp
 
         private:
 			Vector3 m_effectPosition;                   //! エフェクトの座標。
+			Vector3 m_effectScale;                      //! エフェクトのスケール。
+
+			int m_chargingTimer = 0;                    //! チャージ時間を管理するタイマー。
+
         };
 
 

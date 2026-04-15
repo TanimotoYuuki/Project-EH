@@ -30,25 +30,21 @@ namespace nsApp
 
 		public:
 			/**
-			* 武器用のアニメーションを再生する。
-			*/
+			 * 武器用のアニメーションを再生する。
+			 */
 			void CharacterWeaponAnimation(AttackType attack);
 
 
 		/* ゲッター。*/
 		public:
-			/* 武器の*/
+			/* 武器の当たり判定を取得。*/
 			WeaponHitDetection& GetWeaponHitDetection()
 			{
 				return m_weaponHitDetection;
 			}
 
 
-		protected:
-			WeaponHitDetection m_weaponHitDetection;       //! 武器の当たり判定クラス。
-
-			WeaponType m_currentWeapon = WeaponType::None; //! 現在装備している武器の種類。
-
+		protected:	
 			int m_animationIndex = 0;                      //! 再生するアニメーションのインデックス
 		};
 	}

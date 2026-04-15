@@ -233,6 +233,7 @@
     <ClCompile Include="Src\Actor\Character\Player\CharacterByWeapon\HammerCharacter.cpp" />
     <ClCompile Include="Src\Actor\Character\Player\CharacterByWeapon\IWeaponCharacter.cpp" />
     <ClCompile Include="Src\Actor\Character\Player\CharacterByWeapon\SwordCharacter.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerHeavyAttackState.cpp" />
     <ClCompile Include="Src\Fade\Fade.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="main.cpp" />
@@ -300,6 +301,7 @@
     <ClInclude Include="Src\Actor\Character\Player\CharacterByWeapon\HammerCharacter.h" />
     <ClInclude Include="Src\Actor\Character\Player\CharacterByWeapon\IWeaponCharacter.h" />
     <ClInclude Include="Src\Actor\Character\Player\CharacterByWeapon\SwordCharacter.h" />
+    <ClInclude Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerHeavyAttackState.h" />
     <ClInclude Include="Src\Fade\Fade.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="MemberSelect.h" />

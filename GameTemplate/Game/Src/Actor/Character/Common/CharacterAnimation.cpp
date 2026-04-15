@@ -8,7 +8,7 @@ namespace nsApp
 	{		
 		/* ソードキャラクターのアニメーションのファイルパスを初期化。*/
 		/* 基本動作用。*/
-		InitGreatSwordAnimationFilePath();
+		InitGreatSwordBasicAnimationFilePath();
 		/* 攻撃動作用。*/
 		InitGreatSwordAnimationFilePath();
 
@@ -119,20 +119,24 @@ namespace nsApp
 	void CharacterAnimation::InitHammerAnimationFilePath()
 	{
 		/* Hammerのアニメーションファイルパスを格納。*/
-       /* 通常攻撃。*/
+        /* 通常攻撃。*/
 		m_hammerData.weaponAnimationList[AttackType::NormalAttack] = GetWeaponAnimationFilePath("Hammer/NormalAttack");
 
+		/* 強攻撃。*/
+		m_hammerData.weaponAnimationList[AttackType::HeavyAttack] = GetWeaponAnimationFilePath("Hammer/HeavyAttack");
+
 		/* チャージ中。*/
-		m_hammerData.weaponAnimationList[AttackType::Charging] = GetWeaponAnimationFilePath("Hammer/Charging");
+	    m_hammerData.weaponAnimationList[AttackType::Charging] = GetWeaponAnimationFilePath("Hammer/Charging");
 
 		/* チャージ攻撃。*/
-		m_hammerData.weaponAnimationList[AttackType::ChargeAttack] = GetWeaponAnimationFilePath("Hammer/ChargeAttack");
+	    m_hammerData.weaponAnimationList[AttackType::ChargeAttack] = GetWeaponAnimationFilePath("Hammer/HeavyAttack");
 
 		/* 空中攻撃。*/
 		m_hammerData.weaponAnimationList[AttackType::AirAttack] = GetWeaponAnimationFilePath("Hammer/AirAttack");
 
 		/* 回転攻撃。*/
-		m_hammerData.weaponAnimationList[AttackType::RushAttack_Start] = GetWeaponAnimationFilePath("Hammer/Spinning");
+		m_hammerData.weaponAnimationList[AttackType::PushForward] = GetWeaponAnimationFilePath("Hammer/Spinning");
+
 
 
 		/* 登録データをリストに登録。*/
@@ -142,7 +146,6 @@ namespace nsApp
 
 	void CharacterAnimation::LoadAnimation(WeaponType weaponType)
 	{
-
 		/* アニメーションを読み込む前に箱をリセット。*/
 		m_basicIndexMap.clear();
 		m_attackIndexMap.clear();

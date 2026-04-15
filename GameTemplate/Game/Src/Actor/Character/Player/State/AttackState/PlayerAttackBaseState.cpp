@@ -39,6 +39,9 @@ namespace nsApp
 				m_inputRequests[ComboInputType::PressB] = true;
 			}
 
+			if (inputClass.IsPressX())
+				m_inputRequests[ComboInputType::PressX] = true;
+
 			/* Aボタンアクション。*/
 			if (inputClass.IsSlashUp())
 				m_inputRequests[ComboInputType::PressLB2] = true;

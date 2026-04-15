@@ -30,8 +30,9 @@ namespace
 	const auto CHARACON_RADIUS = 12.5f;                 //! キャラクターコントローラーの半径。
 	const auto CHARACON_HEIGHT = 30.0f;                 //! キャラクターコントローラーの高さ。
 	const auto WEAPON_HIT_RADIUS = 40.0f;               //! 武器の当たり判定の半径。
-	
 	const auto ANGLE_Y = 90.0f;                         //! プレイヤーの初期角度。
+	const auto CHARACTER_SCALE = 0.5f;                  //! プレイヤーのスケール。
+
 	const Vector3 POS = Vector3(0.0f,100.0f, 0.0f);     //! プレイヤーの初期座標。
 
 	struct PlayerSetupData
@@ -41,6 +42,7 @@ namespace
 		int padIndex;                                   //! 要素数の何番目を用いて操作を指示するのか。
 	};
 
+	/* 生成名/識別子/コントローラーのインデックスを付与。*/
 	const PlayerSetupData SET_UP_DATA[4] =
 	{
 		{"player1", nsApp::CharacterModelType::Player_1P, 0},
@@ -56,6 +58,7 @@ namespace nsApp
 	{
 		bool Player::Start()
 		{
+
 			for (int i = 0; i < 4; i++)
 			{
 				if (IsMatchName(SET_UP_DATA[i].name))
@@ -66,19 +69,19 @@ namespace nsApp
 				}
 			}
 
-
 			/* アニメーションとモデルを準備する。*/
 			/* アニメーションクラスの初期化処理をコール。*/
 			m_playerAnimation.Initialize();
 			/* 今の武器をセットする。*/
 			m_playerAnimation.LoadAnimation(m_currentWeapon);
 
+			/* モデルの種類/アニメーションの種類/アニメーションの数をセットする。*/
 			m_model.LoadCharacterModel(
-				m_modelType,
-				m_playerAnimation.GetAnimatiocClip(),
-				m_playerAnimation.GetAnimationClips()
+				m_modelType,                               //! モデルの種類。
+				m_playerAnimation.GetAnimatiocClip(),      //! アニメーションの種類。
+				m_playerAnimation.GetAnimationClips()      //! アニメーションの数。
 			);
-			m_model.SetCharacterScale(Vector3::One * 0.5f);
+			m_model.SetCharacterScale(Vector3::One * CHARACTER_SCALE);
 
 			/* 初期座標をセットする。*/
 			m_model.SetPosition(POS);
@@ -144,9 +147,6 @@ namespace nsApp
 			/* モデルの更新より先に入力判定を更新する。*/
 			m_playerInput.Update();
 
-			/* ステートマシーンを更新する。*/
-			m_stateMachine->Update();
-
 			/* リクエストを受け取って必要なステートをコール。*/
 			if (m_stateMachine->GetCurrentState()->RequestID(m_currentStateID))
 			{
@@ -157,6 +157,9 @@ namespace nsApp
 				if (m_stateFactory.count(m_playerStateID) > 0)
 					m_stateMachine->ChangeState(m_stateFactory[m_playerStateID]());
 			}
+
+			/* ステートマシーンを更新する。*/
+			m_stateMachine->Update();
 
 			/* モデルの座標を更新する。*/
 			m_model.SetPosition(m_currentPosition);
@@ -214,7 +217,7 @@ namespace nsApp
 			/* 攻撃アニメーションの数を取得。*/
 			animIndex = m_playerAnimation.GetAttackAnimationIndex(attack);
 			/* 攻撃アニメーションはボタンを押した瞬間に切り替わってほしいため補完割合を低めに設定。*/
-			m_model.PlayAnimation(animIndex, 0.05f);
+			m_model.PlayAnimation(animIndex, 0.0f);
 
 			/* --- ここからSE再生処理 --- */
 			/* サウンド管理クラスを探す */

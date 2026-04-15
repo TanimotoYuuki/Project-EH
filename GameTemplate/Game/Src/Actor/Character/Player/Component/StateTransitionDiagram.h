@@ -18,8 +18,8 @@ namespace nsApp
 	{
 		struct Transition
 		{
-			bool condition;                     /* 遷移条件。*/
-			nsActor::PlayerStateID nextStateID; /* 遷移先のステートID。*/
+			bool condition;                     //! 遷移条件。
+			nsActor::PlayerStateID nextStateID; //! 遷移先のステートID。
 		};
 
 
@@ -27,10 +27,10 @@ namespace nsApp
 		{
 		public:
 			/* 
-			* 状態遷移図を確認する。
-			* @param inputClass:   playerの入力を検知するクラス。
-			* @param transitionID: 遷移ID。
-			*/
+			 * 状態遷移図を確認する。
+			 * @param inputClass:   playerの入力を検知するクラス。
+			 * @param transitionID: 遷移ID。
+			 */
 			static bool CheckCommonTransition(const PlayerInput& inputClass, uint8_t& transitionID)
 			{
 				/* 状態遷移図。*/

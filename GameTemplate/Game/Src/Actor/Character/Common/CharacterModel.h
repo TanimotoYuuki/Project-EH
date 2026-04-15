@@ -43,7 +43,7 @@ namespace nsApp
 	public:
 		/* コンストラクタとデストラクタ。*/
 		CharacterModel();
-		~CharacterModel() = default;
+		virtual ~CharacterModel() = default;
 
 
 	public:

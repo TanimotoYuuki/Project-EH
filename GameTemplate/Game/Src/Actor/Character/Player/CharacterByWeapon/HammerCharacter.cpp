@@ -6,6 +6,8 @@
 #include "Src/Actor/Character/Player/State/AttackState/PlayerChargingState.h"
 #include "Src/Actor/Character/Player/State/AttackState/PlayerChargeAttackState.h"
 #include "Src/Actor/Character/Player/State/AttackState/PlayerAirAttackState.h"
+#include "Src/Actor/Character/Player/State/AttackState/ComboState/PlayerPushState.h"
+#include "Src/Actor/Character/Player/State/AttackState/ComboState/PlayerHeavyAttackState.h"
 
 #include "Src/Actor/Character/Player/State/BasicState/PlayerIdleState.h"
 #include "Src/Actor/Character/Player/State/BasicState/PlayerWalkState.h"
@@ -16,6 +18,13 @@
 #include "Src/Actor/Character/Player/State/BasicState/PlayerGuardState.h"
 #include "Src/Actor/Character/Player/State/BasicState/PlayerReBoneState.h"
 #include "Src/Actor/Character/Player/State/BasicState/PlayerGetUpState.h"
+
+
+namespace
+{
+	const Vector3 HAMMER_OFFSET = Vector3(0.0f, 5.0f, 0.0f);     //! ハンマーと腕のオフセット。
+	const auto HAMMER_ANGLE_Y = 90.0f;                           //! ハンマーの初期角度。
+}
 
 namespace nsApp
 {
@@ -42,9 +51,9 @@ namespace nsApp
 			/* スケール。*/
 			m_model.SetWeaponScale(Vector3::One);
 			/* 大きさ。*/
-			m_model.SetWeaponOffset(Vector3(0.0f, 15.0f, 0.0f));
+			m_model.SetWeaponOffset(HAMMER_OFFSET);
 			/* 武器の角度を設定。*/
-			m_agnle.SetRotationDegY(90.0f);
+			m_agnle.SetRotationDegY(HAMMER_ANGLE_Y);
 			m_model.SetWeaponAngle(m_agnle);
 
 			return true;
@@ -86,18 +95,25 @@ namespace nsApp
 			/* ガード状態。*/
 			m_stateFactory[PlayerStateID::enGuard] = []() { return new nsState::PlayerGuardState(); };
 
+
 			/* 攻撃ステート。*/
 			/* 通常攻撃状態。*/ 
-			//m_stateFactory[PlayerStateID::enNormalAttack] = []() { return new nsState::PlayerNormalAttackState(); };
+			m_stateFactory[PlayerStateID::enNormalAttack] = []() { return new nsState::PlayerNormalAttackState(); };
 
 			/* チャージ中状態。*/
-			//m_stateFactory[PlayerStateID::enCharging] = []() { return new nsState::PlayerChargingState(); };
+			m_stateFactory[PlayerStateID::enCharging] = []() { return new nsState::PlayerChargingState(); };
 
 			/* チャージ攻撃状態。*/
-			//m_stateFactory[PlayerStateID::enChargeAttack] = []() { return new nsState::PlayerChargeAttackState(); };
+			m_stateFactory[PlayerStateID::enChargeAttack] = []() { return new nsState::PlayerChargeAttackState(); };
 
 			/* 空中攻撃状態。*/
-			//m_stateFactory[PlayerStateID::enAirAttack] = []() { return new nsState::PlayerAirAttackState(); };
+			m_stateFactory[PlayerStateID::enAirAttack] = []() { return new nsState::PlayerAirAttackState(); };
+
+			/* 横回転攻撃。*/
+			m_stateFactory[PlayerStateID::enPushForward] = []() { return new nsState::PlayerPushState(); };
+
+			/* 重い攻撃。*/
+			m_stateFactory[PlayerStateID::enHeavyAttack] = []() { return new nsState::PlayerHeavyAttackState(); };
 		}
 	}
 }

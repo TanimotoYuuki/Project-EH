@@ -25,16 +25,33 @@ namespace nsApp
 
 			if (m_chargeEffect != nullptr)
 				m_chargeEffect->SetScale(EFFECT_SCALE);
+			
+			m_chargingTimer = 0;
 		}
 
 
 		void PlayerChargingState::Update()
 		{
+			/* チャージタイマーを加算する。*/
+			m_chargingTimer++;
+
+			if (m_chargingTimer == 10)
+			{
+				m_effectPosition = m_player->GetPosition();
+				m_effectPosition.y += 50.0f;
+				m_chargeEffect = m_player->GetEffectList().PlayEffect(nsEffect::Charge, m_effectPosition);
+
+				if (m_chargeEffect != nullptr)
+					m_chargeEffect->SetScale(EFFECT_SCALE);
+			}
+
+			/* エフェクトが生成されたあとの追従処理 */
 			if (m_chargeEffect != nullptr)
 			{
 				m_chargeEffect->Update();
 				m_chargeEffect->SetScale(EFFECT_SCALE);
 				Vector3 currentEffectPos = m_player->GetPosition();
+				currentEffectPos.y = 50.0f; 
 				m_chargeEffect->SetPosition(currentEffectPos);
 			}
 		}

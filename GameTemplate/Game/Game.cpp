@@ -11,6 +11,7 @@
 #include "GameTimeUpDirection.h"
 #include "GameOverDirection.h"
 #include "GameEndSelect.h"
+
 #include "Src/Camera/Camera.h"
 #include "Src/Actor/Character/Player/Player.h"
 #include "Src/Debug/Sandbag.h"
@@ -68,11 +69,12 @@ namespace nsApp
 
 			m_player = NewGO<nsActor::HammerCharacter>(0, "player2");
 
-			////////////////////////////////////////////////////////////////////
-			// ダミーモデル用。////////////////////////////////////////////////
-			/*m_player2 = NewGO<nsActor::HammerCharacter>(0, "player2");
-			m_player2->SetPosition(Vector3(-150.0f, 50.0f, 0.0f));
-			m_player2->SetInputEnable(false);*/
+
+			//////////////////////////////////////////////////////////////////////
+			//// ダミーモデル用。////////////////////////////////////////////////
+			//m_player2 = NewGO<nsActor::HammerCharacter>(0, "player2");
+			//m_player2->SetPosition(Vector3(-150.0f, 50.0f, 0.0f));
+			//m_player2->SetInputEnable(false);
 
 			m_sandbag = NewGO<nsActor::Sandbag>(0, "Sandbag");
 
