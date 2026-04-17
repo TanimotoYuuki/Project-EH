@@ -18,9 +18,10 @@ namespace nsApp
 		*/
 		enum Effect_ID : uint8_t
 		{
-			Attack,  //! 攻撃エフェクト。
-			Charge,  //! チャージエフェクト。
-			Fire,    //! 炎エフェクト。
+			Attack,    //! 攻撃エフェクト。
+			Charge,    //! チャージエフェクト。
+			Fire,      //! 炎エフェクト。
+			ShockWave, //! 衝撃波エフェクト。
 		};
 
 		class EffectList

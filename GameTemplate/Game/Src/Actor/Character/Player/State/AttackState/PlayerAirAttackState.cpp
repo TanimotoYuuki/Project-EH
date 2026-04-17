@@ -5,6 +5,7 @@
 #include "Src/Actor/Character/Player/State/BasicState/PlayerJumpState.h"
 
 #include "Src/Debug/Sandbag.h"
+#include "Src/Sound/SoundLister.h"
 
 namespace
 {
@@ -12,7 +13,7 @@ namespace
 	const auto AIR_MOVE_SPEED = 120.0f;            //! 空中での前後左右のスピード。
 	const auto CHARGE_TIME = 20;				   //! 空中攻撃のチャージ時間。
 	const auto AIR_ATTACK_TIMER = 0.0f;			   //! 空中攻撃のタイマーの初期値。
-	const auto AIR_ATTACK_DURATION = 10;		   //! 空中攻撃の持続時間。
+	const auto AIR_ATTACK_DURATION = 25;		   //! 空中攻撃の持続時間。
 	const auto FALL_VELOCITY = -15.0f;			   //! 落下速度の初期値。
 	const auto GRAVITY = 150.0f;				   //! 重力の値。
 	const auto FALL_ACCELERATION = 30.0f;		   //! 落下加速度。
@@ -51,6 +52,28 @@ namespace nsApp
 			/* タイマーを加算する。*/
 			m_attackTimer++;
 
+			/* 未着地の場合。*/
+			if (!m_isLanding)
+			{
+				/* 空中での移動処理。*/
+				UpdateAirMovement();
+
+				/* 着地判定。*/
+				CheckLanding();
+			}
+
+			/* 着地しているなら*/
+			else
+			{
+				/* アニメーションが再生し終わるまで待つ。*/
+				if (!m_player->IsPlayAnimation())
+					m_stateMachine->ChangeState(new PlayerIdleState());
+			}
+		}
+
+
+		void PlayerAirAttackState::UpdateAirMovement()
+		{
 			/* 毎フレーム移動速度をリセットする。*/
 			m_currentAirMoveSpeed = Vector3::Zero;
 
@@ -63,10 +86,12 @@ namespace nsApp
 			}
 
 			if (m_attackTimer >= AIR_ATTACK_DURATION)
-				m_fallVelocity = FALL_VELOCITY;
+				m_fallVelocity -= FALL_ACCELERATION;
+			else
+				m_fallVelocity = 0.0f;
 
 			/* ステージにめり込まないように制限。*/
-			if(m_fallVelocity < MAX_FALL_VELOCITY)
+			if (m_fallVelocity < MAX_FALL_VELOCITY)
 				m_fallVelocity = MAX_FALL_VELOCITY;
 
 
@@ -81,21 +106,55 @@ namespace nsApp
 
 			/* Y軸の速度を変数に代入。*/
 			m_fallVelocity = m_moveSpeed.y;
-
-			/* 攻撃の途中で着地したら待機状態に戻す。*/
-			if (m_attackTimer > 10 && m_player->GetCharacterController().IsOnGround())
-			{
-				m_stateMachine->ChangeState(new PlayerIdleState());
-				return;
-			}
-
-			/* 空中でアニメーションが終わったら落下状態にジャンプ状態に戻す。*/
-		    if (!m_player->IsPlayAnimation())
-			{
-				auto jumpState = new PlayerJumpState();
-				jumpState->SetJumpVelocity(m_fallVelocity);
-				m_stateMachine->ChangeState(jumpState);
-			}
 		}
+
+
+		bool PlayerAirAttackState::CheckLanding()
+		{
+			/* 未着地の場合はfalseを返す。*/
+			if (m_attackTimer <= AIR_ATTACK_DURATION || !m_player->GetCharacterController().IsOnGround())
+				return false;
+
+			/* */
+			m_isLanding = true;
+
+			/* 衝撃波エフェクトを生成する。*/
+			CreateShockWaveEffect();
+
+			return true;
+		}
+
+
+		void PlayerAirAttackState::CreateShockWaveEffect()
+		{
+			/* 武器の当たり判定クラスの座標を取得する。*/
+			m_landingPosition = m_player->GetWeaponHitDetection().GetPosition();
+
+			/* それぞれの軸で値を代入する。*/
+			m_landingPosition.x = m_landingPosition.x + 50.0f;
+			m_landingPosition.y = m_player->GetPosition().y;
+			m_landingPosition.z = m_landingPosition.z;
+
+			/* エフェクトを生成する。*/
+			m_player->GetEffectList().PlayEffect(nsEffect::ShockWave, m_landingPosition, Quaternion::Identity, Vector3::One * 2.0f);
+		}
+
+
+		bool PlayerAirAttackState::CheckAnimationEndTransition()
+		{
+			/* アニメーションの終了判定。*/
+			if (m_player->IsPlayAnimation())
+				return false;
+
+			/* ジャンプが終わっている場合、待機状態に戻す。*/
+			auto jumpState = new PlayerJumpState();
+			jumpState->SetJumpVelocity(m_fallVelocity);
+			m_stateMachine->ChangeState(jumpState);
+
+			return false;
+		}
+
+
+
 	}
 }

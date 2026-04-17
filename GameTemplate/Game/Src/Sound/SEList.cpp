@@ -113,6 +113,7 @@ namespace nsApp
 			return nullptr;
 		}
 
+
 		void SEList::RegisterSwordSEBank()
 		{
 			m_attackSEmap[WeaponType::GreatSword] =

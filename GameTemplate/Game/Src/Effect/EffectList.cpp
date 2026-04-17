@@ -30,8 +30,14 @@ namespace nsApp
 			/* チャージ時のHammerに付与するエフェクト。*/
 			m_effectPathList[Effect_ID::Fire] = GetEffectFilePath(u"fire");
 
+			/* 空中攻撃時の着地時に付与するエフェクト。*/
+			m_effectPathList[Effect_ID::ShockWave] = GetEffectFilePath(u"airAttack");
+
 			/* エフェクトを登録。*/
 			EffectEngine::GetInstance()->ResistEffect(Effect_ID::Fire, m_effectPathList[Effect_ID::Fire].c_str());
+
+			EffectEngine::GetInstance()->ResistEffect(Effect_ID::ShockWave, m_effectPathList[Effect_ID::ShockWave].c_str());
+
 		}
 
 
