@@ -93,23 +93,33 @@ namespace nsApp
 				m_chargeEffect->SetPosition(m_currentEffectPosition);
             }
 
+            /**
+             * @brief  炎エフェクトを生成する。
+             * @detail HammerCharacterクラスのみ適応。
+             */
+            void CreateFireEffect();
+
 
         private:
 			nsActor::Player* m_player;          //! プレイヤーのポインタ。
             nsK2EngineLow::EffectEmitter* m_chargeEffect = nullptr;
+            nsK2EngineLow::EffectEmitter* m_hammerEffect = nullptr;
 
 
         private:
-			Vector3 m_effectPosition;                   //! エフェクトの座標。
-			Vector3 m_effectScale;                      //! エフェクトのスケール。
-			Vector3 m_spawnEffectPosition;              //! エフェクトの生成座標。
-			Vector3 m_currentEffectPosition;            //! エフェクトの現在座標。
-            
+			Vector3 m_effectPosition;                             //! エフェクトの座標。
+			Vector3 m_effectScale;                                //! エフェクトのスケール。
+			Vector3 m_spawnEffectPosition;                        //! エフェクトの生成座標。
+			Vector3 m_currentEffectPosition;                      //! エフェクトの現在座標。
+			Vector3 m_weaponPosition;                             //! 武器の座標。
 
-			int m_chargingTimer = 0;                    //! チャージ時間を管理するタイマー。
-			int m_currentEffectLevel = 0;               //! 現在のエフェクトのレベル。
+			Quaternion m_fireEffectAngle = Quaternion::Identity;  //! 炎エフェクトの角度。
 
-			float m_effectScaleMultiplier = 1.0f;       //! エフェクトの大きさの倍率。
+			int m_chargingTimer = 0;                              //! チャージ時間を管理するタイマー。
+			int m_currentEffectLevel = 0;                         //! 現在のエフェクトのレベル。
+
+			float m_effectScaleMultiplier = 1.0f;                 //! エフェクトの大きさの倍率。
+			float m_fireEffectScale = 0;                          //! 炎エフェクトの大きさ。
         };
 
 

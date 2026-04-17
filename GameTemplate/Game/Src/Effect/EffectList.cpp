@@ -9,6 +9,9 @@ namespace nsApp
 		{
 			/* 大剣のエフェクトパスを登録する。*/
 			StorageGreatSwordEffect();
+
+			/* ハンマーのエフェクトパスを登録する。*/
+			StorageHammerEffect();
 		}
 
 
@@ -17,7 +20,18 @@ namespace nsApp
 			/* チャージ時のエフェクト。*/
 			m_effectPathList[Effect_ID::Charge] = GetEffectFilePath(u"chargeAttackEffect");
 
+			/* エフェクトを登録。*/
 			EffectEngine::GetInstance()->ResistEffect(Effect_ID::Charge, m_effectPathList[Effect_ID::Charge].c_str());
+		}
+
+
+		void EffectList::StorageHammerEffect()
+		{
+			/* チャージ時のHammerに付与するエフェクト。*/
+			m_effectPathList[Effect_ID::Fire] = GetEffectFilePath(u"fire");
+
+			/* エフェクトを登録。*/
+			EffectEngine::GetInstance()->ResistEffect(Effect_ID::Fire, m_effectPathList[Effect_ID::Fire].c_str());
 		}
 
 
