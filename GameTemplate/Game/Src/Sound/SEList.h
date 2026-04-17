@@ -19,8 +19,17 @@ namespace nsApp
 			 * @TODO: 必要になった際にSEを足していく。
 			 */
 
-			NormalAttack, //! 通常攻撃のSE。
-			RushAttack    //! 連続攻撃のSE。
+			/* Sword。*/
+			NormalAttack_Sword,  //! 通常攻撃のSE。
+			RushAttack_Sword,    //! 連続攻撃のSE。
+
+
+			/* Hammer*/
+			NormalAttack_Hammer, //! 通常攻撃のSE。
+			HeavyAttack_Hammer,  //! 重攻撃のSE。
+			AirAttack_Hammer,    //! 空中攻撃のSE。
+			ChargeAttack_Hammer, //! 貯め攻撃のSE。
+			DashAttack_Hammer,   //! ダッシュ攻撃のSE。
 		};
 
 

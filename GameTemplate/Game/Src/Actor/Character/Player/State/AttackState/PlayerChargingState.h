@@ -58,47 +58,55 @@ namespace nsApp
             /**
              * @brief チャージ段階に応じたエフェクトの座標を求める。 
              */
-            inline void ComputeEffectLevelByPosition()
+            inline void ComputeEffectLevel()
             {
                 m_currentEffectLevel = (std::max)(1, (std::min)(m_chargingTimer / 30, 3));
                 m_player->SetChargeLevel(m_currentEffectLevel);
             }
 
+
+
+        /* ゲッター。*/
+        public:
             /**
-             * @brief エフェクトを生成する。
+             * @brief チャージレベルのスケールを返す。
              */
-            inline void CreateChargeEffect()
+            inline float GetChargeEffectScale()
             {
-                m_spawnEffectPosition = m_player->GetPosition();
-                m_spawnEffectPosition.y = EFFECT_POSITION_Y;
-                m_chargeEffect = m_player->GetEffectList().PlayEffect(nsEffect::Charge, m_spawnEffectPosition);
+                return (std::min)(10.0f +( m_chargingTimer / 5.0f), 30.0f);
+			}
+
+            /**
+             * @brief チャージエフェクトの座標を返す。
+             */
+            inline Vector3 GetChargeEffectPosition()
+            {
+                m_getPlayerPosition = m_player->GetPosition();
+                m_getPlayerPosition.y = EFFECT_POSITION_Y;
+				return m_getPlayerPosition;
             }
 
             /**
-             * @brief チャージ段階に応じたエフェクトの大きさを求める。
+             * @brief チャージエフェクトの大きさを返す。
              */
-            inline void ComputeEffectLevelByScale()
+            inline float GetFireEffectScale()
             {
-                m_effectScaleMultiplier = (std::min)(10.0f + (m_chargingTimer / 5.0f),30.0f);
-                m_chargeEffect->SetScale(Vector3::One * m_effectScaleMultiplier);
+                return 1.25f + (m_currentEffectLevel * 2.5f);
             }
 
-           /**
-            * @brief エフェクトを追従更新させる。
-            */
-            inline void UpdateEffectPosition()
-            {
-                m_currentEffectPosition = m_player->GetPosition();
-				m_currentEffectPosition.y = EFFECT_POSITION_Y;
-				m_chargeEffect->SetPosition(m_currentEffectPosition);
-            }
 
+        private:
             /**
              * @brief  炎エフェクトを生成する。
              * @detail HammerCharacterクラスのみ適応。
              */
             void CreateFireEffect();
 
+            /**
+             * @brief チャージエフェクトを生成する。
+             */
+			void CreateChargeEffect();
+            
 
         private:
 			nsActor::Player* m_player;          //! プレイヤーのポインタ。
@@ -112,6 +120,7 @@ namespace nsApp
 			Vector3 m_spawnEffectPosition;                        //! エフェクトの生成座標。
 			Vector3 m_currentEffectPosition;                      //! エフェクトの現在座標。
 			Vector3 m_weaponPosition;                             //! 武器の座標。
+            Vector3 m_getPlayerPosition;                          //! プレイヤーの座標。
 
 			Quaternion m_fireEffectAngle = Quaternion::Identity;  //! 炎エフェクトの角度。
 

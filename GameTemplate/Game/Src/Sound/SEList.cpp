@@ -17,10 +17,10 @@ namespace nsApp
 		{
 			/* ソードのSEファイルパスを登録。*/
 			/* 通常攻撃。*/
-			g_soundEngine->ResistWaveFileBank(SE_ID::NormalAttack, GetSEFilePath("GreatSword_NormalAttack").c_str());
+			g_soundEngine->ResistWaveFileBank(SE_ID::NormalAttack_Sword, GetSEFilePath("GreatSword_NormalAttack").c_str());
 
 			/* 連続攻撃。*/
-			g_soundEngine->ResistWaveFileBank(SE_ID::RushAttack, GetSEFilePath("GreatSword_RushAttack").c_str());
+			g_soundEngine->ResistWaveFileBank(SE_ID::RushAttack_Sword, GetSEFilePath("GreatSword_RushAttack").c_str());
 		}
 
 

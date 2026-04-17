@@ -6,6 +6,7 @@ namespace
 {
 	const auto EFFECT_SCALE = Vector3::One * 5.0f; //! エフェクトの大きさ。
 	const auto EFFECT_POSITION = 50.0f;            //! エフェクトの位置。
+	const auto FIRE_EFFECT_ANGLE = 22.5f;          //! 炎エフェクトの角度。
 }
 
 /** @def
@@ -37,31 +38,10 @@ namespace nsApp
 			m_chargingTimer++;
 
 			/* チャージ段階を計算する。*/
-			ComputeEffectLevelByPosition();
+			ComputeEffectLevel();
 
-			/* 10フレーム目に1度だけエフェクトを生成する。*/
-			if (m_chargingTimer == 10)
-			{
-				/* チャージエフェクトを生成する。*/
-				CreateChargeEffect();
-
-				/* HammerCharacterクラスにのみエフェクトの生成を適応する。*/
-				if (m_player->GetCurrentWeapon() == WeaponType::Hammer)
-					m_hammerEffect = m_player->GetEffectList().PlayEffect(nsEffect::Fire, HIT_DETECTION.GetPosition());
-			}
-
-			/* エフェクトが生成さえていないなら早期リターン。*/
-			if (m_chargeEffect == nullptr)
-				return;
-
-			/* エフェクトの更新。*/
-			m_chargeEffect->Update();
-
-			/* チャージ段階に応じたエフェクトの大きさを求める。*/
-			ComputeEffectLevelByScale();
-
-			/* エフェクトの座標を追従更新する。*/
-			UpdateEffectPosition();			
+			/* チャージエフェクトを生成。*/
+			CreateChargeEffect();
 
 			/* ハンマーの炎エフェクトを生成。*/
 			CreateFireEffect();
@@ -104,8 +84,35 @@ namespace nsApp
 		}
 
 
+		void PlayerChargingState::CreateChargeEffect()
+		{
+			/* 特定のフレーム数に1度だけ生成する。*/
+			if (m_chargingTimer == 10)
+				m_chargeEffect = m_player->GetEffectList().PlayEffect(nsEffect::Charge, GetChargeEffectPosition());
+
+			/* 未生成の場合、処理をスキップ。*/
+			if (m_chargeEffect == nullptr)
+				return;
+
+			/* 更新。*/
+			m_chargeEffect->Update();
+
+			/* 大きさをセット。*/
+			m_chargeEffect->SetScale(Vector3::One * GetChargeEffectScale());
+
+			/* 座標をセット。*/
+			m_chargeEffect->SetPosition(GetChargeEffectPosition());
+		}
+
+
 		void PlayerChargingState::CreateFireEffect()
 		{
+			if (m_chargingTimer == 10)
+			{
+				if(m_player->GetCurrentWeapon() == WeaponType::Hammer)
+					m_hammerEffect = m_player->GetEffectList().PlayEffect(nsEffect::Fire, HIT_DETECTION.GetPosition());
+			}
+
 			/* HammerCharacterクラスではない場合は処理をスキップする。*/
 			if (m_hammerEffect == nullptr)
 				return;
@@ -121,7 +128,7 @@ namespace nsApp
 			m_hammerEffect->SetScale(Vector3::One * m_fireEffectScale);
 
 			/* 角度を設定。*/
-			m_fireEffectAngle.SetRotationDegZ(22.5f);
+			m_fireEffectAngle.SetRotationDegZ(FIRE_EFFECT_ANGLE);
 			m_hammerEffect->SetRotation(m_fireEffectAngle);
 
 			/* 座標を設定。*/
