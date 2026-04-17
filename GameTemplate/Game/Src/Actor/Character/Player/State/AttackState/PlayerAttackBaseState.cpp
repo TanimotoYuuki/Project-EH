@@ -26,6 +26,10 @@ namespace nsApp
 			/* 入力クラスを取得する。*/
 			const auto& inputClass = m_player->GetInputClass();
 
+
+			// @TODO: リファ。
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
 			/* Bボタンアクション。*/
 			if (inputClass.IsAttack())
 			{
@@ -74,6 +78,7 @@ namespace nsApp
 					return;
 				}
 			}
+///////////////////////////////////////////////////////////////////////////////////////////////////
 		}
 
 
@@ -82,7 +87,13 @@ namespace nsApp
 			/* Stateを抜ける際の処理。*/
 			/* 効果音とかエフェクトとかの再生をストップさせる*/
 			if (m_player)
+			{
+				/* 当たり判定を奪取する。*/
 				m_player->GetWeaponHitDetection().Disable();
+
+				/* SEの再生を止める。*/
+				m_player->StopWeaponSE();
+			}
 		}
 
 

@@ -61,6 +61,9 @@ namespace nsApp
 				m_hammerEffect->Stop();
 				m_hammerEffect = nullptr;
 			}
+
+			if (m_player)
+				m_player->StopWeaponSE();
 		}
 
 

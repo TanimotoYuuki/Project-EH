@@ -219,19 +219,14 @@ namespace nsApp
 			/* 攻撃アニメーションはボタンを押した瞬間に切り替わってほしいため補完割合を低めに設定。*/
 			m_model.PlayAnimation(animIndex, 0.0f);
 
+			/* 古いSEが残っているなら強制停止する。*/
+		//	StopWeaponSE();
+
 			/* --- ここからSE再生処理 --- */
 			/* サウンド管理クラスを探す */
 			auto soundManager = FindGO<nsSound::SoundLister>("SoundManager");
 			if (soundManager != nullptr)
-			{
-				/* 連続攻撃の時だけ専用のSEを鳴らす */
-				if (attack == AttackType::RushAttack_Start || attack == AttackType::RushAttack_End)
-					soundManager->GetSEList().PlaySE(nsSound::SE_ID::RushAttack_Sword, 1.0f);
-
-				/* それ以外の攻撃（通常、空中、チャージ、斬り上げ、突き進みなど）はデフォルトSE */
-				else
-					soundManager->GetSEList().PlaySE(nsSound::SE_ID::NormalAttack_Sword	, 1.0f);
-			}
+				m_currentWeaponSE = soundManager->GetSEList().PlayAttackSE(m_currentWeapon, attack);
 		}
 
 

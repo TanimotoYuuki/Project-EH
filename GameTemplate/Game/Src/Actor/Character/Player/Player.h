@@ -78,6 +78,7 @@ namespace nsApp
 			/* ダミーモデルの初期化。*/
 			void InitDummyModel();
 
+
 		public:
 			/* 基本動作用アニメーションを再生。*/
 			void PlayBasicAnimation(CharacterBasicAnimationList state);
@@ -90,6 +91,22 @@ namespace nsApp
 
 			/* 助ける対象のキャラクターを探索する。*/
 			nsActor::Player* SearchCharacter();
+
+			/* 現在扱う武器のSEを止める処理。*/
+			inline void StopWeaponSE()
+			{
+				if (m_currentWeaponSE != nullptr)
+				{
+					/* SEの再生を止める。*/
+					m_currentWeaponSE->Stop();
+
+					/* 破棄。*/
+					DeleteGO(m_currentWeaponSE);
+
+					/* リモコンを破棄する。*/ 
+					m_currentWeaponSE = nullptr;
+				}
+			}
 
 
 		/* セッター。*/
@@ -213,7 +230,7 @@ namespace nsApp
 
 		private:
 			nsK2EngineLow::EffectEmitter* m_chargeEffect = nullptr;                                                //! チャージエフェクトのリモコン       
-
+			nsK2EngineLow::SoundSource* m_currentWeaponSE = nullptr;                                               //! 現在の武器のSEのリモコン
 
 		protected:
 			CharacterAnimation m_playerAnimation;                                                                  //! プレイヤーのアニメーション。
