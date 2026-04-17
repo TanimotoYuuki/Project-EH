@@ -140,6 +140,12 @@ namespace nsApp
 				m_fallVelocity = velocity;
 			}
 
+			/* チャージレベルを設定する。*/
+			inline void SetChargeLevel(int chargeLevel)
+			{
+				m_chargeLevel = chargeLevel;
+			}
+
 
 		/* ゲッター。*/
 		public:
@@ -198,6 +204,12 @@ namespace nsApp
 				return m_currentWeapon;
 			}
 
+			/* エフェクトの大きさを取得する。*/
+			inline int GetEffectScale()
+			{
+				return m_chargeLevel;
+			}
+			
 
 		private:
 			nsK2EngineLow::EffectEmitter* m_chargeEffect = nullptr;                                                //! チャージエフェクトのリモコン       
@@ -237,6 +249,7 @@ namespace nsApp
 
 			int animIndex = 0;
 			int m_inputWaitTimer;
+			int m_chargeLevel = 1;                                                                                 //! チャージレベル。
 
 			float m_fallVelocity = 0.0f;                                                                           //! 落下速度。
 		};

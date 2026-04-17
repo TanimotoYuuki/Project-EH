@@ -3,7 +3,8 @@
 
 namespace
 {
-	const auto EFFECT_SCALE = Vector3::One * 5.0f; /* エフェクトの大きさ。*/
+	const auto EFFECT_SCALE = Vector3::One * 5.0f; //! エフェクトの大きさ。
+	const auto EFFECT_POSITION = 50.0f;            //! エフェクトの位置。
 }
 
 namespace nsApp
@@ -17,15 +18,8 @@ namespace nsApp
 
 			/* アニメーションを再生する。*/
 			m_player->PlayWeaponAnimation(AttackType::Charging);
-
-			/* エフェクトを再生する。*/
-			m_effectPosition = m_player->GetPosition();
-			m_effectPosition.y += 50.0f;
-			m_chargeEffect = m_player->GetEffectList().PlayEffect(nsEffect::Charge, m_effectPosition);
-
-			if (m_chargeEffect != nullptr)
-				m_chargeEffect->SetScale(EFFECT_SCALE);
 			
+			m_chargeEffect = nullptr;
 			m_chargingTimer = 0;
 		}
 
@@ -35,25 +29,26 @@ namespace nsApp
 			/* チャージタイマーを加算する。*/
 			m_chargingTimer++;
 
-			if (m_chargingTimer == 10)
-			{
-				m_effectPosition = m_player->GetPosition();
-				m_effectPosition.y += 50.0f;
-				m_chargeEffect = m_player->GetEffectList().PlayEffect(nsEffect::Charge, m_effectPosition);
+			/* チャージ段階を計算する。*/
+			ComputeEffectLevelByPosition();
 
-				if (m_chargeEffect != nullptr)
-					m_chargeEffect->SetScale(EFFECT_SCALE);
-			}
+			/* 10フレーム目に1度だけエフェクトを生成する。*/
+			if(m_chargingTimer == 10)
+			   /* チャージエフェクトを生成する。*/
+			   CreateChargeEffect();
 
-			/* エフェクトが生成されたあとの追従処理 */
-			if (m_chargeEffect != nullptr)
-			{
-				m_chargeEffect->Update();
-				m_chargeEffect->SetScale(EFFECT_SCALE);
-				Vector3 currentEffectPos = m_player->GetPosition();
-				currentEffectPos.y = 50.0f; 
-				m_chargeEffect->SetPosition(currentEffectPos);
-			}
+			/* エフェクトが生成さえていないなら早期リターン。*/
+			if (m_chargeEffect == nullptr)
+				return;
+
+			/* エフェクトの更新。*/
+			m_chargeEffect->Update();
+
+			/* チャージ段階に応じたエフェクトの大きさを求める。*/
+			ComputeEffectLevelByScale();
+
+			/* エフェクトの座標を追従更新する。*/
+			UpdateEffectPosition();			
 		}
 
 
