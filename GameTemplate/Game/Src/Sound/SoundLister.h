@@ -30,6 +30,8 @@ namespace nsApp
 			bool Start();
 
 
+
+
 		/* ゲッター。*/
 		public:
 			/* BGMのリストを取得する。*/
@@ -46,8 +48,8 @@ namespace nsApp
 
 
 		private:
-			nsSound::BGMList m_bgmList; //! BGM担当
-			nsSound::SEList m_seList;   //! SE担当
+			nsSound::BGMList m_bgmList; //! BGM担当。
+			nsSound::SEList m_seList;   //! SE担当。
 		};
 	}
 }

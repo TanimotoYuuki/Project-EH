@@ -20,6 +20,9 @@ namespace nsApp
 		/* チャージ攻撃: ダメージ倍率:1.5倍。クリティカル補正:0.2倍。*/
 		{AttackType::ChargeAttack, {CHARGE_ATTACK_DAMAGE_RATE, CHARGE_ATTACK_DAMAGE_RATE * 0.2f}},
 
+		/* 重攻撃: ステータスはチャージ攻撃と同じ。*/
+		{AttackType::HeavyAttack, {CHARGE_ATTACK_DAMAGE_RATE, CHARGE_ATTACK_DAMAGE_RATE * 0.2f}},
+
 		/* 斬り上げ攻撃: ダメージ倍率:等倍。*/
 		{AttackType::SlashUp, {NORMAL_ATTACK_DAMAGE_RATE, NORMAL_ATTACK_DAMAGE_RATE * 0.0f}},
 

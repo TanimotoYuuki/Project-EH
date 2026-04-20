@@ -11,9 +11,9 @@
 namespace nsApp
 {
 	/** 
-	* @struct AttackParameter
-	* @brief 技ごとのダメージ数/クリティカルダメージ数/クリティカル率を管理する構造体。
-	*/
+	 * @struct AttackParameter
+	 * @brief 技ごとのダメージ数/クリティカルダメージ数/クリティカル率を管理する構造体。
+	 */
 	struct AttackParameter
 	{
 		float damageMultiplier; //! ダメージ倍率。

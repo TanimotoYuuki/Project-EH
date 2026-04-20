@@ -22,6 +22,12 @@ namespace nsApp
 			m_isInputEnable = isEnable;
 		}
 
+		/* gamepadの要素数を取得する。*/
+		inline void SetPadIndex(int index)
+		{
+			m_padInddex = index;
+		}
+
 
 	/* ゲッター。*/
 	public:
@@ -133,32 +139,40 @@ namespace nsApp
 			return m_isHelp;
 		}
 
+		/* Xボタン判定。*/
+		inline bool IsPressX() const
+		{
+			return m_isPressX;
+		}
 
 	private:
-		bool m_isAttack = false;             /* 攻撃したかどうかを判定。*/
-		bool m_isJump = false;               /* ジャンプしたかどうかを判定。*/
-		bool m_isMove = false;               /* 移動したかどうかを判定。*/
-		bool m_isRun = false;                /* 走ったかどうかを判定。*/
-		bool m_isDamage = false;             /* ダメージを受けたかどうかを判定。*/
-		bool m_isDeath = false;              /* 死亡したかどうかを判定。*/
-		bool m_isNormalAttack = false;       /* 攻撃入力を検知。*/
-		bool m_isAirAttack = false;          /* 空中攻撃入力を検知。*/
-		bool m_isComboAttack = false;        /* コンボ攻撃入力を検知。*/
-		bool m_isInputEnable = true;         /* 入力を検知。*/
-		bool m_isPressButton = false;        /* Bボタンが押されているかどうかを判定。*/
-		bool m_isRushStart = false;          /* 連続攻撃が始まっているかを検知。*/
-		bool m_isRushEnd = false;            /* 連続攻撃が終わっているかを検知。*/
-		bool m_isJumpRequested = false;      /* ジャンプの入力があったかどうかを判定。*/
-		bool m_isSlashUp = false;            /* 斬り上げの入力を検知。*/
-		bool m_isChargeStart = false;        /* チャージ攻撃の入力を検知。*/
-		bool m_isChargeAttack = false;       /* チャージ攻撃の入力を検知。*/
-		bool m_isGuard = false;              /* ガードの入力を検知。*/
-		bool m_isHelp = false;               /* 助ける入力を検知。*/
+		bool m_isAttack = false;             //! 攻撃したかどうかを判定。
+		bool m_isJump = false;               //! ジャンプしたかどうかを判定。
+		bool m_isMove = false;               //! 移動したかどうかを判定。
+		bool m_isRun = false;                //! 走ったかどうかを判定。
+		bool m_isDamage = false;             //! ダメージを受けたかどうかを判定。
+		bool m_isDeath = false;              //! 死亡したかどうかを判定。
+		bool m_isNormalAttack = false;       //! 攻撃入力を検知。
+		bool m_isAirAttack = false;          //! 空中攻撃入力を検知。
+		bool m_isComboAttack = false;        //! コンボ攻撃入力を検知。
+		bool m_isInputEnable = true;         //! 入力を検知。
+		bool m_isPressButton = false;        //! Bボタンが押されているかどうかを判定。
+		bool m_isRushStart = false;          //! 連続攻撃が始まっているかを検知。
+		bool m_isRushEnd = false;            //! 連続攻撃が終わっているかを検知。
+		bool m_isJumpRequested = false;      //! ジャンプの入力があったかどうかを判定。
+		bool m_isSlashUp = false;            //! 斬り上げの入力を検知。
+		bool m_isChargeStart = false;        //! チャージ攻撃の入力を検知。
+		bool m_isChargeAttack = false;       //! チャージ攻撃の入力を検知。
+		bool m_isGuard = false;              //! ガードの入力を検知。
+		bool m_isHelp = false;               //! 助ける入力を検知。
+		bool m_isPressX = false;             //! Xボタンが押されているかどうかを判定。
 
-		float m_stickX = 0.0f;               /* スティックのX軸の値。*/
-		float m_stickY = 0.0f;               /* スティックのY軸の値。*/
-		float m_chargeButtonTimer = 0.0f;    /* チャージ攻撃と判定するために必要なBボタンを長押ししなければならない時間。*/
+		float m_stickX = 0.0f;               //! スティックのX軸の値。
+		float m_stickY = 0.0f;               //! スティックのY軸の値。
+		float m_chargeButtonTimer = 0.0f;    //! チャージ攻撃と判定するために必要なBボタンを長押ししなければならない時間。
 
-		Vector3 m_moveVec = Vector3::Right;  /* 移動ベクトル。*/
+		int m_padInddex = 0;                 //! 入力を検知するパッドのインデックス。
+
+		Vector3 m_moveVec = Vector3::Right;  //! 移動ベクトル。
 	};
 }

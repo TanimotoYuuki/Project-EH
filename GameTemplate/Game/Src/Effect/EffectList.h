@@ -18,8 +18,10 @@ namespace nsApp
 		*/
 		enum Effect_ID : uint8_t
 		{
-			Attack, //! 攻撃エフェクト。
-			Charge  //! チャージエフェクト。
+			Attack,    //! 攻撃エフェクト。
+			Charge,    //! チャージエフェクト。
+			Fire,      //! 炎エフェクト。
+			ShockWave, //! 衝撃波エフェクト。
 		};
 
 		class EffectList
@@ -49,7 +51,11 @@ namespace nsApp
 
 		private:
 			/* 武器ごとにエフェクトを登録処理を分ける。*/
+			/* Sword。*/
 			void StorageGreatSwordEffect();
+
+			/* Hammer。*/
+			void StorageHammerEffect();
 
 
 		private:

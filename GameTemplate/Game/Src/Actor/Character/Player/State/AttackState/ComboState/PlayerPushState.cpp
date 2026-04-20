@@ -3,7 +3,10 @@
 
 namespace
 {
-	const auto MOVE_SPEED = 1.0f /60.0f; //! 突き進む攻撃の移動速度。
+	const auto MOVE_SPEED_FRAME = 1.0f /40.0f; //! 突き進む攻撃の移動速度。
+	const auto MOVE_SPEED = 40.0f;             //! 突き進む攻撃の移動速度。
+	const auto START_WEAPON_ANGLE = -90.0f;    //! ステート開始時の武器の角度。
+	const auto END_WEAPON_ANGLE = 0.0f;        //! ステート終了時の武器の角度。
 }
 
 namespace nsApp
@@ -22,7 +25,7 @@ namespace nsApp
 			m_player->PlayWeaponAnimation(AttackType::PushForward);
 
 			/* 武器の角度を調整。*/
-			m_player->SetWeaponRotationAngle(Vector3::Front, -90.0);
+			m_player->SetWeaponRotationAngle(Vector3::Front, START_WEAPON_ANGLE);
 			m_player->GetWeaponHitDetection().Enable();
 		}
 
@@ -39,8 +42,9 @@ namespace nsApp
 
 		void PlayerPushState::Exit()
 		{
-			m_player->SetWeaponRotationAngle(Vector3::Right, 0.0f);
-
+			/* ステート終了時の武器の角度を設定する。*/
+			m_player->SetWeaponRotationAngle(Vector3::Right, END_WEAPON_ANGLE);
+			/* ステートを終了する。*/
 			PlayerAttackBaseState::Exit();
 		}
 
@@ -48,13 +52,15 @@ namespace nsApp
 		void PlayerPushState::MoveForward()
 		{
 			/* 前進する速度を設定。*/
-			SetForwardSpeed(200.0f);
+			SetForwardSpeed(MOVE_SPEED);
 
 			/* 前方向のベクトルを取得。*/
 			m_moveVector = m_player->GetForwardVector() * m_forwardSpeed;
 
 			/* 当たり判定の移動。*/
-			m_player->GetCharacterController().Execute(m_moveVector, MOVE_SPEED);
+			/* キャラコンの移動。*/
+			m_player->GetCharacterController().Execute(m_moveVector, MOVE_SPEED_FRAME);
+			/* 座標の移動。*/
 			m_player->SetPosition(m_player->GetCharacterController().GetPosition());
 		}
 

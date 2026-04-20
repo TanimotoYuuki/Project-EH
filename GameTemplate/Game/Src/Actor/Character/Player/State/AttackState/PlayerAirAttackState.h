@@ -29,6 +29,31 @@ namespace nsApp
 			/* ライフサイクル。*/
 			void Enter() override;
 			void Update() override;
+			void Exit() override {};
+
+
+		private:
+			/**
+			* @brief 空中での移動処理。
+			*/
+			void UpdateAirMovement();
+
+			/**
+			* @brief 着地判定。
+			*/
+			bool CheckLanding();
+
+			/**
+			 * @brief  エフェクトの生成。
+			 * @detail 着磁時の衝撃波エフェクトを生成する。
+			*/
+			void CreateShockWaveEffect();
+
+			/**
+			* @brief  アニメーションの終了判定。
+			* @return アニメーションが終了している場合はtrue、そうでない場合はfalse。
+			*/
+			bool CheckAnimationEndTransition();
 
 
 		/* セッター。*/
@@ -56,27 +81,30 @@ namespace nsApp
 			{
 				m_moveSpeed = moveSpeed;
 			}
-			
+
 			/* 空中で動ける速度を設定。*/
 			inline void SetAirMoveSpeed(float speed)
 			{
-				airMoveSpeed = speed;
+				m_airMoveSpeed = speed;
 			}
 
 
 		private:
-			nsActor::Player* m_player = nullptr;           /* プレイヤーのポインタ。*/
+			nsActor::Player* m_player = nullptr;           //! プレイヤーのポインタ。
 
 
 		private:
-			int m_attackTimer = 0;                         /* 攻撃のタイマー。*/
+			int m_attackTimer = 0;                         //! 攻撃のタイマー。
 
-			float m_fallVelocity = 0.0f;                   /* 落下速度。*/
-			float m_gravity = 0.0f;                        /* 重力の強さ。*/
-			float airMoveSpeed = 0.0f;                     /* 空中での前後左右の移動速度。*/
+			float m_airMoveSpeed = 0.0f;
+			float m_fallVelocity = 0.0f;                   //! 落下速度。
+			float m_gravity = 0.0f;                        //! 重力の強さ。
 
-			Vector3 m_moveSpeed = Vector3::Zero;           /* 空中での移動速度。*/
-			Vector3 m_currentAirMoveSpeed = Vector3::Zero; /* 空中での現在の移動速度。*/
+			bool m_isLanding = false;                      //! 着地したかどうかのフラグ。
+
+			Vector3 m_moveSpeed = Vector3::Zero;           //! 空中での移動速度。
+			Vector3 m_currentAirMoveSpeed = Vector3::Zero; //! 空中での現在の移動速度。
+			Vector3 m_landingPosition = Vector3::Zero;     //! 着地した位置。
 		};
-	} 
+	}
 }

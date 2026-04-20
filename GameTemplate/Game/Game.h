@@ -100,6 +100,7 @@ namespace nsApp
 			GameTimeUpDirection* m_gameTimeUpDirection = nullptr;
 			GameOverDirection* m_gameOverDirection = nullptr;
 			GameEndSelect* m_gameEndSelect = nullptr;
+
 			nsActor::Player* m_player = nullptr;   //! プレイヤー。
 			nsActor::Player* m_player2 = nullptr;  //! プレイヤー2。
 			nsActor::Sandbag* m_sandbag = nullptr; //! サンドバッグ。

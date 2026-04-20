@@ -5,16 +5,22 @@
 namespace nsApp
 {
 	void CharacterAnimation::Initialize()
-	{
-		/* 基本動作用のアニメーションのファイルパスを初期化。*/
-		InitBasicAnimationFilePath();
-		
-		/* 大剣用のアニメーションのファイルパスを初期化。*/
+	{		
+		/* ソードキャラクターのアニメーションのファイルパスを初期化。*/
+		/* 基本動作用。*/
+		InitGreatSwordBasicAnimationFilePath();
+		/* 攻撃動作用。*/
 		InitGreatSwordAnimationFilePath();
+
+		/* ハンマーキャラクターのアニメーションのファイルパスを初期化。*/
+	    /* 基本動作用。*/
+		InitHammerBasicAnimationFilePath();
+		/* 攻撃動作用。*/
+		InitHammerAnimationFilePath();
 	}
 
 
-	void CharacterAnimation::InitBasicAnimationFilePath()
+	void CharacterAnimation::InitGreatSwordBasicAnimationFilePath()
 	{
 		/* 基本動作用のアニメーションのファイルパスを登録。。*/
 		/* Idleアニメーション。*/
@@ -73,6 +79,68 @@ namespace nsApp
 
 		/* 登録データをリストに登録する。*/
 		m_weaponDataList[WeaponType::GreatSword] = m_greatSwordData;
+	}
+
+
+	void CharacterAnimation::InitHammerBasicAnimationFilePath()
+	{
+		/* Hammerのアニメーションを登録。*/
+        /* 待機状態。*/
+		m_basicAnimationFilePathList[CharacterBasicAnimationList::Idle] = GetBasicAnimationFilePath("Hammer/Idle");
+
+		/* 歩き状態。*/
+		m_basicAnimationFilePathList[CharacterBasicAnimationList::Walk] = GetBasicAnimationFilePath("Hammer/Walk");
+
+		/* 走り状態。*/
+		m_basicAnimationFilePathList[CharacterBasicAnimationList::Run] = GetBasicAnimationFilePath("Hammer/Run");
+
+		/* ジャンプ状態。*/
+		m_basicAnimationFilePathList[CharacterBasicAnimationList::Jump] = GetBasicAnimationFilePath("Hammer/Jump");
+
+		/* 被弾状態。*/
+		m_basicAnimationFilePathList[CharacterBasicAnimationList::Hit_Fly] = GetBasicAnimationFilePath("Hammer/Fly_Hit");
+
+		/* 起き上がり状態。*/
+		m_basicAnimationFilePathList[CharacterBasicAnimationList::Hit_UP] = GetBasicAnimationFilePath("Hammer/Fly_GetUp");
+
+		/* 死亡状態。*/
+		m_basicAnimationFilePathList[CharacterBasicAnimationList::Death] = GetBasicAnimationFilePath("Hammer/Deth");
+
+		/* ガード状態。*/
+		m_basicAnimationFilePathList[CharacterBasicAnimationList::Guard] = GetBasicAnimationFilePath("Hammer/Guard");
+
+		/* 助ける状態。*/
+		m_basicAnimationFilePathList[CharacterBasicAnimationList::Help] = GetBasicAnimationFilePath("Hammer/Help");
+
+		m_weaponDataList[WeaponType::Hammer] = m_hammerData;
+	}
+
+
+	void CharacterAnimation::InitHammerAnimationFilePath()
+	{
+		/* Hammerのアニメーションファイルパスを格納。*/
+        /* 通常攻撃。*/
+		m_hammerData.weaponAnimationList[AttackType::NormalAttack] = GetWeaponAnimationFilePath("Hammer/NormalAttack");
+
+		/* 強攻撃。*/
+		m_hammerData.weaponAnimationList[AttackType::HeavyAttack] = GetWeaponAnimationFilePath("Hammer/HeavyAttack");
+
+		/* チャージ中。*/
+	    m_hammerData.weaponAnimationList[AttackType::Charging] = GetWeaponAnimationFilePath("Hammer/Charging");
+
+		/* チャージ攻撃。*/
+	    m_hammerData.weaponAnimationList[AttackType::ChargeAttack] = GetWeaponAnimationFilePath("Hammer/HeavyAttack");
+
+		/* 空中攻撃。*/
+		m_hammerData.weaponAnimationList[AttackType::AirAttack] = GetWeaponAnimationFilePath("Hammer/AirAttack");
+
+		/* 回転攻撃。*/
+		m_hammerData.weaponAnimationList[AttackType::PushForward] = GetWeaponAnimationFilePath("Hammer/Spinning");
+
+
+
+		/* 登録データをリストに登録。*/
+		m_weaponDataList[WeaponType::Hammer] = m_hammerData;
 	}
 
 
