@@ -13,7 +13,7 @@ namespace nsApp
 	void PlayerInput::Update()
 	{
 		/* Bボタンを押しているかを取得。*/
-		m_isPressButton = g_pad[0]->IsPress(enButtonB);
+		m_isPressButton = g_pad[m_padInddex]->IsPress(enButtonB);
 
 		/* 入力判定。*/
 		if (!m_isInputEnable)
@@ -35,11 +35,11 @@ namespace nsApp
 		}
 
 		/* 移動入力判定。*/ 
-		m_stickX = g_pad[0]->GetLStickXF();
-		m_stickY = g_pad[0]->GetLStickYF();
+		m_stickX = g_pad[m_padInddex]->GetLStickXF();
+		m_stickY = g_pad[m_padInddex]->GetLStickYF();
 
 		/* ジャンプ, 斬り上げ判定。*/
-		if (g_pad[0]->IsTrigger(enButtonA))
+		if (g_pad[m_padInddex]->IsTrigger(enButtonA))
 		{
 			if (m_stickY > 0.5f)
 			{
@@ -62,13 +62,13 @@ namespace nsApp
 		}
 
 		/* 斬り上げ判定。*/
-		m_isSlashUp = g_pad[0]->IsTrigger(enButtonLB2);
+		m_isSlashUp = g_pad[m_padInddex]->IsTrigger(enButtonLB2);
 
 		/* ジャンプ判定。*/
-		m_isJump = g_pad[0]->IsTrigger(enButtonA);
+		m_isJump = g_pad[m_padInddex]->IsTrigger(enButtonA);
 
 		/* Bボタンを押した瞬間の攻撃判定を設定。*/
-		m_isAttack = g_pad[0]->IsTrigger(enButtonB);
+		m_isAttack = g_pad[m_padInddex]->IsTrigger(enButtonB);
 
 		/* カメラを考慮せずにとりあえずスティックの入力量で移動する。*/
 		m_moveVec = Vector3(m_stickX, 0.0, 0.0);
@@ -78,14 +78,14 @@ namespace nsApp
 
 		/* ダメージ判定。*/
 		/* ※ボスが実装されるまで仮置き。*/
-		m_isDamage = g_pad[0]->IsTrigger(enButtonLeft);
+		m_isDamage = g_pad[m_padInddex]->IsTrigger(enButtonLeft);
 
 		/* 死亡判定。*/
 		/* ※テストでYボタン判定とする。*/
-		m_isDeath = g_pad[0]->IsTrigger(enButtonDown);
+		m_isDeath = g_pad[m_padInddex]->IsTrigger(enButtonDown);
 
 		/* スティックの押し具合は厳しいので特定のボタン同士で走れるようにする。*/
-		m_isRun = (g_pad[0]->IsPress(enButtonLB1) && m_isMove);
+		m_isRun = (g_pad[m_padInddex]->IsPress(enButtonLB1) && m_isMove);
 
 
 		/* 攻撃入力判定。*/
@@ -103,7 +103,7 @@ namespace nsApp
 		/* 空中攻撃。
 		* 空中でBボタンを押しているかを判定。
 		*/
-		m_isAirAttack = g_pad[0]->IsTrigger(enButtonB);
+		m_isAirAttack = g_pad[m_padInddex]->IsTrigger(enButtonB);
 
 		/* タイマー処理。
 		* 押せば加算。
@@ -114,13 +114,16 @@ namespace nsApp
 		/* チャージ攻撃開始。
 		 * 5F以上(長押し) Bボタンを押しているかを判定。
 		 */ 
-		m_isChargeStart = (m_isPressButton && m_chargeButtonTimer >= 5);
+		m_isChargeStart = (m_isPressButton && m_chargeButtonTimer >= 1);
 
 
 		/* ガード判定。*/ 
-		m_isGuard = g_pad[0]->IsPress(enButtonLB2);
+		m_isGuard = g_pad[m_padInddex]->IsPress(enButtonLB2);
 
 		/* 助ける判定。*/ 
-		m_isHelp = g_pad[0]->IsTrigger(enButtonY);
+		m_isHelp = g_pad[m_padInddex]->IsTrigger(enButtonY);
+
+		/* 重攻撃判定。*/
+		m_isPressX = g_pad[m_padInddex]->IsTrigger(enButtonX);
 	}
 }

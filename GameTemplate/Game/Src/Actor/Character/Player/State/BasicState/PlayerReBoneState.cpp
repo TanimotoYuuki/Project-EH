@@ -27,7 +27,6 @@ namespace nsApp
 
 				m_stateMachine->ChangeState(new PlayerIdleState());
 			}
-
 		}
 	}
 }
