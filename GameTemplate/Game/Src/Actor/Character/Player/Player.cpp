@@ -42,13 +42,17 @@ namespace
 		int padIndex;                                   //! 要素数の何番目を用いて操作を指示するのか。
 	};
 
-	/* 生成名/識別子/コントローラーのインデックスを付与。*/
 	const PlayerSetupData SET_UP_DATA[4] =
 	{
+		/*
+		 * @brief  生成名/識別子/コントローラーのインデックスを付与。
+		 * @detail 右端のインデックス数は0がメインPCの番号となる。
+		 * @TODO:  NPC実装のためにも実装を考える必要あり。
+		 */
 		{"player1", nsApp::CharacterModelType::Player_1P, 0},
 		{"player2", nsApp::CharacterModelType::Player_2P, 0},
 		{"player3", nsApp::CharacterModelType::Player_3P, 2},
-		{"player4", nsApp::CharacterModelType::Player_4P, 3}
+		{"player4", nsApp::CharacterModelType::Player_4P, 0}
 	};
 }
 

@@ -5,8 +5,8 @@
 
 namespace
 {
-	const auto WEAPON_OFFSET = Vector3::Zero; //! 武器と腕モデル間のオフセット。
-	const auto WEAPON_ANGLE_Y = 0.0f;         //! 武器のY軸の角度。
+	const auto WEAPON_OFFSET = Vector3(0.0f, -20.0f, 0.0f); //! 武器と腕モデル間のオフセット。
+	const auto WEAPON_ANGLE_Y = 0.0f;						//! 武器のY軸の角度。
 }
 
 namespace nsApp
@@ -29,14 +29,14 @@ namespace nsApp
 			m_model.LoadWeaponModel(CharacterModelType::Weapon_Wand);
 
 			/* 武器の大きさを設定する。*/
-			m_model.SetWeaponScale(Vector3::One * 0.5f);
+			m_model.SetWeaponScale(Vector3::One * 0.25f);
 
 			/* 武器とキャラモデルの腕の差を設定。*/
 			m_model.SetWeaponOffset(WEAPON_OFFSET);
 
 			/* 武器の角度を設定する。*/
 			m_angle.SetRotationDegY(WEAPON_ANGLE_Y);
-			m_model.SettRotation(m_angle);
+			m_model.SetWeaponAngle(m_angle);
 
 			return true;
 		}

@@ -149,10 +149,35 @@ namespace nsApp
 
 	void CharacterAnimation::InitWandBasicAnimationFilePath()
 	{
+		/* 待機状態。*/
 		m_basicAnimationFilePathList[CharacterBasicAnimationList::Idle] = GetBasicAnimationFilePath("Wand/Idle");
 
-		m_weaponDataList[WeaponType::Wand] = m_wandData;
+		/* 歩き状態。*/
+		m_basicAnimationFilePathList[CharacterBasicAnimationList::Walk] = GetBasicAnimationFilePath("Wand/Walk");
 
+		/* 走り状態。*/
+		m_basicAnimationFilePathList[CharacterBasicAnimationList::Run] = GetBasicAnimationFilePath("Wand/Run");
+
+		/* ジャンプ状態。*/
+		m_basicAnimationFilePathList[CharacterBasicAnimationList::Jump] = GetBasicAnimationFilePath("Wand/Jump");
+
+		/* 被弾状態。*/
+		m_basicAnimationFilePathList[CharacterBasicAnimationList::Hit_Fly] = GetBasicAnimationFilePath("Wand/Hit");
+
+		/* 起き上がり状態。*/
+		m_basicAnimationFilePathList[CharacterBasicAnimationList::Hit_UP] = GetBasicAnimationFilePath("Wand/GetUp");
+
+		/* 死亡状態。*/
+		m_basicAnimationFilePathList[CharacterBasicAnimationList::Death] = GetBasicAnimationFilePath("Wand/Deth");
+
+		/* ガード状態。*/
+		m_basicAnimationFilePathList[CharacterBasicAnimationList::Guard] = GetBasicAnimationFilePath("Wand/Guard");
+
+		/* 助ける状態。*/
+		m_basicAnimationFilePathList[CharacterBasicAnimationList::Help] = GetBasicAnimationFilePath("Wand/Help");
+
+		/* 登録したアニメーションをリストに登録。*/
+		m_weaponDataList[WeaponType::Wand] = m_wandData;
 	}
 
 
