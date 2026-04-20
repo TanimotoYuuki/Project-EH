@@ -17,6 +17,9 @@ namespace nsApp
 		InitHammerBasicAnimationFilePath();
 		/* 攻撃動作用。*/
 		InitHammerAnimationFilePath();
+
+		/* 杖キャラクターのアニメーションファイルパスを初期化。*/
+		InitWandBasicAnimationFilePath();
 	}
 
 
@@ -141,6 +144,20 @@ namespace nsApp
 
 		/* 登録データをリストに登録。*/
 		m_weaponDataList[WeaponType::Hammer] = m_hammerData;
+	}
+
+
+	void CharacterAnimation::InitWandBasicAnimationFilePath()
+	{
+		m_basicAnimationFilePathList[CharacterBasicAnimationList::Idle] = GetBasicAnimationFilePath("Wand/Idle");
+
+		m_weaponDataList[WeaponType::Wand] = m_wandData;
+
+	}
+
+
+	void CharacterAnimation::InitWandAttackAnimationFilePath()
+	{
 	}
 
 

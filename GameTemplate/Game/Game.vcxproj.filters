@@ -168,6 +168,7 @@
     <ClCompile Include="Src\Actor\Character\Player\CharacterByWeapon\SwordCharacter.cpp" />
     <ClCompile Include="Src\Actor\Character\Player\CharacterByWeapon\HammerCharacter.cpp" />
     <ClCompile Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerHeavyAttackState.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\CharacterByWeapon\WandCharacter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -297,5 +298,6 @@
     <ClInclude Include="Src\Actor\Character\Player\CharacterByWeapon\SwordCharacter.h" />
     <ClInclude Include="Src\Actor\Character\Player\CharacterByWeapon\HammerCharacter.h" />
     <ClInclude Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerHeavyAttackState.h" />
+    <ClInclude Include="Src\Actor\Character\Player\CharacterByWeapon\WandCharacter.h" />
   </ItemGroup>
 </Project>
