@@ -20,31 +20,8 @@ namespace nsApp
 			enRushMagic,    //! 連打魔法。
 			enAirMagic,     //! 空中魔法。
 			enChargeMagic,  //! チャージ魔法。
-			enHeelMagic,    //! 回復魔法。
 			enNone,         //! 魔法なし。
 		};
-
-		namespace
-		{
-			/*
-			 * @struct
-			 * @brief
-			 * 魔法を構成する要素をまとめた構造体。
-			 */
-			struct MagicParam
-			{
-				float speed = 0.0f;     //! 魔法の射出速度。
-				float damage = 0.0f;    //! 魔法のダメージ量。
-				std::string modelPath;  //! モデル名。
-				float hitRadius = 0.0f; //! 魔法の当たり判定の半径。
-				float hitHeight = 0.0f; //! 魔法の当たり判定の高さ。
-			};
-
-			const std::unordered_map<MagicType, MagicParam> MAGIC_PARAM_TABLE =
-			{
-				{ MagicType::enNormalMagic, {2.0f, 10.0f, } },
-			};
-		}
 
 
 		class MagicProjectotile : public IGameObject
@@ -70,12 +47,19 @@ namespace nsApp
 			 */
 			void Update();
 
-
 			/**
-			 * @brief　描画処理。
+			 * @brief 描画処理。
 			 * @detail ここでは攻撃時に射出するミサイルオブジェクトの描画を行う。
 			 */
 			void Render(RenderContext& rc);
+
+
+		private:
+			/**
+			* @brief ターゲットに向かって移動する処理。
+			*/
+			void TargetMoving();
+
 
 
 		/* セッター。*/
@@ -84,6 +68,12 @@ namespace nsApp
 			inline void SetDamage(float damage)
 			{
 				m_damage = damage;
+			}
+
+			/* 目標を設定。*/
+			inline void SetTarget(nsActor::ICharacter* target)
+			{
+				m_target = target;
 			}
 
 
@@ -95,36 +85,51 @@ namespace nsApp
 				return m_magicType;
 			}
 
-
-		/* ヘルパー。*/
-		private:
-			/* ファイルパスを取得。*/
-			inline const std::string SearchMissileModelPath(const std::string modelName) 
+			/* モデル名を取得。*/
+			inline const std::string SearchMissileModelPath(const std::string& modelName)
 			{
-				const std::string missileModelPath = "Assets/modelData/Character/Weapon/" + modelName + ".tkm";
-				return missileModelPath;
+				return "Assets/modelData/Character/Weapon/" + modelName + ".tkm";
+			}
+
+			/* 角度計算。*/
+			Quaternion MakeAngle(float degX, float degY, float degZ)
+			{
+				Quaternion angleX, angleY, angleZ;
+				angleX.SetRotationDegX(degX);
+				angleY.SetRotationDegY(degY);
+				angleZ.SetRotationDegZ(degZ);
+				return angleX * angleY * angleZ;
 			}
 
 
+		private:
+			nsActor::ICharacter* m_target = nullptr;       //! 目標。
+
 
 		private:
-			MagicType m_magicType = MagicType::enNone;  //! 魔法の種類。
+			MagicType m_magicType = MagicType::enNone;     //! 魔法の種類。
 
-			WeaponHitDetection m_hitDetection;          //! 魔法の当たり判定を管理するクラス。
+			WeaponHitDetection m_hitDetection;             //! 魔法の当たり判定を管理するクラス。
 
-			Vector3 m_position = Vector3::Zero;         //! 魔法の位置。
-			Vector3 m_velocity = Vector3::Zero;         //! 魔法の速度。
-			Vector3 m_forwardDirection = Vector3::Zero; //! 魔法の前方向ベクトル。
+			Vector3 m_position = Vector3::Zero;            //! 魔法の位置。
+			Vector3 m_velocity = Vector3::Zero;            //! 魔法の速度。
+			Vector3 m_forwardDirection = Vector3::Zero;    //! 魔法の前方向ベクトル。
+			Vector3 m_scale = Vector3::One;                //! 魔法のスケール。
+			Vector3 m_targetPosition = Vector3::Zero;      //! 目標位置。
+			Vector3 m_toTargetVector = Vector3::Zero;      //! 目標と自身の距離ベクトル。
+			Vector3 m_currentDirection = Vector3::Zero;    //! 現在の移動方向。
+			Vector3 m_newPosition = Vector3::Zero;         //! 新しい位置。
 
-			ModelRender m_missileMddel;                 //! ミサイルを描画するレンダー。
+			Quaternion m_angle = Quaternion::Identity;     //! 魔法の回転角。
+			Quaternion m_direction = Quaternion::Identity; //! 角度。
 
-			int m_lifeTimer = 0;                        //! 魔法の生成時間を管理するタイマー。
+
+			ModelRender m_missileMddel;                    //! ミサイルを描画するレンダー。
+
+			int m_lifeTimer = 0;                           //! 魔法の生成時間を管理するタイマー。
 			
-			float m_damage = 0.0f;                      //! 魔法のダメージ量。
+			float m_damage = 0.0f;                         //! 魔法のダメージ量。
+			float m_moveSpeed = 0.0f;                      //! 移動速度。
 		};
 	}
 }
-
-
-
-
