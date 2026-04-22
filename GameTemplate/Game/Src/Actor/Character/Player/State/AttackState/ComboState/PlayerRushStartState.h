@@ -7,6 +7,7 @@
 */
 
 #include "Src/Actor/Character/Player/State/AttackState/PlayerAttackBaseState.h"
+#include "Src/Actor/Magic/MagicProjectotile.h"
 
 namespace nsApp
 {
@@ -31,13 +32,17 @@ namespace nsApp
 			/* 前進する処理。*/
 			void MoveForward();
 
+			/* ミサイルを召喚。*/
+			void SummonMissile();
+
 
 		private:
-			int m_loopCount = 0;                  /* 連続攻撃のループ回数を管理するカウンター。*/
+			int m_loopCount = 0;                  //! 連続攻撃のループ回数を管理するカウンター。
 
-			float m_forwardSpeed = 0.0f;          /* 連続攻撃をする際、前方への移動速度。*/
+			float m_forwardSpeed = 0.0f;          //! 連続攻撃をする際、前方への移動速度。
 
-			Vector3 m_moveVector = Vector3::Zero; /* 前進する際の移動ベクトル。*/
+			Vector3 m_moveVector = Vector3::Zero; //! 前進する際の移動ベクトル。
+			Vector3 m_spawnPos = Vector3::Zero;   //! ミサイルを召喚する位置。
 		};
 	}
 }
