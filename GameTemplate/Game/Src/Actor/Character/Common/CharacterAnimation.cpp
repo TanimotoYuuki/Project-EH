@@ -19,7 +19,11 @@ namespace nsApp
 		InitHammerAnimationFilePath();
 
 		/* 杖キャラクターのアニメーションファイルパスを初期化。*/
+		/* 基本動作用。*/
 		InitWandBasicAnimationFilePath();
+		/* 攻撃動作用。*/
+		InitWandAttackAnimationFilePath();
+
 	}
 
 
@@ -183,6 +187,23 @@ namespace nsApp
 
 	void CharacterAnimation::InitWandAttackAnimationFilePath()
 	{
+		/* 通常攻撃。*/
+		m_wandData.weaponAnimationList[AttackType::NormalAttack] = GetWeaponAnimationFilePath("Wand/NormalAttack");
+
+        /* 連打攻撃。*/
+		m_wandData.weaponAnimationList[AttackType::RushAttack_Start] = GetWeaponAnimationFilePath("Wand/RushAttack");
+
+        /* 空中攻撃。*/
+		m_wandData.weaponAnimationList[AttackType::AirAttack] = GetWeaponAnimationFilePath("Wand/AirAttack");
+
+        /* チャージ中。*/
+		m_wandData.weaponAnimationList[AttackType::Charging] = GetWeaponAnimationFilePath("Wand/Charging");
+
+		/* チャージ攻撃。*/
+		m_wandData.weaponAnimationList[AttackType::ChargeAttack] = GetWeaponAnimationFilePath("Wand/ChargeAttack");
+
+		/* アニメーションデータをリストに登録。*/
+		m_weaponDataList[WeaponType::Wand] = m_wandData;
 	}
 
 
