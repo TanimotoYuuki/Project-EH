@@ -41,6 +41,8 @@ namespace nsApp
 
 			float m_forwardSpeed = 0.0f;          //! 連続攻撃をする際、前方への移動速度。
 
+			bool m_isSummoned = false;            //! ミサイルを射出したかどうかを管理するフラグ。
+
 			Vector3 m_moveVector = Vector3::Zero; //! 前進する際の移動ベクトル。
 			Vector3 m_spawnPos = Vector3::Zero;   //! ミサイルを召喚する位置。
 		};
