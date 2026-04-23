@@ -7,6 +7,8 @@
 #include "Src/Debug/Sandbag.h"
 #include "Src/Sound/SoundLister.h"
 
+#include "Src/Actor/Magic/MagicProjectotile.h" 
+
 namespace
 {
 	const auto MOVE_FRAME_TIME = 1.0f / 60.0f;     //! 1フレームあたりの固定時間。
@@ -21,8 +23,21 @@ namespace
 
 	const float ZERO_MOVE_SPEED = 0.0f;            //! 移動速度の初期値。
 
+	/* ミサイルをばら撒いて描画する際の角度のリスト。*/
+	float missileAngleList[] =
+	{
+		-45.0f,
+		-22.5f,
+		0.0f,
+		22.5f,
+		45.0f
+	};
 }	
 
+/**
+ * @brief キャラコンを取得するマクロ。
+ */
+#define GET_PLAYER_CHARACON m_player->GetCharacterController()
 
 namespace nsApp
 {
@@ -51,6 +66,19 @@ namespace nsApp
 		{
 			/* タイマーを加算する。*/
 			m_attackTimer++;
+
+
+			/* 武器が杖の場合、空中攻撃。*/
+			if (m_player->GetCurrentWeapon() == WeaponType::Wand)
+			{
+				if (m_attackTimer == 10 && !m_isSpawningMissile)
+				{
+					/* ミサイルを生成する。*/
+					SpawnMissile();
+					/* ミサイルの生成フラグ。*/
+					m_isSpawningMissile = true;
+				}
+			}
 
 			/* 未着地の場合。*/
 			if (!m_isLanding)
@@ -99,10 +127,10 @@ namespace nsApp
 			SetMoveSpeed(Vector3(m_currentAirMoveSpeed.x, m_fallVelocity, m_currentAirMoveSpeed.z));
 
 			/* 移動速度をキャラコンに反映。*/
-			m_player->GetCharacterController().Execute(m_moveSpeed, MOVE_FRAME_TIME);
+			GET_PLAYER_CHARACON.Execute(m_moveSpeed, MOVE_FRAME_TIME);
 
 			/* 座標にも反映。*/
-			m_player->SetPosition(m_player->GetCharacterController().GetPosition());
+			m_player->SetPosition(GET_PLAYER_CHARACON.GetPosition());
 
 			/* Y軸の速度を変数に代入。*/
 			m_fallVelocity = m_moveSpeed.y;
@@ -112,14 +140,18 @@ namespace nsApp
 		bool PlayerAirAttackState::CheckLanding()
 		{
 			/* 未着地の場合はfalseを返す。*/
-			if (m_attackTimer <= AIR_ATTACK_DURATION || !m_player->GetCharacterController().IsOnGround())
+			if (m_attackTimer <= AIR_ATTACK_DURATION || !GET_PLAYER_CHARACON.IsOnGround())
 				return false;
 
-			/* */
+			/* 着地フラグをセット。*/
 			m_isLanding = true;
 
-			/* 衝撃波エフェクトを生成する。*/
-			CreateShockWaveEffect();
+			/* Wandキャラの場合は衝撃波エフェクトを生成しない。*/
+			if (m_player->GetCurrentWeapon() != WeaponType::Wand)
+			{
+				/* 衝撃波エフェクトを生成する。*/
+				CreateShockWaveEffect();
+			}
 
 			return true;
 		}
@@ -154,7 +186,35 @@ namespace nsApp
 			return false;
 		}
 
+		Vector3 PlayerAirAttackState::ComputeMissile(float angle)
+		{
+			Vector3 shootDir = m_player->GetForwardVector();
+
+			/* 角度を設定する。*/
+			m_angleY.SetRotationDegY(angle);
+			/* 角度を適応する。*/
+			m_angleY.Apply(shootDir);
+
+			return shootDir;
+		}
 
 
+		void PlayerAirAttackState::SpawnMissile()
+		{
+			/* 生成位置を計算する。*/
+			Vector3 spawnPos = m_player->GetWeaponHitDetection().GetPosition();
+			spawnPos.y += 10.0f;
+
+
+			for (auto angle : missileAngleList)
+			{
+				/* 角度を渡して飛ばす方向を計算する。*/
+				m_shootDir = ComputeMissile(angle);
+
+				/* 渡された角度を用いて、ミサイルを描画する。*/
+				m_airMissile = NewGO<nsActor::MagicProjectotile>(0, "AirMissile");
+				m_airMissile->Initialize(nsActor::MagicType::enAirMagic, spawnPos, m_shootDir);
+			}
+		}
 	}
 }

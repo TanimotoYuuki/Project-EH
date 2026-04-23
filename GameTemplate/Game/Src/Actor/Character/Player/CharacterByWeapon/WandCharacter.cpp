@@ -2,10 +2,18 @@
 #include "WandCharacter.h"
 
 #include "Src/Actor/Character/Player/State/AttackState/PlayerNormalAttackState.h"
+#include "Src/Actor/Character/Player/State/AttackState/PlayerAirAttackState.h"
+#include "Src/Actor/Character/Player/State/AttackState/PlayerChargingState.h"
+#include "Src/Actor/Character/Player/State/AttackState/PlayerChargeAttackState.h"
+
+#include "Src/Actor/Character/Player/State/AttackState/ComboState/PlayerRushStartState.h"
+#include "Src/Actor/Character/Player/State/AttackState/ComboState/PlayerSlashUpState.h"
+
 
 namespace
 {
 	const auto WEAPON_OFFSET = Vector3(0.0f, -20.0f, 0.0f); //! 武器と腕モデル間のオフセット。
+	const auto WEAPON_SCALE = Vector3(0.5f, 0.3f, 1.0f);	//! 武器の大きさ。
 	const auto WEAPON_ANGLE_Y = 0.0f;						//! 武器のY軸の角度。
 }
 
@@ -29,7 +37,7 @@ namespace nsApp
 			m_model.LoadWeaponModel(CharacterModelType::Weapon_Wand);
 
 			/* 武器の大きさを設定する。*/
-			m_model.SetWeaponScale(Vector3::One * 0.25f);
+			m_model.SetWeaponScale(WEAPON_SCALE);
 
 			/* 武器とキャラモデルの腕の差を設定。*/
 			m_model.SetWeaponOffset(WEAPON_OFFSET);
@@ -49,6 +57,21 @@ namespace nsApp
 
 			/* 通常攻撃ステート。*/
 			m_stateFactory[PlayerStateID::enNormalAttack] = []() { return new nsState::PlayerNormalAttackState(); };
+
+			/* 空中攻撃ステート。*/
+			m_stateFactory[PlayerStateID::enAirAttack] = []() { return new nsState::PlayerAirAttackState(); };
+
+			/* チャージステート。*/
+			m_stateFactory[PlayerStateID::enCharging] = []() { return new nsState::PlayerChargingState(); };
+
+			/* チャージ攻撃ステート。*/
+			m_stateFactory[PlayerStateID::enChargeAttack] = []() { return new nsState::PlayerChargeAttackState(); };
+
+			/* 連打攻撃ステート。*/
+			m_stateFactory[PlayerStateID::enRushStart] = []() { return new nsState::PlayerRushStartState(); };
+
+			/* 打ち上げ攻撃ステート。*/
+			m_stateFactory[PlayerStateID::enSlashUp] = []() { return new nsState::PlayerSlashUpState(); };
 		}
 	}
 }

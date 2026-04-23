@@ -194,7 +194,10 @@ namespace nsApp
 		m_wandData.weaponAnimationList[AttackType::RushAttack_Start] = GetWeaponAnimationFilePath("Wand/RushAttack");
 
         /* 空中攻撃。*/
-		m_wandData.weaponAnimationList[AttackType::AirAttack] = GetWeaponAnimationFilePath("Wand/AirAttack");
+		m_wandData.weaponAnimationList[AttackType::AirAttack] = GetWeaponAnimationFilePath("Wand/ChargeAttack");
+
+		/* 斬り上げ枠。*/
+		m_wandData.weaponAnimationList[AttackType::SlashUp] = GetWeaponAnimationFilePath("Wand/AirAttack");
 
         /* チャージ中。*/
 		m_wandData.weaponAnimationList[AttackType::Charging] = GetWeaponAnimationFilePath("Wand/Charging");

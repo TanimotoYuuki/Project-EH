@@ -98,6 +98,10 @@ namespace nsApp
 				return;
 			}
 
+			/* 連打魔法の場合、発動。*/
+			if (m_magicType == MagicType::enRushMagic)
+				TargetMoving();
+
 			/* モデルの各要素の更新。*/
 			/* 角度。*/
 			m_missileMddel.SetRotation(m_angle);
@@ -125,41 +129,31 @@ namespace nsApp
 			/* 目標が設定されている場合。*/
 			if (m_target != nullptr)
 			{
-				/* 目標の中心位置を狙う。*/
 				m_targetPosition = m_target->GetPosition();
 				m_targetPosition.y += 10.0f;
 
 				/* 自身と目標の距離を測る。*/
 				m_toTargetVector = m_targetPosition - m_position;
-				m_toTargetVector.Normalize();
 
-				/* 目標の方向を向く。*/
-				m_toTargetVector = m_velocity;
-				m_moveSpeed = m_currentDirection.Length();
-				m_currentDirection.Normalize();
+				if (m_toTargetVector.LengthSq() > 0.001f)
+				{
+					m_toTargetVector.Normalize();
 
-				/* 現在の進行方向を目標の方向に滑らかに向ける。*/
-				m_newPosition.Lerp(0.0f, m_currentDirection, m_targetPosition);
-				m_newPosition.Normalize();
+					/* 目標の方向を向く。*/
+					m_currentDirection = m_velocity;
+					m_moveSpeed = m_currentDirection.Length();
 
-				/* 新しい進行方向と速度を適応。*/
-				m_velocity = m_newPosition * m_moveSpeed;
+					if (m_moveSpeed > 0.001f)
+					{
+						m_newPosition.Lerp(0.08f, m_currentDirection, m_toTargetVector);
+						m_newPosition.Normalize();
 
-				/* モデルの角度も計算する。*/
-				m_direction.SetRotation(Vector3::Front, m_newPosition);
-				m_angle = m_direction * NORMAL_MAGIC_ANGLE;
-					
+						m_velocity = m_newPosition * m_moveSpeed;
+
+						m_direction.SetRotation(Vector3::Front, m_newPosition);
+						m_angle = m_direction * NORMAL_MAGIC_ANGLE;
+					}
+				}
 			}
-
-
-
-
-
-
-			if (m_magicType == MagicType::enRushMagic)
-			{
-				/* */
-			}
-		}
-	}
+		}	}
 }

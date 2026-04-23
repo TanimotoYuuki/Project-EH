@@ -14,7 +14,7 @@ namespace nsApp
 			PLAYER_STATE_ID::enNormalAttack,
 			{
 			    /* 連続攻撃の開始。*/
-				{ ComboInputType::RushB, 20, PLAYER_STATE_ID::enRushStart},
+				{ ComboInputType::RushB, 10, PLAYER_STATE_ID::enRushStart},
 				/* 連続攻撃の終了。*/
 				{ ComboInputType::PressB, 15, PLAYER_STATE_ID::enRushEnd},
 				/* 重攻撃に派生。*/
