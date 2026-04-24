@@ -36,6 +36,9 @@ namespace nsApp
 		HeavyAttack,           //! 強攻撃。
 		Charging,              //! チャージ中。
 		ChargeAttack,          //! チャージ攻撃。
+		HeelMagic,             //! 回復魔法。
+		HeelMagic_Particle,    //! 回復魔法のパーティクル。
+		MagicAttack,           //! 魔法攻撃。
 		AirAttack,             //! 空中攻撃。
 		RushAttack_Start,      //! 連続攻撃。
 		RushAttack_End,        //! 連続攻撃のループ部分。

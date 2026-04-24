@@ -205,6 +205,12 @@ namespace nsApp
 		/* チャージ攻撃。*/
 		m_wandData.weaponAnimationList[AttackType::ChargeAttack] = GetWeaponAnimationFilePath("Wand/ChargeAttack");
 
+		/* 魔法攻撃。*/
+		m_wandData.weaponAnimationList[AttackType::MagicAttack] = GetWeaponAnimationFilePath("Wand/MagicAttack");
+
+		/* 回復魔法。*/
+		m_wandData.weaponAnimationList[AttackType::HeelMagic] = GetWeaponAnimationFilePath("Wand/HeelMagic");
+
 		/* アニメーションデータをリストに登録。*/
 		m_weaponDataList[WeaponType::Wand] = m_wandData;
 	}

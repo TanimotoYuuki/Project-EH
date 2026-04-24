@@ -169,6 +169,9 @@
     <ClCompile Include="Src\Actor\Character\Player\CharacterByWeapon\HammerCharacter.cpp" />
     <ClCompile Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerHeavyAttackState.cpp" />
     <ClCompile Include="Src\Actor\Character\Player\CharacterByWeapon\WandCharacter.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerHeelMagicState.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerMagicAttackState.cpp" />
+    <ClCompile Include="Src\Actor\Magic\MagicProjectotile.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -299,5 +302,8 @@
     <ClInclude Include="Src\Actor\Character\Player\CharacterByWeapon\HammerCharacter.h" />
     <ClInclude Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerHeavyAttackState.h" />
     <ClInclude Include="Src\Actor\Character\Player\CharacterByWeapon\WandCharacter.h" />
+    <ClInclude Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerHeelMagicState.h" />
+    <ClInclude Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerMagicAttackState.h" />
+    <ClInclude Include="Src\Actor\Magic\MagicProjectotile.h" />
   </ItemGroup>
 </Project>

@@ -29,6 +29,14 @@ namespace nsApp
 				{ ComboInputType::PressLB2, 10, PLAYER_STATE_ID::enSlashUp },
 			},
 		},
+		{
+			/* パターン3: チャージ攻撃からの派生。*/ 
+			PLAYER_STATE_ID::enCharging,
+			{
+			    /* Bボタンを離したらチャージ攻撃状態へ。*/
+			    { ComboInputType::PressB, 0, PLAYER_STATE_ID::enChargeAttack},
+		    },
+		},
 	};
 
 

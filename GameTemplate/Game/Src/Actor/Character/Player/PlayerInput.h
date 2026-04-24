@@ -145,6 +145,19 @@ namespace nsApp
 			return m_isPressX;
 		}
 
+		/* RBボタン判定。*/
+		inline bool IsPressRB() const
+		{
+			return m_isPressRB;
+		}
+
+		/* RTボタン判定。*/
+		inline bool IsPressRT() const 
+		{
+			return m_isPressRT;
+		}
+
+
 	private:
 		bool m_isAttack = false;             //! 攻撃したかどうかを判定。
 		bool m_isJump = false;               //! ジャンプしたかどうかを判定。
@@ -166,6 +179,8 @@ namespace nsApp
 		bool m_isGuard = false;              //! ガードの入力を検知。
 		bool m_isHelp = false;               //! 助ける入力を検知。
 		bool m_isPressX = false;             //! Xボタンが押されているかどうかを判定。
+		bool m_isPressRB = false;            //! RBボタンが押されているかどうかを判定。
+		bool m_isPressRT = false;			 //! RTボタンが押されているかどうかを判定。
 
 		float m_stickX = 0.0f;               //! スティックのX軸の値。
 		float m_stickY = 0.0f;               //! スティックのY軸の値。

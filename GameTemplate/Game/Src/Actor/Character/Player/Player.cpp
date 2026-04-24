@@ -229,7 +229,7 @@ namespace nsApp
 			/* --- ここからSE再生処理 --- */
 			/* サウンド管理クラスを探す */
 			auto soundManager = FindGO<nsSound::SoundLister>("SoundManager");
-			if (soundManager != nullptr)
+			if (soundManager != nullptr && reinterpret_cast<uint8_t>(soundManager) != 0xFFFFFFFFFFFFFFFF)
 				m_currentWeaponSE = soundManager->GetSEList().PlayAttackSE(m_currentWeapon, attack);
 		}
 
@@ -247,7 +247,7 @@ namespace nsApp
 		nsActor::Player* Player::SearchCharacter()
 		{
 			auto target = FindGO<nsActor::Player>("player2");
-			if (target != nullptr)
+			if (target != nullptr && reinterpret_cast<uintptr_t>(target) != 0xFFFFFFFFFFFFFFFF)
 			{
 				if (target->GetCharacterStatus().hp.currentHP <= 0)
 				{

@@ -1,5 +1,4 @@
 #pragma once
-
 /**
  * @file   MagicProjectotile.h
  * @brief  攻撃の際に飛ばすオブジェクトを管理するクラス。
@@ -56,8 +55,8 @@ namespace nsApp
 
 		private:
 			/**
-			* @brief ターゲットに向かって移動する処理。
-			*/
+			 * @brief ターゲットに向かって移動する処理。
+			 */
 			void TargetMoving();
 
 
@@ -94,11 +93,10 @@ namespace nsApp
 			/* 角度計算。*/
 			Quaternion MakeAngle(float degX, float degY, float degZ)
 			{
-				Quaternion angleX, angleY, angleZ;
-				angleX.SetRotationDegX(degX);
-				angleY.SetRotationDegY(degY);
-				angleZ.SetRotationDegZ(degZ);
-				return angleX * angleY * angleZ;
+				m_angleX.SetRotationDegX(degX);
+				m_angleY.SetRotationDegY(degY);
+				m_angleZ.SetRotationDegZ(degZ);
+				return m_angleZ * m_angleY * m_angleZ;
 			}
 
 
@@ -122,6 +120,9 @@ namespace nsApp
 
 			Quaternion m_angle = Quaternion::Identity;     //! 魔法の回転角。
 			Quaternion m_direction = Quaternion::Identity; //! 角度。
+			Quaternion m_angleX = Quaternion::Identity;    //! X軸の回転角。
+			Quaternion m_angleY = Quaternion::Identity;    //! Y軸の回転角。
+			Quaternion m_angleZ = Quaternion::Identity;    //! Z軸の回転角。
 
 
 			ModelRender m_missileMddel;                    //! ミサイルを描画するレンダー。

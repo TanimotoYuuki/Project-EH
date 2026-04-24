@@ -8,6 +8,8 @@
 
 #include "Src/Actor/Character/Player/State/AttackState/ComboState/PlayerRushStartState.h"
 #include "Src/Actor/Character/Player/State/AttackState/ComboState/PlayerSlashUpState.h"
+#include "Src/Actor/Character/Player/State/AttackState/ComboState/PlayerHeelMagicState.h"
+#include "Src/Actor/Character/Player/State/AttackState/ComboState/PlayerMagicAttackState.h"
 
 
 namespace
@@ -72,6 +74,12 @@ namespace nsApp
 
 			/* 打ち上げ攻撃ステート。*/
 			m_stateFactory[PlayerStateID::enSlashUp] = []() { return new nsState::PlayerSlashUpState(); };
+
+            /* 回復魔法ステート。*/
+			m_stateFactory[PlayerStateID::enHeelMagic] = []() { return new nsState::PlayerHeelMagicState(); };
+
+			/* 魔法攻撃ステート。*/
+			m_stateFactory[PlayerStateID::enMagicAttack] = []() { return new nsState::PlayerMagicAttackState(); };
 		}
 	}
 }

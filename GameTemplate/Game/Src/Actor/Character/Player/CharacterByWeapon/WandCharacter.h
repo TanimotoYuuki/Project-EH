@@ -8,6 +8,13 @@
 
 #include "Src/Actor/Character/Player/CharacterByWeapon/IWeaponCharacter.h"
 
+enum class WandMagicMode : uint8_t
+{
+	enAttackMagic, //! 通常攻撃魔法。
+	enHeelMagic,   //! ヒール魔法。
+	enNone, 	   //! 魔法なし。
+};
+
 namespace nsApp
 {
 	namespace nsActor
@@ -33,8 +40,29 @@ namespace nsApp
 			void RegisterState() override;
 
 
+		/* セッター。*/
+		public:
+			/* 現在の魔法をセットする。*/
+			inline void SetWandMagicMode(WandMagicMode mode)
+			{
+				m_currentMagicMode = mode;
+			}
+
+
+
+		/* ゲッター。*/
+		public:
+			/* 現在の魔法を取得する。*/
+			inline WandMagicMode GetWandMagicMode() const
+			{
+				return m_currentMagicMode;
+			}
+
+
 		private:
-			Quaternion m_angle = Quaternion::Identity; //! モデルの角度。
+			Quaternion m_angle = Quaternion::Identity;                //! モデルの角度。
+
+			WandMagicMode m_currentMagicMode = WandMagicMode::enNone; //! 現在の魔法モード。
 		};
 	}
 }

@@ -55,6 +55,8 @@ namespace nsApp
 			enPushForward,    //! “Ë‚«i‚ŞUŒ‚ó‘ÔB
 		};
 
+
+
 		class Player : public ICharacter
 		{
 		public:
