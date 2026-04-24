@@ -28,14 +28,20 @@ namespace nsApp
 			/* ライフサイクル。*/
 			void Enter() override;
 			void Update() override;
+			void Exit() override;
 
 
 		private:
-			nsActor::MagicProjectotile* m_missileMagic = nullptr; //! 発射する魔法の弾。
+			/* レーザーエフェクトを生成する。*/
+			void SpawnLaserEffect();
 
 
 		private:
-			Vector3 m_spawnPosition = Vector3::Zero;              //! 魔法の発生位置。
+			nsK2EngineLow::EffectEmitter* m_laserEffect = nullptr; //! 発射する魔法の弾。
+
+
+		private:
+			Vector3 m_spawnPosition = Vector3::Zero;                //! 魔法の発生位置。
 		};
 	}
 }
