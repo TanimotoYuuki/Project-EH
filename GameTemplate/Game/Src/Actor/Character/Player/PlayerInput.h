@@ -6,6 +6,13 @@
  * @date 2026/03/15
  */
 
+ /** @def
+  *  RTボタン判定。
+  *  エンジン内でのボタン判定はRT2だが、XboxコントローラーだとRTに該当し、視認性が悪いため定義する。
+  */
+#define BUTTON_RT enButtonRB2
+
+
 namespace nsApp
 {
 	class PlayerInput
@@ -13,6 +20,23 @@ namespace nsApp
 	public:
 		/* 入力判定の更新。*/
 		void Update();
+
+		/**
+		 * @brief Press入力判定があるかチェックする。
+		 * @param コントローラーの列挙型をセットする。
+		 */
+		bool CheckButtonPress(nsK2EngineLow::EnButton inputButtonType);
+
+		/**
+		 * @brief Trigger入力判定があるかチェックする。
+		 * @param コントローラーの列挙型をセットする。
+		 */
+		bool CheckButtonTrigger(nsK2EngineLow::EnButton inputButtonType);
+
+		/**
+         * @brief ジャンプ/斬り上げ判定をセットする。
+         */
+		void EvaluateJumpAndSlashUp();
 
 
 	public:
@@ -45,22 +69,86 @@ namespace nsApp
 			m_virtualStickY = stickY;
 		}
 
-		/**
-		 * @brief 
-		 * @param isPress 
-		 */
-		inline void SetVirtualAttackButton(bool isPress)
+		/* AI用仮想コントローラーの前フレーム保存用のセッター群。*/
+		/* Aボタン。*/
+		inline void SavePrevVirtualPressA() 
 		{
-			m_isVirtualAttackPress = isPress;
+			m_prevVirtualPressA = m_isVirtualPressA; 
+		}
+
+		/* Bボタン。*/
+		inline void SavePrevVirtualPressB() 
+		{
+			m_prevVirtualPressB = m_isVirtualPressB; 
+		}
+
+		/* Xボタン。*/ 
+		inline void SavePrevVirtualPressX() 
+		{
+			m_prevVirtualPressX = m_isVirtualPressX; 
+		}
+
+		/* Yボタン。*/
+		inline void SavePrevVirtualPressY() 
+		{
+			m_prevVirtualPressY = m_isVirtualPressY; 
+		}
+
+		/* LB1ボタン。*/ 
+		inline void SavePrevVirtualPressLB1() 
+		{ 
+			m_prevVirtualPressLB1 = m_isVirtualPressLB1; 
+		}
+
+		/* LB2ボタン。*/ 
+		inline void SavePrevVirtualPressLB2()
+		{
+			m_prevVirtualPressLB2 = m_isVirtualPressLB2; 
+		}
+
+		/* RB1ボタン。*/
+		inline void SavePrevVirtualPressRB1() 
+		{
+			m_prevVirtualPressRB1 = m_isVirtualPressRB1; 
+		}
+
+		/* RTボタン。*/
+		inline void SavePrevVirtualPressRT() 
+		{
+			m_prevVirtualPressRT = m_isVirtualPressRT; 
 		}
 
 		/**
-		 * @brief ジャンプ/斬り上げ判定をセットする。
+		 * @brief 各ボタン判定をまとめる処理。
 		 */
-		inline void SetIsJumpAndSlashUp(bool isJump, bool isSlashUp)
+		inline void SetVirtualAttackButtons()
 		{
-			m_isJump = isJump;
-			m_isSlashUp = isSlashUp;
+			SavePrevVirtualPressA();
+			SavePrevVirtualPressB();
+			SavePrevVirtualPressX();
+			SavePrevVirtualPressY();
+			SavePrevVirtualPressLB1();
+			SavePrevVirtualPressLB2();
+			SavePrevVirtualPressRB1();
+			SavePrevVirtualPressRT();
+		}
+
+		/* 
+		 * @brief Jumpフラグをセット。
+		 * @param flag ジャンプフラグ。
+		 */
+		inline void SetJumpFlag(bool flag)
+		{
+			m_isJump = flag;
+		}
+
+		/* 
+		 * @brief SlashUpフラグをセット。
+		 * @param flag 斬り上げフラグ。
+		 */
+		inline void SetSlashUpFlag(bool flag)
+		{
+			m_isSlashUp = flag;
 		}
 
 
@@ -81,6 +169,29 @@ namespace nsApp
 		}
 
 		/**
+		 *  @brief Bボタンの入力判定をまとめる。
+		 */
+		void SummarizeButtonB()
+		{
+			m_isPressButton = CheckButtonPress(enButtonB);
+			m_isAttack = CheckButtonTrigger(enButtonB);
+			m_isAirAttack = CheckButtonTrigger(enButtonB);
+		}
+
+		/**
+		 * @brief その他のボタンの入浴判定をまとめる。
+		 */
+		void SummarizeOtherButtons()
+		{
+			m_isGuard = CheckButtonPress(enButtonLB2);
+			m_isHelp = CheckButtonPress(enButtonLB1);
+			m_isPressX = CheckButtonPress(enButtonX);
+			m_isPressRB = CheckButtonPress(enButtonRB1);
+			m_isPressRT = CheckButtonPress(BUTTON_RT);
+		}
+
+
+		/**
 		 * @brief 仮チャージ判定を更新する。。
 		 */
 		void UpdateChargeTranslation()
@@ -90,6 +201,12 @@ namespace nsApp
 			m_isChargeStart = (m_isPressButton && m_chargeButtonTimer >= 12.0f);
 			m_isChargeAttack = (!m_isPressButton && m_chargeButtonTimer >= 30.0f);
 		}
+
+		/**
+		 * @brief 入力判定を再初期化する。
+		 */
+		void InitInputJudgment();
+
 
 
 	/* ゲッター。*/
@@ -226,24 +343,6 @@ namespace nsApp
 			return m_padInddex;
 		}
 
-		/**
-         * @brief Press入力判定があるかチェックする。
-         * @param コントローラーの列挙型をセットする。
-         */
-		inline bool CheckButtonPress(nsK2EngineLow::EnButton inputButtonType)
-		{
-			return g_pad[m_padInddex]->IsPress(inputButtonType);
-		}
-
-		/**
-		 * @brief Trigger入力判定があるかチェックする。
-		 * @param コントローラーの列挙型をセットする。
-		 */
-		inline bool CheckButtonTrigger(nsK2EngineLow::EnButton inputButtonType)
-		{
-			return g_pad[m_padInddex]->IsTrigger(inputButtonType);
-		}
-
 
 	private:
 		bool m_isAttack = false;             //! 攻撃したかどうかを判定。
@@ -273,11 +372,33 @@ namespace nsApp
 		float m_stickX = 0.0f;               //! スティックのX軸の値。
 		float m_stickY = 0.0f;               //! スティックのY軸の値。
 		float m_chargeButtonTimer = 0.0f;    //! チャージ攻撃と判定するために必要なBボタンを長押ししなければならない時間。
-		float m_virtualStickX = 0.0f;        //! 仮想スティックのX軸の値。
-		float m_virtualStickY = 0.0f;        //! 仮想スティックのY軸の値。
 
 		int m_padInddex = 0;                 //! 入力を検知するパッドのインデックス。
 
 		Vector3 m_moveVec = Vector3::Right;  //! 移動ベクトル。
+
+
+	private:
+		/* AI用の仮想コントローラー変数群。*/
+		float m_virtualStickX = 0.0f;        //! 仮想スティックのX軸の値。
+		float m_virtualStickY = 0.0f;        //! 仮想スティックのY軸の値。
+		bool m_isVirtualPressA = false;      //! 仮想Aボタンが押されているかどうかを判定。
+		bool m_isVirtualPressB = false;      //! 仮想Bボタンが押されているかどうかを判定。
+		bool m_isVirtualPressX = false;      //! 仮想Xボタンが押されているかどうかを判定。
+		bool m_isVirtualPressY = false;      //! 仮想Yボタンが押されているかどうかを判定。
+		bool m_isVirtualPressLB1 = false;    //! 仮想LB1ボタンが押されているかどうかを判定。	
+		bool m_isVirtualPressLB2 = false;    //! 仮想LB2ボタンが押されているかどうかを判定。
+		bool m_isVirtualPressRB1 = false;    //! 仮想RB1ボタンが押されているかどうかを判定。
+		bool m_isVirtualPressRT = false;     //! 仮想RTボタンが押されているかどうかを判定。
+
+		/* トリガー判定用（前フレームの記憶） */
+		bool m_prevVirtualPressA = false;    // 仮想Aボタンの前フレームの状態を記憶。
+		bool m_prevVirtualPressB = false;    // 仮想Bボタンの前フレームの状態を記憶。
+		bool m_prevVirtualPressX = false;    // 仮想Xボタンの前フレームの状態を記憶。
+		bool m_prevVirtualPressY = false;    // 仮想Yボタンの前フレームの状態を記憶。
+		bool m_prevVirtualPressLB1 = false;  // 仮想LB1ボタンの前フレームの状態を記憶。
+		bool m_prevVirtualPressLB2 = false;  // 仮想LB2ボタンの前フレームの状態を記憶。
+		bool m_prevVirtualPressRB1 = false;  // 仮想RB1ボタンの前フレームの状態を記憶。
+		bool m_prevVirtualPressRT = false;   // 仮想RTボタンの前フレームの状態を記憶。
 	};
 }
