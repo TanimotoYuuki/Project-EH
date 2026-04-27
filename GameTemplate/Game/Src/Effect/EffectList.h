@@ -18,10 +18,17 @@ namespace nsApp
 		*/
 		enum Effect_ID : uint8_t
 		{
-			Attack,    //! 攻撃エフェクト。
-			Charge,    //! チャージエフェクト。
-			Fire,      //! 炎エフェクト。
-			ShockWave, //! 衝撃波エフェクト。
+			Attack,         //! 攻撃エフェクト。
+			Charge,         //! チャージエフェクト。
+			Fire,           //! 炎エフェクト。
+			ShockWave,      //! 衝撃波エフェクト。
+
+			NormalMagic,    //! 通常魔法エフェクト。
+			RushMagic,      //! 連打魔法エフェクト。
+			AirMagic,       //! 空中魔法エフェクト。
+			HeelMagic,      //! 回復エフェクト。
+			HeelMagic_Particle,
+			MagicAttack,    //! 魔法攻撃エフェクト。
 		};
 
 		class EffectList
@@ -36,12 +43,21 @@ namespace nsApp
 			/* エフェクトを初期化。*/
 			void Init();
 
-			/* エフェクトを再生。*/
+			/* 
+			 * @def エフェクトを再生。
+			 * @param id: エフェクトの識別子。
+			 * @param position: エフェクトの出現位置。
+			 * @param angle: エフェクトの回転角度。
+			 * @param scale: エフェクトの拡大率。
+			 */
 			nsK2EngineLow::EffectEmitter* PlayEffect(Effect_ID id, const Vector3& position, const Quaternion& angle = Quaternion::Identity, const Vector3& scale = Vector3::One);
 
 
 		public:
-			/* ファイルパスを登録。*/
+			/*
+			 * @def ファイルパスを登録。
+			 * @pararm name: エフェクトのファイル名。
+			 */
 			inline const std::u16string GetEffectFilePath(const std::u16string name)
 			{
 				const std::u16string path = u"Assets/effect/" + name + u".efk";
@@ -57,11 +73,15 @@ namespace nsApp
 			/* Hammer。*/
 			void StorageHammerEffect();
 
+			/* Wand。*/
+			void StorageWandEffect();
+
+
 
 		private:
-			std::unordered_map<Effect_ID, std::u16string> m_effectPathList;
+			std::unordered_map<Effect_ID, std::u16string> m_effectPathList; //! エフェクトの識別子とファイルパスを管理するマップ。
 
-			EffectEmitter* m_effectEmitter = nullptr;
+			EffectEmitter* m_effectEmitter = nullptr;						//! エフェクトクラスのインスタンス。
 		};
 	}
 }

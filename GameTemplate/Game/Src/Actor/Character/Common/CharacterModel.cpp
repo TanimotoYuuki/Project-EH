@@ -13,6 +13,7 @@ namespace nsApp
 		/* プレイヤーモデル。*/
 		m_filePathList[CharacterModelType::Player_2P] = GetCharacterModelFilePath("2p/player_2p");                    //! 2Pモデル。
 		m_filePathList[CharacterModelType::Player_3P] = GetCharacterModelFilePath("3p/Player_3P");                    //! 3Pモデル。
+		m_filePathList[CharacterModelType::Player_4P] = GetCharacterModelFilePath("4p/Player_4P");                    //! 4Pモデル。
 
 		/* ボスモデル。*/
 		m_filePathList[CharacterModelType::Enemy_Tutorial] = GetCharacterModelFilePath("TutorialBoss/TutorialBoss");
@@ -26,6 +27,8 @@ namespace nsApp
 		m_filePathList[CharacterModelType::Weapon_GreatSword] = GetWeaponModelFilePath("GreatSword");
 		/* ハンマー。*/
 		m_filePathList[CharacterModelType::Weapon_Hammer] = GetWeaponModelFilePath("Hammer");
+		/* 杖。*/ 
+		m_filePathList[CharacterModelType::Weapon_Wand] = GetWeaponModelFilePath("Wand");
 	}
 
 

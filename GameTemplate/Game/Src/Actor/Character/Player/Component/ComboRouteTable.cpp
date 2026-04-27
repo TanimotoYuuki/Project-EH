@@ -14,7 +14,7 @@ namespace nsApp
 			PLAYER_STATE_ID::enNormalAttack,
 			{
 			    /* 連続攻撃の開始。*/
-				{ ComboInputType::RushB, 20, PLAYER_STATE_ID::enRushStart},
+				{ ComboInputType::RushB, 10, PLAYER_STATE_ID::enRushStart},
 				/* 連続攻撃の終了。*/
 				{ ComboInputType::PressB, 15, PLAYER_STATE_ID::enRushEnd},
 				/* 重攻撃に派生。*/
@@ -28,6 +28,14 @@ namespace nsApp
 			    /* 斬り上げ攻撃への派生。*/
 				{ ComboInputType::PressLB2, 10, PLAYER_STATE_ID::enSlashUp },
 			},
+		},
+		{
+			/* パターン3: チャージ攻撃からの派生。*/ 
+			PLAYER_STATE_ID::enCharging,
+			{
+			    /* Bボタンを離したらチャージ攻撃状態へ。*/
+			    { ComboInputType::PressB, 0, PLAYER_STATE_ID::enChargeAttack},
+		    },
 		},
 	};
 

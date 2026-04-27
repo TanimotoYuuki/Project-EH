@@ -127,6 +127,10 @@ namespace nsApp
 
 		bool PlayerAttackBaseState::CheckCombo(PLAYER_STATE_ID currentStateID, uint8_t& id)
 		{
+			/* playerクラスが存在するか検知。*/
+			if (!m_player)
+				return false;
+
 			/* 地上にいるかどうかを確認。*/ 
 			m_isGrounded = m_player->GetCharacterController().IsOnGround();
 
@@ -146,7 +150,6 @@ namespace nsApp
 					return true;
 				}
 			}
-
 			return false;
 		}
 	}

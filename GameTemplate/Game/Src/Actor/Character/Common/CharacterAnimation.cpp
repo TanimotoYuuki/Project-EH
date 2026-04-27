@@ -17,6 +17,13 @@ namespace nsApp
 		InitHammerBasicAnimationFilePath();
 		/* 攻撃動作用。*/
 		InitHammerAnimationFilePath();
+
+		/* 杖キャラクターのアニメーションファイルパスを初期化。*/
+		/* 基本動作用。*/
+		InitWandBasicAnimationFilePath();
+		/* 攻撃動作用。*/
+		InitWandAttackAnimationFilePath();
+
 	}
 
 
@@ -141,6 +148,71 @@ namespace nsApp
 
 		/* 登録データをリストに登録。*/
 		m_weaponDataList[WeaponType::Hammer] = m_hammerData;
+	}
+
+
+	void CharacterAnimation::InitWandBasicAnimationFilePath()
+	{
+		/* 待機状態。*/
+		m_basicAnimationFilePathList[CharacterBasicAnimationList::Idle] = GetBasicAnimationFilePath("Wand/Idle");
+
+		/* 歩き状態。*/
+		m_basicAnimationFilePathList[CharacterBasicAnimationList::Walk] = GetBasicAnimationFilePath("Wand/Walk");
+
+		/* 走り状態。*/
+		m_basicAnimationFilePathList[CharacterBasicAnimationList::Run] = GetBasicAnimationFilePath("Wand/Run");
+
+		/* ジャンプ状態。*/
+		m_basicAnimationFilePathList[CharacterBasicAnimationList::Jump] = GetBasicAnimationFilePath("Wand/Jump");
+
+		/* 被弾状態。*/
+		m_basicAnimationFilePathList[CharacterBasicAnimationList::Hit_Fly] = GetBasicAnimationFilePath("Wand/Hit");
+
+		/* 起き上がり状態。*/
+		m_basicAnimationFilePathList[CharacterBasicAnimationList::Hit_UP] = GetBasicAnimationFilePath("Wand/GetUp");
+
+		/* 死亡状態。*/
+		m_basicAnimationFilePathList[CharacterBasicAnimationList::Death] = GetBasicAnimationFilePath("Wand/Deth");
+
+		/* ガード状態。*/
+		m_basicAnimationFilePathList[CharacterBasicAnimationList::Guard] = GetBasicAnimationFilePath("Wand/Guard");
+
+		/* 助ける状態。*/
+		m_basicAnimationFilePathList[CharacterBasicAnimationList::Help] = GetBasicAnimationFilePath("Wand/Help");
+
+		/* 登録したアニメーションをリストに登録。*/
+		m_weaponDataList[WeaponType::Wand] = m_wandData;
+	}
+
+
+	void CharacterAnimation::InitWandAttackAnimationFilePath()
+	{
+		/* 通常攻撃。*/
+		m_wandData.weaponAnimationList[AttackType::NormalAttack] = GetWeaponAnimationFilePath("Wand/NormalAttack");
+
+        /* 連打攻撃。*/
+		m_wandData.weaponAnimationList[AttackType::RushAttack_Start] = GetWeaponAnimationFilePath("Wand/RushAttack");
+
+        /* 空中攻撃。*/
+		m_wandData.weaponAnimationList[AttackType::AirAttack] = GetWeaponAnimationFilePath("Wand/ChargeAttack");
+
+		/* 斬り上げ枠。*/
+		m_wandData.weaponAnimationList[AttackType::SlashUp] = GetWeaponAnimationFilePath("Wand/AirAttack");
+
+        /* チャージ中。*/
+		m_wandData.weaponAnimationList[AttackType::Charging] = GetWeaponAnimationFilePath("Wand/Charging");
+
+		/* チャージ攻撃。*/
+		m_wandData.weaponAnimationList[AttackType::ChargeAttack] = GetWeaponAnimationFilePath("Wand/ChargeAttack");
+
+		/* 魔法攻撃。*/
+		m_wandData.weaponAnimationList[AttackType::MagicAttack] = GetWeaponAnimationFilePath("Wand/MagicAttack");
+
+		/* 回復魔法。*/
+		m_wandData.weaponAnimationList[AttackType::HeelMagic] = GetWeaponAnimationFilePath("Wand/HeelMagic");
+
+		/* アニメーションデータをリストに登録。*/
+		m_weaponDataList[WeaponType::Wand] = m_wandData;
 	}
 
 
