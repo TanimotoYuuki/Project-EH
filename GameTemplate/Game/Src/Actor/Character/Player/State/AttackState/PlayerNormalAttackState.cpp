@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "PlayerNormalAttackState.h"
-
+#include "Src/Actor/Magic/MagicProjectotile.h"
 
 namespace
 {
@@ -22,6 +22,7 @@ namespace nsApp
 			/* 攻撃アニメーションを再生する。*/ 
 			m_player->PlayWeaponAnimation(AttackType::NormalAttack);
 
+			/* 当たり判定を付与。*/
 			m_player->GetWeaponHitDetection().Enable();
 		}
 
@@ -31,6 +32,12 @@ namespace nsApp
 			if (!m_player)
 				return;
 
+			if (m_attackTimer == 18)
+			{
+				/* WandCharacterを選択時、通常攻撃の際、ミサイルを飛ばす処理。*/
+				SummonMissile();
+			}
+
 			/* 更新作業。*/
 			PlayerAttackBaseState::Update();
 		}
@@ -39,6 +46,21 @@ namespace nsApp
 		bool PlayerNormalAttackState::RequestID(uint8_t& id)
 		{
 			return CheckCombo(nsActor::PlayerStateID::enNormalAttack, id);
+		}
+
+
+		void PlayerNormalAttackState::SummonMissile()
+		{
+			if(m_player->GetCurrentWeapon() == WeaponType::Wand)
+			{
+				m_spawnPosition = m_player->GetWeaponHitDetection().GetPosition();
+				m_spawnPosition.y += 10.0f;
+				m_spawnPosition += m_player->GetForwardVector() * 10.0f;
+
+				/* ミサイルを生成する。*/
+				auto* normalMagicMissile = NewGO<nsActor::MagicProjectotile>(0, "NormalMagic");
+				normalMagicMissile->Initialize(nsActor::MagicType::enNormalMagic, m_spawnPosition, m_player->GetForwardVector());
+			}
 		}
 	}
 }

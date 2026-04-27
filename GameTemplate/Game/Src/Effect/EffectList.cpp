@@ -12,6 +12,9 @@ namespace nsApp
 
 			/* ハンマーのエフェクトパスを登録する。*/
 			StorageHammerEffect();
+
+			/* 杖のエフェクトのパスを登録する。*/
+			StorageWandEffect();
 		}
 
 
@@ -38,6 +41,30 @@ namespace nsApp
 
 			EffectEngine::GetInstance()->ResistEffect(Effect_ID::ShockWave, m_effectPathList[Effect_ID::ShockWave].c_str());
 
+		}
+
+
+		void EffectList::StorageWandEffect()
+		{
+			/* 回復魔法(回復部分)を登録。*/
+			m_effectPathList[Effect_ID::HeelMagic] = GetEffectFilePath(u"heelEffect_Heel");
+
+			/* 回復魔法(パーティクル)を登録。*/
+			m_effectPathList[Effect_ID::HeelMagic_Particle] = GetEffectFilePath(u"heelEffect_Particle");
+
+			/* 魔法攻撃を登録。*/
+			m_effectPathList[Effect_ID::MagicAttack] = GetEffectFilePath(u"magicAttack");
+
+
+			/* エフェクトを登録。*/
+			/* 回復エフェクト。*/
+			EffectEngine::GetInstance()->ResistEffect(Effect_ID::HeelMagic, m_effectPathList[Effect_ID::HeelMagic].c_str());
+
+			/* 回復エフェクトのパーティクル部分。*/
+			EffectEngine::GetInstance()->ResistEffect(Effect_ID::HeelMagic_Particle, m_effectPathList[Effect_ID::HeelMagic_Particle].c_str());
+
+			/* 魔法攻撃エフェクト。*/
+			EffectEngine::GetInstance()->ResistEffect(Effect_ID::MagicAttack, m_effectPathList[Effect_ID::MagicAttack].c_str());
 		}
 
 

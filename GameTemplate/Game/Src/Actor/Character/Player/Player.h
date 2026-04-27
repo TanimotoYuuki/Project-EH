@@ -43,6 +43,8 @@ namespace nsApp
 			enHeavyAttack,	  //! 重攻撃状態。
 			enCharging,       //! チャージ状態。
 			enChargeAttack,   //! チャージ攻撃状態。
+			enMagicAttack,	  //! 魔法攻撃状態。
+			enHeelMagic,	  //! 回復魔法状態。
 			enAirAttack,	  //! 空中攻撃状態。
 			enComboAttack,	  //! コンボ攻撃状態 1段目。
 			enComboLink,	  //! コンボ攻撃状態 2段目。
@@ -52,6 +54,8 @@ namespace nsApp
 			enSlashUp,        //! 斬り上げ状態。
 			enPushForward,    //! 突き進む攻撃状態。
 		};
+
+
 
 		class Player : public ICharacter
 		{
@@ -93,7 +97,7 @@ namespace nsApp
 			nsActor::Player* SearchCharacter();
 
 			/* 現在扱う武器のSEを止める処理。*/
-			inline void StopWeaponSE()
+		    void StopWeaponSE()
 			{
 				if (m_currentWeaponSE != nullptr)
 				{

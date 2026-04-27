@@ -8,6 +8,12 @@ namespace
 	const auto CHARGE_FLAG_FALSE = 0;
 }
 
+/** @def
+ *  RTボタン判定。
+ *  エンジン内でのボタン判定はRT2だが、XboxコントローラーだとRTに該当し、視認性が悪いため定義する。
+ */
+#define BUTTON_RT enButtonRB2
+
 namespace nsApp
 {
 	void PlayerInput::Update()
@@ -114,7 +120,7 @@ namespace nsApp
 		/* チャージ攻撃開始。
 		 * 5F以上(長押し) Bボタンを押しているかを判定。
 		 */ 
-		m_isChargeStart = (m_isPressButton && m_chargeButtonTimer >= 1);
+		m_isChargeStart = (m_isPressButton && m_chargeButtonTimer >= 12);
 
 
 		/* ガード判定。*/ 
@@ -125,5 +131,11 @@ namespace nsApp
 
 		/* 重攻撃判定。*/
 		m_isPressX = g_pad[m_padInddex]->IsTrigger(enButtonX);
+
+		/* RBボタン判定。*/
+		m_isPressRB = g_pad[m_padInddex]->IsPress(enButtonRB1);
+
+		/* RTボタン判定。*/
+		m_isPressRT = g_pad[m_padInddex]->IsPress(BUTTON_RT);
 	}
 }

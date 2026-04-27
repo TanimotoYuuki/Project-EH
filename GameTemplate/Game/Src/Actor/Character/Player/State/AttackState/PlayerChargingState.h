@@ -12,8 +12,9 @@
  */
 #define NOMINMAX
 
-#include "Src/Actor/Character/Common/IState.h"
+#include "Src/Actor/Character/Player/State/AttackState/PlayerAttackBaseState.h"
 #include "Src/Actor/Character/Player/Player.h"
+#include "Src/Actor/Character/Common/IState.h"
 #include "Src/Effect/EffectList.h"
 #include "stdint.h"
 
@@ -34,7 +35,7 @@ namespace nsApp
 
     namespace nsState
     {
-        class PlayerChargingState :public IState<nsActor::Actor>
+        class PlayerChargingState :public PlayerAttackBaseState
         {
         public:
             /* コンストラクタとデストラクタ。*/
@@ -50,7 +51,7 @@ namespace nsApp
             /* ステートの終了処理。*/
 			void Exit() override;
             /* 遷移。*/
-            bool RequestID(uint8_t& id);
+            bool RequestID(uint8_t& id) override;
 
 
         /* ヘルパー。*/
@@ -60,10 +61,10 @@ namespace nsApp
              */
             inline void ComputeEffectLevel()
             {
-                m_currentEffectLevel = (std::max)(1, (std::min)(m_chargingTimer / 30, 3));
+                m_timerValue = static_cast<int>(m_chargingTimer);
+                m_currentEffectLevel = (std::max<int>)(1, (std::min<int>)(m_timerValue / 30, 3));
                 m_player->SetChargeLevel(m_currentEffectLevel);
             }
-
 
 
         /* ゲッター。*/
@@ -74,7 +75,7 @@ namespace nsApp
             inline float GetChargeEffectScale()
             {
                 return (std::min)(10.0f +( m_chargingTimer / 5.0f), 30.0f);
-			}
+            }
 
             /**
              * @brief チャージエフェクトの座標を返す。
@@ -115,23 +116,22 @@ namespace nsApp
 
 
         private:
-			Vector3 m_effectPosition;                             //! エフェクトの座標。
-			Vector3 m_effectScale;                                //! エフェクトのスケール。
-			Vector3 m_spawnEffectPosition;                        //! エフェクトの生成座標。
-			Vector3 m_currentEffectPosition;                      //! エフェクトの現在座標。
-			Vector3 m_weaponPosition;                             //! 武器の座標。
-            Vector3 m_getPlayerPosition;                          //! プレイヤーの座標。
+			Vector3 m_effectPosition;                                   //! エフェクトの座標。
+			Vector3 m_effectScale;                                      //! エフェクトのスケール。
+			Vector3 m_spawnEffectPosition;                              //! エフェクトの生成座標。
+			Vector3 m_currentEffectPosition;                            //! エフェクトの現在座標。
+			Vector3 m_weaponPosition;                                   //! 武器の座標。
+            Vector3 m_getPlayerPosition;                                //! プレイヤーの座標。
 
-			Quaternion m_fireEffectAngle = Quaternion::Identity;  //! 炎エフェクトの角度。
+			Quaternion m_fireEffectAngle = Quaternion::Identity;        //! 炎エフェクトの角度。
 
-			int m_chargingTimer = 0;                              //! チャージ時間を管理するタイマー。
-			int m_currentEffectLevel = 0;                         //! 現在のエフェクトのレベル。
+			int m_timerValue = 0;                                       //! タイマーの値。
+			int m_chargingTimer = 0;                                    //! チャージ時間を管理するタイマー。
+			int m_currentEffectLevel = 0;                               //! 現在のエフェクトのレベル。
 
-			float m_effectScaleMultiplier = 1.0f;                 //! エフェクトの大きさの倍率。
-			float m_fireEffectScale = 0;                          //! 炎エフェクトの大きさ。
+			float m_effectScaleMultiplier = 1.0f;                       //! エフェクトの大きさの倍率。
+			float m_fireEffectScale = 0;                                //! 炎エフェクトの大きさ。
         };
-
-
     }
 }
 

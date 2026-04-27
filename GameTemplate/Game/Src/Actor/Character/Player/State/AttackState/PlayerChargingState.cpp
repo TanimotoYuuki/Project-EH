@@ -1,6 +1,11 @@
 #include "stdafx.h"
 #include "PlayerChargingState.h"
 #include "Src/Actor/Character/Player/Component/ComboRouteTable.h"
+#include "Src/Actor/Character/Player/CharacterByWeapon/WandCharacter.h"
+
+#include "Src/Actor/Character/Player/State/AttackState/ComboState/PlayerMagicAttackState.h"
+#include "Src/Actor/Character/Player/State/AttackState/ComboState/PlayerHeelMagicState.h"
+
 
 namespace
 {
@@ -45,6 +50,28 @@ namespace nsApp
 
 			/* ハンマーの炎エフェクトを生成。*/
 			CreateFireEffect();
+
+
+		////////////////////////////////////////////////////////////////////////
+			// リファ。
+			/* ボタンアクションで派生。*/
+			if (m_player->GetCurrentWeapon() == WeaponType::Wand)
+			{
+				/* RBButtonで魔法攻撃状態に遷移。*/
+				if (m_player->GetInputClass().IsPressRB())
+				{
+					m_stateMachine->ChangeState(new PlayerMagicAttackState());
+					return;
+				}
+
+				/* RTボタンで回復魔法状態に遷移。*/
+				if (m_player->GetInputClass().IsPressRT())
+				{
+					m_stateMachine->ChangeState(new PlayerHeelMagicState());
+					return;
+				}
+			}
+		////////////////////////////////////////////////////////////////////////
 		}
 
 
@@ -69,21 +96,7 @@ namespace nsApp
 
 		bool PlayerChargingState::RequestID(uint8_t& id)
 		{
-			const auto& inputClass = m_player->GetInputClass();
-
-			/* Bボタンを離した瞬間、タイマーの時間を元に派生させる */
-			if (inputClass.IsChargeAttack())
-			{
-				id = static_cast<uint8_t>(PLAYER_STATE_ID::enChargeAttack);
-				return true;
-			}
-			else if (inputClass.IsNormalAttack())
-			{
-				id = static_cast<uint8_t>(PLAYER_STATE_ID::enNormalAttack);
-				return true;
-			}
-
-			return false;
+			return CheckCombo(PLAYER_STATE_ID::enCharging, id);
 		}
 
 
@@ -96,9 +109,6 @@ namespace nsApp
 			/* 未生成の場合、処理をスキップ。*/
 			if (m_chargeEffect == nullptr)
 				return;
-
-			/* 更新。*/
-			m_chargeEffect->Update();
 
 			/* 大きさをセット。*/
 			m_chargeEffect->SetScale(Vector3::One * GetChargeEffectScale());
@@ -119,9 +129,6 @@ namespace nsApp
 			/* HammerCharacterクラスではない場合は処理をスキップする。*/
 			if (m_hammerEffect == nullptr)
 				return;
-
-			/* エフェクトを更新する。*/
-			m_hammerEffect->Update();
 
 			/* 武器の情報を取得してエフェクトを生成する。*/
 			m_weaponPosition = HIT_DETECTION.GetPosition();

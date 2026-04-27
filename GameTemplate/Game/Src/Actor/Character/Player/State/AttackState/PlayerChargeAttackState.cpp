@@ -1,6 +1,13 @@
 #include "stdafx.h"
 #include "PlayerChargeAttackState.h"
 #include "Src/Actor/Character/Player/Player.h"
+#include "Src/Actor/Character/Player/CharacterByWeapon/WandCharacter.h"
+#include "Src/Actor/Character/Player/State/AttackState/PlayerChargingState.h"
+#include "Src/Actor/Character/Player/State/AttackState/ComboState/PlayerHeelMagicState.h"
+
+
+#define PLAYER_PLAY_ANIMATION m_player->PlayWeaponAnimation
+#define CURRENT_WEAPON m_currentAttackType = AttackType
 
 namespace nsApp
 {
@@ -14,14 +21,14 @@ namespace nsApp
 			/* 武器の種類によってチャージ後の攻撃のアニメーションを変化させる。*/
 			if (m_player->GetCurrentWeapon() == WeaponType::Hammer)
 			{
-				m_currentAttackType == AttackType::HeavyAttack;
-				m_player->PlayWeaponAnimation(AttackType::ChargeAttack);
+				CURRENT_WEAPON::HeavyAttack;
+				PLAYER_PLAY_ANIMATION(AttackType::ChargeAttack);
 			}
 
 			else
 			{
-				m_currentAttackType == AttackType::ChargeAttack;
-				m_player->PlayWeaponAnimation(AttackType::ChargeAttack);
+				CURRENT_WEAPON::ChargeAttack;
+				PLAYER_PLAY_ANIMATION(AttackType::ChargeAttack);
 			}
 
 			/* 当たり判定を有効にする。*/

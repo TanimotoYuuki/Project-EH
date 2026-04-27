@@ -20,6 +20,7 @@
 
 #include "Src/Actor/Character/Player/CharacterByWeapon/SwordCharacter.h"
 #include "Src/Actor/Character/Player/CharacterByWeapon/HammerCharacter.h"
+#include "Src/Actor/Character/Player/CharacterByWeapon/WandCharacter.h"
 
 namespace nsApp
 {
@@ -67,7 +68,7 @@ namespace nsApp
 			/*フェードインに切り替える。*/
 			nsApp::nsFade::Fade::GetInstance()->ChangeFadeType(nsApp::nsFade::Fade::EnFadeType::enFadeType_FadeIn);
 
-			m_player = NewGO<nsActor::HammerCharacter>(0, "player2");
+			m_player = NewGO<nsActor::WandCharacter>(0, "player4");
 
 
 			//////////////////////////////////////////////////////////////////////

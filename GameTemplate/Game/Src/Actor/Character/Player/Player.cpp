@@ -42,13 +42,17 @@ namespace
 		int padIndex;                                   //! 要素数の何番目を用いて操作を指示するのか。
 	};
 
-	/* 生成名/識別子/コントローラーのインデックスを付与。*/
 	const PlayerSetupData SET_UP_DATA[4] =
 	{
+		/*
+		 * @brief  生成名/識別子/コントローラーのインデックスを付与。
+		 * @detail 右端のインデックス数は0がメインPCの番号となる。
+		 * @TODO:  NPC実装のためにも実装を考える必要あり。
+		 */
 		{"player1", nsApp::CharacterModelType::Player_1P, 0},
 		{"player2", nsApp::CharacterModelType::Player_2P, 0},
 		{"player3", nsApp::CharacterModelType::Player_3P, 2},
-		{"player4", nsApp::CharacterModelType::Player_4P, 3}
+		{"player4", nsApp::CharacterModelType::Player_4P, 0}
 	};
 }
 
@@ -225,7 +229,7 @@ namespace nsApp
 			/* --- ここからSE再生処理 --- */
 			/* サウンド管理クラスを探す */
 			auto soundManager = FindGO<nsSound::SoundLister>("SoundManager");
-			if (soundManager != nullptr)
+			if (soundManager != nullptr && reinterpret_cast<uint8_t>(soundManager) != 0xFFFFFFFFFFFFFFFF)
 				m_currentWeaponSE = soundManager->GetSEList().PlayAttackSE(m_currentWeapon, attack);
 		}
 
@@ -243,7 +247,7 @@ namespace nsApp
 		nsActor::Player* Player::SearchCharacter()
 		{
 			auto target = FindGO<nsActor::Player>("player2");
-			if (target != nullptr)
+			if (target != nullptr && reinterpret_cast<uintptr_t>(target) != 0xFFFFFFFFFFFFFFFF)
 			{
 				if (target->GetCharacterStatus().hp.currentHP <= 0)
 				{

@@ -36,6 +36,9 @@ namespace nsApp
 		HeavyAttack,           //! 強攻撃。
 		Charging,              //! チャージ中。
 		ChargeAttack,          //! チャージ攻撃。
+		HeelMagic,             //! 回復魔法。
+		HeelMagic_Particle,    //! 回復魔法のパーティクル。
+		MagicAttack,           //! 魔法攻撃。
 		AirAttack,             //! 空中攻撃。
 		RushAttack_Start,      //! 連続攻撃。
 		RushAttack_End,        //! 連続攻撃のループ部分。
@@ -161,6 +164,12 @@ namespace nsApp
 		/* Hammerのアニメーションパスを格納。*/
 		void InitHammerAnimationFilePath();
 
+		/* Wandの基本動作アニメーションのファイルパスを格納。*/
+		void InitWandBasicAnimationFilePath();
+
+		/* Wandの攻撃用アニメーションファイルパスを格納。*/
+		void InitWandAttackAnimationFilePath();
+
 
 	private:
 		std::unordered_map<CharacterBasicAnimationList, std::string> m_basicAnimationFilePathList;                  //! 基本動作用アニメーションのファイルパスを管理するマップ。
@@ -179,7 +188,7 @@ namespace nsApp
 		/* 武器の種類ごとに代入用変数を設定。*/
 		WeaponData m_greatSwordData;                                                                                //! 大剣のアニメーションと表示のズレを管理する変数。
 		WeaponData m_hammerData;                                                                                    //! ハンマーのアニメーションと表示のズレを管理する変数。
-		/* @TODO: 杖ともう1種類変数を追加する。*/
+		WeaponData m_wandData;                                                                                      //! 杖のアニメーションと表示のズレを管理する変数。
 
 		int m_currentIndex = 0;																						//! 現在のアニメーションの再生数を管理。
 		int m_animationNum = 0;                                                                                     //! 読み込んだアニメーションの数を管理する変数。

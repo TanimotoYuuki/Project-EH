@@ -29,6 +29,17 @@ namespace nsApp
 
 			/* 他の攻撃に遷移。*/
 			bool RequestID(uint8_t& id);
+
+
+		private:
+			/*
+			 * @brief WandCharacterを使用している場合、攻撃の際にミサイルを召喚する処理。
+			 */
+			void SummonMissile();
+
+
+		private:
+			Vector3 m_spawnPosition;        //! ミサイルの出現位置。
 		};
 	}
 }
