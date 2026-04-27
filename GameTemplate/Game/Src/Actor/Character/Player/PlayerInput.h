@@ -16,16 +16,79 @@ namespace nsApp
 
 
 	public:
-		/* 入力のオンオフを切り替える。*/
+		/** 
+		 * @brief 入力のオンオフを切り替える。
+		 * @param isEnable 入力を有効にするかどうか。
+		 */
 		inline void SetInputEnable(bool isEnable)
 		{
 			m_isInputEnable = isEnable;
 		}
 
-		/* gamepadの要素数を取得する。*/
+		/** 
+		 * @brief gamepadの要素数を受け取る。
+		 * @param index 受け取るgamepadの要素数。
+		 */
 		inline void SetPadIndex(int index)
 		{
 			m_padInddex = index;
+		}
+
+		/** 
+		 * @brief AI用の仮想コントローラー。
+		 * @param stickX スティックのX軸の値。
+		 * @param stickY スティックのY軸の値。
+		 */
+		inline void SetVirtualController(float stickX, float stickY)
+		{
+			m_virtualStickX = stickX;
+			m_virtualStickY = stickY;
+		}
+
+		/**
+		 * @brief 
+		 * @param isPress 
+		 */
+		inline void SetVirtualAttackButton(bool isPress)
+		{
+			m_isVirtualAttackPress = isPress;
+		}
+
+		/**
+		 * @brief ジャンプ/斬り上げ判定をセットする。
+		 */
+		inline void SetIsJumpAndSlashUp(bool isJump, bool isSlashUp)
+		{
+			m_isJump = isJump;
+			m_isSlashUp = isSlashUp;
+		}
+
+
+	private:
+		/** 
+		 * @brief 仮想Bボタンが押され場合、攻撃フラグを立てる。
+         */
+		inline void VirtualAttackButton()
+		{
+			/* フラグを設定。*/
+			static bool prevVirtualAttack = false;
+
+			/* 攻撃判定。*/
+			m_isAttack = (m_isPressButton && ! prevVirtualAttack);
+
+			/* データをセット。*/
+			prevVirtualAttack = m_isPressButton;
+		}
+
+		/**
+		 * @brief 仮チャージ判定を更新する。。
+		 */
+		void UpdateChargeTranslation()
+		{
+			m_chargeButtonTimer = m_isPressButton ? m_chargeButtonTimer + 1.0f : 0.0f;
+			m_isNormalAttack = (!m_isPressButton && m_chargeButtonTimer > 0.0f && m_chargeButtonTimer < 30.0f);
+			m_isChargeStart = (m_isPressButton && m_chargeButtonTimer >= 12.0f);
+			m_isChargeAttack = (!m_isPressButton && m_chargeButtonTimer >= 30.0f);
 		}
 
 
@@ -157,6 +220,30 @@ namespace nsApp
 			return m_isPressRT;
 		}
 
+		/* gamepad の要素数を受け取る。*/
+		inline int GetPadIndex() const
+		{
+			return m_padInddex;
+		}
+
+		/**
+         * @brief Press入力判定があるかチェックする。
+         * @param コントローラーの列挙型をセットする。
+         */
+		inline bool CheckButtonPress(nsK2EngineLow::EnButton inputButtonType)
+		{
+			return g_pad[m_padInddex]->IsPress(inputButtonType);
+		}
+
+		/**
+		 * @brief Trigger入力判定があるかチェックする。
+		 * @param コントローラーの列挙型をセットする。
+		 */
+		inline bool CheckButtonTrigger(nsK2EngineLow::EnButton inputButtonType)
+		{
+			return g_pad[m_padInddex]->IsTrigger(inputButtonType);
+		}
+
 
 	private:
 		bool m_isAttack = false;             //! 攻撃したかどうかを判定。
@@ -181,10 +268,13 @@ namespace nsApp
 		bool m_isPressX = false;             //! Xボタンが押されているかどうかを判定。
 		bool m_isPressRB = false;            //! RBボタンが押されているかどうかを判定。
 		bool m_isPressRT = false;			 //! RTボタンが押されているかどうかを判定。
+		bool m_isVirtualAttackPress = false; //! 
 
 		float m_stickX = 0.0f;               //! スティックのX軸の値。
 		float m_stickY = 0.0f;               //! スティックのY軸の値。
 		float m_chargeButtonTimer = 0.0f;    //! チャージ攻撃と判定するために必要なBボタンを長押ししなければならない時間。
+		float m_virtualStickX = 0.0f;        //! 仮想スティックのX軸の値。
+		float m_virtualStickY = 0.0f;        //! 仮想スティックのY軸の値。
 
 		int m_padInddex = 0;                 //! 入力を検知するパッドのインデックス。
 
