@@ -55,9 +55,9 @@ namespace nsApp
 	{
 		GreatSword, //! 大剣。
 		Hammer,     //! ハンマー。
-		TwinSword,  //! 双剣。
-		Wand,       /* 杖。*/
-		None,       /* 武器なし。*/
+		Wand,       //! 杖。
+		TwinGun,    //! 双銃。
+		None,       //! 武器なし。
 	};
 
 	/* 武器ごとのアニメーションと表示のズレをまとめた構造体。*/
@@ -83,7 +83,7 @@ namespace nsApp
 
 	public:
 		/* 初期化処理。*/
-		void Initialize();
+		void Initialize(WeaponType kind);
 
 		/* 武器を持ち替えたときに呼んで必要なアニメーションを読み込む。
 		* @param weaponType 持ち替える武器のタイプ。
@@ -170,6 +170,12 @@ namespace nsApp
 		/* Wandの攻撃用アニメーションファイルパスを格納。*/
 		void InitWandAttackAnimationFilePath();
 
+		/* TwinGunの基本動作用アニメーションのファイルパスを格納。*/
+		void InitTwinGunBasicAnimationFilePath();
+
+		/* TwinGunの攻撃用アニメーションファイルパスを格納。*/
+		void InitTwinGunAttackAnimationFilePath();
+
 
 	private:
 		std::unordered_map<CharacterBasicAnimationList, std::string> m_basicAnimationFilePathList;                  //! 基本動作用アニメーションのファイルパスを管理するマップ。
@@ -189,6 +195,7 @@ namespace nsApp
 		WeaponData m_greatSwordData;                                                                                //! 大剣のアニメーションと表示のズレを管理する変数。
 		WeaponData m_hammerData;                                                                                    //! ハンマーのアニメーションと表示のズレを管理する変数。
 		WeaponData m_wandData;                                                                                      //! 杖のアニメーションと表示のズレを管理する変数。
+		WeaponData m_twinGunData;                                                                                   //! 双銃のアニメーションと表示のズレを管理する変数。
 
 		int m_currentIndex = 0;																						//! 現在のアニメーションの再生数を管理。
 		int m_animationNum = 0;                                                                                     //! 読み込んだアニメーションの数を管理する変数。

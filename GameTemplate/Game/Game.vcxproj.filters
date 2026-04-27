@@ -172,6 +172,8 @@
     <ClCompile Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerHeelMagicState.cpp" />
     <ClCompile Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerMagicAttackState.cpp" />
     <ClCompile Include="Src\Actor\Magic\MagicProjectotile.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\CharacterByWeapon\TwinGunCharacter.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\Component\PlayerGenerator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -305,5 +307,8 @@
     <ClInclude Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerHeelMagicState.h" />
     <ClInclude Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerMagicAttackState.h" />
     <ClInclude Include="Src\Actor\Magic\MagicProjectotile.h" />
+    <ClInclude Include="Src\Actor\Character\Player\CharacterByWeapon\TwinGunCharacter.h" />
+    <ClInclude Include="Src\Actor\Character\Player\Component\PlayerSpawnData.h" />
+    <ClInclude Include="Src\Actor\Character\Player\Component\PlayerGenerator.h" />
   </ItemGroup>
 </Project>

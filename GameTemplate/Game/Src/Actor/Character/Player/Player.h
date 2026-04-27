@@ -11,6 +11,7 @@
 #include "Src/Actor/Character/Common/ICharacter.h"
 #include "Src/Actor/Character/Common/CharacterAnimation.h"
 #include "Src/Actor/Character/Common/WeaponHitDetection.h"
+#include "Src/Actor/Character/Player/Component/PlayerSpawnData.h"
 
 #include "Src/Effect/EffectList.h"
 namespace nsApp
@@ -46,9 +47,7 @@ namespace nsApp
 			enMagicAttack,	  //! 魔法攻撃状態。
 			enHeelMagic,	  //! 回復魔法状態。
 			enAirAttack,	  //! 空中攻撃状態。
-			enComboAttack,	  //! コンボ攻撃状態 1段目。
-			enComboLink,	  //! コンボ攻撃状態 2段目。
-			enComboFinish,	  //! コンボ攻撃状態 3段目。
+			enComboAttack,	  //! コンボ攻撃状態。
 			enRushStart,	  //! 連続攻撃状態。
 			enRushEnd,		  //! 連続攻撃のループ状態。
 			enSlashUp,        //! 斬り上げ状態。
@@ -63,6 +62,23 @@ namespace nsApp
 		    /* コンストラクタとデストラクタ。*/
 			Player() = default;
 			virtual ~Player() = default;
+
+			/*  
+			 * @def PlayerGeneratorにてコールする。
+			 * @brief PlayerGeneratorクラスからデータを受け取る処理。
+			 * @param data: 生成時に必要な構造体のデータを取得する。
+			 */
+			inline virtual void InitializeSpawnData(const PlayerSpawnData& data)
+			{
+				/* コントローラーの種類をセット。*/
+				m_playerInput.SetPadIndex(static_cast<int>(data.controllerType));
+
+				/* 設定座標にスポーン。*/
+				m_currentPosition = data.spawnPosition;
+
+				/* キャラコンをセット。*/
+				m_characterController.SetPosition(m_currentPosition);
+			}
 
 
 		public:
@@ -235,6 +251,7 @@ namespace nsApp
 		private:
 			nsK2EngineLow::EffectEmitter* m_chargeEffect = nullptr;                                                //! チャージエフェクトのリモコン       
 			nsK2EngineLow::SoundSource* m_currentWeaponSE = nullptr;                                               //! 現在の武器のSEのリモコン
+
 
 		protected:
 			CharacterAnimation m_playerAnimation;                                                                  //! プレイヤーのアニメーション。
