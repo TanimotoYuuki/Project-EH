@@ -1,25 +1,32 @@
 #pragma once
 /**
-* @file   NPCAttackState.h
-* @brief  NPCの攻撃状態を管理するクラス。
-* @author Yamaguchi Hayato
-* @date   2026/04/28
-*/
+ * @file   NPCAttackState.h
+ * @brief  NPCの攻撃状態を管理するクラス。
+ * @author Yamaguchi Hayato
+ * @date   2026/04/28
+ */
 
 #include "Src/Actor/Character/NPC/NPCBrain.h"
 #include "Src/Actor/Character/Common/IState.h"
+#include "Src/Actor/Character/Player/PlayerInput.h"
 #include "Src/Actor/Character/Common/CharacterAnimation.h"
 
 namespace nsApp
 {
 	namespace nsState
 	{
+		/*
+		 * @enum NPCComboPattern。
+		 * @brief NPCの攻撃コンボのパターンを管理する列挙型。
+		 */
 		enum class NPCComboPattern : uint8_t
 		{
-			enMelee_Attack, //! B連打コンボ。
-			enMelee_Heavy,  //! B → Xの攻撃コンボ。
-			enMagic_Attack, //! RBの遠距離攻撃コンボ。
-			enMagic_Heel,   //! RTの回復魔法コンボ。
+			enMelee_Rush,   //! 通常 -> 連続攻撃
+			enMelee_Heavy,  //! 通常 -> 重攻撃
+			enMelee_Push,   //! ダッシュ攻撃(突き進み)
+			enMelee_Air,    //! ダッシュ -> 斬り上げ -> 空中攻撃（激アツコンボ！）
+			enMagic_Attack, //! 遠距離魔法
+			enMagic_Heal,   //! 回復魔法
 			enNone          //! コンボなし。
 		};
 
@@ -40,14 +47,38 @@ namespace nsApp
 
 
 		private:
-			NPCBrain* m_brain = nullptr; //! NPCの親クラスのポインタ。
+			/* 
+			 * @brief コンボの種類ごとに実行関数を作成。
+			 * @param body: NPCの体。
+			 */
+			/* B連打コンボ。 */
+			void ExecuteMeleeRush(nsActor::Player* body);
+
+			/* 重攻撃コンボ。*/
+			void ExecuteMeleeHeavy(nsActor::Player* body);
+
+			/* 中継コンボ。*/
+			void ExecuteMeleePush(nsActor::Player* body);
+
+			/* 空中コンボ。*/
+			void ExecuteMeleeAir(nsActor::Player* body);
+
+			/* RBの遠距離攻撃コンボ。*/
+			void ExecuteMagicAttack(nsActor::Player* body);
+
+			/* 回復魔法。*/
+			void ExecuteMagicHeal(nsActor::Player* body);
 
 
 		private:
-			int m_attackTimer = 0;       //! 攻撃のタイマー。
+			NPCBrain* m_brain = nullptr;                                //! NPCの親クラスのポインタ。
 
-			NPCComboPattern m_currentPattern = NPCComboPattern::enNone;
-			WeaponType m_myWeaponType = WeaponType::None;
+
+		private:
+			int m_attackTimer = 0;                                      //! 攻撃のタイマー。
+
+			NPCComboPattern m_currentPattern = NPCComboPattern::enNone; //! 現在の攻撃コンボのパターン。
+			WeaponType m_myWeaponType = WeaponType::None;               //! NPCの現在の武器の種類。
 		};
 
 	}

@@ -62,6 +62,10 @@ namespace nsApp
 					{ inputClass.IsGuard(), nsActor::PlayerStateID::enGuard},
 					/* 助ける状態。*/
 					{ inputClass.IsHelp(), nsActor::PlayerStateID::enHelp},
+					/* 魔法攻撃状態。*/
+					{ inputClass.IsPressRB(), nsActor::PlayerStateID::enMagicAttack},
+					/* 回復魔法状態。*/
+					{ inputClass.IsPressRT(), nsActor::PlayerStateID::enHeelMagic},
 				};
 
 

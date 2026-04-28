@@ -1,9 +1,9 @@
 #pragma once
 /**
-* @file NPCIdleState.h
-* @brief NPCの待機状態を管理するクラス。
+* @file   NPCIdleState.h
+* @brief  NPCの待機状態を管理するクラス。
 * @author Yamaguchi Hayato
-* @date 2026/04/27
+* @date   2026/04/27
 */
 
 #include "Src/Actor/Character/NPC/NPCBrain.h"

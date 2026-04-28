@@ -66,8 +66,13 @@ namespace nsApp
 				return;
 			}
 
+
+			auto attackRange = 60.0f;
+			if (body->GetCurrentWeapon() == WeaponType::Wand)
+				attackRange = 100.0f;
+
 			m_difference = target->GetPosition() - body->GetPosition();
-			if (m_difference.Length() > 80.0f)
+			if (m_difference.Length() > attackRange)
 			{
 				/* ‹——£‚ª‰“‚¯‚ê‚Î‹ß‚Ã‚­B*/
 				m_difference.Normalize();
