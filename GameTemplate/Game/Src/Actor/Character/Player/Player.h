@@ -12,6 +12,8 @@
 #include "Src/Actor/Character/Common/CharacterAnimation.h"
 #include "Src/Actor/Character/Common/WeaponHitDetection.h"
 #include "Src/Actor/Character/Player/Component/PlayerSpawnData.h"
+#include "Src/Actor/Character/NPC/NPCBrain.h"
+
 
 #include "Src/Effect/EffectList.h"
 namespace nsApp
@@ -61,7 +63,7 @@ namespace nsApp
 		public:
 		    /* コンストラクタとデストラクタ。*/
 			Player() = default;
-			virtual ~Player() = default;
+			virtual ~Player();
 
 			/*  
 			 * @def PlayerGeneratorにてコールする。
@@ -97,6 +99,9 @@ namespace nsApp
 
 			/* ダミーモデルの初期化。*/
 			void InitDummyModel();
+
+			/* すり抜け計算。*/
+			void ComputeSlipThrough();
 
 
 		public:
@@ -194,7 +199,7 @@ namespace nsApp
 			}
 
 			/* 入力判定クラスを取得。*/
-			inline const PlayerInput GetInputClass() const
+			inline  PlayerInput& GetInputClass() 
 			{
 				return m_playerInput;
 			}
@@ -251,6 +256,7 @@ namespace nsApp
 		private:
 			nsK2EngineLow::EffectEmitter* m_chargeEffect = nullptr;                                                //! チャージエフェクトのリモコン       
 			nsK2EngineLow::SoundSource* m_currentWeaponSE = nullptr;                                               //! 現在の武器のSEのリモコン
+			NPCBrain* m_brain = nullptr; //! NPCの親クラスのポインタ。
 
 
 		protected:
@@ -290,6 +296,8 @@ namespace nsApp
 			int m_chargeLevel = 1;                                                                                 //! チャージレベル。
 
 			float m_fallVelocity = 0.0f;                                                                           //! 落下速度。
+
+			bool m_isIgnorePlayerSet = false;
 		};
 	}
 }

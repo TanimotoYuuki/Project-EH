@@ -1,14 +1,14 @@
-#pragma once
+ï»¿#pragma once
 /**
  * @file PlayerInput.h
- * @brief ƒvƒŒƒCƒ„[‚Ì“ü—Í‚ğŠÇ—‚·‚éƒNƒ‰ƒXB
+ * @brief ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®å…¥åŠ›ã‚’ç®¡ç†ã™ã‚‹ã‚¯ãƒ©ã‚¹ã€‚
  * @author Yamaguchi Hayato
  * @date 2026/03/15
  */
 
  /** @def
-  *  RTƒ{ƒ^ƒ“”»’èB
-  *  ƒGƒ“ƒWƒ““à‚Å‚Ìƒ{ƒ^ƒ“”»’è‚ÍRT2‚¾‚ªAXboxƒRƒ“ƒgƒ[ƒ‰[‚¾‚ÆRT‚ÉŠY“–‚µA‹”F«‚ªˆ«‚¢‚½‚ß’è‹`‚·‚éB
+  *  RTãƒœã‚¿ãƒ³åˆ¤å®šã€‚
+  *  ã‚¨ãƒ³ã‚¸ãƒ³å†…ã§ã®ãƒœã‚¿ãƒ³åˆ¤å®šã¯RT2ã ãŒã€Xboxã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼ã ã¨RTã«è©²å½“ã—ã€è¦–èªæ€§ãŒæ‚ªã„ãŸã‚å®šç¾©ã™ã‚‹ã€‚
   */
 #define BUTTON_RT enButtonRB2
 
@@ -18,31 +18,32 @@ namespace nsApp
 	class PlayerInput
 	{
 	public:
-		/* “ü—Í”»’è‚ÌXVB*/
+		/* å…¥åŠ›åˆ¤å®šã®æ›´æ–°ã€‚*/
 		void Update();
 
 		/**
-		 * @brief Press“ü—Í”»’è‚ª‚ ‚é‚©ƒ`ƒFƒbƒN‚·‚éB
-		 * @param ƒRƒ“ƒgƒ[ƒ‰[‚Ì—ñ‹“Œ^‚ğƒZƒbƒg‚·‚éB
+		 * @brief Presså…¥åŠ›åˆ¤å®šãŒã‚ã‚‹ã‹ãƒã‚§ãƒƒã‚¯ã™ã‚‹ã€‚
+		 * @param ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼ã®åˆ—æŒ™å‹ã‚’ã‚»ãƒƒãƒˆã™ã‚‹ã€‚
 		 */
 		bool CheckButtonPress(nsK2EngineLow::EnButton inputButtonType);
 
 		/**
-		 * @brief Trigger“ü—Í”»’è‚ª‚ ‚é‚©ƒ`ƒFƒbƒN‚·‚éB
-		 * @param ƒRƒ“ƒgƒ[ƒ‰[‚Ì—ñ‹“Œ^‚ğƒZƒbƒg‚·‚éB
+		 * @brief Triggerå…¥åŠ›åˆ¤å®šãŒã‚ã‚‹ã‹ãƒã‚§ãƒƒã‚¯ã™ã‚‹ã€‚
+		 * @param ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼ã®åˆ—æŒ™å‹ã‚’ã‚»ãƒƒãƒˆã™ã‚‹ã€‚
 		 */
 		bool CheckButtonTrigger(nsK2EngineLow::EnButton inputButtonType);
 
 		/**
-         * @brief ƒWƒƒƒ“ƒv/a‚èã‚°”»’è‚ğƒZƒbƒg‚·‚éB
+         * @brief ã‚¸ãƒ£ãƒ³ãƒ—/æ–¬ã‚Šä¸Šã’åˆ¤å®šã‚’ã‚»ãƒƒãƒˆã™ã‚‹ã€‚
          */
 		void EvaluateJumpAndSlashUp();
 
 
+	/* ã‚»ãƒƒã‚¿ãƒ¼ã€‚*/
 	public:
 		/** 
-		 * @brief “ü—Í‚ÌƒIƒ“ƒIƒt‚ğØ‚è‘Ö‚¦‚éB
-		 * @param isEnable “ü—Í‚ğ—LŒø‚É‚·‚é‚©‚Ç‚¤‚©B
+		 * @brief å…¥åŠ›ã®ã‚ªãƒ³ã‚ªãƒ•ã‚’åˆ‡ã‚Šæ›¿ãˆã‚‹ã€‚
+		 * @param isEnable å…¥åŠ›ã‚’æœ‰åŠ¹ã«ã™ã‚‹ã‹ã©ã†ã‹ã€‚
 		 */
 		inline void SetInputEnable(bool isEnable)
 		{
@@ -50,8 +51,8 @@ namespace nsApp
 		}
 
 		/** 
-		 * @brief gamepad‚Ì—v‘f”‚ğó‚¯æ‚éB
-		 * @param index ó‚¯æ‚égamepad‚Ì—v‘f”B
+		 * @brief gamepadã®è¦ç´ æ•°ã‚’å—ã‘å–ã‚‹ã€‚
+		 * @param index å—ã‘å–ã‚‹gamepadã®è¦ç´ æ•°ã€‚
 		 */
 		inline void SetPadIndex(int index)
 		{
@@ -59,9 +60,9 @@ namespace nsApp
 		}
 
 		/** 
-		 * @brief AI—p‚Ì‰¼‘zƒRƒ“ƒgƒ[ƒ‰[B
-		 * @param stickX ƒXƒeƒBƒbƒN‚ÌX²‚Ì’lB
-		 * @param stickY ƒXƒeƒBƒbƒN‚ÌY²‚Ì’lB
+		 * @brief AIç”¨ã®ä»®æƒ³ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼ã€‚
+		 * @param stickX ã‚¹ãƒ†ã‚£ãƒƒã‚¯ã®Xè»¸ã®å€¤ã€‚
+		 * @param stickY ã‚¹ãƒ†ã‚£ãƒƒã‚¯ã®Yè»¸ã®å€¤ã€‚
 		 */
 		inline void SetVirtualController(float stickX, float stickY)
 		{
@@ -69,59 +70,109 @@ namespace nsApp
 			m_virtualStickY = stickY;
 		}
 
-		/* AI—p‰¼‘zƒRƒ“ƒgƒ[ƒ‰[‚Ì‘OƒtƒŒ[ƒ€•Û‘¶—p‚ÌƒZƒbƒ^[ŒQB*/
-		/* Aƒ{ƒ^ƒ“B*/
+		/* æŠ¼ã™/é›¢ã™ç”¨ã€‚*/
+		/* Aãƒœã‚¿ãƒ³ã€‚*/
+		inline void SetVirtualButtonA(bool isPress)
+		{
+			m_isVirtualPressA = isPress; 
+		}
+
+		/* Bãƒœã‚¿ãƒ³ã€‚*/
+		inline void SetVirtualButtonB(bool isPress) 
+		{
+			m_isVirtualPressB = isPress; 
+		}
+
+		/* Xãƒœã‚¿ãƒ³ã€‚*/
+		inline void SetVirtualButtonX(bool isPress) 
+		{
+			m_isVirtualPressX = isPress; 
+		}
+
+		/* Yãƒœã‚¿ãƒ³ã€‚*/
+		inline void SetVirtualButtonY(bool isPress) 
+		{ 
+			m_isVirtualPressY = isPress; 
+		}
+
+		/* LB1ãƒœã‚¿ãƒ³ã€‚*/
+		inline void SetVirtualButtonLB1(bool isPress) 
+		{ 
+			m_isVirtualPressLB1 = isPress; 
+		}
+
+		/* LB2ãƒœã‚¿ãƒ³ã€‚*/
+		inline void SetVirtualButtonLB2(bool isPress) 
+		{
+			m_isVirtualPressLB2 = isPress; 
+		}
+
+		/* RB1ãƒœã‚¿ãƒ³ã€‚*/
+		inline void SetVirtualButtonRB1(bool isPress) 
+		{
+			m_isVirtualPressRB1 = isPress; 
+		}
+
+		/* RTãƒœã‚¿ãƒ³ã€‚*/
+		inline void SetVirtualButtonRT(bool isPress) 
+		{
+			m_isVirtualPressRT = isPress; 
+		}
+
+
+		/* AIç”¨ä»®æƒ³ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼ã®å‰ãƒ•ãƒ¬ãƒ¼ãƒ ä¿å­˜ç”¨ã®ã‚»ãƒƒã‚¿ãƒ¼ç¾¤ã€‚*/
+		/* Aãƒœã‚¿ãƒ³ã€‚*/
 		inline void SavePrevVirtualPressA() 
 		{
 			m_prevVirtualPressA = m_isVirtualPressA; 
 		}
 
-		/* Bƒ{ƒ^ƒ“B*/
+		/* Bãƒœã‚¿ãƒ³ã€‚*/
 		inline void SavePrevVirtualPressB() 
 		{
 			m_prevVirtualPressB = m_isVirtualPressB; 
 		}
 
-		/* Xƒ{ƒ^ƒ“B*/ 
+		/* Xãƒœã‚¿ãƒ³ã€‚*/ 
 		inline void SavePrevVirtualPressX() 
 		{
 			m_prevVirtualPressX = m_isVirtualPressX; 
 		}
 
-		/* Yƒ{ƒ^ƒ“B*/
+		/* Yãƒœã‚¿ãƒ³ã€‚*/
 		inline void SavePrevVirtualPressY() 
 		{
 			m_prevVirtualPressY = m_isVirtualPressY; 
 		}
 
-		/* LB1ƒ{ƒ^ƒ“B*/ 
+		/* LB1ãƒœã‚¿ãƒ³ã€‚*/ 
 		inline void SavePrevVirtualPressLB1() 
 		{ 
 			m_prevVirtualPressLB1 = m_isVirtualPressLB1; 
 		}
 
-		/* LB2ƒ{ƒ^ƒ“B*/ 
+		/* LB2ãƒœã‚¿ãƒ³ã€‚*/ 
 		inline void SavePrevVirtualPressLB2()
 		{
 			m_prevVirtualPressLB2 = m_isVirtualPressLB2; 
 		}
 
-		/* RB1ƒ{ƒ^ƒ“B*/
+		/* RB1ãƒœã‚¿ãƒ³ã€‚*/
 		inline void SavePrevVirtualPressRB1() 
 		{
 			m_prevVirtualPressRB1 = m_isVirtualPressRB1; 
 		}
 
-		/* RTƒ{ƒ^ƒ“B*/
+		/* RTãƒœã‚¿ãƒ³ã€‚*/
 		inline void SavePrevVirtualPressRT() 
 		{
 			m_prevVirtualPressRT = m_isVirtualPressRT; 
 		}
 
 		/**
-		 * @brief Šeƒ{ƒ^ƒ“”»’è‚ğ‚Ü‚Æ‚ß‚éˆ—B
+		 * @brief å„ãƒœã‚¿ãƒ³åˆ¤å®šã‚’ã¾ã¨ã‚ã‚‹å‡¦ç†ã€‚
 		 */
-		inline void SetVirtualAttackButtons()
+		void SetVirtualAttackButtons()
 		{
 			SavePrevVirtualPressA();
 			SavePrevVirtualPressB();
@@ -134,8 +185,8 @@ namespace nsApp
 		}
 
 		/* 
-		 * @brief Jumpƒtƒ‰ƒO‚ğƒZƒbƒgB
-		 * @param flag ƒWƒƒƒ“ƒvƒtƒ‰ƒOB
+		 * @brief Jumpãƒ•ãƒ©ã‚°ã‚’ã‚»ãƒƒãƒˆã€‚
+		 * @param flag ã‚¸ãƒ£ãƒ³ãƒ—ãƒ•ãƒ©ã‚°ã€‚
 		 */
 		inline void SetJumpFlag(bool flag)
 		{
@@ -143,8 +194,8 @@ namespace nsApp
 		}
 
 		/* 
-		 * @brief SlashUpƒtƒ‰ƒO‚ğƒZƒbƒgB
-		 * @param flag a‚èã‚°ƒtƒ‰ƒOB
+		 * @brief SlashUpãƒ•ãƒ©ã‚°ã‚’ã‚»ãƒƒãƒˆã€‚
+		 * @param flag æ–¬ã‚Šä¸Šã’ãƒ•ãƒ©ã‚°ã€‚
 		 */
 		inline void SetSlashUpFlag(bool flag)
 		{
@@ -153,23 +204,8 @@ namespace nsApp
 
 
 	private:
-		/** 
-		 * @brief ‰¼‘zBƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚êê‡AUŒ‚ƒtƒ‰ƒO‚ğ—§‚Ä‚éB
-         */
-		inline void VirtualAttackButton()
-		{
-			/* ƒtƒ‰ƒO‚ğİ’èB*/
-			static bool prevVirtualAttack = false;
-
-			/* UŒ‚”»’èB*/
-			m_isAttack = (m_isPressButton && ! prevVirtualAttack);
-
-			/* ƒf[ƒ^‚ğƒZƒbƒgB*/
-			prevVirtualAttack = m_isPressButton;
-		}
-
 		/**
-		 *  @brief Bƒ{ƒ^ƒ“‚Ì“ü—Í”»’è‚ğ‚Ü‚Æ‚ß‚éB
+		 *  @brief Bãƒœã‚¿ãƒ³ã®å…¥åŠ›åˆ¤å®šã‚’ã¾ã¨ã‚ã‚‹ã€‚
 		 */
 		void SummarizeButtonB()
 		{
@@ -179,165 +215,180 @@ namespace nsApp
 		}
 
 		/**
-		 * @brief ‚»‚Ì‘¼‚Ìƒ{ƒ^ƒ“‚Ì“ü—”»’è‚ğ‚Ü‚Æ‚ß‚éB
+		 * @brief ãã®ä»–ã®ãƒœã‚¿ãƒ³ã®å…¥æµ´åˆ¤å®šã‚’ã¾ã¨ã‚ã‚‹ã€‚
 		 */
 		void SummarizeOtherButtons()
 		{
+			/* ã‚¬ãƒ¼ãƒ‰åˆ¤å®šã€‚*/
 			m_isGuard = CheckButtonPress(enButtonLB2);
-			m_isHelp = CheckButtonPress(enButtonLB1);
-			m_isPressX = CheckButtonPress(enButtonX);
+
+			/* æ•‘å‡ºåˆ¤å®šã€‚*/
+			m_isHelp = CheckButtonTrigger(enButtonY);
+
+			/* ãƒ€ãƒ¡ãƒ¼ã‚¸åˆ¤å®šã€‚*/
+			m_isDamage = CheckButtonTrigger(enButtonLeft);
+
+			/* å¿—æœ›åˆ¤å®šã€‚*/
+			m_isDeath = CheckButtonTrigger(enButtonDown);
+
+			/* Xãƒœã‚¿ãƒ³åˆ¤å®šã€‚*/
+			m_isPressX = CheckButtonTrigger(enButtonX); 
+
+			/* RBãƒœã‚¿ãƒ³åˆ¤å®šã€‚*/
 			m_isPressRB = CheckButtonPress(enButtonRB1);
+
+			/* RTãƒœã‚¿ãƒ³åˆ¤å®šã€‚*/
 			m_isPressRT = CheckButtonPress(BUTTON_RT);
 		}
 
 
 		/**
-		 * @brief ‰¼ƒ`ƒƒ[ƒW”»’è‚ğXV‚·‚éBB
+		 * @brief ä»®ãƒãƒ£ãƒ¼ã‚¸åˆ¤å®šã‚’æ›´æ–°ã™ã‚‹ã€‚ã€‚
 		 */
 		void UpdateChargeTranslation()
 		{
-			m_chargeButtonTimer = m_isPressButton ? m_chargeButtonTimer + 1.0f : 0.0f;
 			m_isNormalAttack = (!m_isPressButton && m_chargeButtonTimer > 0.0f && m_chargeButtonTimer < 30.0f);
 			m_isChargeStart = (m_isPressButton && m_chargeButtonTimer >= 12.0f);
 			m_isChargeAttack = (!m_isPressButton && m_chargeButtonTimer >= 30.0f);
+			m_chargeButtonTimer = m_isPressButton ? m_chargeButtonTimer + 1.0f : 0.0f;
+
 		}
 
 		/**
-		 * @brief “ü—Í”»’è‚ğÄ‰Šú‰»‚·‚éB
+		 * @brief å…¥åŠ›åˆ¤å®šã‚’å†åˆæœŸåŒ–ã™ã‚‹ã€‚
 		 */
 		void InitInputJudgment();
 
 
-
-	/* ƒQƒbƒ^[B*/
+	/* ã‚²ãƒƒã‚¿ãƒ¼ã€‚*/
 	public:
-		/* ƒAƒNƒVƒ‡ƒ“”»’èB*/
+		/* ã‚¢ã‚¯ã‚·ãƒ§ãƒ³åˆ¤å®šã€‚*/
 		inline bool IsAttack() const
 		{
 			return m_isAttack;
 		}
 
-		/* ’ÊíUŒ‚”»’èB*/
+		/* é€šå¸¸æ”»æ’ƒåˆ¤å®šã€‚*/
 		inline bool IsNormalAttack() const
 		{
 			return m_isNormalAttack;
 		}
 
-		/* ƒ`ƒƒ[ƒW’†”»’èB*/
+		/* ãƒãƒ£ãƒ¼ã‚¸ä¸­åˆ¤å®šã€‚*/
 		inline bool IsCharging() const
 		{
 			return m_isChargeStart;
 		}
 
-		/* ƒ`ƒƒ[ƒWUŒ‚”»’èB*/
+		/* ãƒãƒ£ãƒ¼ã‚¸æ”»æ’ƒåˆ¤å®šã€‚*/
 		inline bool IsChargeAttack() const
 		{
 			return m_isChargeAttack;
 		}
 
-		/* ‹ó’†UŒ‚”»’èB*/
+		/* ç©ºä¸­æ”»æ’ƒåˆ¤å®šã€‚*/
 		inline bool IsAirAttack() const
 		{
 			return m_isAirAttack;
 		}
 
-		/* ˜A‘±UŒ‚ŠJn”»’èB*/
+		/* é€£ç¶šæ”»æ’ƒé–‹å§‹åˆ¤å®šã€‚*/
 		inline bool IsRushStart() const
 		{
 			return m_isRushStart;
 		}
 
-		/* ˜A‘±UŒ‚I—¹”»’èB*/
+		/* é€£ç¶šæ”»æ’ƒçµ‚äº†åˆ¤å®šã€‚*/
 		inline bool IsRushEnd() const
 		{
 			return m_isRushEnd;
 		}
 
-		/* a‚èã‚°”»’èB*/
+		/* æ–¬ã‚Šä¸Šã’åˆ¤å®šã€‚*/
 		inline bool IsSlashUp() const
 		{
 			return m_isSlashUp;
 		}
 
-		/* ƒRƒ“ƒ{UŒ‚”»’èB*/
+		/* ã‚³ãƒ³ãƒœæ”»æ’ƒåˆ¤å®šã€‚*/
 		inline bool IsComboAttack() const
 		{
 			return m_isComboAttack;
 		}
 
-		/* ƒWƒƒƒ“ƒv”»’èB*/ 
+		/* ã‚¸ãƒ£ãƒ³ãƒ—åˆ¤å®šã€‚*/ 
 		inline bool IsJump() const
 		{
 			return m_isJump;
 		}
 
-		/* ˆÚ“®”»’èB*/
+		/* ç§»å‹•åˆ¤å®šã€‚*/
 		inline bool IsMove() const
 		{
 			return m_isMove;
 		}
 
-		/* ‘–‚è”»’èB*/
+		/* èµ°ã‚Šåˆ¤å®šã€‚*/
 		inline bool IsRun() const
 		{
 			return m_isRun;
 		}
 
-		/* ƒ_ƒ[ƒW”»’èB*/
+		/* ãƒ€ãƒ¡ãƒ¼ã‚¸åˆ¤å®šã€‚*/
 		inline bool IsDamage() const
 		{
 			return m_isDamage;	
 		}
 
-		/* €–S”»’èB*/
+		/* æ­»äº¡åˆ¤å®šã€‚*/
 		inline bool IsDeath() const
 		{
 			return m_isDeath;
 		}
 
-		/* ˆÚ“®ƒxƒNƒgƒ‹‚ğæ“¾B*/
+		/* ç§»å‹•ãƒ™ã‚¯ãƒˆãƒ«ã‚’å–å¾—ã€‚*/
 		inline Vector3 GetMoveVector() const
 		{
 			return m_moveVec;
 		}
 
-		/* ƒ`ƒƒ[ƒWŠÔ‚ğæ“¾‚·‚éB*/
+		/* ãƒãƒ£ãƒ¼ã‚¸æ™‚é–“ã‚’å–å¾—ã™ã‚‹ã€‚*/
 		inline float GetChargeTimer() const
 		{
 			return m_isChargeStart;
 		}
 
-		/* ƒK[ƒh”»’èB*/
+		/* ã‚¬ãƒ¼ãƒ‰åˆ¤å®šã€‚*/
 		inline bool IsGuard() const
 		{
 			return m_isGuard;
 		}
 
-		/* •‚¯‚é”»’èB*/
+		/* åŠ©ã‘ã‚‹åˆ¤å®šã€‚*/
 		inline bool IsHelp() const
 		{
 			return m_isHelp;
 		}
 
-		/* Xƒ{ƒ^ƒ“”»’èB*/
+		/* Xãƒœã‚¿ãƒ³åˆ¤å®šã€‚*/
 		inline bool IsPressX() const
 		{
 			return m_isPressX;
 		}
 
-		/* RBƒ{ƒ^ƒ“”»’èB*/
+		/* RBãƒœã‚¿ãƒ³åˆ¤å®šã€‚*/
 		inline bool IsPressRB() const
 		{
 			return m_isPressRB;
 		}
 
-		/* RTƒ{ƒ^ƒ“”»’èB*/
+		/* RTãƒœã‚¿ãƒ³åˆ¤å®šã€‚*/
 		inline bool IsPressRT() const 
 		{
 			return m_isPressRT;
 		}
 
-		/* gamepad ‚Ì—v‘f”‚ğó‚¯æ‚éB*/
+		/* gamepad ã®è¦ç´ æ•°ã‚’å—ã‘å–ã‚‹ã€‚*/
 		inline int GetPadIndex() const
 		{
 			return m_padInddex;
@@ -345,60 +396,60 @@ namespace nsApp
 
 
 	private:
-		bool m_isAttack = false;             //! UŒ‚‚µ‚½‚©‚Ç‚¤‚©‚ğ”»’èB
-		bool m_isJump = false;               //! ƒWƒƒƒ“ƒv‚µ‚½‚©‚Ç‚¤‚©‚ğ”»’èB
-		bool m_isMove = false;               //! ˆÚ“®‚µ‚½‚©‚Ç‚¤‚©‚ğ”»’èB
-		bool m_isRun = false;                //! ‘–‚Á‚½‚©‚Ç‚¤‚©‚ğ”»’èB
-		bool m_isDamage = false;             //! ƒ_ƒ[ƒW‚ğó‚¯‚½‚©‚Ç‚¤‚©‚ğ”»’èB
-		bool m_isDeath = false;              //! €–S‚µ‚½‚©‚Ç‚¤‚©‚ğ”»’èB
-		bool m_isNormalAttack = false;       //! UŒ‚“ü—Í‚ğŒŸ’mB
-		bool m_isAirAttack = false;          //! ‹ó’†UŒ‚“ü—Í‚ğŒŸ’mB
-		bool m_isComboAttack = false;        //! ƒRƒ“ƒ{UŒ‚“ü—Í‚ğŒŸ’mB
-		bool m_isInputEnable = true;         //! “ü—Í‚ğŒŸ’mB
-		bool m_isPressButton = false;        //! Bƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚Ä‚¢‚é‚©‚Ç‚¤‚©‚ğ”»’èB
-		bool m_isRushStart = false;          //! ˜A‘±UŒ‚‚ªn‚Ü‚Á‚Ä‚¢‚é‚©‚ğŒŸ’mB
-		bool m_isRushEnd = false;            //! ˜A‘±UŒ‚‚ªI‚í‚Á‚Ä‚¢‚é‚©‚ğŒŸ’mB
-		bool m_isJumpRequested = false;      //! ƒWƒƒƒ“ƒv‚Ì“ü—Í‚ª‚ ‚Á‚½‚©‚Ç‚¤‚©‚ğ”»’èB
-		bool m_isSlashUp = false;            //! a‚èã‚°‚Ì“ü—Í‚ğŒŸ’mB
-		bool m_isChargeStart = false;        //! ƒ`ƒƒ[ƒWUŒ‚‚Ì“ü—Í‚ğŒŸ’mB
-		bool m_isChargeAttack = false;       //! ƒ`ƒƒ[ƒWUŒ‚‚Ì“ü—Í‚ğŒŸ’mB
-		bool m_isGuard = false;              //! ƒK[ƒh‚Ì“ü—Í‚ğŒŸ’mB
-		bool m_isHelp = false;               //! •‚¯‚é“ü—Í‚ğŒŸ’mB
-		bool m_isPressX = false;             //! Xƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚Ä‚¢‚é‚©‚Ç‚¤‚©‚ğ”»’èB
-		bool m_isPressRB = false;            //! RBƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚Ä‚¢‚é‚©‚Ç‚¤‚©‚ğ”»’èB
-		bool m_isPressRT = false;			 //! RTƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚Ä‚¢‚é‚©‚Ç‚¤‚©‚ğ”»’èB
+		bool m_isAttack = false;             //! æ”»æ’ƒã—ãŸã‹ã©ã†ã‹ã‚’åˆ¤å®šã€‚
+		bool m_isJump = false;               //! ã‚¸ãƒ£ãƒ³ãƒ—ã—ãŸã‹ã©ã†ã‹ã‚’åˆ¤å®šã€‚
+		bool m_isMove = false;               //! ç§»å‹•ã—ãŸã‹ã©ã†ã‹ã‚’åˆ¤å®šã€‚
+		bool m_isRun = false;                //! èµ°ã£ãŸã‹ã©ã†ã‹ã‚’åˆ¤å®šã€‚
+		bool m_isDamage = false;             //! ãƒ€ãƒ¡ãƒ¼ã‚¸ã‚’å—ã‘ãŸã‹ã©ã†ã‹ã‚’åˆ¤å®šã€‚
+		bool m_isDeath = false;              //! æ­»äº¡ã—ãŸã‹ã©ã†ã‹ã‚’åˆ¤å®šã€‚
+		bool m_isNormalAttack = false;       //! æ”»æ’ƒå…¥åŠ›ã‚’æ¤œçŸ¥ã€‚
+		bool m_isAirAttack = false;          //! ç©ºä¸­æ”»æ’ƒå…¥åŠ›ã‚’æ¤œçŸ¥ã€‚
+		bool m_isComboAttack = false;        //! ã‚³ãƒ³ãƒœæ”»æ’ƒå…¥åŠ›ã‚’æ¤œçŸ¥ã€‚
+		bool m_isInputEnable = true;         //! å…¥åŠ›ã‚’æ¤œçŸ¥ã€‚
+		bool m_isPressButton = false;        //! Bãƒœã‚¿ãƒ³ãŒæŠ¼ã•ã‚Œã¦ã„ã‚‹ã‹ã©ã†ã‹ã‚’åˆ¤å®šã€‚
+		bool m_isRushStart = false;          //! é€£ç¶šæ”»æ’ƒãŒå§‹ã¾ã£ã¦ã„ã‚‹ã‹ã‚’æ¤œçŸ¥ã€‚
+		bool m_isRushEnd = false;            //! é€£ç¶šæ”»æ’ƒãŒçµ‚ã‚ã£ã¦ã„ã‚‹ã‹ã‚’æ¤œçŸ¥ã€‚
+		bool m_isJumpRequested = false;      //! ã‚¸ãƒ£ãƒ³ãƒ—ã®å…¥åŠ›ãŒã‚ã£ãŸã‹ã©ã†ã‹ã‚’åˆ¤å®šã€‚
+		bool m_isSlashUp = false;            //! æ–¬ã‚Šä¸Šã’ã®å…¥åŠ›ã‚’æ¤œçŸ¥ã€‚
+		bool m_isChargeStart = false;        //! ãƒãƒ£ãƒ¼ã‚¸æ”»æ’ƒã®å…¥åŠ›ã‚’æ¤œçŸ¥ã€‚
+		bool m_isChargeAttack = false;       //! ãƒãƒ£ãƒ¼ã‚¸æ”»æ’ƒã®å…¥åŠ›ã‚’æ¤œçŸ¥ã€‚
+		bool m_isGuard = false;              //! ã‚¬ãƒ¼ãƒ‰ã®å…¥åŠ›ã‚’æ¤œçŸ¥ã€‚
+		bool m_isHelp = false;               //! åŠ©ã‘ã‚‹å…¥åŠ›ã‚’æ¤œçŸ¥ã€‚
+		bool m_isPressX = false;             //! Xãƒœã‚¿ãƒ³ãŒæŠ¼ã•ã‚Œã¦ã„ã‚‹ã‹ã©ã†ã‹ã‚’åˆ¤å®šã€‚
+		bool m_isPressRB = false;            //! RBãƒœã‚¿ãƒ³ãŒæŠ¼ã•ã‚Œã¦ã„ã‚‹ã‹ã©ã†ã‹ã‚’åˆ¤å®šã€‚
+		bool m_isPressRT = false;			 //! RTãƒœã‚¿ãƒ³ãŒæŠ¼ã•ã‚Œã¦ã„ã‚‹ã‹ã©ã†ã‹ã‚’åˆ¤å®šã€‚
 		bool m_isVirtualAttackPress = false; //! 
 
-		float m_stickX = 0.0f;               //! ƒXƒeƒBƒbƒN‚ÌX²‚Ì’lB
-		float m_stickY = 0.0f;               //! ƒXƒeƒBƒbƒN‚ÌY²‚Ì’lB
-		float m_chargeButtonTimer = 0.0f;    //! ƒ`ƒƒ[ƒWUŒ‚‚Æ”»’è‚·‚é‚½‚ß‚É•K—v‚ÈBƒ{ƒ^ƒ“‚ğ’·‰Ÿ‚µ‚µ‚È‚¯‚ê‚Î‚È‚ç‚È‚¢ŠÔB
+		float m_stickX = 0.0f;               //! ã‚¹ãƒ†ã‚£ãƒƒã‚¯ã®Xè»¸ã®å€¤ã€‚
+		float m_stickY = 0.0f;               //! ã‚¹ãƒ†ã‚£ãƒƒã‚¯ã®Yè»¸ã®å€¤ã€‚
+		float m_chargeButtonTimer = 0.0f;    //! ãƒãƒ£ãƒ¼ã‚¸æ”»æ’ƒã¨åˆ¤å®šã™ã‚‹ãŸã‚ã«å¿…è¦ãªBãƒœã‚¿ãƒ³ã‚’é•·æŠ¼ã—ã—ãªã‘ã‚Œã°ãªã‚‰ãªã„æ™‚é–“ã€‚
 
-		int m_padInddex = 0;                 //! “ü—Í‚ğŒŸ’m‚·‚éƒpƒbƒh‚ÌƒCƒ“ƒfƒbƒNƒXB
+		int m_padInddex = 0;                 //! å…¥åŠ›ã‚’æ¤œçŸ¥ã™ã‚‹ãƒ‘ãƒƒãƒ‰ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã€‚
 
-		Vector3 m_moveVec = Vector3::Right;  //! ˆÚ“®ƒxƒNƒgƒ‹B
+		Vector3 m_moveVec = Vector3::Right;  //! ç§»å‹•ãƒ™ã‚¯ãƒˆãƒ«ã€‚
 
 
 	private:
-		/* AI—p‚Ì‰¼‘zƒRƒ“ƒgƒ[ƒ‰[•Ï”ŒQB*/
-		float m_virtualStickX = 0.0f;        //! ‰¼‘zƒXƒeƒBƒbƒN‚ÌX²‚Ì’lB
-		float m_virtualStickY = 0.0f;        //! ‰¼‘zƒXƒeƒBƒbƒN‚ÌY²‚Ì’lB
-		bool m_isVirtualPressA = false;      //! ‰¼‘zAƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚Ä‚¢‚é‚©‚Ç‚¤‚©‚ğ”»’èB
-		bool m_isVirtualPressB = false;      //! ‰¼‘zBƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚Ä‚¢‚é‚©‚Ç‚¤‚©‚ğ”»’èB
-		bool m_isVirtualPressX = false;      //! ‰¼‘zXƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚Ä‚¢‚é‚©‚Ç‚¤‚©‚ğ”»’èB
-		bool m_isVirtualPressY = false;      //! ‰¼‘zYƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚Ä‚¢‚é‚©‚Ç‚¤‚©‚ğ”»’èB
-		bool m_isVirtualPressLB1 = false;    //! ‰¼‘zLB1ƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚Ä‚¢‚é‚©‚Ç‚¤‚©‚ğ”»’èB	
-		bool m_isVirtualPressLB2 = false;    //! ‰¼‘zLB2ƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚Ä‚¢‚é‚©‚Ç‚¤‚©‚ğ”»’èB
-		bool m_isVirtualPressRB1 = false;    //! ‰¼‘zRB1ƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚Ä‚¢‚é‚©‚Ç‚¤‚©‚ğ”»’èB
-		bool m_isVirtualPressRT = false;     //! ‰¼‘zRTƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚Ä‚¢‚é‚©‚Ç‚¤‚©‚ğ”»’èB
+		/* AIç”¨ã®ä»®æƒ³ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼å¤‰æ•°ç¾¤ã€‚*/
+		float m_virtualStickX = 0.0f;        //! ä»®æƒ³ã‚¹ãƒ†ã‚£ãƒƒã‚¯ã®Xè»¸ã®å€¤ã€‚
+		float m_virtualStickY = 0.0f;        //! ä»®æƒ³ã‚¹ãƒ†ã‚£ãƒƒã‚¯ã®Yè»¸ã®å€¤ã€‚
+		bool m_isVirtualPressA = false;      //! ä»®æƒ³Aãƒœã‚¿ãƒ³ãŒæŠ¼ã•ã‚Œã¦ã„ã‚‹ã‹ã©ã†ã‹ã‚’åˆ¤å®šã€‚
+		bool m_isVirtualPressB = false;      //! ä»®æƒ³Bãƒœã‚¿ãƒ³ãŒæŠ¼ã•ã‚Œã¦ã„ã‚‹ã‹ã©ã†ã‹ã‚’åˆ¤å®šã€‚
+		bool m_isVirtualPressX = false;      //! ä»®æƒ³Xãƒœã‚¿ãƒ³ãŒæŠ¼ã•ã‚Œã¦ã„ã‚‹ã‹ã©ã†ã‹ã‚’åˆ¤å®šã€‚
+		bool m_isVirtualPressY = false;      //! ä»®æƒ³Yãƒœã‚¿ãƒ³ãŒæŠ¼ã•ã‚Œã¦ã„ã‚‹ã‹ã©ã†ã‹ã‚’åˆ¤å®šã€‚
+		bool m_isVirtualPressLB1 = false;    //! ä»®æƒ³LB1ãƒœã‚¿ãƒ³ãŒæŠ¼ã•ã‚Œã¦ã„ã‚‹ã‹ã©ã†ã‹ã‚’åˆ¤å®šã€‚	
+		bool m_isVirtualPressLB2 = false;    //! ä»®æƒ³LB2ãƒœã‚¿ãƒ³ãŒæŠ¼ã•ã‚Œã¦ã„ã‚‹ã‹ã©ã†ã‹ã‚’åˆ¤å®šã€‚
+		bool m_isVirtualPressRB1 = false;    //! ä»®æƒ³RB1ãƒœã‚¿ãƒ³ãŒæŠ¼ã•ã‚Œã¦ã„ã‚‹ã‹ã©ã†ã‹ã‚’åˆ¤å®šã€‚
+		bool m_isVirtualPressRT = false;     //! ä»®æƒ³RTãƒœã‚¿ãƒ³ãŒæŠ¼ã•ã‚Œã¦ã„ã‚‹ã‹ã©ã†ã‹ã‚’åˆ¤å®šã€‚
 
-		/* ƒgƒŠƒK[”»’è—pi‘OƒtƒŒ[ƒ€‚Ì‹L‰¯j */
-		bool m_prevVirtualPressA = false;    // ‰¼‘zAƒ{ƒ^ƒ“‚Ì‘OƒtƒŒ[ƒ€‚Ìó‘Ô‚ğ‹L‰¯B
-		bool m_prevVirtualPressB = false;    // ‰¼‘zBƒ{ƒ^ƒ“‚Ì‘OƒtƒŒ[ƒ€‚Ìó‘Ô‚ğ‹L‰¯B
-		bool m_prevVirtualPressX = false;    // ‰¼‘zXƒ{ƒ^ƒ“‚Ì‘OƒtƒŒ[ƒ€‚Ìó‘Ô‚ğ‹L‰¯B
-		bool m_prevVirtualPressY = false;    // ‰¼‘zYƒ{ƒ^ƒ“‚Ì‘OƒtƒŒ[ƒ€‚Ìó‘Ô‚ğ‹L‰¯B
-		bool m_prevVirtualPressLB1 = false;  // ‰¼‘zLB1ƒ{ƒ^ƒ“‚Ì‘OƒtƒŒ[ƒ€‚Ìó‘Ô‚ğ‹L‰¯B
-		bool m_prevVirtualPressLB2 = false;  // ‰¼‘zLB2ƒ{ƒ^ƒ“‚Ì‘OƒtƒŒ[ƒ€‚Ìó‘Ô‚ğ‹L‰¯B
-		bool m_prevVirtualPressRB1 = false;  // ‰¼‘zRB1ƒ{ƒ^ƒ“‚Ì‘OƒtƒŒ[ƒ€‚Ìó‘Ô‚ğ‹L‰¯B
-		bool m_prevVirtualPressRT = false;   // ‰¼‘zRTƒ{ƒ^ƒ“‚Ì‘OƒtƒŒ[ƒ€‚Ìó‘Ô‚ğ‹L‰¯B
+		/* ãƒˆãƒªã‚¬ãƒ¼åˆ¤å®šç”¨ï¼ˆå‰ãƒ•ãƒ¬ãƒ¼ãƒ ã®è¨˜æ†¶ï¼‰ */
+		bool m_prevVirtualPressA = false;    // ä»®æƒ³Aãƒœã‚¿ãƒ³ã®å‰ãƒ•ãƒ¬ãƒ¼ãƒ ã®çŠ¶æ…‹ã‚’è¨˜æ†¶ã€‚
+		bool m_prevVirtualPressB = false;    // ä»®æƒ³Bãƒœã‚¿ãƒ³ã®å‰ãƒ•ãƒ¬ãƒ¼ãƒ ã®çŠ¶æ…‹ã‚’è¨˜æ†¶ã€‚
+		bool m_prevVirtualPressX = false;    // ä»®æƒ³Xãƒœã‚¿ãƒ³ã®å‰ãƒ•ãƒ¬ãƒ¼ãƒ ã®çŠ¶æ…‹ã‚’è¨˜æ†¶ã€‚
+		bool m_prevVirtualPressY = false;    // ä»®æƒ³Yãƒœã‚¿ãƒ³ã®å‰ãƒ•ãƒ¬ãƒ¼ãƒ ã®çŠ¶æ…‹ã‚’è¨˜æ†¶ã€‚
+		bool m_prevVirtualPressLB1 = false;  // ä»®æƒ³LB1ãƒœã‚¿ãƒ³ã®å‰ãƒ•ãƒ¬ãƒ¼ãƒ ã®çŠ¶æ…‹ã‚’è¨˜æ†¶ã€‚
+		bool m_prevVirtualPressLB2 = false;  // ä»®æƒ³LB2ãƒœã‚¿ãƒ³ã®å‰ãƒ•ãƒ¬ãƒ¼ãƒ ã®çŠ¶æ…‹ã‚’è¨˜æ†¶ã€‚
+		bool m_prevVirtualPressRB1 = false;  // ä»®æƒ³RB1ãƒœã‚¿ãƒ³ã®å‰ãƒ•ãƒ¬ãƒ¼ãƒ ã®çŠ¶æ…‹ã‚’è¨˜æ†¶ã€‚
+		bool m_prevVirtualPressRT = false;   // ä»®æƒ³RTãƒœã‚¿ãƒ³ã®å‰ãƒ•ãƒ¬ãƒ¼ãƒ ã®çŠ¶æ…‹ã‚’è¨˜æ†¶ã€‚
 	};
 }

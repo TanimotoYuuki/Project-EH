@@ -21,7 +21,7 @@ namespace nsApp
 			return;
 		}
 
-		if (m_padInddex < PAD_INDEX_NAM)
+		if (m_padInddex < 0)
 		{
 			m_stickX = m_virtualStickX;
 			m_stickY = m_virtualStickY;
@@ -33,7 +33,7 @@ namespace nsApp
 		}
 
 		/* スティック移動量の計算 */
-		m_moveVec = Vector3(m_stickX, 0.0f, m_stickY);
+		m_moveVec = Vector3(m_stickX, 0.0f, 0.0f);
 		m_isMove = (m_moveVec.Length() > 0.1f);
 
 		/* Bボタン。*/
@@ -53,7 +53,7 @@ namespace nsApp
 
 
 		/* AIControllerの前フレームのボタンの情報を保持する。*/
-		if (m_padInddex < PAD_INDEX_NAM)
+		if (m_padInddex < 0)
 			SetVirtualAttackButtons();
 	}
 

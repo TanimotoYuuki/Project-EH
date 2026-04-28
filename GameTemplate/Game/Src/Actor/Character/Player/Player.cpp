@@ -24,6 +24,7 @@
 
 #include "Src/Actor/Character/Common/WeaponHitDetection.h"
 #include "Src/Sound/SoundLister.h"
+#include "Src/Actor/Character/NPC/NPCBrain.h"
 
 namespace
 {
@@ -41,6 +42,13 @@ namespace nsApp
 {
 	namespace nsActor
 	{
+		Player::~Player()
+		{
+			if (m_brain != nullptr)
+				delete m_brain;
+		}
+
+
 		bool Player::Start()
 		{
 			/* アニメーションとモデルを準備する。*/
@@ -80,6 +88,15 @@ namespace nsApp
 			/* 武器の当たり判定を設定。*/
 			m_weaponHitDetection.Init(WEAPON_HIT_RADIUS);
 
+			/* NPCの場合、padIndexを0にする。*/
+			if (m_playerInput.GetPadIndex() < 0)
+			{
+				m_brain = new NPCBrain();
+				m_brain->Init(this);
+			}
+
+			/* */
+			m_stateMachine->ChangeState(m_stateFactory[PlayerStateID::enIdle]());
 			return true;
 		}
 
@@ -88,6 +105,12 @@ namespace nsApp
 		{
 			/* ICharacterクラスの更新処理をコール。*/
 			ICharacter::Update();
+
+			/* すり抜け判定。*/
+			if (!m_isIgnorePlayerSet)
+			{
+				ComputeSlipThrough();
+			}
 
 			/* ヒットストップ状態なら*/
 			if (IsHitStop())
@@ -101,6 +124,10 @@ namespace nsApp
 			}
 			else
 				m_playerInput.SetInputEnable(true);
+
+			/* NPCの場合、仮想のコントローラーによる判定を行う。*/
+			if (m_playerInput.GetPadIndex() < 0)
+				m_brain->Update();
 
 
 			/* モデルの更新より先に入力判定を更新する。*/
@@ -161,6 +188,39 @@ namespace nsApp
 
 			/* 最初から死亡ステートへ遷移させる。*/
 			m_stateMachine->ChangeState(m_stateFactory[PlayerStateID::enIdle]());
+		}
+
+
+		void Player::ComputeSlipThrough()
+		{
+			// 自分の剛体ができているか確認。
+			auto* myBody = m_characterController.GetRigidBody()->GetBody();
+			if (myBody == nullptr) return;
+
+			// 検索する全プレイヤーの名前リスト
+			const char* playerNames[] = { "player1", "player2", "player3", "player4" };
+
+			for (const char* name : playerNames)
+			{
+				auto otherPlayer = FindGO<nsActor::Player>(name);
+
+				// 相手がまだいない場合や、自分自身の場合はスキップする
+				if (otherPlayer == nullptr || otherPlayer == this)
+					continue;
+
+				// 相手の剛体を取得
+				auto* otherBody = otherPlayer->GetCharacterController().GetRigidBody()->GetBody();
+
+				// 相手の剛体も確実に存在していれば設定
+				if (otherBody != nullptr)
+				{
+					// お互いに無視リストへ登録
+					myBody->setIgnoreCollisionCheck(otherBody, true);
+					otherBody->setIgnoreCollisionCheck(myBody, true);
+				}
+			}
+
+			m_isIgnorePlayerSet = true; 
 		}
 
 

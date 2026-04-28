@@ -2,6 +2,7 @@
 #include "StateMachine.h"
 #include "NullState.h"
 #include "Src/Actor/Actor.h"
+#include "Src/Actor/Character/NPC/NPCBrain.h"
 
 /* テンプレートのマクロ。*/
 #define CLASS_T template<class CharacterTemplete>
@@ -64,5 +65,8 @@ namespace nsApp
 
 		/* Actorクラスに対してテンプレートの使用可能にする。*/
 		template class StateMachine<nsApp::nsActor::Actor>;
+
+		/* NPC用ステートマシーンテンプレートを作成する。*/
+		template class StateMachine<NPCBrain>;
 	}
 }
