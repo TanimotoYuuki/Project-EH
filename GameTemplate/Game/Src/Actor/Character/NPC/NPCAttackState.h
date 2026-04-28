@@ -8,11 +8,21 @@
 
 #include "Src/Actor/Character/NPC/NPCBrain.h"
 #include "Src/Actor/Character/Common/IState.h"
+#include "Src/Actor/Character/Common/CharacterAnimation.h"
 
 namespace nsApp
 {
 	namespace nsState
 	{
+		enum class NPCComboPattern : uint8_t
+		{
+			enMelee_Attack, //! B連打コンボ。
+			enMelee_Heavy,  //! B → Xの攻撃コンボ。
+			enMagic_Attack, //! RBの遠距離攻撃コンボ。
+			enMagic_Heel,   //! RTの回復魔法コンボ。
+			enNone          //! コンボなし。
+		};
+
 		class NPCAttackState : public IState<NPCBrain>
 		{
 		public:
@@ -35,6 +45,9 @@ namespace nsApp
 
 		private:
 			int m_attackTimer = 0;       //! 攻撃のタイマー。
+
+			NPCComboPattern m_currentPattern = NPCComboPattern::enNone;
+			WeaponType m_myWeaponType = WeaponType::None;
 		};
 
 	}

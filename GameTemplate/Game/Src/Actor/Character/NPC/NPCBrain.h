@@ -69,10 +69,16 @@ namespace nsApp
 			return m_outer;
 		}
 
+		/* 助ける対象を取得。*/
+		inline nsActor::Player* GetHelpTarget() const
+		{
+			return m_helpTarget;
+		}
 
 
 	private:
 		nsActor::Player* m_outer = nullptr;                           //! ポインタを持つ対象。
+		nsActor::Player* m_helpTarget = nullptr;                    //! 助ける対象。
 		nsActor::Sandbag* m_testTarget = nullptr;                     //! ターゲット。
 		nsState::StateMachine<NPCBrain>* m_npcStateMachine = nullptr; //! NPCの状態を管理するステートマシン。
 

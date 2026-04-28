@@ -174,6 +174,10 @@
     <ClCompile Include="Src\Actor\Magic\MagicProjectotile.cpp" />
     <ClCompile Include="Src\Actor\Character\Player\CharacterByWeapon\TwinGunCharacter.cpp" />
     <ClCompile Include="Src\Actor\Character\Player\Component\PlayerGenerator.cpp" />
+    <ClCompile Include="Src\Actor\Character\NPC\NPCBrain.cpp" />
+    <ClCompile Include="Src\Actor\Character\NPC\NPCChaseState.cpp" />
+    <ClCompile Include="Src\Actor\Character\NPC\NPCIdleState.cpp" />
+    <ClCompile Include="Src\Actor\Character\NPC\NPCAttackState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -310,5 +314,9 @@
     <ClInclude Include="Src\Actor\Character\Player\CharacterByWeapon\TwinGunCharacter.h" />
     <ClInclude Include="Src\Actor\Character\Player\Component\PlayerSpawnData.h" />
     <ClInclude Include="Src\Actor\Character\Player\Component\PlayerGenerator.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\NPCBrain.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\NPCChaseState.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\NPCIdleState.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\NPCAttackState.h" />
   </ItemGroup>
 </Project>

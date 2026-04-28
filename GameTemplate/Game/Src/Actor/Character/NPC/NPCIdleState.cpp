@@ -16,7 +16,9 @@ namespace nsApp
 			auto body = m_brain->GetBody();
 			if (body)
 			{
-				body->GetInputClass();
+				body->GetInputClass().SetVirtualController(0.0f, 0.0f);
+				body->GetInputClass().SetVirtualButtonB(false);
+				body->GetInputClass().SetVirtualButtonY(false);
 			}
 		}
 

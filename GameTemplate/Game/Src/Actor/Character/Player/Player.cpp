@@ -175,6 +175,12 @@ namespace nsApp
 
 			/* クリティカルダメージの初期化。*/
 			m_characterStatus.attack.criticalDamage = 2.0f;
+
+			/* 最大HPを初期化する。*/
+			m_characterStatus.hp.maxHP = 1000;
+
+			/* 現在のHPを初期化する。*/
+			m_characterStatus.hp.currentHP = m_characterStatus.hp.maxHP;
 		}
 
 

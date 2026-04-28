@@ -25,11 +25,11 @@ namespace nsApp
 			return;
 
 		/* ターゲットを探す。*/
-		m_testTarget = SearchTarget();
+		m_helpTarget = m_outer->SearchCharacter();
+
 		/* ターゲットが居ない場合は何もしない。*/
 		if (m_npcStateMachine != nullptr)
 			m_npcStateMachine->Update();
-
 	}
 
 

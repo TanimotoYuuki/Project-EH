@@ -29,6 +29,23 @@ namespace nsApp
 			void Exit() override {};
 			bool RequestID(uint8_t& id) override { return false; };
 
+
+		private:
+			/* 
+			 * @brief 味方を助ける行動。
+			 * @param body: NPCの体。
+			 * @param helpTarget: 助ける対象。
+			 */
+			bool ExecuteHelpAction(nsActor::Player* body, nsActor::Player* helpTarget);
+
+
+			/**
+			 * @brief 距離をつめる対象を設定する。
+			 * @param body: NPCの体。
+			 * @param target: 距離をつめる対象。
+			 */
+			void ExecuteChaseAction(nsActor::Player* body, nsActor::Sandbag* target);
+
 		private:
 			NPCBrain* m_brain = nullptr; //! NPCの親クラスのポインタ。
 

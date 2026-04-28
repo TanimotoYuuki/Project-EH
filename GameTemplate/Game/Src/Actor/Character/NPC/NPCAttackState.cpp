@@ -11,6 +11,20 @@ namespace nsApp
 		{
 			m_brain = static_cast<NPCBrain*>(m_owner);
 			m_attackTimer = 0.0f;
+
+			/* */
+			auto body = m_brain->GetBody();
+			if (!body)
+				return;
+
+			/* 武器の情報を取得する。*/
+			m_myWeaponType = body->GetCurrentWeapon();
+
+			/* 武器によって派生。*/
+			if (m_myWeaponType == WeaponType::Wand)
+			{
+				/* HPの割合が半分以下なら回復魔法を最優先として発動。*/
+			}
 		}
 
 
@@ -34,9 +48,6 @@ namespace nsApp
 				return;
 			}
 
-			/* ================================================== */
-			/* ⚔️ AIの「脳みそ」！コンボの入力制御！ */
-			/* ================================================== */
 			m_attackTimer++;
 
 			/* 約1秒（60フレーム）のテンポで、仮想のBボタンを押して離す！ */
