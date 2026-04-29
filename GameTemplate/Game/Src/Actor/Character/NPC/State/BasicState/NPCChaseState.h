@@ -9,9 +9,16 @@
 
 #include "Src/Actor/Character/Common/IState.h"
 #include "Src/Actor/Character/NPC/NPCBrain.h"
+#include "Src/Actor/Character/Player/Player.h"
 
 namespace nsApp
 {
+	namespace nsActor
+	{
+		class Player;
+		class Sandbag;
+	}
+
 	namespace nsState
 	{
 		class NPCChaseState : public IState<NPCBrain>
@@ -33,21 +40,32 @@ namespace nsApp
 		private:
 			/* 
 			 * @brief 味方を助ける行動。
-			 * @param body: NPCの体。
 			 * @param helpTarget: 助ける対象。
 			 */
-			bool ExecuteHelpAction(nsActor::Player* body, nsActor::Player* helpTarget);
+			bool ExecuteHelpAction(nsActor::Player* helpTarget);
 
 
 			/**
 			 * @brief 距離をつめる対象を設定する。
-			 * @param body: NPCの体。
 			 * @param target: 距離をつめる対象。
 			 */
-			void ExecuteChaseAction(nsActor::Player* body, nsActor::Sandbag* target);
+			void ExecuteChaseAction(nsActor::Sandbag* target);
+
+			/* 攻撃ステートへの遷移を関数化。*/
+			void TransitionToAttackState();
+
+			/* 距離計算メソッド。*/
+			inline void ComputeDistance(nsActor::ICharacter* targetObject)
+			{
+				m_difference = targetObject->GetPosition() - m_body->GetPosition();
+				m_distance = m_difference.Length();
+			}
+
 
 		private:
-			NPCBrain* m_brain = nullptr; //! NPCの親クラスのポインタ。
+			NPCBrain* m_brain = nullptr;			  //! NPCの親クラスのポインタ。
+			nsActor::Player* m_body = nullptr;	      //! NPCのボディクラスのポインタ。
+			PlayerInput* m_input = nullptr;			  //! NPCの入力クラスのポインタ。
 
 
 		private:
@@ -55,8 +73,10 @@ namespace nsApp
 			Vector3 m_targetPosition = Vector3::Zero; //! ターゲットの現在位置。
 			Vector3 m_difference = Vector3::Zero;     //! NPCとターゲットの位置の差分。
 
+			WeaponType m_myWeapon = WeaponType::None; //! NPCの武器の種類。
 
 			float m_distance = 0.0f;				  //! NPCとターゲットの距離。
+			float m_attackRange = 0.0f;			      //! NPCの攻撃開始距離。
 		};
 	}
 }

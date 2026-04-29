@@ -3,7 +3,7 @@
 #include "Src/Actor/Character/Player/PlayerInput.h"
 #include "Src/Actor/Character/Player/Player.h"
 
-#include "Src/Actor/Character/NPC/NPCIdleState.h"
+#include "Src/Actor/Character/NPC/State/BasicState/NPCIdleState.h"
 
 namespace nsApp
 {
