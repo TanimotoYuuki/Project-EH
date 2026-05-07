@@ -13,7 +13,7 @@ namespace nsApp
 			m_seList.Init();
 
 			/* Å‰‚©‚ç–Â‚ç‚µ‚½‚¢BGM‚ª‚ ‚ê‚ÎA‚±‚±‚ÅŒÄ‚Ô‚Ì‚àƒAƒŠ‚Å‚· */
-			// m_bgmList.PlayBGM(BGM_ID::Title, 1.0f);
+			m_bgmList.PlayBGM(BGM_ID::Title, 1.0f);
 
 			return true;
 		}

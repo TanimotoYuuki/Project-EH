@@ -14,9 +14,8 @@ namespace nsApp
 		void BGMList::Init()
 		{
 			/* BGMのファイルパスを登録。*/
-			//g_soundEngine->ResistWaveFileBank(BGM_ID::Title, GetBGMFilePath("title").c_str());
-			//g_soundEngine->ResistWaveFileBank(BGM_ID::Stage1, GetBGMFilePath("stage1").c_str());
-			//g_soundEngine->ResistWaveFileBank(BGM_ID::Stage2, GetBGMFilePath("stage2").c_str());
+			g_soundEngine->ResistWaveFileBank(BGM_ID::Title, GetBGMFilePath("title").c_str());
+			g_soundEngine->ResistWaveFileBank(BGM_ID::Stage1, GetBGMFilePath("stage").c_str());
 			//g_soundEngine->ResistWaveFileBank(BGM_ID::Result, GetBGMFilePath("result").c_str());
 		}
 
