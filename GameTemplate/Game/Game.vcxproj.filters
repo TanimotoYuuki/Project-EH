@@ -311,12 +311,5 @@
     <ClInclude Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerHeelMagicState.h" />
     <ClInclude Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerMagicAttackState.h" />
     <ClInclude Include="Src\Actor\Magic\MagicProjectotile.h" />
-    <ClInclude Include="Src\Actor\Character\Player\CharacterByWeapon\TwinGunCharacter.h" />
-    <ClInclude Include="Src\Actor\Character\Player\Component\PlayerSpawnData.h" />
-    <ClInclude Include="Src\Actor\Character\Player\Component\PlayerGenerator.h" />
-    <ClInclude Include="Src\Actor\Character\NPC\NPCBrain.h" />
-    <ClInclude Include="Src\Actor\Character\NPC\NPCChaseState.h" />
-    <ClInclude Include="Src\Actor\Character\NPC\NPCIdleState.h" />
-    <ClInclude Include="Src\Actor\Character\NPC\NPCAttackState.h" />
   </ItemGroup>
 </Project>
