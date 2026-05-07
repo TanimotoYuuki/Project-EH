@@ -11,9 +11,10 @@ namespace nsApp
 
 		/* キャラモデルの格納。*/
 		/* プレイヤーモデル。*/
-		m_filePathList[CharacterModelType::Player_2P] = GetCharacterModelFilePath("2p/player_2p");                    //! 2Pモデル。
-		m_filePathList[CharacterModelType::Player_3P] = GetCharacterModelFilePath("3p/Player_3P");                    //! 3Pモデル。
-		m_filePathList[CharacterModelType::Player_4P] = GetCharacterModelFilePath("4p/Player_4P");                    //! 4Pモデル。
+		m_filePathList[CharacterModelType::Player_1P] = GetCharacterModelFilePath("1p/Player_1P"); //! 1Pモデル。
+		m_filePathList[CharacterModelType::Player_2P] = GetCharacterModelFilePath("2p/player_2p"); //! 2Pモデル。
+		m_filePathList[CharacterModelType::Player_3P] = GetCharacterModelFilePath("3p/Player_3P"); //! 3Pモデル。
+		m_filePathList[CharacterModelType::Player_4P] = GetCharacterModelFilePath("4p/Player_4P"); //! 4Pモデル。
 
 		/* ボスモデル。*/
 		m_filePathList[CharacterModelType::Enemy_Tutorial] = GetCharacterModelFilePath("TutorialBoss/TutorialBoss");
@@ -25,6 +26,8 @@ namespace nsApp
 		/* 武器モデル。*/
 		/* 大剣。*/
 		m_filePathList[CharacterModelType::Weapon_GreatSword] = GetWeaponModelFilePath("GreatSword");
+		/* 双銃。*/
+		m_filePathList[CharacterModelType::Weapon_TwinGun] = GetWeaponModelFilePath("TwinGun");
 		/* ハンマー。*/
 		m_filePathList[CharacterModelType::Weapon_Hammer] = GetWeaponModelFilePath("Hammer");
 		/* 杖。*/ 

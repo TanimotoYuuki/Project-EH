@@ -4,25 +4,52 @@
 
 namespace nsApp
 {
-	void CharacterAnimation::Initialize()
+	void CharacterAnimation::Initialize(WeaponType kind)
 	{		
-		/* ソードキャラクターのアニメーションのファイルパスを初期化。*/
-		/* 基本動作用。*/
-		InitGreatSwordBasicAnimationFilePath();
-		/* 攻撃動作用。*/
-		InitGreatSwordAnimationFilePath();
+		switch (kind)
+		{
+		case WeaponType::GreatSword:
+		{
+			 /* ソードキャラクターのアニメーションのファイルパスを初期化。*/
+             /* 基本動作用。*/
+			 InitGreatSwordBasicAnimationFilePath();
+			 /* 攻撃動作用。*/
+			 InitGreatSwordAnimationFilePath();
+			 break;
+		}
 
-		/* ハンマーキャラクターのアニメーションのファイルパスを初期化。*/
-	    /* 基本動作用。*/
-		InitHammerBasicAnimationFilePath();
-		/* 攻撃動作用。*/
-		InitHammerAnimationFilePath();
+		case WeaponType::Hammer:
+		{
+			/* ハンマーキャラクターのアニメーションのファイルパスを初期化。*/
+			/* 基本動作用。*/
+			InitHammerBasicAnimationFilePath();
+			/* 攻撃動作用。*/
+			InitHammerAnimationFilePath();
+			break;
+		}
 
-		/* 杖キャラクターのアニメーションファイルパスを初期化。*/
-		/* 基本動作用。*/
-		InitWandBasicAnimationFilePath();
-		/* 攻撃動作用。*/
-		InitWandAttackAnimationFilePath();
+		case WeaponType::Wand:
+		{
+			/* 杖キャラクターのアニメーションファイルパスを初期化。*/
+            /* 基本動作用。*/
+			InitWandBasicAnimationFilePath();
+			/* 攻撃動作用。*/
+			InitWandAttackAnimationFilePath();
+			break;
+		}
+
+		case WeaponType::TwinGun:
+		{
+			/* 銃キャラクターのアニメーションファイルパスを初期化。*/
+			/* 基本動作用。*/
+			InitTwinGunBasicAnimationFilePath();
+			break;
+		}
+
+		default:
+			break;
+		}
+
 
 	}
 
@@ -213,6 +240,45 @@ namespace nsApp
 
 		/* アニメーションデータをリストに登録。*/
 		m_weaponDataList[WeaponType::Wand] = m_wandData;
+	}
+
+
+	void CharacterAnimation::InitTwinGunBasicAnimationFilePath()
+	{
+		/* 待機状態。*/ 
+		m_basicAnimationFilePathList[CharacterBasicAnimationList::Idle] = GetBasicAnimationFilePath("TwinGun/Idle");
+
+		/* 歩き状態。*/
+		m_basicAnimationFilePathList[CharacterBasicAnimationList::Walk] = GetBasicAnimationFilePath("TwinGun/Walk");
+
+		/* 走り状態。*/
+		m_basicAnimationFilePathList[CharacterBasicAnimationList::Run] = GetBasicAnimationFilePath("TwinGun/Run");
+
+		/* ジャンプ状態。*/
+		m_basicAnimationFilePathList[CharacterBasicAnimationList::Jump] = GetBasicAnimationFilePath("TwinGun/Jump");
+
+		/* 被弾状態。*/
+		m_basicAnimationFilePathList[CharacterBasicAnimationList::Hit_Fly] = GetBasicAnimationFilePath("TwinGun/Hit");
+
+		/* 起き上がり状態。*/
+		m_basicAnimationFilePathList[CharacterBasicAnimationList::Hit_UP] = GetBasicAnimationFilePath("TwinGun/GetUp");
+
+		/* 死亡状態。*/
+		m_basicAnimationFilePathList[CharacterBasicAnimationList::Death] = GetBasicAnimationFilePath("TwinGun/Deth");
+
+		/* ガード状態。*/
+		m_basicAnimationFilePathList[CharacterBasicAnimationList::Guard] = GetBasicAnimationFilePath("TwinGun/Guard");
+
+		/* 助ける状態。*/
+		m_basicAnimationFilePathList[CharacterBasicAnimationList::Help] = GetBasicAnimationFilePath("TwinGun/Help");
+
+		/* 登録したアニメーションをリストに登録。*/
+		m_weaponDataList[WeaponType::TwinGun] = m_greatSwordData;
+	}
+
+
+	void CharacterAnimation::InitTwinGunAttackAnimationFilePath()
+	{
 	}
 
 

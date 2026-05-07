@@ -18,9 +18,17 @@
 #include "Src/Sound/SoundLister.h"
 #include "Src/Actor/Stage/BackGround.h"
 
-#include "Src/Actor/Character/Player/CharacterByWeapon/SwordCharacter.h"
-#include "Src/Actor/Character/Player/CharacterByWeapon/HammerCharacter.h"
-#include "Src/Actor/Character/Player/CharacterByWeapon/WandCharacter.h"
+#include "Src/Actor/Character/Player/Component/PlayerGenerator.h"
+
+namespace
+{
+	const auto INIT_CHARACTER_POSITION_Y = 50.0f;
+	const auto INIT_CHARACTER_POSITION_Z = 0.0f;
+
+	const auto INIT_CHARACTER_POSITION_PLAYER1 = Vector3(80.0f, INIT_CHARACTER_POSITION_Y, INIT_CHARACTER_POSITION_Z);
+	const auto INIT_CHARACTER_POSITION_PLAYER2 = Vector3(-80.0f, INIT_CHARACTER_POSITION_Y, INIT_CHARACTER_POSITION_Z);
+	const auto INIT_CHARACTER_POSITION_PLAYER3 = Vector3(-50.0f, INIT_CHARACTER_POSITION_Y, INIT_CHARACTER_POSITION_Z);
+}
 
 namespace nsApp
 {
@@ -32,13 +40,13 @@ namespace nsApp
 			DeleteGO(m_soundLister);
 			DeleteGO(m_backGround);
 			DeleteGO(m_camera);
-			DeleteGO(m_player);
-			DeleteGO(m_player2);
 			DeleteGO(m_sandbag);
 			DeleteGO(m_gameClearDirection);
 			DeleteGO(m_gameTimeUpDirection);
 			DeleteGO(m_gameOverDirection);
 			DeleteGO(m_gameEndSelect);
+
+			delete m_generator;
 		}
 
 
@@ -67,17 +75,10 @@ namespace nsApp
 
 			/*フェードインに切り替える。*/
 			nsApp::nsFade::Fade::GetInstance()->ChangeFadeType(nsApp::nsFade::Fade::EnFadeType::enFadeType_FadeIn);
-
-			m_player = NewGO<nsActor::WandCharacter>(0, "player4");
-
-
-			//////////////////////////////////////////////////////////////////////
-			//// ダミーモデル用。////////////////////////////////////////////////
-			//m_player2 = NewGO<nsActor::HammerCharacter>(0, "player2");
-			//m_player2->SetPosition(Vector3(-150.0f, 50.0f, 0.0f));
-			//m_player2->SetInputEnable(false);
-
 			m_sandbag = NewGO<nsActor::Sandbag>(0, "Sandbag");
+
+			/* プレイアブルキャラを生成する。*/
+			SpawnPlayCharacter();
 
 			return true;
 		}
@@ -170,6 +171,25 @@ namespace nsApp
 		{
 			/* 現在のステージを描画する。*/
 			nsApp::nsStage::LoadStageData::GetInstance().Draw(rc);
+		}
+
+
+		void Game::SpawnPlayCharacter()
+		{
+			/* 生成システムを生成する。*/
+			m_generator = new PlayerGenerator();
+
+			/* PlayerGeneratorを用い、プレイアブルキャラを作成する。*/
+			std::vector<PlayerSpawnData> partyData =
+			{
+				{"player1", WeaponType::GreatSword, ControllerType::Player_1P,INIT_CHARACTER_POSITION_PLAYER1},
+				{"player2", WeaponType::Hammer, ControllerType::NPC,INIT_CHARACTER_POSITION_PLAYER2},
+				{"player3", WeaponType::Wand, ControllerType::NPC, INIT_CHARACTER_POSITION_PLAYER3},
+				/* @TODO: 銃キャラを実装する。*/
+			};
+
+			/* 作成したリストをセットする。*/
+			m_generator->SpawnPlayers(partyData);
 		}
 	}
 

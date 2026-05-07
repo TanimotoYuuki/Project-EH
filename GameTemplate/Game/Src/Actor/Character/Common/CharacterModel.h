@@ -30,11 +30,10 @@ namespace nsApp
 
 
 		/* 武器モデルを定義。*/
-		Weapon_GreatSword,   /* 大剣。*/
-		Weapon_TwinSword,    /* 双剣。*/
-		Weapon_Axe,          /* 斧。*/
-		Weapon_Hammer,       /* ハンマー。*/
-		Weapon_Wand,		 /* 杖。 @TODO 3Dモデルを探す。*/
+		Weapon_GreatSword,   //! 大剣。
+		Weapon_TwinGun,      //! 双銃。
+		Weapon_Hammer,       //! ハンマー。
+		Weapon_Wand,		 //! 杖。 
 	};
 
 
@@ -48,21 +47,22 @@ namespace nsApp
 
 	public:
 	    /* モデルを読み込む。
-		* @param characterType モデルの種類をしているする。
-		* @param animationClip アニメーションクリップの配列。
-		* @param numClips      アニメーションクリップの数。
-		*/
+		 * @param characterType モデルの種類をしているする。
+		 * @param animationClip アニメーションクリップの配列。
+		 * @param numClips      アニメーションクリップの数。
+		 */
 		bool LoadCharacterModel(CharacterModelType characterType, AnimationClip* animationClip, int numClips);
 
 		/**
-		* 武器を読み込む。
-		*/
+		 * @brief 武器を読み込む。
+		 * @param weaponType 武器の種類を指定する。
+		 */
 		bool LoadWeaponModel(CharacterModelType weaponType);
 
 		/* アニメーションを再生する。
-		* @param animationNumber 再生するアニメーションの配列の要素数を指定する。
-		* @param interpolateTime アニメーションの補間時間を指定する。デフォルトは0.2秒。
-		*/
+		 * @param animationNumber 再生するアニメーションの配列の要素数を指定する。
+		 * @param interpolateTime アニメーションの補間時間を指定する。デフォルトは0.2秒。
+		 */
 		void PlayAnimation(int animationNumber, float interpolateTime);
 
 		/* キャラクターを描画する。*/
@@ -180,7 +180,6 @@ namespace nsApp
 
 		Matrix m_handMatrix; 																					               //! 武器を装備させるときの右手のボーンの行列を管理する変数。
 		Matrix m_rotationMatrix;                                                                                               //! 武器を装備させたときの武器の傾きを制御。
-
 
 		Vector3 m_xAxis;                                                                                                       //! 武器を装備させるときの右手のボーンの行列から抽出したX軸を管理する変数。
 		Vector3 m_yAxis;                                                                                                       //! 武器を装備させるときの右手のボーンの行列から抽出したY軸を管理する変数。

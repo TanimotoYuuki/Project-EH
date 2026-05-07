@@ -8,13 +8,11 @@
 
 #include "Level3DRender/LevelRender.h"
 
-class Player;
-
-
 namespace nsApp
 {
 	class Camera;
 	class GameEndSelect;
+	class PlayerGenerator;	
 
 	namespace nsSound {
 		class SoundLister;
@@ -25,7 +23,6 @@ namespace nsApp
 	}
 
 	namespace nsActor {
-		class Player;
 		class Sandbag;
 	}
 
@@ -50,6 +47,12 @@ namespace nsApp
 			bool Start();
 			void Update();
 			void Render(RenderContext& rc)override;
+
+
+		private:
+			/* プレイアブルキャラを生成する。*/
+			void SpawnPlayCharacter();
+
 
 		public:
 			
@@ -101,9 +104,8 @@ namespace nsApp
 			GameOverDirection* m_gameOverDirection = nullptr;
 			GameEndSelect* m_gameEndSelect = nullptr;
 
-			nsActor::Player* m_player = nullptr;   //! プレイヤー。
-			nsActor::Player* m_player2 = nullptr;  //! プレイヤー2。
 			nsActor::Sandbag* m_sandbag = nullptr; //! サンドバッグ。
+			PlayerGenerator* m_generator = nullptr;
 		};
 	}
 }
