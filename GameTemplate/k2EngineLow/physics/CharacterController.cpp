@@ -29,6 +29,7 @@ namespace nsK2EngineLow {
 				if (convexResult.m_hitCollisionObject == me
 					|| convexResult.m_hitCollisionObject->getUserIndex() == enCollisionAttr_Character
 					|| convexResult.m_hitCollisionObject->getInternalType() == btCollisionObject::CO_GHOST_OBJECT
+					|| !me->checkCollideWith(convexResult.m_hitCollisionObject)
 					) {
 					//自分に衝突した。or キャラクタ属性のコリジョンと衝突した。
 					return 0.0f;
@@ -58,6 +59,7 @@ namespace nsK2EngineLow {
 				return 0.0f;
 			}
 		};
+
 		//衝突したときに呼ばれる関数オブジェクト(壁用)
 		struct SweepResultWall : public btCollisionWorld::ConvexResultCallback
 		{
@@ -72,6 +74,7 @@ namespace nsK2EngineLow {
 			{
 				if (convexResult.m_hitCollisionObject == me
 					|| convexResult.m_hitCollisionObject->getInternalType() == btCollisionObject::CO_GHOST_OBJECT
+					|| !me->checkCollideWith(convexResult.m_hitCollisionObject)
 					) {
 					//自分に衝突した。or 地面に衝突した。
 					return 0.0f;

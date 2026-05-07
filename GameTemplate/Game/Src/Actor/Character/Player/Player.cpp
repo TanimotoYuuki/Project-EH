@@ -24,6 +24,7 @@
 
 #include "Src/Actor/Character/Common/WeaponHitDetection.h"
 #include "Src/Sound/SoundLister.h"
+#include "Src/Actor/Character/NPC/NPCBrain.h"
 
 namespace
 {
@@ -35,47 +36,24 @@ namespace
 
 	const Vector3 POS = Vector3(0.0f,100.0f, 0.0f);     //! プレイヤーの初期座標。
 
-	struct PlayerSetupData
-	{
-		const char* name;                               //! モデルの名前。
-		nsApp::CharacterModelType modelType;            //! モデルの種類。
-		int padIndex;                                   //! 要素数の何番目を用いて操作を指示するのか。
-	};
-
-	const PlayerSetupData SET_UP_DATA[4] =
-	{
-		/*
-		 * @brief  生成名/識別子/コントローラーのインデックスを付与。
-		 * @detail 右端のインデックス数は0がメインPCの番号となる。
-		 * @TODO:  NPC実装のためにも実装を考える必要あり。
-		 */
-		{"player1", nsApp::CharacterModelType::Player_1P, 0},
-		{"player2", nsApp::CharacterModelType::Player_2P, 0},
-		{"player3", nsApp::CharacterModelType::Player_3P, 2},
-		{"player4", nsApp::CharacterModelType::Player_4P, 0}
-	};
 }
 
 namespace nsApp
 {
 	namespace nsActor
 	{
+		Player::~Player()
+		{
+			if (m_brain != nullptr)
+				delete m_brain;
+		}
+
+
 		bool Player::Start()
 		{
-
-			for (int i = 0; i < 4; i++)
-			{
-				if (IsMatchName(SET_UP_DATA[i].name))
-				{
-					m_playerInput.SetPadIndex(SET_UP_DATA[i].padIndex);
-					m_modelType = SET_UP_DATA[i].modelType;
-					break;
-				}
-			}
-
 			/* アニメーションとモデルを準備する。*/
 			/* アニメーションクラスの初期化処理をコール。*/
-			m_playerAnimation.Initialize();
+			m_playerAnimation.Initialize(m_currentWeapon);
 			/* 今の武器をセットする。*/
 			m_playerAnimation.LoadAnimation(m_currentWeapon);
 
@@ -85,10 +63,9 @@ namespace nsApp
 				m_playerAnimation.GetAnimatiocClip(),      //! アニメーションの種類。
 				m_playerAnimation.GetAnimationClips()      //! アニメーションの数。
 			);
-			m_model.SetCharacterScale(Vector3::One * CHARACTER_SCALE);
 
-			/* 初期座標をセットする。*/
-			m_model.SetPosition(POS);
+			/* モデルの大きさをセットする。*/
+			m_model.SetCharacterScale(Vector3::One * CHARACTER_SCALE);
 
 			/* 角度をセットする。*/
 			m_angle.AddRotationDegY(ANGLE_Y);
@@ -100,22 +77,9 @@ namespace nsApp
 			/* ステートを生成する。*/
 			RegisterState();
 
-
-			/* 
-			 * ダミーモデル配置用。
-			 * MPCの実装が完了後、削除可。
-			 */
-		    ///////////////////////////////////////////////////////////////////////////////////////
-			if (IsMatchName("player2"))
-				InitDummyModel();
-
-			else
-				m_stateMachine->ChangeState(m_stateFactory[PlayerStateID::enIdle]());
-
-			//////////////////////////////////////////////////////////////////////////////////////////
-
-			m_currentPosition = POS;
+			/* キャラコンを設定する。*/
 			m_characterController.Init(CHARACON_RADIUS, CHARACON_HEIGHT, m_currentPosition);
+			/* 座標をセットする。*/
 			m_model.SetPosition(m_currentPosition);
 
 			SetWaitInputTimer(10);
@@ -124,6 +88,15 @@ namespace nsApp
 			/* 武器の当たり判定を設定。*/
 			m_weaponHitDetection.Init(WEAPON_HIT_RADIUS);
 
+			/* NPCの場合、padIndexを0にする。*/
+			if (m_playerInput.GetPadIndex() < 0)
+			{
+				m_brain = new NPCBrain();
+				m_brain->Init(this);
+			}
+
+			/* */
+			m_stateMachine->ChangeState(m_stateFactory[PlayerStateID::enIdle]());
 			return true;
 		}
 
@@ -133,12 +106,17 @@ namespace nsApp
 			/* ICharacterクラスの更新処理をコール。*/
 			ICharacter::Update();
 
+			/* すり抜け判定。*/
+			if (!m_isIgnorePlayerSet)
+			{
+				ComputeSlipThrough();
+			}
+
 			/* ヒットストップ状態なら*/
 			if (IsHitStop())
 				return;
 
 			/* ゲーム開始直後数フレームは入力を受け付けない*/
-			/*@全体共有: その硬直はボス戦の開始演出でカバーする*/
 			if (m_inputWaitTimer > 0)
 			{
 				m_inputWaitTimer--;
@@ -146,6 +124,10 @@ namespace nsApp
 			}
 			else
 				m_playerInput.SetInputEnable(true);
+
+			/* NPCの場合、仮想のコントローラーによる判定を行う。*/
+			if (m_playerInput.GetPadIndex() < 0)
+				m_brain->Update();
 
 
 			/* モデルの更新より先に入力判定を更新する。*/
@@ -193,6 +175,12 @@ namespace nsApp
 
 			/* クリティカルダメージの初期化。*/
 			m_characterStatus.attack.criticalDamage = 2.0f;
+
+			/* 最大HPを初期化する。*/
+			m_characterStatus.hp.maxHP = 1000;
+
+			/* 現在のHPを初期化する。*/
+			m_characterStatus.hp.currentHP = m_characterStatus.hp.maxHP;
 		}
 
 
@@ -209,6 +197,39 @@ namespace nsApp
 		}
 
 
+		void Player::ComputeSlipThrough()
+		{
+			// 自分の剛体ができているか確認。
+			auto* myBody = m_characterController.GetRigidBody()->GetBody();
+			if (myBody == nullptr) return;
+
+			// 検索する全プレイヤーの名前リスト
+			const char* playerNames[] = { "player1", "player2", "player3", "player4" };
+
+			for (const char* name : playerNames)
+			{
+				auto otherPlayer = FindGO<nsActor::Player>(name);
+
+				// 相手がまだいない場合や、自分自身の場合はスキップする
+				if (otherPlayer == nullptr || otherPlayer == this)
+					continue;
+
+				// 相手の剛体を取得
+				auto* otherBody = otherPlayer->GetCharacterController().GetRigidBody()->GetBody();
+
+				// 相手の剛体も確実に存在していれば設定
+				if (otherBody != nullptr)
+				{
+					// お互いに無視リストへ登録
+					myBody->setIgnoreCollisionCheck(otherBody, true);
+					otherBody->setIgnoreCollisionCheck(myBody, true);
+				}
+			}
+
+			m_isIgnorePlayerSet = true; 
+		}
+
+
 		void Player::PlayBasicAnimation(CharacterBasicAnimationList state)
 		{
 			int animIndex = m_playerAnimation.GetBasicAnimationIndex(state);
@@ -222,9 +243,6 @@ namespace nsApp
 			animIndex = m_playerAnimation.GetAttackAnimationIndex(attack);
 			/* 攻撃アニメーションはボタンを押した瞬間に切り替わってほしいため補完割合を低めに設定。*/
 			m_model.PlayAnimation(animIndex, 0.0f);
-
-			/* 古いSEが残っているなら強制停止する。*/
-		//	StopWeaponSE();
 
 			/* --- ここからSE再生処理 --- */
 			/* サウンド管理クラスを探す */
