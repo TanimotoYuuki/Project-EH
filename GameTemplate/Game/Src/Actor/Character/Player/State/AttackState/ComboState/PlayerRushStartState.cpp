@@ -202,7 +202,10 @@ namespace nsApp
 		{
 			/* ボーンの位置を取得する。*/
 			m_subWeaponSpawnPos = m_player->GetBonePosition(boneName);
-			BulletFactory::CreateBullet(BulletType::enRush, m_subWeaponSpawnPos, m_player->GetForwardVector());
+			m_forwardDirection = m_player->GetForwardVector();
+
+			/* 乱射弾（enRush）を指定。*/
+			ConstructAndTransmitBulletRequest(BulletType::enRush);
 		}
 	}
 }

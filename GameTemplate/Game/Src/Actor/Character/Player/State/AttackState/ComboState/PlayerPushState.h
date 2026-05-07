@@ -56,7 +56,6 @@ namespace nsApp
 			float m_forwardSpeed = 0.0f;                //! 突き進む速度。
 
 			Vector3 m_moveVector = Vector3::Zero;	    //! 突き進む方向を管理。
-			Vector3 m_spawnPosition = Vector3::Zero;    //! 突き進む攻撃の開始位置を管理。
 		};
 	}
 }

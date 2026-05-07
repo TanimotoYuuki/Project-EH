@@ -17,8 +17,6 @@ namespace nsApp
 
 		// 登録されているリスナーに通知。
 		for (auto* listener : m_listeners)
-		{
 			listener->OnBulletFired(request);
-		}
 	}
 }

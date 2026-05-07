@@ -33,8 +33,6 @@ namespace nsApp
 
 
 		private:
-			Vector3 m_spawnPosition = Vector3::Zero; //! 弾の生成位置を管理。
-
 			Quaternion m_baseRot;					 //! 攻撃開始時の武器の角度を管理。
 		};
 	}

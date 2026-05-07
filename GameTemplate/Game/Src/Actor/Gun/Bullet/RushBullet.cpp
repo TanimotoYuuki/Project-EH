@@ -24,9 +24,6 @@ namespace nsApp
 			m_rushBulletRender->SetPosition(m_position);
 
 			/* 弾の向きをセットする。*/ 
-			m_angle.SetRotation(Vector3::Front, m_direction);
-			m_offsetAngle.SetRotationDegZ(-90.0f);
-			m_angle *= m_offsetAngle;
 			m_rushBulletRender->SetRotation(m_angle);
 			return true;
 		}
@@ -38,6 +35,13 @@ namespace nsApp
 			{
 				DeleteGO(this);
 				return;
+			}
+
+			if (m_direction.LengthSq() > 0.0)
+			{
+				m_angle.SetRotation(Vector3::Front, m_direction);
+				m_offsetAngle.SetRotationDegZ(-90.0f);
+				m_angle *= m_offsetAngle;
 			}
 
 			m_rushBulletRender->SetPosition(m_position);

@@ -50,7 +50,10 @@ namespace nsApp
         void PlayerHeavyAttackState::FireHeavyBullet()
         {
             m_spawnPosition = m_player->GetBonePosition(L"mixamorig:RightHand");
-            BulletFactory::CreateBullet(BulletType::enExplosive, m_spawnPosition, m_player->GetForwardVector());
+            m_forwardDirection = m_player->GetForwardVector();
+
+            /* 爆発弾（enExplosive）を指定。*/
+            ConstructAndTransmitBulletRequest(BulletType::enExplosive);
         }
     }
 }

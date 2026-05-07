@@ -1,5 +1,5 @@
 #pragma once
-/*＊
+/**
  * @file   BulletParameterTable.h
  * @brief  各弾丸のパラメータを管理する。
  * @author Yamaguchi Hayato

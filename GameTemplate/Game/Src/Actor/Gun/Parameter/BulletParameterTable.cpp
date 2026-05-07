@@ -4,7 +4,7 @@
 
 namespace
 {
-	const auto UNIFIED_SPEED = 2400.0f;
+	const auto UNIFIED_SPEED = 500.0f;
 	const auto UNIFIED_LIFE = 1.0f;
 
 	namespace nsNormalBullet

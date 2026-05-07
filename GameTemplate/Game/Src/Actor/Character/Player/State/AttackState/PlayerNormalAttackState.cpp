@@ -72,8 +72,14 @@ namespace nsApp
 
 		void PlayerNormalAttackState::FireGunBullet()
 		{
+			/* 座標を取得。*/
 			m_spawnPosition = m_player->GetWeaponHitDetection().GetPosition();
-			BulletFactory::CreateBullet(BulletType::enNormal, m_spawnPosition, m_player->GetForwardVector());
+
+			/* 前方向のベクトルを取得する。*/
+			m_forwardDirection = m_player->GetForwardVector();
+
+			/* 生成する弾丸の種類を設定する。*/
+			ConstructAndTransmitBulletRequest(BulletType::enNormal);
 		}
 	}
 }

@@ -38,10 +38,6 @@ namespace nsApp
 			* @brief 銃弾を発射させる処理。
 			*/
 			void FireGunBullet();
-
-
-		private:
-			Vector3 m_spawnPosition;        //! ミサイルの出現位置。
 		};
 	}
 }

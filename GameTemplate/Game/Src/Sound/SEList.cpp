@@ -4,13 +4,21 @@
 
 namespace
 {
-	const auto SE_VOLUME = 1.0f; //! SEの音量。
+	const auto SE_VOLUME = 1.0f;			  //! SEの音量。
+	static constexpr int MAX_SE_COUNT = 64;   //! 同時に再生できるSEの数。
 }
 
 namespace nsApp
 {
 	namespace nsSound
 	{
+		SEList::~SEList()
+		{
+			/* SEを解放する。*/
+			Clear();
+		}
+
+
 		void SEList::Init()
 		{
 			/* ファイルパスを登録。*/
@@ -70,26 +78,87 @@ namespace nsApp
 		}
 
 
-		nsK2EngineLow::SoundSource* SEList::PlaySE(SE_ID id, float volume, bool flag)
+		void SEList::Update(float deltaTime)
 		{
-			volume = 1.0f;
+			for (auto it = m_playingSEs.begin(); it != m_playingSEs.end();)
+			{
+				/* ループSEは自動削除しない。*/
+				if (it->isLoop)
+				{
+					++it;
+					continue;
+				}
 
-			/* 音源クラス(ライブラリ)の生成。*/
-			auto seSource = NewGO<nsK2EngineLow::SoundSource>(0, "SE");
+				it->currentTime += deltaTime;
+
+		
+				if (it->currentTime >= it->lifeTime)
+				{
+					if (it->source != nullptr)
+					{
+						DeleteGO(it->source);
+						it->source = nullptr;
+					}
+
+					it = m_playingSEs.erase(it);
+				}
+
+				else
+				{
+					++it;
+				}
+			}
+		}
+
+
+		void SEList::Clear()
+		{
+			for (auto& se : m_playingSEs)
+			{
+				if (se.source != nullptr)
+				{
+					DeleteGO(se.source);
+					se.source = nullptr;
+				}
+			}
+
+			m_playingSEs.clear();
+		}
+
+
+		nsK2EngineLow::SoundSource* SEList::PlaySE(SE_ID id, float volume, bool flag, float lifeTime)
+		{
+			if (m_playingSEs.size() >= MAX_SE_COUNT)
+				return nullptr;
+
+			/* 音源クラスの生成。*/
+			auto* seSource = NewGO<nsK2EngineLow::SoundSource>(0, "SE");
+
 			/* データを代入。*/
 			seSource->Init(id);
+
 			/* 音量をセット。*/
 			seSource->SetVolume(volume);
-			/* 再生。*/
-			seSource->Play(false);
 
-			/* 真偽値によって再生の有無を変化させる。*/
+			/* 再生。*/
+			seSource->Play(flag);
+
+			/* 再生中SEとして登録。*/
+			SEInfo info;
+			info.source = seSource;
+			info.lifeTime = lifeTime;
+			info.currentTime = 0.0f;
+			info.isLoop = flag;
+
+			m_playingSEs.emplace_back(info);
+
+			/* ループSEは呼び出し側で止める必要があるので返す。*/
 			if (flag)
 				return seSource;
 
-			else
-				return nullptr;
 
+			/* 単発SEはSEList側で自動削除する。*/
+			return nullptr;
 		}
 
 
@@ -106,13 +175,40 @@ namespace nsApp
 				{
 					m_isLoop = (attack == AttackType::Charging);
 
-					return PlaySE(attackTable[attack], SE_VOLUME, m_isLoop);
+					return PlaySE(attackTable[attack], SE_VOLUME, m_isLoop, 2.0f);
 				}
 			}
 
 			return nullptr;
 		}
 
+
+		void SEList::StopSE(nsK2EngineLow::SoundSource*& soundSource)
+		{
+			if (soundSource == nullptr)
+			{
+				return;
+			}
+
+			for (auto it = m_playingSEs.begin(); it != m_playingSEs.end(); ++it)
+			{
+				if (it->source == soundSource)
+				{
+					it->source->Stop();
+					DeleteGO(it->source);
+					it->source = nullptr;
+
+					m_playingSEs.erase(it);
+					soundSource = nullptr;
+					return;
+				}
+			}
+
+			/* リストに無い場合でも、念のため削除する。*/
+			soundSource->Stop();
+			DeleteGO(soundSource);
+			soundSource = nullptr;
+		}
 
 		void SEList::RegisterSwordSEBank()
 		{

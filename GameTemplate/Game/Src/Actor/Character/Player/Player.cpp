@@ -88,6 +88,12 @@ namespace nsApp
 			/* 武器の当たり判定を設定。*/
 			m_weaponHitDetection.Init(WEAPON_HIT_RADIUS);
 
+			m_forwardVector = Vector3::Right;
+
+			/* エフェクトリスナーを初期化。*/
+			m_effectListener.Initialize(this);
+			m_gunShooter.Subscribe(&m_effectListener);
+
 			/* NPCの場合、padIndexを0にする。*/
 			if (m_playerInput.GetPadIndex() < 0)
 			{

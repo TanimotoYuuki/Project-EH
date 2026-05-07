@@ -13,9 +13,10 @@
 #include "Src/Actor/Character/Common/WeaponHitDetection.h"
 #include "Src/Actor/Character/Player/Component/PlayerSpawnData.h"
 #include "Src/Actor/Character/NPC/NPCBrain.h"
-
-
+#include "Src/Actor/Gun/Shooter/GunShooter.h"
 #include "Src/Effect/EffectList.h"
+#include "Src/Effect/EffectListener.h"
+
 namespace nsApp
 {
 	namespace nsEffect {
@@ -64,6 +65,8 @@ namespace nsApp
 			Player() = default;
 			virtual ~Player();
 
+
+		public:
 			/*  
 			 * @def PlayerGeneratorにてコールする。
 			 * @brief PlayerGeneratorクラスからデータを受け取る処理。
@@ -104,10 +107,16 @@ namespace nsApp
 
 
 		public:
-			/* 基本動作用アニメーションを再生。*/
+			/* 
+			 * @brief 基本動作用アニメーションを再生。
+			 * @param state 再生する基本動作の列挙型。
+			 */
 			void PlayBasicAnimation(CharacterBasicAnimationList state);
 
-			/* 攻撃用アニメーションを再生。*/
+			/* 
+			 * @brief 攻撃用アニメーションを再生。
+			 * @param attack 再生する攻撃の列挙型。
+			 */
 			void PlayWeaponAnimation(AttackType attack);
 
 			/* 起き上がり状態。*/
@@ -132,7 +141,10 @@ namespace nsApp
 				}
 			}
 
-			/* サブウェポンの表示。*/
+			/* 
+			 * @brief サブウェポンの表示。
+			 * @param type 表示するサブウェポンの種類。
+			 */
 			inline void LoadSubWeapon(CharacterModelType type)
 			{
 				/* サブウェポンモデルを読み込む。*/
@@ -148,25 +160,37 @@ namespace nsApp
 
 		/* セッター。*/
 		public:
-			/* 座標を設定。*/
+			/* 
+			 * @brief 座標を設定。
+			 * @param position 設定する座標。
+			 */
 			inline void SetPosition(const Vector3& position)
 			{
 				m_currentPosition = position;
 			}
 
-			/* 入力判定の切り替えを設定。*/
+			/* 
+			 * @brief 入力判定の切り替えを設定。
+			 * @param isEnable 入力を有効にするかどうか。
+			 */
 			inline void SetInputEnable(bool isEnable)
 			{
 				m_playerInput.SetInputEnable(isEnable);
 			}
 
-			/* 入力時間を設定。*/
+			/* 
+			 * @brief 入力時間を設定。
+			 * @param timer 入力時間。
+			 */
 			inline void SetWaitInputTimer(int timer)
 			{
 				m_inputWaitTimer = timer;
 			}
 
-			/* 角度を設定。*/
+			/* 
+			 * @brief 角度を設定。
+			 * @param angle 設定する角度。
+			 */
 			inline void SetAngle(float angle)
 			{
 				m_angle = Quaternion::Identity;
@@ -174,13 +198,19 @@ namespace nsApp
 				m_model.SettRotation(m_angle);
 			}
 
-			/* 前方向ベクトルを設定。*/
+			/*
+			 * @brief 前方向ベクトルを設定。
+			 * @param forward 設定する前方向ベクトル。
+			 */
 			inline void SetForwardVector(const Vector3& forward)
 			{
 				m_forwardVector = forward;
 			}
 
-			/* ステートから武器の角度をいじれるように設定。*/
+			/* 
+			 * @brief ステートから武器の角度をいじれるように設定。
+			 * @param rotDeg 回転軸の角度。
+			 */
 			inline void SetWeaponRotationAngle(const Vector3& rotDeg, float angle)
 			{
 				m_weaponAngle = Quaternion::Identity;
@@ -188,31 +218,45 @@ namespace nsApp
 				m_model.SetWeaponAngle(m_weaponAngle);
 			}
 
-			/* 落下速度を設定。*/
+			/* 
+			 * @brief 下速度を設定。
+			 * @param velocity 設定する下速度。
+			 */
 			inline void SetFallVelocity(float velocity)
 			{
 				m_fallVelocity = velocity;
 			}
 
-			/* チャージレベルを設定する。*/
+			/* 
+			 * @brief チャージレベルを設定する。
+			 * @param chargeLevel 設定するチャージレベル。
+			 */
 			inline void SetChargeLevel(int chargeLevel)
 			{
 				m_chargeLevel = chargeLevel;
 			}
 
-			/* モデル全体を傾きを設定をする。*/
+			/**
+			 * @brief モデル全体を傾きを設定をする。
+			 * @param offset 設定する傾きのクォータニオン。
+			 */
 			inline void SetPostureOffset(const Quaternion& offset)
 			{
 				m_postureOffset = offset;
 			}
 
+			/**
+			 * @brief 武器の回転をクォータニオンで設定する。
+			 * @param rot 設定する回転のクォータニオン。
+			 */
 			inline void SetWeaponRotationByQuaternion(const Quaternion& rot)
 			{
 				m_weaponAngle = rot;
 				m_model.SetWeaponAngle(m_weaponAngle);
 			}
 
-		/* ゲッター。*/
+
+			/* ゲッター。*/
 		public:
 			/* アニメーションが再生終了しているかどうか。*/
 			inline bool IsPlayAnimation()
@@ -275,19 +319,29 @@ namespace nsApp
 				return m_chargeLevel;
 			}
 			
-			/* 指定したボーンの位置を取得。*/
+			/*
+			 * @broef 指定したボーンの位置を取得。
+			 * @param boneName 取得したいボーンの名前。
+			 */
 			inline Vector3 GetBonePosition(const wchar_t* boneName)
 			{
 				m_subWeaponHandMatrix = m_model.GetWorldMatrix(boneName);
 				return Vector3(m_subWeaponHandMatrix.m[3][0], m_subWeaponHandMatrix.m[3][1], m_subWeaponHandMatrix.m[3][2]);
 			}
 
+			/**
+			 * @brief GunShooterクラスを取得する。
+			 */
+			inline GunShooter& GetGunShooter()
+			{
+				return m_gunShooter;
+			}
+
+
 		private:
 			nsK2EngineLow::EffectEmitter* m_chargeEffect = nullptr;                                                //! チャージエフェクトのリモコン       
 			nsK2EngineLow::SoundSource* m_currentWeaponSE = nullptr;                                               //! 現在の武器のSEのリモコン
-			NPCBrain* m_brain = nullptr; //! NPCの親クラスのポインタ。
-
-
+			NPCBrain* m_brain = nullptr;																		   //! NPCの親クラスのポインタ。
 
 
 		protected:
@@ -311,6 +365,8 @@ namespace nsApp
 		private:
 			nsApp::nsEffect::EffectList m_effectList;                                                              //! エフェクト管理クラス
 			PlayerStateID m_playerStateID;                                                                         //! プレイヤーの状態ID。
+			GunShooter m_gunShooter;                                                                               //! 銃の発射処理を管理するクラス。
+			EffectListener m_effectListener;
 
 
 		private:

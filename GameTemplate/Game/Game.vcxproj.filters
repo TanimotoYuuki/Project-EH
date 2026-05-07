@@ -190,6 +190,7 @@
     <ClCompile Include="Src\Actor\Gun\Parameter\BulletParameterTable.cpp" />
     <ClCompile Include="Src\Actor\Gun\Factory\BulletFactory.cpp" />
     <ClCompile Include="Src\Actor\Gun\Shooter\GunShooter.cpp" />
+    <ClCompile Include="Src\Effect\EffectListener.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -345,5 +346,6 @@
     <ClInclude Include="Src\Actor\Gun\Shooter\BulletFireRequest.h" />
     <ClInclude Include="Src\Actor\Gun\Shooter\IBulletFireListener.h" />
     <ClInclude Include="Src\Actor\Gun\Parameter\BulletParameter.h" />
+    <ClInclude Include="Src\Effect\EffectListener.h" />
   </ItemGroup>
 </Project>

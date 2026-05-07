@@ -180,16 +180,12 @@ namespace nsApp
 		bool PlayerAirAttackState::CheckLanding()
 		{
 			if (m_attackTimer <= AIR_ATTACK_DURATION || !GET_PLAYER_CHARACON.IsOnGround())
-			{
 				return false;
-			}
 
 			m_isLanding = true;
 
 			if (m_player->GetCurrentWeapon() != WeaponType::Wand && m_player->GetCurrentWeapon() != WeaponType::TwinGun)
-			{
 				CreateShockWaveEffect();
-			}
 
 			return true;
 		}
@@ -246,10 +242,18 @@ namespace nsApp
 			m_gunShootDir = m_player->GetForwardVector();
 			m_gunShootDir.y -= BULLET_SHOOT_DIR_DOWN_OFFSET;
 			m_gunShootDir.Normalize();
+			
+			m_forwardDirection = m_gunShootDir;
 
-			BulletFactory::CreateBullet(BulletType::enAirial, m_spawnPosR, m_gunShootDir);
-			BulletFactory::CreateBullet(BulletType::enAirial, m_spawnPosL, m_gunShootDir);
+			/* 右手から発射。*/
+			m_spawnPosition = m_player->GetBonePosition(L"mixamorig:RightHand");
+			ConstructAndTransmitBulletRequest(BulletType::enAirial);
 
+			/* 左手から発射。*/
+			m_spawnPosition = m_player->GetBonePosition(L"mixamorig:LeftHand");
+			ConstructAndTransmitBulletRequest(BulletType::enAirial);
+
+			/* 反動を計算。*/
 			m_recoil = m_player->GetForwardVector() * RECOIL_POWER_BACK;
 			m_recoil.y += RECOIL_POWER_UP;
 			m_recoilVector = m_recoil;

@@ -104,7 +104,6 @@ namespace nsApp
 
 
 		private:
-			nsActor::Player* m_player = nullptr;                 //! プレイヤーのポインタ
 			nsActor::MagicProjectotile* m_airMissile = nullptr;  //! 空中攻撃で生成するミサイルのポインタ
 			nsActor::AirBullet* m_bulletR = nullptr;             //! 右手から発射される弾のポインタ
 			nsActor::AirBullet* m_bulletL = nullptr;             //! 左手から発射される弾のポインタ

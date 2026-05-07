@@ -32,7 +32,10 @@ namespace nsApp
 			if (m_attackTimer == 15)
 			{
 				m_spawnPosition = m_player->GetWeaponHitDetection().GetPosition();
-				BulletFactory::CreateBullet(BulletType::enRush, m_spawnPosition, m_player->GetForwardVector());
+				m_forwardDirection = m_player->GetForwardVector();
+
+				/* 乱射弾（enRush）を指定。*/
+				ConstructAndTransmitBulletRequest(BulletType::enRush);
 			}
 
 			/* アニメーションの再生が終わったらタメ攻撃状態に遷移。*/ 

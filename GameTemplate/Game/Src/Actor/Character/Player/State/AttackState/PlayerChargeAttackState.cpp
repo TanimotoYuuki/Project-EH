@@ -59,7 +59,12 @@ namespace nsApp
 		{
 			/* 武器の当たり判定を取得する。*/
 			m_spawnPosition = m_player->GetWeaponHitDetection().GetPosition();
-			BulletFactory::CreateBullet(BulletType::enCharge, m_spawnPosition, m_player->GetForwardVector());
+
+			/* 前方向のベクトルを取得する。*/
+			m_forwardDirection = m_player->GetForwardVector();
+
+			/* 生成する弾丸の種類を設定する。*/
+			ConstructAndTransmitBulletRequest(BulletType::enCharge);
 		}
 	}
 }
