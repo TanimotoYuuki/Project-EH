@@ -81,40 +81,6 @@ namespace nsApp
 				m_characterController.SetPosition(m_currentPosition);
 			}
 
-			/*  
-			 * @def PlayerGenerator‚É‚ÄƒR[ƒ‹‚·‚éB
-			 * @brief PlayerGeneratorƒNƒ‰ƒX‚©‚çƒf[ƒ^‚ğó‚¯æ‚éˆ—B
-			 * @param data: ¶¬‚É•K—v‚È\‘¢‘Ì‚Ìƒf[ƒ^‚ğæ“¾‚·‚éB
-			 */
-			inline virtual void InitializeSpawnData(const PlayerSpawnData& data)
-			{
-				/* ƒRƒ“ƒgƒ[ƒ‰[‚Ìí—Ş‚ğƒZƒbƒgB*/
-				m_playerInput.SetPadIndex(static_cast<int>(data.controllerType));
-
-				/* İ’èÀ•W‚ÉƒXƒ|[ƒ“B*/
-				m_currentPosition = data.spawnPosition;
-
-				/* ƒLƒƒƒ‰ƒRƒ“‚ğƒZƒbƒgB*/
-				m_characterController.SetPosition(m_currentPosition);
-			}
-
-			/*  
-			 * @def PlayerGenerator‚É‚ÄƒR[ƒ‹‚·‚éB
-			 * @brief PlayerGeneratorƒNƒ‰ƒX‚©‚çƒf[ƒ^‚ğó‚¯æ‚éˆ—B
-			 * @param data: ¶¬‚É•K—v‚È\‘¢‘Ì‚Ìƒf[ƒ^‚ğæ“¾‚·‚éB
-			 */
-			inline virtual void InitializeSpawnData(const PlayerSpawnData& data)
-			{
-				/* ƒRƒ“ƒgƒ[ƒ‰[‚Ìí—Ş‚ğƒZƒbƒgB*/
-				m_playerInput.SetPadIndex(static_cast<int>(data.controllerType));
-
-				/* İ’èÀ•W‚ÉƒXƒ|[ƒ“B*/
-				m_currentPosition = data.spawnPosition;
-
-				/* ƒLƒƒƒ‰ƒRƒ“‚ğƒZƒbƒgB*/
-				m_characterController.SetPosition(m_currentPosition);
-			}
-
 
 		public:
 			/* ãƒ©ã‚¤ãƒ•ã‚µã‚¤ã‚¯ãƒ«ã€‚*/

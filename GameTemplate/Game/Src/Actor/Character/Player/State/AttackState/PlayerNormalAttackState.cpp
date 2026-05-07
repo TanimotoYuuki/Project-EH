@@ -2,6 +2,7 @@
 #include "PlayerNormalAttackState.h"
 #include "Src/Actor/Magic/MagicProjectotile.h"
 #include "Src/Actor/Gun/Bullet/NormalBullet.h"
+#include "Src/Actor/Gun/Factory/BulletFactory.h"
 
 namespace
 {
@@ -72,10 +73,7 @@ namespace nsApp
 		void PlayerNormalAttackState::FireGunBullet()
 		{
 			m_spawnPosition = m_player->GetWeaponHitDetection().GetPosition();
-			m_spawnPosition.y += 10.0f;
-
-			auto* bullet = NewGO<nsActor::NormalBullet>(0, "NormalBullet");
-			bullet->InitializeBullet(m_spawnPosition, m_player->GetForwardVector(), 4.0f, 60);
+			BulletFactory::CreateBullet(BulletType::enNormal, m_spawnPosition, m_player->GetForwardVector());
 		}
 	}
 }

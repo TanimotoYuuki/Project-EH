@@ -4,7 +4,7 @@
 #include "Src/Actor/Character/Player/State/BasicState/PlayerIdleState.h"
 #include "Src/Actor/Character/Player/State/BasicState/PlayerRunState.h"
 #include "Src/Actor/Character/Player/State/BasicState/PlayerWalkState.h"
-
+#include "Src/Actor/Gun/Factory/BulletFactory.h"
 
 namespace
 {
@@ -42,7 +42,7 @@ namespace nsApp
 
 		void PlayerPushState::Update()
 		{
-			if(!m_player)
+			if (!m_player)
 				return;
 
 			/* 前進する。*/
@@ -67,7 +67,7 @@ namespace nsApp
 
 		void PlayerPushState::Exit()
 		{
-			if (m_player->GetCurrentWeapon() == WeaponType::TwinGun){}
+			if (m_player->GetCurrentWeapon() == WeaponType::TwinGun) {}
 
 			else
 			{
@@ -82,16 +82,16 @@ namespace nsApp
 
 		void PlayerPushState::MoveForward()
 		{
-			if(m_attackTimer <= 12)
-			  /* 前進する速度を設定。*/
-			  SetForwardSpeed(MOVE_SPEED);
+			if (m_attackTimer <= 12)
+				/* 前進する速度を設定。*/
+				SetForwardSpeed(MOVE_SPEED);
 
 			else
 			{
 				/* 減衰処理。*/
 				m_forwardSpeed *= 0.8f;
 
-				if(m_forwardSpeed < 0.1f)
+				if (m_forwardSpeed < 0.1f)
 					m_forwardSpeed = 0.0f;
 			}
 
@@ -108,13 +108,9 @@ namespace nsApp
 		void PlayerPushState::FireDashBullet()
 		{
 			m_spawnPosition = m_player->GetBonePosition(L"mixamorig:RightHand");
-			m_spawnPosition.y += 10.0f;
-			m_spawnPosition += m_player->GetForwardVector() * 20.0f; // 前方へオフセット
-
-			/* ダッシュ用弾丸を生成*/ 
-			auto* dashBullet = NewGO<nsActor::DashBullet>(0, "DashBullet");
-			dashBullet->InitializeBullet(m_spawnPosition, m_player->GetForwardVector(), 30.0f, 60);
+			BulletFactory::CreateBullet(BulletType::enDash, m_spawnPosition, m_player->GetForwardVector());
 		}
+
 
 
 		bool PlayerPushState::TransitionMultiState()

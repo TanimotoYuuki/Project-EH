@@ -32,7 +32,7 @@ namespace nsApp
 
             if (m_player->GetCurrentWeapon() == WeaponType::TwinGun)
             {
-                if (m_attackTimer == 15) 
+                if (m_attackTimer == 8) 
                     FireHeavyBullet();
                 
 

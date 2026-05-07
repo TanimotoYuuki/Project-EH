@@ -3,6 +3,7 @@
 #include "Src/Actor/Character/Player/State/AttackState/ComboState/PlayerRushEndState.h"
 #include "Src/Actor/Character/Player/State/BasicState/PlayerIdleState.h"
 #include "Src/Actor/Gun/Bullet/RushBullet.h"
+#include "Src/Actor/Gun/Factory/BulletFactory.h"
 
 namespace
 {
@@ -201,14 +202,7 @@ namespace nsApp
 		{
 			/* ボーンの位置を取得する。*/
 			m_subWeaponSpawnPos = m_player->GetBonePosition(boneName);
-			m_subWeaponSpawnPos.y += INCREASE_VALUE_Y;
-
-			/* 前方向のベクトルを取得する。*/
-			m_subWeaponSpawnPos += m_player->GetForwardVector() * 30.0f;
-			
-			/* 弾丸の生成。*/
-			auto* rushBullet = NewGO<nsActor::RushBullet>(0, "RushBullet");
-			rushBullet->InitializeBullet(m_subWeaponSpawnPos, m_player->GetForwardVector(), 7.5f, 10.0f);
+			BulletFactory::CreateBullet(BulletType::enRush, m_subWeaponSpawnPos, m_player->GetForwardVector());
 		}
 	}
 }

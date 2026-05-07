@@ -7,6 +7,8 @@
 
 #include "Src/Actor/Gun/Factory/BulletFactory.h"
 
+#define FIRE_FRAME 15
+
 #define PLAYER_PLAY_ANIMATION m_player->PlayWeaponAnimation
 #define CURRENT_WEAPON m_currentAttackType = AttackType
 
@@ -45,7 +47,7 @@ namespace nsApp
 			if (!m_player)
 				return;
 
-			if (m_attackTimer == 30 && m_player->GetCurrentWeapon() == WeaponType::TwinGun)
+			if (m_attackTimer == FIRE_FRAME && m_player->GetCurrentWeapon() == WeaponType::TwinGun)
 				FireChargeBullet();
 
 			/* 親クラスを更新。*/
