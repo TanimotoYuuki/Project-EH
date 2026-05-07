@@ -28,6 +28,7 @@ namespace
 	const auto INIT_CHARACTER_POSITION_PLAYER1 = Vector3(80.0f, INIT_CHARACTER_POSITION_Y, INIT_CHARACTER_POSITION_Z);
 	const auto INIT_CHARACTER_POSITION_PLAYER2 = Vector3(-80.0f, INIT_CHARACTER_POSITION_Y, INIT_CHARACTER_POSITION_Z);
 	const auto INIT_CHARACTER_POSITION_PLAYER3 = Vector3(-50.0f, INIT_CHARACTER_POSITION_Y, INIT_CHARACTER_POSITION_Z);
+	const auto INIT_CHARACTER_POSITION_PLAYER4 = Vector3(50.0f, INIT_CHARACTER_POSITION_Y, INIT_CHARACTER_POSITION_Z);
 }
 
 namespace nsApp
@@ -176,16 +177,16 @@ namespace nsApp
 
 		void Game::SpawnPlayCharacter()
 		{
-			/* 生成システムを生成する。*/
+			/* 生成システムクラスを生成する。*/
 			m_generator = new PlayerGenerator();
 
 			/* PlayerGeneratorを用い、プレイアブルキャラを作成する。*/
 			std::vector<PlayerSpawnData> partyData =
 			{
-				{"player1", WeaponType::GreatSword, ControllerType::Player_1P,INIT_CHARACTER_POSITION_PLAYER1},
-				{"player2", WeaponType::Hammer, ControllerType::NPC,INIT_CHARACTER_POSITION_PLAYER2},
-				{"player3", WeaponType::Wand, ControllerType::NPC, INIT_CHARACTER_POSITION_PLAYER3},
-				/* @TODO: 銃キャラを実装する。*/
+				//{"player1", WeaponType::GreatSword, ControllerType::NPC,INIT_CHARACTER_POSITION_PLAYER1},
+				//{"player2", WeaponType::Hammer, ControllerType::NPC,INIT_CHARACTER_POSITION_PLAYER2},
+				//{"player3", WeaponType::Wand, ControllerType::NPC, INIT_CHARACTER_POSITION_PLAYER3},
+				{"player4", WeaponType::TwinGun, ControllerType::Player_1P, INIT_CHARACTER_POSITION_PLAYER4}
 			};
 
 			/* 作成したリストをセットする。*/

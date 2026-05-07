@@ -77,6 +77,7 @@ namespace nsApp
 
 			bool m_isInputMatch;									  //! 入力がコンボルートの条件に合致しているか。
 			bool m_isGrounded;										  //! 地上にいるかどうか。
+			bool m_isHit;											  //! 攻撃がヒットしたかどうか。
 
 			float m_criticalRate = 0.0f;							  //! クリティカル補正の確率。
 

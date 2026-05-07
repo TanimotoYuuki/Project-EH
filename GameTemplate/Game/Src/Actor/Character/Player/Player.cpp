@@ -79,7 +79,7 @@ namespace nsApp
 
 			/* キャラコンを設定する。*/
 			m_characterController.Init(CHARACON_RADIUS, CHARACON_HEIGHT, m_currentPosition);
-			/* 座標をセットする。*/
+			m_model.SettRotation(m_angle * m_postureOffset);
 			m_model.SetPosition(m_currentPosition);
 
 			SetWaitInputTimer(10);
@@ -146,6 +146,8 @@ namespace nsApp
 
 			/* ステートマシーンを更新する。*/
 			m_stateMachine->Update();
+
+			m_model.SettRotation(m_angle * m_postureOffset);
 
 			/* モデルの座標を更新する。*/
 			m_model.SetPosition(m_currentPosition);

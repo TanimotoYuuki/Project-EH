@@ -1,8 +1,8 @@
-#pragma once
+ï»¿#pragma once
 
 /**
 * @file   Player.h
-* @brief  ƒvƒŒƒCƒ„[ƒXƒe[ƒgƒ}ƒV[ƒ“‚ğXV‚·‚éƒNƒ‰ƒXB
+* @brief  ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚¹ãƒ†ãƒ¼ãƒˆãƒã‚·ãƒ¼ãƒ³ã‚’æ›´æ–°ã™ã‚‹ã‚¯ãƒ©ã‚¹ã€‚
 * @author Yamaguchi Hayato
 * @date   2026/03/11
 */
@@ -25,60 +25,59 @@ namespace nsApp
 	namespace nsActor
 	{
 		/* 
-		 * @enum PlayerStateIDB
-		 *ƒvƒŒƒCƒ„[‚Ìó‘Ô‚ğŠÇ—‚·‚é—ñ‹“Œ^B
+		 * @enum PlayerStateIDã€‚
+		 *ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®çŠ¶æ…‹ã‚’ç®¡ç†ã™ã‚‹åˆ—æŒ™å‹ã€‚
 		 */
 		enum class PlayerStateID : uint8_t
 		{
-			/* Šî–{“®ìB*/
-			enIdle,           //! ‘Ò‹@ó‘ÔB
-			enWalk,           //! •àsó‘ÔB
-			enRun,            //! ‘–só‘ÔB
-			enJump,           //! ƒWƒƒƒ“ƒvó‘ÔB
-			enHit,            //! ”í’eó‘ÔB
-			enDeath,          //! €–Só‘ÔB
-			enGuard,          //! ƒK[ƒhó‘ÔB
-			enHelp,           //! •‚¯’†B
-			enGetUp,          //! ‹N‚«ã‚ª‚èó‘ÔB
+			/* åŸºæœ¬å‹•ä½œã€‚*/
+			enIdle,           //! å¾…æ©ŸçŠ¶æ…‹ã€‚
+			enWalk,           //! æ­©è¡ŒçŠ¶æ…‹ã€‚
+			enRun,            //! èµ°è¡ŒçŠ¶æ…‹ã€‚
+			enJump,           //! ã‚¸ãƒ£ãƒ³ãƒ—çŠ¶æ…‹ã€‚
+			enHit,            //! è¢«å¼¾çŠ¶æ…‹ã€‚
+			enDeath,          //! æ­»äº¡çŠ¶æ…‹ã€‚
+			enGuard,          //! ã‚¬ãƒ¼ãƒ‰çŠ¶æ…‹ã€‚
+			enHelp,           //! åŠ©ã‘ä¸­ã€‚
+			enGetUp,          //! èµ·ãä¸ŠãŒã‚ŠçŠ¶æ…‹ã€‚
 
-			/* UŒ‚ó‘ÔB*/
-			enNormalAttack,   //! UŒ‚ó‘ÔB
-			enHeavyAttack,	  //! dUŒ‚ó‘ÔB
-			enCharging,       //! ƒ`ƒƒ[ƒWó‘ÔB
-			enChargeAttack,   //! ƒ`ƒƒ[ƒWUŒ‚ó‘ÔB
-			enMagicAttack,	  //! –‚–@UŒ‚ó‘ÔB
-			enHeelMagic,	  //! ‰ñ•œ–‚–@ó‘ÔB
-			enAirAttack,	  //! ‹ó’†UŒ‚ó‘ÔB
-			enComboAttack,	  //! ƒRƒ“ƒ{UŒ‚ó‘ÔB
-			enRushStart,	  //! ˜A‘±UŒ‚ó‘ÔB
-			enRushEnd,		  //! ˜A‘±UŒ‚‚Ìƒ‹[ƒvó‘ÔB
-			enSlashUp,        //! a‚èã‚°ó‘ÔB
-			enPushForward,    //! “Ë‚«i‚ŞUŒ‚ó‘ÔB
+			/* æ”»æ’ƒçŠ¶æ…‹ã€‚*/
+			enNormalAttack,   //! æ”»æ’ƒçŠ¶æ…‹ã€‚
+			enHeavyAttack,	  //! é‡æ”»æ’ƒçŠ¶æ…‹ã€‚
+			enCharging,       //! ãƒãƒ£ãƒ¼ã‚¸çŠ¶æ…‹ã€‚
+			enChargeAttack,   //! ãƒãƒ£ãƒ¼ã‚¸æ”»æ’ƒçŠ¶æ…‹ã€‚
+			enMagicAttack,	  //! é­”æ³•æ”»æ’ƒçŠ¶æ…‹ã€‚
+			enHeelMagic,	  //! å›å¾©é­”æ³•çŠ¶æ…‹ã€‚
+			enAirAttack,	  //! ç©ºä¸­æ”»æ’ƒçŠ¶æ…‹ã€‚
+			enComboAttack,	  //! ã‚³ãƒ³ãƒœæ”»æ’ƒçŠ¶æ…‹ã€‚
+			enRushStart,	  //! é€£ç¶šæ”»æ’ƒçŠ¶æ…‹ã€‚
+			enRushEnd,		  //! é€£ç¶šæ”»æ’ƒã®ãƒ«ãƒ¼ãƒ—çŠ¶æ…‹ã€‚
+			enSlashUp,        //! æ–¬ã‚Šä¸Šã’çŠ¶æ…‹ã€‚
+			enPushForward,    //! çªãé€²ã‚€æ”»æ’ƒçŠ¶æ…‹ã€‚
 		};
-
 
 
 		class Player : public ICharacter
 		{
 		public:
-		    /* ƒRƒ“ƒXƒgƒ‰ƒNƒ^‚ÆƒfƒXƒgƒ‰ƒNƒ^B*/
+		    /* ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã¨ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã€‚*/
 			Player() = default;
 			virtual ~Player();
 
 			/*  
-			 * @def PlayerGenerator‚É‚ÄƒR[ƒ‹‚·‚éB
-			 * @brief PlayerGeneratorƒNƒ‰ƒX‚©‚çƒf[ƒ^‚ğó‚¯æ‚éˆ—B
-			 * @param data: ¶¬‚É•K—v‚È\‘¢‘Ì‚Ìƒf[ƒ^‚ğæ“¾‚·‚éB
+			 * @def PlayerGeneratorã«ã¦ã‚³ãƒ¼ãƒ«ã™ã‚‹ã€‚
+			 * @brief PlayerGeneratorã‚¯ãƒ©ã‚¹ã‹ã‚‰ãƒ‡ãƒ¼ã‚¿ã‚’å—ã‘å–ã‚‹å‡¦ç†ã€‚
+			 * @param data: ç”Ÿæˆæ™‚ã«å¿…è¦ãªæ§‹é€ ä½“ã®ãƒ‡ãƒ¼ã‚¿ã‚’å–å¾—ã™ã‚‹ã€‚
 			 */
 			inline virtual void InitializeSpawnData(const PlayerSpawnData& data)
 			{
-				/* ƒRƒ“ƒgƒ[ƒ‰[‚Ìí—Ş‚ğƒZƒbƒgB*/
+				/* ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼ã®ç¨®é¡ã‚’ã‚»ãƒƒãƒˆã€‚*/
 				m_playerInput.SetPadIndex(static_cast<int>(data.controllerType));
 
-				/* İ’èÀ•W‚ÉƒXƒ|[ƒ“B*/
+				/* è¨­å®šåº§æ¨™ã«ã‚¹ãƒãƒ¼ãƒ³ã€‚*/
 				m_currentPosition = data.spawnPosition;
 
-				/* ƒLƒƒƒ‰ƒRƒ“‚ğƒZƒbƒgB*/
+				/* ã‚­ãƒ£ãƒ©ã‚³ãƒ³ã‚’ã‚»ãƒƒãƒˆã€‚*/
 				m_characterController.SetPosition(m_currentPosition);
 			}
 
@@ -118,77 +117,90 @@ namespace nsApp
 
 
 		public:
-			/* ƒ‰ƒCƒtƒTƒCƒNƒ‹B*/
-			/* ‰Šú‰»ˆ—B*/
+			/* ãƒ©ã‚¤ãƒ•ã‚µã‚¤ã‚¯ãƒ«ã€‚*/
+			/* åˆæœŸåŒ–å‡¦ç†ã€‚*/
 			bool Start() override;
-			/* –ˆƒtƒŒ[ƒ€XV‚·‚éˆ—B*/
+			/* æ¯ãƒ•ãƒ¬ãƒ¼ãƒ æ›´æ–°ã™ã‚‹å‡¦ç†ã€‚*/
 			void Update() override;
-			/* •`‰æˆ—B*/
+			/* æç”»å‡¦ç†ã€‚*/
 			void Render(RenderContext& rc) override;
 
 
 		private:
-			/* UŒ‚—Í‚Ì‰Šú‰»ˆ—B*/
+			/* æ”»æ’ƒåŠ›ã®åˆæœŸåŒ–å‡¦ç†ã€‚*/
 			void InitAttackStatus();
 
-			/* ƒ_ƒ~[ƒ‚ƒfƒ‹‚Ì‰Šú‰»B*/
+			/* ãƒ€ãƒŸãƒ¼ãƒ¢ãƒ‡ãƒ«ã®åˆæœŸåŒ–ã€‚*/
 			void InitDummyModel();
 
-			/* ‚·‚è”²‚¯ŒvZB*/
+			/* ã™ã‚ŠæŠœã‘è¨ˆç®—ã€‚*/
 			void ComputeSlipThrough();
 
 
 		public:
-			/* Šî–{“®ì—pƒAƒjƒ[ƒVƒ‡ƒ“‚ğÄ¶B*/
+			/* åŸºæœ¬å‹•ä½œç”¨ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’å†ç”Ÿã€‚*/
 			void PlayBasicAnimation(CharacterBasicAnimationList state);
 
-			/* UŒ‚—pƒAƒjƒ[ƒVƒ‡ƒ“‚ğÄ¶B*/
+			/* æ”»æ’ƒç”¨ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’å†ç”Ÿã€‚*/
 			void PlayWeaponAnimation(AttackType attack);
 
-			/* ‹N‚«ã‚ª‚èó‘ÔB*/
+			/* èµ·ãä¸ŠãŒã‚ŠçŠ¶æ…‹ã€‚*/
 			void ReceiveHelp();
 
-			/* •‚¯‚é‘ÎÛ‚ÌƒLƒƒƒ‰ƒNƒ^[‚ğ’Tõ‚·‚éB*/
+			/* åŠ©ã‘ã‚‹å¯¾è±¡ã®ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼ã‚’æ¢ç´¢ã™ã‚‹ã€‚*/
 			nsActor::Player* SearchCharacter();
 
-			/* Œ»İˆµ‚¤•Ší‚ÌSE‚ğ~‚ß‚éˆ—B*/
+			/* ç¾åœ¨æ‰±ã†æ­¦å™¨ã®SEã‚’æ­¢ã‚ã‚‹å‡¦ç†ã€‚*/
 		    void StopWeaponSE()
 			{
 				if (m_currentWeaponSE != nullptr)
 				{
-					/* SE‚ÌÄ¶‚ğ~‚ß‚éB*/
+					/* SEã®å†ç”Ÿã‚’æ­¢ã‚ã‚‹ã€‚*/
 					m_currentWeaponSE->Stop();
 
-					/* ”jŠüB*/
+					/* ç ´æ£„ã€‚*/
 					DeleteGO(m_currentWeaponSE);
 
-					/* ƒŠƒ‚ƒRƒ“‚ğ”jŠü‚·‚éB*/ 
+					/* ãƒªãƒ¢ã‚³ãƒ³ã‚’ç ´æ£„ã™ã‚‹ã€‚*/ 
 					m_currentWeaponSE = nullptr;
 				}
 			}
 
+			/* ã‚µãƒ–ã‚¦ã‚§ãƒãƒ³ã®è¡¨ç¤ºã€‚*/
+			inline void LoadSubWeapon(CharacterModelType type)
+			{
+				/* ã‚µãƒ–ã‚¦ã‚§ãƒãƒ³ãƒ¢ãƒ‡ãƒ«ã‚’èª­ã¿è¾¼ã‚€ã€‚*/
+				m_model.LoadSubWeaponModel(type);
+			}
 
-		/* ƒZƒbƒ^[B*/
+			/* ã‚µãƒ–ã‚¦ã‚§ãƒãƒ³ã®éè¡¨ç¤ºã€‚*/
+			inline void ResetSubWeapon()
+			{
+				m_model.ResetSubWeaponModel();
+			}
+
+
+		/* ã‚»ãƒƒã‚¿ãƒ¼ã€‚*/
 		public:
-			/* À•W‚ğİ’èB*/
+			/* åº§æ¨™ã‚’è¨­å®šã€‚*/
 			inline void SetPosition(const Vector3& position)
 			{
 				m_currentPosition = position;
 			}
 
-			/* “ü—Í”»’è‚ÌØ‚è‘Ö‚¦‚ğİ’èB*/
+			/* å…¥åŠ›åˆ¤å®šã®åˆ‡ã‚Šæ›¿ãˆã‚’è¨­å®šã€‚*/
 			inline void SetInputEnable(bool isEnable)
 			{
 				m_playerInput.SetInputEnable(isEnable);
 			}
 
-			/* “ü—ÍŠÔ‚ğİ’èB*/
+			/* å…¥åŠ›æ™‚é–“ã‚’è¨­å®šã€‚*/
 			inline void SetWaitInputTimer(int timer)
 			{
 				m_inputWaitTimer = timer;
 			}
 
-			/* ‰ñ“]²‚ğ§ŒäB*/
+			/* è§’åº¦ã‚’è¨­å®šã€‚*/
 			inline void SetAngle(float angle)
 			{
 				m_angle = Quaternion::Identity;
@@ -196,13 +208,13 @@ namespace nsApp
 				m_model.SettRotation(m_angle);
 			}
 
-			/* ‘O•ûŒüƒxƒNƒgƒ‹‚ğİ’èB*/
+			/* å‰æ–¹å‘ãƒ™ã‚¯ãƒˆãƒ«ã‚’è¨­å®šã€‚*/
 			inline void SetForwardVector(const Vector3& forward)
 			{
 				m_forwardVector = forward;
 			}
 
-			/* ƒXƒe[ƒg‚©‚ç•Ší‚ÌŠp“x‚ğ‚¢‚¶‚ê‚é‚æ‚¤‚Éİ’èB*/
+			/* ã‚¹ãƒ†ãƒ¼ãƒˆã‹ã‚‰æ­¦å™¨ã®è§’åº¦ã‚’ã„ã˜ã‚Œã‚‹ã‚ˆã†ã«è¨­å®šã€‚*/
 			inline void SetWeaponRotationAngle(const Vector3& rotDeg, float angle)
 			{
 				m_weaponAngle = Quaternion::Identity;
@@ -210,128 +222,149 @@ namespace nsApp
 				m_model.SetWeaponAngle(m_weaponAngle);
 			}
 
-			/* —‰º‘¬“x‚ğİ’èB*/
+			/* è½ä¸‹é€Ÿåº¦ã‚’è¨­å®šã€‚*/
 			inline void SetFallVelocity(float velocity)
 			{
 				m_fallVelocity = velocity;
 			}
 
-			/* ƒ`ƒƒ[ƒWƒŒƒxƒ‹‚ğİ’è‚·‚éB*/
+			/* ãƒãƒ£ãƒ¼ã‚¸ãƒ¬ãƒ™ãƒ«ã‚’è¨­å®šã™ã‚‹ã€‚*/
 			inline void SetChargeLevel(int chargeLevel)
 			{
 				m_chargeLevel = chargeLevel;
 			}
 
+			/* ãƒ¢ãƒ‡ãƒ«å…¨ä½“ã‚’å‚¾ãã‚’è¨­å®šã‚’ã™ã‚‹ã€‚*/
+			inline void SetPostureOffset(const Quaternion& offset)
+			{
+				m_postureOffset = offset;
+			}
 
-		/* ƒQƒbƒ^[B*/
+			inline void SetWeaponRotationByQuaternion(const Quaternion& rot)
+			{
+				m_weaponAngle = rot;
+				m_model.SetWeaponAngle(m_weaponAngle);
+			}
+
+		/* ã‚²ãƒƒã‚¿ãƒ¼ã€‚*/
 		public:
-			/* ƒAƒjƒ[ƒVƒ‡ƒ“‚ªÄ¶I—¹‚µ‚Ä‚¢‚é‚©‚Ç‚¤‚©B*/
+			/* ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ãŒå†ç”Ÿçµ‚äº†ã—ã¦ã„ã‚‹ã‹ã©ã†ã‹ã€‚*/
 			inline bool IsPlayAnimation()
 			{
-				/* ModelRenderŒo—R‚ÅƒR[ƒ‹B*/
+				/* ModelRenderçµŒç”±ã§ã‚³ãƒ¼ãƒ«ã€‚*/
 				return m_model.IsPlayAnimation();
 			}
 
-			/* “ü—Í”»’èƒNƒ‰ƒX‚ğæ“¾B*/
+			/* å…¥åŠ›åˆ¤å®šã‚¯ãƒ©ã‚¹ã‚’å–å¾—ã€‚*/
 			inline  PlayerInput& GetInputClass() 
 			{
 				return m_playerInput;
 			}
 
-			/* ƒLƒƒƒ‰ƒRƒ“‚ğæ“¾B*/
+			/* ã‚­ãƒ£ãƒ©ã‚³ãƒ³ã‚’å–å¾—ã€‚*/
 			inline CharacterController& GetCharacterController()
 			{
 				return m_characterController;
 			}
 
-			/* ‘O•ûŒüƒxƒNƒgƒ‹‚ğæ“¾B*/
+			/* å‰æ–¹å‘ãƒ™ã‚¯ãƒˆãƒ«ã‚’å–å¾—ã€‚*/
 			inline const Vector3& GetForwardVector()
 			{
 				return m_forwardVector;
 			}
 
-			/* —‰º‘¬“x‚ğæ“¾B*/
+			/* è½ä¸‹é€Ÿåº¦ã‚’å–å¾—ã€‚*/
 			inline float GetFallVelocity() const
 			{
 				return m_fallVelocity;
 			}
 
-			/* À•W‚ğæ“¾(eƒNƒ‰ƒXŒo—R‚Å)B*/
+			/* åº§æ¨™ã‚’å–å¾—(è¦ªã‚¯ãƒ©ã‚¹çµŒç”±ã§)ã€‚*/
 			virtual inline Vector3& GetPosition() override
 			{
 				return m_currentPosition;
 			}
 
-			/* •Ší‚Ì“–‚½‚è”»’è‚ğæ“¾B*/
+			/* æ­¦å™¨ã®å½“ãŸã‚Šåˆ¤å®šã‚’å–å¾—ã€‚*/
 			inline WeaponHitDetection& GetWeaponHitDetection()
 			{
 				return m_weaponHitDetection;
 			}
 
-			/* ƒGƒtƒFƒNƒgƒŠƒXƒg‚ğæ“¾B*/
+			/* ã‚¨ãƒ•ã‚§ã‚¯ãƒˆãƒªã‚¹ãƒˆã‚’å–å¾—ã€‚*/
 			inline nsEffect::EffectList& GetEffectList()
 			{
 				return m_effectList;
 			}
 
-			/* Œ»İ‚Ì•Ší‚ğæ“¾‚·‚éB*/
+			/* ç¾åœ¨ã®æ­¦å™¨ã‚’å–å¾—ã™ã‚‹ã€‚*/
 			inline WeaponType GetCurrentWeapon() const
 			{
 				return m_currentWeapon;
 			}
 
-			/* ƒGƒtƒFƒNƒg‚Ì‘å‚«‚³‚ğæ“¾‚·‚éB*/
+			/* ã‚¨ãƒ•ã‚§ã‚¯ãƒˆã®å¤§ãã•ã‚’å–å¾—ã™ã‚‹ã€‚*/
 			inline int GetEffectScale()
 			{
 				return m_chargeLevel;
 			}
 			
+			/* æŒ‡å®šã—ãŸãƒœãƒ¼ãƒ³ã®ä½ç½®ã‚’å–å¾—ã€‚*/
+			inline Vector3 GetBonePosition(const wchar_t* boneName)
+			{
+				m_subWeaponHandMatrix = m_model.GetWorldMatrix(boneName);
+				return Vector3(m_subWeaponHandMatrix.m[3][0], m_subWeaponHandMatrix.m[3][1], m_subWeaponHandMatrix.m[3][2]);
+			}
 
 		private:
-			nsK2EngineLow::EffectEmitter* m_chargeEffect = nullptr;                                                //! ƒ`ƒƒ[ƒWƒGƒtƒFƒNƒg‚ÌƒŠƒ‚ƒRƒ“       
-			nsK2EngineLow::SoundSource* m_currentWeaponSE = nullptr;                                               //! Œ»İ‚Ì•Ší‚ÌSE‚ÌƒŠƒ‚ƒRƒ“
-			NPCBrain* m_brain = nullptr; //! NPC‚ÌeƒNƒ‰ƒX‚Ìƒ|ƒCƒ“ƒ^B
+			nsK2EngineLow::EffectEmitter* m_chargeEffect = nullptr;                                                //! ãƒãƒ£ãƒ¼ã‚¸ã‚¨ãƒ•ã‚§ã‚¯ãƒˆã®ãƒªãƒ¢ã‚³ãƒ³       
+			nsK2EngineLow::SoundSource* m_currentWeaponSE = nullptr;                                               //! ç¾åœ¨ã®æ­¦å™¨ã®SEã®ãƒªãƒ¢ã‚³ãƒ³
+			NPCBrain* m_brain = nullptr; //! NPCã®è¦ªã‚¯ãƒ©ã‚¹ã®ãƒã‚¤ãƒ³ã‚¿ã€‚
 
 
 
 
 		protected:
-			CharacterAnimation m_playerAnimation;                                                                  //! ƒvƒŒƒCƒ„[‚ÌƒAƒjƒ[ƒVƒ‡ƒ“B
-			PlayerInput m_playerInput;                                                                             //! ƒvƒŒƒCƒ„[‚Ì“ü—Í‚ğŠÇ—‚·‚éƒNƒ‰ƒXB
-			CharacterModelType m_modelType;                                                                        //! ƒvƒŒƒCƒ„[‚Ìƒ‚ƒfƒ‹‚Ìí—ŞB
-			WeaponHitDetection m_weaponHitDetection;                                                               //! •Ší‚Ì“–‚½‚è”»’è‚ğŠÇ—‚·‚éƒNƒ‰ƒXB
-			WeaponType m_currentWeapon = WeaponType::None;                                                         //! Œ»İ‚Ì•ŠíB@TODO •Ší‚Ìí—Ş‚ğ‘‚â‚·Û‚É—v’²®B
+			CharacterAnimation m_playerAnimation;                                                                  //! ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã€‚
+			PlayerInput m_playerInput;                                                                             //! ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®å…¥åŠ›ã‚’ç®¡ç†ã™ã‚‹ã‚¯ãƒ©ã‚¹ã€‚
+			CharacterModelType m_modelType;                                                                        //! ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ãƒ¢ãƒ‡ãƒ«ã®ç¨®é¡ã€‚
+			WeaponHitDetection m_weaponHitDetection;                                                               //! æ­¦å™¨ã®å½“ãŸã‚Šåˆ¤å®šã‚’ç®¡ç†ã™ã‚‹ã‚¯ãƒ©ã‚¹ã€‚
+			WeaponType m_currentWeapon = WeaponType::None;                                                         //! ç¾åœ¨ã®æ­¦å™¨ã€‚@TODO æ­¦å™¨ã®ç¨®é¡ã‚’å¢—ã‚„ã™éš›ã«è¦èª¿æ•´ã€‚
 
 
-		/* ƒXƒe[ƒg¶¬B*/
+		/* ã‚¹ãƒ†ãƒ¼ãƒˆç”Ÿæˆã€‚*/
 		protected:
-			std::unordered_map<PlayerStateID, std::function<nsState::IState<nsActor::Actor>* ()>> m_stateFactory;  //! ƒXƒe[ƒg‚Ìí—Ş‚ğŠi”[B
-			uint8_t m_currentStateID = 0;                                                                          //! Œ»İ‚ÌƒXƒe[ƒgIDB
+			std::unordered_map<PlayerStateID, std::function<nsState::IState<nsActor::Actor>* ()>> m_stateFactory;  //! ã‚¹ãƒ†ãƒ¼ãƒˆã®ç¨®é¡ã‚’æ ¼ç´ã€‚
+			uint8_t m_currentStateID = 0;                                                                          //! ç¾åœ¨ã®ã‚¹ãƒ†ãƒ¼ãƒˆIDã€‚
 
 
-			/* •K—v‚ÈƒXƒe[ƒg‚ğ“o˜^B*/
+			/* å¿…è¦ãªã‚¹ãƒ†ãƒ¼ãƒˆã‚’ç™»éŒ²ã€‚*/
 			virtual void RegisterState();
 
 
 		private:
-			nsApp::nsEffect::EffectList m_effectList;                                                              //! ƒGƒtƒFƒNƒgŠÇ—ƒNƒ‰ƒX
-			PlayerStateID m_playerStateID;                                                                         //! ƒvƒŒƒCƒ„[‚Ìó‘ÔIDB
+			nsApp::nsEffect::EffectList m_effectList;                                                              //! ã‚¨ãƒ•ã‚§ã‚¯ãƒˆç®¡ç†ã‚¯ãƒ©ã‚¹
+			PlayerStateID m_playerStateID;                                                                         //! ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®çŠ¶æ…‹IDã€‚
 
 
 		private:
-			CharacterController m_characterController;                                                             //! ƒvƒŒƒCƒ„[‚ÌƒLƒƒƒ‰ƒRƒ“B
+			CharacterController m_characterController;                                                             //! ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ã‚­ãƒ£ãƒ©ã‚³ãƒ³ã€‚
 
-			Quaternion m_angle = Quaternion::Identity ;                                                            //! ƒvƒŒƒCƒ„[‚Ì‰ñ“]ŠpB
-			Quaternion m_weaponAngle = Quaternion::Identity;                                                       //! •Ší‚Ì‰ñ“]ŠpB
+			Quaternion m_angle = Quaternion::Identity ;                                                            //! ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®å›è»¢è§’ã€‚
+			Quaternion m_weaponAngle = Quaternion::Identity;                                                       //! æ­¦å™¨ã®å›è»¢è§’ã€‚
+			Quaternion m_postureOffset = Quaternion::Identity;
 
-			Vector3 m_currentPosition = Vector3::Zero;                                                             //! ƒvƒŒƒCƒ„[‚ÌŒ»İˆÊ’uB
-			Vector3 m_forwardVector = Vector3::Zero;                                                               //! ƒvƒŒƒCƒ„[‚Ì‘O•ûŒüƒxƒNƒgƒ‹B
+			Vector3 m_currentPosition = Vector3::Zero;                                                             //! ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ç¾åœ¨ä½ç½®ã€‚
+			Vector3 m_forwardVector = Vector3::Zero;                                                               //! ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®å‰æ–¹å‘ãƒ™ã‚¯ãƒˆãƒ«ã€‚
+
+			Matrix m_subWeaponHandMatrix;                                                                          //! ã‚µãƒ–æ­¦å™¨ã‚’è£…å‚™ã•ã›ã‚‹ã¨ãã®å·¦æ‰‹ã®ãƒœãƒ¼ãƒ³ã®è¡Œåˆ—ã‚’ç®¡ç†ã™ã‚‹å¤‰æ•°ã€‚
+
 
 			int animIndex = 0;
 			int m_inputWaitTimer;
-			int m_chargeLevel = 1;                                                                                 //! ƒ`ƒƒ[ƒWƒŒƒxƒ‹B
+			int m_chargeLevel = 1;                                                                                 //! ãƒãƒ£ãƒ¼ã‚¸ãƒ¬ãƒ™ãƒ«ã€‚
 
-			float m_fallVelocity = 0.0f;                                                                           //! —‰º‘¬“xB
+			float m_fallVelocity = 0.0f;                                                                           //! è½ä¸‹é€Ÿåº¦ã€‚
 
 			bool m_isIgnorePlayerSet = false;
 		};

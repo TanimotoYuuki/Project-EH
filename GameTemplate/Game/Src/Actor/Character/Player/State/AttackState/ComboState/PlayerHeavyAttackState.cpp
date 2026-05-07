@@ -1,6 +1,7 @@
-#include "stdafx.h"
+Ôªø#include "stdafx.h"
 #include "PlayerHeavyAttackState.h"
 #include "Src/Actor/Character/Player/State/BasicState/PlayerIdleState.h"
+#include "Src/Actor/Gun/Factory/BulletFactory.h"
 
 namespace nsApp
 {
@@ -8,28 +9,48 @@ namespace nsApp
 	{
 		void PlayerHeavyAttackState::Enter()
 		{
-			/* ÉLÉÉÉXÉgÅB*/
+			/* „Ç≠„É£„Çπ„Éà„ÄÇ*/
 			m_player = static_cast<nsActor::Player*>(m_owner);
 
-			/* çUåÇÇÃéÌóﬁÇê›íËÅB*/
+			/* ÊîªÊíÉ„ÅÆÁ®ÆÈ°û„ÇíË®≠ÂÆö„ÄÇ*/
 			m_currentAttackType = AttackType::HeavyAttack;
 
-			/* ïêäÌÉAÉjÉÅÅ[ÉVÉáÉìÇçƒê∂ÅB*/
+			/* Ê≠¶Âô®„Ç¢„Éã„É°„Éº„Ç∑„Éß„É≥„ÇíÂÜçÁîü„ÄÇ*/
 			m_player->PlayWeaponAnimation(AttackType::HeavyAttack);
 
-			/* ìñÇΩÇËîªíËÇïtó^ÅB*/
+			if (m_player->GetCurrentWeapon() == WeaponType::TwinGun)
+				m_player->SetWeaponRotationAngle(Vector3::Front, -90.0f);
+
+			/* ÂΩì„Åü„ÇäÂà§ÂÆö„Çí‰ªò‰∏é„ÄÇ*/
 			m_player->GetWeaponHitDetection().Enable();
 		}
 
 
-		void PlayerHeavyAttackState::Update()
-		{
-			/* êeÉNÉâÉXÇÃçXêVÅB*/
-			PlayerAttackBaseState::Update();
+        void PlayerHeavyAttackState::Update()
+        {
+            PlayerAttackBaseState::Update();
 
-			/* ÉAÉjÉÅÅ[ÉVÉáÉìÇÃèIóπîªíËÅB*/
-			if (m_attackTimer > 10 && !m_player->IsPlayAnimation())
-				m_stateMachine->ChangeState(new PlayerIdleState);
-		}
-	}
+            if (m_player->GetCurrentWeapon() == WeaponType::TwinGun)
+            {
+                if (m_attackTimer == 15) 
+                    FireHeavyBullet();
+                
+
+                if (!m_player->IsPlayAnimation()) {
+                    m_stateMachine->ChangeState(new PlayerIdleState());
+                    return;
+                }
+            }
+            else 
+                if (m_attackTimer > 10 && !m_player->IsPlayAnimation()) 
+                    m_stateMachine->ChangeState(new PlayerIdleState);
+        }
+
+
+        void PlayerHeavyAttackState::FireHeavyBullet()
+        {
+            m_spawnPosition = m_player->GetBonePosition(L"mixamorig:RightHand");
+            BulletFactory::CreateBullet(BulletType::enExplosive, m_spawnPosition, m_player->GetForwardVector());
+        }
+    }
 }

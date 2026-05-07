@@ -1,59 +1,94 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "PlayerRushStartState.h"
 #include "Src/Actor/Character/Player/State/AttackState/ComboState/PlayerRushEndState.h"
 #include "Src/Actor/Character/Player/State/BasicState/PlayerIdleState.h"
+#include "Src/Actor/Gun/Bullet/RushBullet.h"
 
 namespace
 {
-	const auto MOVE_FRAME_SPEED = 1.0 / 60.0f; /* ‘Oi‚·‚éƒtƒŒ[ƒ€”B*/
+	const auto MOVE_FRAME_SPEED = 1.0 / 60.0f; //! å‰é€²ã™ã‚‹ãƒ•ãƒ¬ãƒ¼ãƒ æ•°ã€‚
+	const auto INCREASE_VALUE_Y = 10.0f;       //! Yè»¸ã®ä¸Šæ˜‡å€¤ã€‚
+	const auto ATTACK_TIMER_5 = 5;             //! æ”»æ’ƒã‚¿ã‚¤ãƒãƒ¼ã®5ãƒ•ãƒ¬ãƒ¼ãƒ ç›®ã€‚
+	const auto ATTACK_TIMER_12 = 5;            //! æ”»æ’ƒã‚¿ã‚¤ãƒãƒ¼ã®12ãƒ•ãƒ¬ãƒ¼ãƒ ç›®ã€‚
+	const auto WEAPON_ANGLE = -90.0f;          //! æ­¦å™¨ã®è§’åº¦ã€‚
 }
 	
-namespace nsApp
-{
-	namespace nsState
-	{
-
 /** @def
- * @brief PlayerƒNƒ‰ƒX‚ÌŒ»İ‚Ì•Ší‚ğæ“¾‚·‚éƒ}ƒNƒB
+ * @brief Playerã‚¯ãƒ©ã‚¹ã®ç¾åœ¨ã®æ­¦å™¨ã‚’å–å¾—ã™ã‚‹ãƒã‚¯ãƒ­ã€‚
  */
 #define GET_PLAYER_WEAPON m_player->GetCurrentWeapon()
 
 /** @def
- * @brief Ä¶‚·‚éƒAƒjƒ[ƒVƒ‡ƒ“‚ğİ’è‚·‚éƒ}ƒNƒB
+ * @brief å†ç”Ÿã™ã‚‹ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’è¨­å®šã™ã‚‹ãƒã‚¯ãƒ­ã€‚
  */
 #define PLAYER_PLAY_ANIMATION m_player->PlayWeaponAnimation
 
 /** @def
- * @brief Player‚Ì‘O•ûŒü‚ÌƒxƒNƒgƒ‹‚ğæ“¾‚·‚éƒ}ƒNƒB
+ * @brief Playerã®å‰æ–¹å‘ã®ãƒ™ã‚¯ãƒˆãƒ«ã‚’å–å¾—ã™ã‚‹ãƒã‚¯ãƒ­ã€‚
  */
 #define GET_PLAYER_FORWARD_VECTOR m_player->GetForwardVector()
 
 
-
+namespace nsApp
+{
+	namespace nsState
+	{
 		void PlayerRushStartState::Enter()
 		{
-			/* ƒLƒƒƒ‰ƒXƒgB*/
+			/* ã‚­ãƒ£ãƒ©ã‚¹ãƒˆã€‚*/
 			m_player = static_cast<nsActor::Player*>(m_owner);
 
-			/* UŒ‚‚Ìƒ^ƒCƒv‚ğİ’è‚·‚éB*/
+			/* æ”»æ’ƒã®ã‚¿ã‚¤ãƒ—ã‚’è¨­å®šã™ã‚‹ã€‚*/
 			m_currentAttackType = AttackType::RushAttack_Start;
 
-			/* ƒAƒjƒ[ƒVƒ‡ƒ“‚ğÄ¶B*/
+			/* ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’å†ç”Ÿã€‚*/
 			m_player->PlayWeaponAnimation(AttackType::RushAttack_Start);
+
+			/* GunCharacterã®å ´åˆã€ã‚‚ã†ä¸€ã¤éŠƒãƒ¢ãƒ‡ãƒ«ã‚’ãƒ­ãƒ¼ãƒ‰ã™ã‚‹ã€‚*/
+			if (m_player->GetCurrentWeapon() == WeaponType::TwinGun)
+			{
+				m_player->LoadSubWeapon(CharacterModelType::Weapon_TwinGun);
+				m_player->SetWeaponRotationAngle(Vector3::Front, -WEAPON_ANGLE);
+			}
+
+			/* å½“ãŸã‚Šåˆ¤å®šã‚’æœ‰åŠ¹ã«ã™ã‚‹ã€‚*/ 
 			m_player->GetWeaponHitDetection().Enable();
 		}
 
 
 		void PlayerRushStartState::Update()
 		{
-			/* ƒ^ƒCƒ}[‚ğ‰ÁZB*/
-			m_attackTimer++;
-
-			/* ‘Oi‚·‚éˆ—B*/
+			/* å‰é€²ã™ã‚‹å‡¦ç†ã€‚*/
 			MoveForward();
 
 ////////////////////////////////////////////////////////////////////////////
-			/* @TODO:ƒŠƒtƒ@B*/
+			if (m_player->GetCurrentWeapon() == WeaponType::TwinGun)
+			{
+				/* ãƒœãƒ¼ãƒ³ã®åˆ‡ã‚Šæ›¿ãˆã€‚*/
+				AdjustBoneNameByKeyFrameNumber();
+
+				/* ãƒ«ãƒ¼ãƒ—ã¨çµ‚äº†ã®åˆ¤å®š */
+				if (!m_player->IsPlayAnimation())
+				{
+					m_loopCount++;
+
+					// ãƒœã‚¿ãƒ³ãŒé›¢ã•ã‚Œã¦ã„ã‚‹ã€‚
+				    m_isButtonReleased = !m_player->GetInputClass().CheckButtonPress(enButtonB);
+
+					if (m_loopCount >= 4 || m_isButtonReleased)
+						m_stateMachine->ChangeState(new PlayerRushEndState());
+
+					else
+					{
+						// ãƒ«ãƒ¼ãƒ—ç¶™ç¶šï¼šã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’å†å†ç”Ÿã—ã€ã‚¿ã‚¤ãƒãƒ¼ã‚’ãƒªã‚»ãƒƒãƒˆ
+						m_player->PlayWeaponAnimation(AttackType::RushAttack_Start);
+						m_attackTimer = 0;
+					}
+				}
+			}
+
+
+			/* @TODO:ãƒªãƒ•ã‚¡ã€‚*/
 			/* ================================================== */
 			if (m_player->GetCurrentWeapon() == WeaponType::Wand)
 			{
@@ -63,12 +98,11 @@ namespace nsApp
 					m_isSummoned = true;
 				}
 
-				/* Œ‚‚¿I‚í‚Á‚½Œã(12FˆÈ~)‚ÉAƒAƒjƒ‚ªŠ®—¹‚µ‚½‚ç‚·‚®Idle‚É–ß‚· */
-				if (m_attackTimer > 12 && !m_player->IsPlayAnimation())
-				{
+				/* æ’ƒã¡çµ‚ã‚ã£ãŸå¾Œ(12Fä»¥é™)ã«ã€ã‚¢ãƒ‹ãƒ¡ãŒå®Œäº†ã—ãŸã‚‰ã™ãIdleã«æˆ»ã™ */
+				if (m_attackTimer > ATTACK_TIMER_12 && !m_player->IsPlayAnimation())
 					m_stateMachine->ChangeState(new PlayerIdleState());
-				}
 			}
+
 			else
 			{
 				if (m_attackTimer == 10 && !m_isSummoned)
@@ -87,13 +121,25 @@ namespace nsApp
 						m_attackTimer = 0;
 					}
 					else
-					{
 						m_stateMachine->ChangeState(new PlayerRushEndState());
-					}
 				}
 			}
 /////////////////////////////////////////////////////////////////////////////////////////
+			PlayerAttackBaseState::Update();
 		}
+
+
+		void PlayerRushStartState::Exit()
+		{
+			if (m_player && m_player->GetCurrentWeapon() == WeaponType::TwinGun)
+			{
+				m_player->ResetSubWeapon();
+				m_player->SetWeaponRotationAngle(Vector3::Front ,WEAPON_ANGLE);
+			}
+
+			PlayerAttackBaseState::Exit();
+		}
+
 
 		bool PlayerRushStartState::RequestID(uint8_t& id)
 		{
@@ -103,17 +149,17 @@ namespace nsApp
 
 		void PlayerRushStartState::MoveForward()
 		{
-			/* ‘Oi‚ğs‚¤‚Ì‚ÍHammer/Sword‚Ì‚İB(04/22Œ»İB)*/
+			/* å‰é€²ã‚’è¡Œã†ã®ã¯Hammer/Swordã®ã¿ã€‚*/
 			if (m_player->GetCurrentWeapon() == WeaponType::GreatSword or m_player->GetCurrentWeapon() == WeaponType::Hammer)
 			{
-				/* ‘OiB*/
+				/* å‰é€²ã€‚*/
 				m_forwardSpeed = 50.0f;
 
 				m_moveVector = m_player->GetForwardVector() * m_forwardSpeed;
 
-				/* “–‚½‚è”»’è‚ÌˆÚ“®B*/
+				/* å½“ãŸã‚Šåˆ¤å®šã®ç§»å‹•ã€‚*/
 				m_player->GetCharacterController().Execute(m_moveVector, MOVE_FRAME_SPEED);
-				/* ƒvƒŒƒCƒ„[‚ÌÀ•W‚ğƒLƒƒƒ‰ƒRƒ“‚ÌÀ•W‚É‡‚í‚¹‚éB*/
+				/* ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®åº§æ¨™ã‚’ã‚­ãƒ£ãƒ©ã‚³ãƒ³ã®åº§æ¨™ã«åˆã‚ã›ã‚‹ã€‚*/
 				m_player->SetPosition(m_player->GetCharacterController().GetPosition());
 			}
 		}
@@ -124,20 +170,45 @@ namespace nsApp
 			if (m_player->GetCurrentWeapon() == WeaponType::Wand)
 			{
 				m_spawnPos = m_player->GetWeaponHitDetection().GetPosition();
-				m_spawnPos.y += 10.0f;
-				m_spawnPos += m_player->GetForwardVector() * 10.0f;
+				m_spawnPos.y += INCREASE_VALUE_Y;
+				m_spawnPos += m_player->GetForwardVector() * INCREASE_VALUE_Y;
 
 				auto* rushMagic = NewGO<nsActor::MagicProjectotile>(0, "RushMagic");
 
-				/* –Ú•W‚ğİ’èB
-				 *  ¦¡‚ÍƒeƒXƒg—p‚Å‘¼ƒvƒŒƒCƒAƒuƒ‹ƒLƒƒƒ‰‚ğ–Ú•W‚ÉB
-				 * ƒ{ƒX‚ªÀ‘•‚³‚êŸ‘æAØ‚è‘Ö‚¦‚éB
+				/* ç›®æ¨™ã‚’è¨­å®šã€‚
+				 *  â€»ä»Šã¯ãƒ†ã‚¹ãƒˆç”¨ã§ä»–ãƒ—ãƒ¬ã‚¤ã‚¢ãƒ–ãƒ«ã‚­ãƒ£ãƒ©ã‚’ç›®æ¨™ã«ã€‚
+				 * ãƒœã‚¹ãŒå®Ÿè£…ã•ã‚Œæ¬¡ç¬¬ã€åˆ‡ã‚Šæ›¿ãˆã‚‹ã€‚
 				 */
 				rushMagic->SetTarget(m_player->SearchCharacter());
 
-				/* –‚–@‚Ìí—Ş‚ğİ’è‚·‚éB*/
+				/* é­”æ³•ã®ç¨®é¡ã‚’è¨­å®šã™ã‚‹ã€‚*/
 				rushMagic->Initialize(nsActor::MagicType::enRushMagic, m_spawnPos, m_player->GetForwardVector());
 			}
+		}
+
+
+		void PlayerRushStartState::AdjustBoneNameByKeyFrameNumber()
+		{
+			if (m_attackTimer == ATTACK_TIMER_5)
+				FireRushBullet(L"mixamorig:RightHand");
+
+			else if(m_attackTimer == ATTACK_TIMER_12)
+				FireRushBullet(L"mixamorig:LeftHand");
+		}
+
+
+		void PlayerRushStartState::FireRushBullet(const wchar_t* boneName)
+		{
+			/* ãƒœãƒ¼ãƒ³ã®ä½ç½®ã‚’å–å¾—ã™ã‚‹ã€‚*/
+			m_subWeaponSpawnPos = m_player->GetBonePosition(boneName);
+			m_subWeaponSpawnPos.y += INCREASE_VALUE_Y;
+
+			/* å‰æ–¹å‘ã®ãƒ™ã‚¯ãƒˆãƒ«ã‚’å–å¾—ã™ã‚‹ã€‚*/
+			m_subWeaponSpawnPos += m_player->GetForwardVector() * 30.0f;
+			
+			/* å¼¾ä¸¸ã®ç”Ÿæˆã€‚*/
+			auto* rushBullet = NewGO<nsActor::RushBullet>(0, "RushBullet");
+			rushBullet->InitializeBullet(m_subWeaponSpawnPos, m_player->GetForwardVector(), 7.5f, 10.0f);
 		}
 	}
 }

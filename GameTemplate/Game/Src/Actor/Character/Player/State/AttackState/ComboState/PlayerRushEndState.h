@@ -25,6 +25,10 @@ namespace nsApp
 			/* ライフサイクル。*/
 			void Enter() override;
 			void Update() override;
+
+
+		private:
+			Vector3 m_spawnPosition = Vector3::Zero; //! 乱射攻撃の生成座標。
 		};
 	}
 }

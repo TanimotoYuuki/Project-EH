@@ -1,10 +1,11 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "PlayerGenerator.h"
 
 #include "Src/Actor/Character/Player/Player.h"
 #include "Src/Actor/Character/Player/CharacterByWeapon/HammerCharacter.h"
 #include "Src/Actor/Character/Player/CharacterByWeapon/SwordCharacter.h"
 #include "Src/Actor/Character/Player/CharacterByWeapon/WandCharacter.h"
+#include "Src/Actor/Character/Player/CharacterByWeapon/TwinGunCharacter.h"
 
 namespace nsApp
 {
@@ -20,7 +21,7 @@ namespace nsApp
 		/* Wand�B*/
 		m_characterFactory[WeaponType::Wand] = [](const char* name) { return NewGO<nsActor::WandCharacter>(0, name); };
 
-		/* @TODO: �e�L����������ł�����A�o�^����B*/
+		/* @TODO: 銃キャラも実装でき次第、登録する。*/
 	}
 
 

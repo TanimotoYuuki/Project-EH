@@ -25,6 +25,17 @@ namespace nsApp
 			void Enter() override;
 			void Update() override;
 			bool RequestID(uint8_t& id) override { return false; };
+
+
+		private:
+			/* 弾を発射する。*/
+			void FireHeavyBullet();
+
+
+		private:
+			Vector3 m_spawnPosition = Vector3::Zero; //! 弾の生成位置を管理。
+
+			Quaternion m_baseRot;					 //! 攻撃開始時の武器の角度を管理。
 		};
 	}
 }

@@ -25,6 +25,14 @@ namespace nsApp
 			void Enter() override;
 			void Update() override;
 
+
+		private:
+			/* チャージ弾を発射させる。 */
+			void FireChargeBullet();
+
+
+		private:
+			Vector3 m_spawnPosition = Vector3::Zero; //! チャージ弾の生成座標。
 		};
 	}
 }
