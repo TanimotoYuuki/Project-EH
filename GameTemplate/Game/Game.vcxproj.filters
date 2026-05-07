@@ -189,6 +189,7 @@
     <ClCompile Include="Src\Actor\Gun\Bullet\AirBullet.cpp" />
     <ClCompile Include="Src\Actor\Gun\Parameter\BulletParameterTable.cpp" />
     <ClCompile Include="Src\Actor\Gun\Factory\BulletFactory.cpp" />
+    <ClCompile Include="Src\Actor\Gun\Shooter\GunShooter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -341,5 +342,8 @@
     <ClInclude Include="Src\Actor\Gun\Bullet\AirBullet.h" />
     <ClInclude Include="Src\Actor\Gun\Parameter\BulletParameterTable.h" />
     <ClInclude Include="Src\Actor\Gun\Factory\BulletFactory.h" />
+    <ClInclude Include="Src\Actor\Gun\Shooter\BulletFireRequest.h" />
+    <ClInclude Include="Src\Actor\Gun\Shooter\IBulletFireListener.h" />
+    <ClInclude Include="Src\Actor\Gun\Parameter\BulletParameter.h" />
   </ItemGroup>
 </Project>
