@@ -99,6 +99,23 @@ namespace nsApp
 				m_characterController.SetPosition(m_currentPosition);
 			}
 
+			/*  
+			 * @def PlayerGeneratorにてコールする。
+			 * @brief PlayerGeneratorクラスからデータを受け取る処理。
+			 * @param data: 生成時に必要な構造体のデータを取得する。
+			 */
+			inline virtual void InitializeSpawnData(const PlayerSpawnData& data)
+			{
+				/* コントローラーの種類をセット。*/
+				m_playerInput.SetPadIndex(static_cast<int>(data.controllerType));
+
+				/* 設定座標にスポーン。*/
+				m_currentPosition = data.spawnPosition;
+
+				/* キャラコンをセット。*/
+				m_characterController.SetPosition(m_currentPosition);
+			}
+
 
 		public:
 			/* ライフサイクル。*/
@@ -274,6 +291,7 @@ namespace nsApp
 			nsK2EngineLow::EffectEmitter* m_chargeEffect = nullptr;                                                //! チャージエフェクトのリモコン       
 			nsK2EngineLow::SoundSource* m_currentWeaponSE = nullptr;                                               //! 現在の武器のSEのリモコン
 			NPCBrain* m_brain = nullptr; //! NPCの親クラスのポインタ。
+
 
 
 

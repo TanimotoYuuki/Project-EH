@@ -10,17 +10,17 @@ namespace nsApp
 {
 	PlayerGenerator::PlayerGenerator()
 	{
-		/* ƒvƒŒƒCƒAƒuƒ‹ƒLƒƒƒ‰ƒNƒ‰ƒX‚ğ“o˜^B*/
-		/* SwordB*/
+		/* ï¿½vï¿½ï¿½ï¿½Cï¿½Aï¿½uï¿½ï¿½ï¿½Lï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½Xï¿½ï¿½oï¿½^ï¿½B*/
+		/* Swordï¿½B*/
 		m_characterFactory[WeaponType::GreatSword] = [](const char* name) { return NewGO<nsActor::SwordCharacter>(0, name); };
 
-        /* HammerB*/
+        /* Hammerï¿½B*/
 		m_characterFactory[WeaponType::Hammer] = [](const char* name) { return NewGO<nsActor::HammerCharacter>(0, name); };
 
-		/* WandB*/
+		/* Wandï¿½B*/
 		m_characterFactory[WeaponType::Wand] = [](const char* name) { return NewGO<nsActor::WandCharacter>(0, name); };
 
-		/* @TODO: eƒLƒƒƒ‰‚àÀ‘•‚Å‚«Ÿ‘æA“o˜^‚·‚éB*/
+		/* @TODO: ï¿½eï¿½Lï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å‚ï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½oï¿½^ï¿½ï¿½ï¿½ï¿½B*/
 	}
 
 
@@ -29,20 +29,20 @@ namespace nsApp
 		/* */
 		std::vector<nsActor::Player*> spawnedPlayers;
 
-		/* ƒŠƒXƒg‚Ì”‚¾‚¯ƒvƒŒƒCƒAƒuƒ‹ƒLƒƒƒ‰‚ğ¶¬‚·‚éB*/
+		/* ï¿½ï¿½ï¿½Xï¿½gï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½ï¿½vï¿½ï¿½ï¿½Cï¿½Aï¿½uï¿½ï¿½ï¿½Lï¿½ï¿½ï¿½ï¿½ï¿½ğ¶ï¿½ï¿½ï¿½ï¿½ï¿½B*/
 		for (const auto& data : spawnDataList)
 		{
-			/* ¶¬‚·‚éƒLƒƒƒ‰‚ğ”‚¦A•Ší‚Ìí—Ş‚Æ¶¬–¼‚ğƒZƒbƒgB*/
+			/* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Lï¿½ï¿½ï¿½ï¿½ï¿½ğ”‚ï¿½ï¿½Aï¿½ï¿½ï¿½ï¿½Ìï¿½Ş‚Æï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Zï¿½bï¿½gï¿½B*/
 			if (m_characterFactory.count(data.weaponType) > 0)
 				m_spawnPlayer = m_characterFactory[data.weaponType](data.playerName);
 
-			/* ¶¬‚É¬Œ÷‚µ‚½ê‡B*/
+			/* ï¿½ï¿½ï¿½ï¿½ï¿½Éï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ê‡ï¿½B*/
 			if (m_spawnPlayer != nullptr)
 			{
 				/* */
 				m_spawnPlayer->InitializeSpawnData(data);
 
-				/* ¶¬‚µ‚½ƒvƒŒƒCƒ„[‚ğƒŠƒXƒg‚É•Û‘¶‚·‚éB*/
+				/* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½Xï¿½gï¿½É•Û‘ï¿½ï¿½ï¿½ï¿½ï¿½B*/
 				spawnedPlayers.push_back(m_spawnPlayer);
 			}
 		}

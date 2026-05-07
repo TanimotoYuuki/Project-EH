@@ -44,6 +44,17 @@ namespace nsApp
 			return;
 		}
 
+		/* NPCの場合は操作をコントローラーの操作を受け付けないので、入力判定を無視する。*/
+		if (m_padInddex < 0)
+		{
+			m_moveVec = Vector3::Zero;   //! 移動ベクトルを初期化。
+			m_isMove = false;            //! 移動判定。
+			m_isAttack = false;          //! 攻撃判定。
+			m_isGuard = false;			 //! ガード判定。
+
+			return;
+		}
+
 		/* 移動入力判定。*/ 
 		m_stickX = g_pad[m_padInddex]->GetLStickXF();
 		m_stickY = g_pad[m_padInddex]->GetLStickYF();
