@@ -1,34 +1,268 @@
 #include "stdafx.h"
 #include "Boss.h"
 
-#include "stdafx.h"
-#include "Boss.h"
+#include "BossIdleState.h"
+#include "BossMoveState.h"
+#include "BossAttackState.h"
+#include "BossDamageState.h"
+#include "BossDethState.h"
 
+namespace
+{
+	const Vector3 START_POSITION{ 200.0,100.0f,0.0f };
+	const int BOSS_MAX_HP = 5000;
+	const float ROT_SPEED = 0.1f;
+}
 
 namespace nsApp
 {
 	namespace nsActor
 	{
+		/*ボスごとのオフセット設定テーブル。*/
+		const std::unordered_map<CharacterModelType, Vector3> BOSS_OFFSETS =
+		{
+			{CharacterModelType::GrayDragon,	Vector3(0.0f,10.0f,0.0f)},
+			{CharacterModelType::TutorialBoss,	Vector3(0.0f,50.0f,0.0f)},
+			{CharacterModelType::RedDragon,		Vector3(0.0f,45.0f,0.0f)},
+			{CharacterModelType::GreenDragon,	Vector3(0.0f,20.0f,0.0f)},
+		};
+
+		/*特定のステートの時だけ追加で浮かせるテーブル。*/
+		const std::unordered_map<BossStateID, Vector3> STATE_OFFSETS =
+		{
+			{BossStateID::enAttack,		Vector3(0.0f,25.0f,0.0f)},
+			{BossStateID::enDamage,		Vector3(0.0f,5.0f,0.0f)},
+		};
+
+		/*ステータス。*/
+		void Boss::InitStatus()
+		{
+			/*ボスの体力。*/
+			m_characterStatus.hp.maxHP = BOSS_MAX_HP;
+			/*現在の体力。*/
+			m_characterStatus.hp.currentHP = BOSS_MAX_HP;
+			m_prevHP = BOSS_MAX_HP;
+
+			m_hitStopFlame = 0;
+		}
+
 		bool Boss::Start()
 		{
+			if (!m_stateMachine)
+			{
+				m_stateMachine = new nsState::StateMachine<Actor>(this);
+			}
+
+
+			/*アニメーションの初期化。*/
+			m_BossAimation = std::make_unique<BossAnimation>();
+			m_BossAimation->Init("TutorialBoss");/*ここのモデルを変えたら下のキャラモデルも変更してね。*/
+
 			/*モデルの読み込み。*/
-			/*m_model.LoadCharacterModel(CharacterModelType::GrayDragon); */
+			m_model.LoadCharacterModel
+			(
+				CharacterModelType::TutorialBoss,/*ここだよ。*/
+				m_BossAimation->GetAnimationClips(),
+				(int)BossAnimationID::Max
+			);
 
-			/*ステータス。*/
-			m_characterStatus.hp.maxHP = 500;
-			m_characterStatus.hp.currentHP = m_characterStatus.hp.maxHP;
-			m_characterStatus.attack.normalDamage = 30.0f;
-			m_characterStatus.moveSpeed = 3.0f;
+			auto it = BOSS_OFFSETS.find(m_bossType);
+			if (it != BOSS_OFFSETS.end())
+			{
+				m_modelOffset = it->second;
+			}
 
-			m_model.SetPosition(Vector3::Zero);
+			/*初期座標を設定。*/
+			m_position = START_POSITION;
+			m_BossController.SetPosition(m_position);
+			m_model.SetPosition(m_position);
+
+			m_forward = Vector3::Left;
+
+			m_rotation.SetRotationYFromDirectionXZ(m_forward);
+
+			/*キャラコンを初期化。*/
+			m_BossController.Init(40.0, 20.0f, m_position);
+
+			m_BossController.SetPosition(m_position);
+			m_model.SetPosition(m_position);
+
+			/*スケールを設定。*/
+			m_model.SetCharacterScale(Vector3::One * 0.2f);
+
+
+			/*ヒット判定初期化。*/
+			m_BiteHit.Init(3.0f);
+			m_TailHit.Init(4.0f);
+			m_FireHit.Init(6.0f);
+
+			/*ステート登録。*/
+			RegisterState();
+			m_stateMachine->ChangeState(m_stateFactory[enIdle]());
+
+			/*初期化前にステータスを確定。*/
+			InitStatus();
+
+			/*初期化。*/
+			m_prevHP = m_characterStatus.hp.currentHP;
 
 			return true;
-
 		}
 
 		void Boss::Update()
 		{
+			/*ICharacterクラスの更新処理をコール。*/
 			ICharacter::Update();
+
+			if (IsHitStop())return;
+
+			/*ステートマシンを更新する。*/
+			m_stateMachine->Update();
+
+			/*次のステートを決定する。*/
+			uint8_t nextID = m_currentStateID;
+
+			/*強制遷移刑を優先。*/
+			if (m_characterStatus.hp.currentHP <= 0 )
+			{
+				nextID = BossStateID::enDeath ;
+			}
+			else if (IsDamage())
+			{
+				nextID = BossStateID::enDamage;
+			}
+			/*ステートからの遷移リクエストを確認。*/
+			else
+			{
+				uint8_t reqID = 0;
+				if (m_stateMachine->GetCurrentState()->RequestID(reqID))
+				{
+					nextID = reqID;
+				}
+			}
+
+			/*ステートが変わるときだけステートを変更。*/
+			if (nextID != m_currentStateID)
+			{
+				auto next = static_cast<BossStateID>(nextID);
+				if (m_stateFactory.count(next) > 0)
+				{
+					m_currentStateID = next;
+					m_stateMachine->ChangeState(m_stateFactory[next]());
+				}
+			}
+
+			/*プレイヤーの方向を向く処理。*/
+			UpdateRotation(g_gameTime->GetFrameDeltaTime());
+
+			/*座標反映。*/
+			m_position = m_BossController.GetPosition();
+			/*z軸を固定。*/
+			m_position.z = 0.0f;
+
+			/*モデルの座標を設定。*/ 
+			m_model.SetPosition(m_position);
+
+			/*回転反映。*/
+			m_model.SettRotation(m_rotation);
+
+			Vector3 finalOffset = m_modelOffset;
+
+			auto it = STATE_OFFSETS.find((BossStateID)m_currentStateID);
+			if (it != STATE_OFFSETS.end())
+			{
+				finalOffset += it->second;
+			}
+
+			m_model.SetPosition(m_position + finalOffset);
+
+			/*モデル更新。*/
+			m_model.Update();
+		}
+
+		/*プレイヤーの方向を向く処理。*/
+		void Boss::UpdateRotation(float deltaTime)
+		{
+			if (!m_target) return;
+
+			Vector3 toTarget = m_target->GetPosition() - m_position;
+
+			/*左右だけで判断。*/
+			if (toTarget.x > 0)
+			{
+				m_forward = Vector3::Right;
+			}
+			else
+			{
+				m_forward = Vector3::Left;
+			}
+
+			Quaternion rot;
+			rot.SetRotationYFromDirectionXZ(m_forward);
+
+			m_rotation = rot;
+		}
+
+		/*噛みつき攻撃。*/ 
+		void Boss::AttackBite() 
+		{
+			m_attackPosition = m_position + m_forward * 2.0f;
+
+			m_BiteHit.Enable(); 
+			m_BiteHit.Update(m_attackPosition);
+		}
+
+		/*尻尾攻撃。*/ 
+		void Boss::AttackTail()
+		{
+			m_attackPosition = m_position - m_forward * 3.0f;
+
+			m_TailHit.Enable();
+			m_TailHit.Update(m_attackPosition);
+		}
+
+		/*火炎攻撃。*/
+		void Boss::ShotFireBall()
+		{
+			if (m_forward.LengthSq() < 0.01f)m_forward = Vector3::Left;
+
+			m_FireHit.Enable();
+
+			/*ブレスを前に伸ばす。*/
+			for (int i = 1; i <= 3; i++)
+			{
+				Vector3 pos = m_position + m_forward * (2.0f * i);
+				m_FireHit.Update(pos);
+			}
+		}
+
+		/*ダメージ判定。*/
+		bool Boss::IsDamage()
+		{
+			bool isDamage = m_characterStatus.hp.currentHP < m_prevHP;
+			m_prevHP = m_characterStatus.hp.currentHP;
+			return isDamage;
+		}
+
+		void Boss::Render(RenderContext& rc)
+		{
+			ICharacter::Render(rc);
+		}
+
+		/*ステート。*/
+		void Boss::RegisterState()
+		{
+			/*待機アニメーション。*/
+			m_stateFactory[BossStateID::enIdle] = []() {return new nsState::BossIdleState(); };
+			/*移動アニメーション。*/
+			m_stateFactory[BossStateID::enMove] = []() {return new nsState::BossMoveState(); };
+			/*攻撃アニメーション。*/
+			m_stateFactory[BossStateID::enAttack] = []() {return new nsState::BossAttackState(); };
+			/*被弾アニメーション。*/
+			m_stateFactory[BossStateID::enDamage] = []() {return new nsState::BossDamageState(); };
+			/*死亡アニメーション。*/
+			m_stateFactory[BossStateID::enDeath] = []() {return new nsState::BossDethState(); };
+
 		}
 	}
 }

@@ -6,26 +6,24 @@
 
 #include "Src/Actor/Character/Status/AttackParameterTable.h"
 #include "PresentDamageIndicator.h"
-
 #include "Src/Debug/Sandbag.h"
 
 
 namespace
 {
-	const auto ATTACK_END_FRAME = 5;			//! ЌUЊ‚ЏI—№ѓtѓЊЃ[ѓЂЃB
-	const auto RUSH_COMBO_THRESHOLD = 2;		//! A‘±ЌUЊ‚‚Ми‡’lЃB
-	const auto HIT_STOP_FRAME = 8;              //! ѓqѓbѓgѓXѓgѓbѓv‚МѓtѓЊЃ[ѓЂђ”ЃB
-	const auto DAMAGE_TEXT_OFFSET_Y = 120.0f;   //! ѓ_ѓЃЃ[ѓWѓeѓLѓXѓg‚МYЋІѓIѓtѓZѓbѓgЃB
-	const auto CRITICAL_PERCENTAGE = 100.0f;    //! ѓNѓЉѓeѓBѓJѓ‹”­ђ¶Љm—§ЃB
+	const auto ATTACK_END_FRAME = 5;			//! ж”»ж’ѓзµ‚дє†гѓ•гѓ¬гѓјгѓ гЂ‚
+	const auto RUSH_COMBO_THRESHOLD = 2;		//! йЂЈз¶љж”»ж’ѓгЃ®й–ѕеЂ¤гЂ‚
+	const auto HIT_STOP_FRAME = 8;              //! гѓ’гѓѓгѓ€г‚№гѓ€гѓѓгѓ—гЃ®гѓ•гѓ¬гѓјгѓ ж•°гЂ‚
+	const auto DAMAGE_TEXT_OFFSET_Y = 120.0f;   //! гѓЂгѓЎгѓјг‚ёгѓ†г‚­г‚№гѓ€гЃ®Yи»ёг‚Єгѓ•г‚»гѓѓгѓ€гЂ‚
+	const auto CRITICAL_PERCENTAGE = 100.0f;    //! г‚ЇгѓЄгѓ†г‚Јг‚«гѓ«з™єз”џзўєз«‹гЂ‚
 }
-
 namespace nsApp
 {
 	namespace nsState
 	{
 		void PlayerAttackBaseState::Enter()
 		{
-			/* ЌUЊ‚‚МЋн—Ю‚І‚Ж‚ЙѓLѓѓѓXѓg‚рЌs‚¤ЃB*/
+			/* ж”»ж’ѓгЃ®зЁ®йЎћгЃ”гЃЁгЃ«г‚­гѓЈг‚№гѓ€г‚’иЎЊгЃ†гЂ‚*/
 			m_player = static_cast<nsActor::Player*>(m_owner);
 
 			m_isHit = false;
@@ -35,33 +33,33 @@ namespace nsApp
 
 		void PlayerAttackBaseState::Update()
 		{
-			/* ѓ^ѓCѓ}Ѓ[‚р‰БЋZ‚·‚йЃB*/
+			/* г‚їг‚¤гѓћгѓјг‚’еЉ з®—гЃ™г‚‹гЂ‚*/
 			m_attackTimer++;
 
-			/* “ь—НѓNѓ‰ѓX‚рЋж“ѕ‚·‚йЃB*/
+			/* е…ҐеЉ›г‚Їгѓ©г‚№г‚’еЏ–еѕ—гЃ™г‚‹гЂ‚*/
 			const auto& inputClass = m_player->GetInputClass();
 
 
-			// @TODO: ѓЉѓtѓ@ЃB
+			// @TODO: гѓЄгѓ•г‚ЎгЂ‚
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
-			/* Bѓ{ѓ^ѓ“ѓAѓNѓVѓ‡ѓ“ЃB*/
+			/* Bгѓњг‚їгѓіг‚ўг‚Їг‚·гѓ§гѓігЂ‚*/
 			if (inputClass.IsAttack())
 			{
 				/* 
-				 *ѓ^ѓCѓ}Ѓ[‚р‰БЋZ‚·‚йЃB
-				 * Bѓ{ѓ^ѓ“‚р‰џ‚·‚І‚Ж‚Йѓ^ѓCѓ}Ѓ[‚р‰БЋZ‚µЃA“–‚Д‚Н‚Ь‚й‚И‚зA‘±ЌUЊ‚‚ЙЊq‚°‚йЃB
+				 *г‚їг‚¤гѓћгѓјг‚’еЉ з®—гЃ™г‚‹гЂ‚
+				 * Bгѓњг‚їгѓіг‚’жЉјгЃ™гЃ”гЃЁгЃ«г‚їг‚¤гѓћгѓјг‚’еЉ з®—гЃ—гЂЃеЅ“гЃ¦гЃЇгЃѕг‚‹гЃЄг‚‰йЂЈз¶љж”»ж’ѓгЃ«з№‹гЃ’г‚‹гЂ‚
 				 */
 				m_rushCount++;
 				
-				/* Bѓ{ѓ^ѓ“‚Є‰џ‚і‚к‚Д‚ў‚Ѕ‚з—\–с‚р“ь‚к‚йЃB*/
+				/* Bгѓњг‚їгѓігЃЊжЉјгЃ•г‚ЊгЃ¦гЃ„гЃџг‚‰дє€зґ„г‚’е…Ґг‚Њг‚‹гЂ‚*/
 				m_inputRequests[ComboInputType::PressB] = true;
 			}
 
 			if (inputClass.IsPressX())
 				m_inputRequests[ComboInputType::PressX] = true;
 
-			/* Aѓ{ѓ^ѓ“ѓAѓNѓVѓ‡ѓ“ЃB*/
+			/* Aгѓњг‚їгѓіг‚ўг‚Їг‚·гѓ§гѓігЂ‚*/
 			if (inputClass.IsSlashUp())
 				m_inputRequests[ComboInputType::PressLB2] = true;
 			else if(inputClass.IsJump())
@@ -73,7 +71,7 @@ namespace nsApp
 
 			if (m_attackTimer > 5 && !m_player->IsPlayAnimation())
 			{
-				/* IdleЏу‘Ф‚Ц‘J€ЪЃB*/
+				/* IdleзЉ¶ж…‹гЃёйЃ·з§»гЂ‚*/
 				m_stateMachine->ChangeState(new PlayerIdleState());
 				return;
 			}
@@ -97,14 +95,14 @@ namespace nsApp
 
 		void PlayerAttackBaseState::Exit()
 		{
-			/* State‚р”І‚Ї‚йЌЫ‚МЏ€—ќЃB*/
-			/* Њш‰К‰№‚Ж‚©ѓGѓtѓFѓNѓg‚Ж‚©‚МЌДђ¶‚рѓXѓgѓbѓv‚і‚№‚й*/
+			/* Stateг‚’жЉњгЃ‘г‚‹йљ›гЃ®е‡¦зђ†гЂ‚*/
+			/* еЉ№жћњйџігЃЁгЃ‹г‚Ёгѓ•г‚§г‚Їгѓ€гЃЁгЃ‹гЃ®е†Ќз”џг‚’г‚№гѓ€гѓѓгѓ—гЃ•гЃ›г‚‹*/
 			if (m_player)
 			{
-				/* “–‚Ѕ‚и”»’и‚р’DЋж‚·‚йЃB*/
+				/* еЅ“гЃџг‚Ље€¤е®љг‚’еҐЄеЏ–гЃ™г‚‹гЂ‚*/
 				m_player->GetWeaponHitDetection().Disable();
 
-				/* SE‚МЌДђ¶‚рЋ~‚Я‚йЃB*/
+				/* SEгЃ®е†Ќз”џг‚’ж­ўг‚Ѓг‚‹гЂ‚*/
 				m_player->StopWeaponSE();
 			}
 		}
@@ -112,11 +110,11 @@ namespace nsApp
 
 		void PlayerAttackBaseState::OnHitDamageText(nsActor::ICharacter* target)
 		{
-			// m_player ‚в target ‚Є–і‚ўЋћ‚Н‰Ѕ‚а‚µ‚И‚ў
+			// m_player г‚„ target гЃЊз„ЎгЃ„ж™‚гЃЇдЅ•г‚‚гЃ—гЃЄгЃ„
 			if (!m_player || !target)
 				return;
 
-			/* --- ѓ_ѓЃЃ[ѓWЊvЋZ‚Н‚»‚М‚Ь‚Ь --- */
+			/* --- гѓЂгѓЎгѓјг‚ёиЁ€з®—гЃЇгЃќгЃ®гЃѕгЃѕ --- */
 			m_getPlayerPosition = m_player->GetPosition();
 			m_forwardDirection = m_player->GetForwardVector();
 			const auto& playerStatus = m_player->GetCharacterStatus().attack;
@@ -132,7 +130,7 @@ namespace nsApp
 			m_screenPosition = target->GetPosition();
 			m_screenPosition.y += 120.0f;
 
-			/* ѓ_ѓЃЃ[ѓWѓeѓLѓXѓg‚р•\Ћ¦‚·‚йЃB*/
+			/* гѓЂгѓЎгѓјг‚ёгѓ†г‚­г‚№гѓ€г‚’иЎЁз¤єгЃ™г‚‹гЂ‚*/
 			m_damageIndicator = NewGO<PresentDamageIndicator>(0, "DamageUI");
 			m_damageIndicator->Init(m_finalDamage, m_screenPosition);
 		}
@@ -140,25 +138,25 @@ namespace nsApp
 
 		bool PlayerAttackBaseState::CheckCombo(PLAYER_STATE_ID currentStateID, uint8_t& id)
 		{
-			/* playerѓNѓ‰ѓX‚Є‘¶ЌЭ‚·‚й‚©Њџ’mЃB*/
+			/* playerг‚Їгѓ©г‚№гЃЊе­ењЁгЃ™г‚‹гЃ‹ж¤њзџҐгЂ‚*/
 			if (!m_player)
 				return false;
 
-			/* ’nЏг‚Й‚ў‚й‚©‚З‚¤‚©‚рЉm”FЃB*/ 
+			/* ењ°дёЉгЃ«гЃ„г‚‹гЃ‹гЃ©гЃ†гЃ‹г‚’зўєиЄЌгЂ‚*/ 
 			m_isGrounded = m_player->GetCharacterController().IsOnGround();
 
-			/* ѓXѓeЃ[ѓgID‚Ж’nЏг‚Й‚ў‚й‚©‚З‚¤‚©‚рЊџ’m‚і‚№‚йЃB*/
+			/* г‚№гѓ†гѓјгѓ€IDгЃЁењ°дёЉгЃ«гЃ„г‚‹гЃ‹гЃ©гЃ†гЃ‹г‚’ж¤њзџҐгЃ•гЃ›г‚‹гЂ‚*/
 			const auto& routes = ComboRouteTable::GetRoutes(currentStateID, m_isGrounded);
 
 			for (const auto& route : routes)
 			{
-				/* ѓeЃ[ѓuѓ‹‚©‚зЋw’и‚і‚к‚Ѕ‚а‚М‚рЋж‚иЏo‚·ЃB*/
+				/* гѓ†гѓјгѓ–гѓ«гЃ‹г‚‰жЊ‡е®љгЃ•г‚ЊгЃџг‚‚гЃ®г‚’еЏ–г‚Ље‡єгЃ™гЂ‚*/
 				m_isInputMatch = m_inputRequests[route.inputType];
 
-				/* ЋћЉФ‚Ж“ь—НЏрЊЏ‚р–ћ‚Ѕ‚µ‚Д‚ў‚й‚©Љm”FЃB*/
+				/* ж™‚й–“гЃЁе…ҐеЉ›жќЎд»¶г‚’жєЂгЃџгЃ—гЃ¦гЃ„г‚‹гЃ‹зўєиЄЌгЂ‚*/
 				if (m_attackTimer >= route.cancelTime && m_isInputMatch)
 				{
-					/* ЏрЊЏ‚р–ћ‚Ѕ‚µ‚Д‚ў‚йЏкЌ‡ЃAЋџ‚МЏу‘Ф‚Ц‘J€Ъ‚·‚йЃB*/
+					/* жќЎд»¶г‚’жєЂгЃџгЃ—гЃ¦гЃ„г‚‹е ґеђ€гЂЃж¬ЎгЃ®зЉ¶ж…‹гЃёйЃ·з§»гЃ™г‚‹гЂ‚*/
 					id = static_cast<uint8_t>(route.nextStateID);
 					return true;
 				}

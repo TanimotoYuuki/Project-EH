@@ -49,6 +49,9 @@
     <Filter Include="Src\Actor\Character\Boss">
       <UniqueIdentifier>{be4b2ca9-0734-4f99-b20b-a39e6acf329c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Actor\Character\Boss\State">
+      <UniqueIdentifier>{6c9d9ef2-f516-4c04-b093-71b4b9b9a8db}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -109,9 +112,6 @@
     <ClCompile Include="Src\Actor\Character\Player\State\BasicState\PlayerHitState.cpp">
       <Filter>Src\Actor\Character\Player\State\BasicState</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Actor\Character\Player\State\BasicState\PlayerDethState.cpp">
-      <Filter>Src\Actor\Character\Player\State\BasicState</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Actor\Character\Player\State\AttackState\PlayerChargeAttackState.cpp">
       <Filter>Src\Actor\Character\Player\State\AttackState</Filter>
     </ClCompile>
@@ -136,7 +136,6 @@
     <ClCompile Include="Src\Camera\Camera.cpp" />
     <ClCompile Include="PresentDamageIndicator.cpp" />
     <ClCompile Include="Src\Actor\Character\Common\WeaponHitDetection.cpp" />
-    <ClCompile Include="Src\Debug\Sandbag.cpp" />
     <ClCompile Include="Src\Camera\Camera.cpp">
       <Filter>Src\Camera</Filter>
     </ClCompile>
@@ -147,6 +146,42 @@
     <ClCompile Include="Src\Sound\SoundLister.cpp" />
     <ClCompile Include="Src\Effect\EffectList.cpp" />
     <ClCompile Include="Src\Actor\Character\Player\State\AttackState\PlayerChargingState.cpp" />
+    <ClCompile Include="BossIdleState.cpp">
+      <Filter>Src\Actor\Character\Boss\State</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\Player\State\BasicState\PlayerDethState.cpp">
+      <Filter>Src\Actor\Character\Player\State\BasicState</Filter>
+    </ClCompile>
+    <ClCompile Include="Boss.cpp">
+      <Filter>Src\Actor\Character\Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="BossMoveState.cpp">
+      <Filter>Src\Actor\Character\Boss\State</Filter>
+    </ClCompile>
+    <ClCompile Include="BossAttackState.cpp">
+      <Filter>Src\Actor\Character\Boss\State</Filter>
+    </ClCompile>
+    <ClCompile Include="BossAnimation.cpp">
+      <Filter>Src\Actor\Character\Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="BossDamageState.cpp">
+      <Filter>Src\Actor\Character\Boss\State</Filter>
+    </ClCompile>
+    <ClCompile Include="BossDethState.cpp">
+      <Filter>Src\Actor\Character\Boss\State</Filter>
+    </ClCompile>
+    <ClCompile Include="IBossAttackStrategy.cpp">
+      <Filter>Src\Actor\Character\Boss\State</Filter>
+    </ClCompile>
+    <ClCompile Include="TailAttackStrategy.cpp">
+      <Filter>Src\Actor\Character\Boss\State</Filter>
+    </ClCompile>
+    <ClCompile Include="BiteAttackStrategy.cpp">
+      <Filter>Src\Actor\Character\Boss\State</Filter>
+    </ClCompile>
+    <ClCompile Include="FireAttackStrategy.cpp">
+      <Filter>Src\Actor\Character\Boss\State</Filter>
+    </ClCompile>
     <ClCompile Include="Src\Actor\Character\Player\State\BasicState\PlayerGuardState.cpp" />
     <ClCompile Include="Src\Actor\Character\Player\State\BasicState\PlayerReBoneState.cpp" />
     <ClCompile Include="Src\Actor\Character\Player\State\BasicState\PlayerGetUpState.cpp" />
@@ -290,7 +325,6 @@
       <Filter>Src\Camera</Filter>
     </ClInclude>
     <ClInclude Include="PresentDamageIndicator.h" />
-    <ClInclude Include="Src\Debug\Sandbag.h" />
     <ClInclude Include="Src\Actor\Character\Common\WeaponHitDetection.h" />
     <ClInclude Include="Src\Actor\Character\Status\AttackParameterTable.h" />
     <ClInclude Include="Src\Actor\Stage\BackGround.h" />
@@ -299,6 +333,39 @@
     <ClInclude Include="Src\Sound\SoundLister.h" />
     <ClInclude Include="Src\Effect\EffectList.h" />
     <ClInclude Include="Src\Actor\Character\Player\State\AttackState\PlayerChargingState.h" />
+    <ClInclude Include="BossIdleState.h">
+      <Filter>Src\Actor\Character\Boss\State</Filter>
+    </ClInclude>
+    <ClInclude Include="Boss.h">
+      <Filter>Src\Actor\Character\Boss</Filter>
+    </ClInclude>
+    <ClInclude Include="BossMoveState.h">
+      <Filter>Src\Actor\Character\Boss\State</Filter>
+    </ClInclude>
+    <ClInclude Include="BossAttackState.h">
+      <Filter>Src\Actor\Character\Boss\State</Filter>
+    </ClInclude>
+    <ClInclude Include="BossAnimation.h">
+      <Filter>Src\Actor\Character\Boss</Filter>
+    </ClInclude>
+    <ClInclude Include="BossDamageState.h">
+      <Filter>Src\Actor\Character\Boss\State</Filter>
+    </ClInclude>
+    <ClInclude Include="BossDethState.h">
+      <Filter>Src\Actor\Character\Boss\State</Filter>
+    </ClInclude>
+    <ClInclude Include="IBossAttackStrategy.h">
+      <Filter>Src\Actor\Character\Boss\State</Filter>
+    </ClInclude>
+    <ClInclude Include="TailAttackStrategy.h">
+      <Filter>Src\Actor\Character\Boss\State</Filter>
+    </ClInclude>
+    <ClInclude Include="BiteAttackStrategy.h">
+      <Filter>Src\Actor\Character\Boss\State</Filter>
+    </ClInclude>
+    <ClInclude Include="FireAttackStrategy.h">
+      <Filter>Src\Actor\Character\Boss\State</Filter>
+    </ClInclude>
     <ClInclude Include="Src\Actor\Character\Player\State\BasicState\PlayerGuardState.h" />
     <ClInclude Include="Src\Actor\Character\Player\State\BasicState\PlayerReBoneState.h" />
     <ClInclude Include="Src\Actor\Character\Player\State\BasicState\PlayerGetUpState.h" />
