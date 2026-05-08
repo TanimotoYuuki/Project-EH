@@ -11,6 +11,10 @@ namespace nsApp
 		if (!m_target)
 			return;
 
+		if (!m_soundManager) {
+			m_soundManager = FindGO<nsSound::SoundLister>("SoundManager");
+		}
+
 		/* Job‚Ìî•ñ‚ðŽæ“¾B*/
 		m_currentJob = m_target->GetCurrentWeapon();
 		auto& effectList = m_target->GetEffectList();
@@ -50,9 +54,8 @@ namespace nsApp
 		default:
 			break;
 		}
-		
-		auto soundManager = FindGO<nsSound::SoundLister>("SoundLister");
-		if (soundManager != nullptr && reinterpret_cast<uintptr_t>(soundManager) != 0xFFFFFFFFFFFFFFFF)
-			soundManager->GetSEList().PlayAttackSE(m_currentJob, AttackType::NormalAttack);
+
+		if (m_soundManager)
+			m_soundManager->GetSEList().PlayAttackSE(m_currentJob, AttackType::NormalAttack);
 	}
 }

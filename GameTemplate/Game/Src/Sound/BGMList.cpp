@@ -14,9 +14,10 @@ namespace nsApp
 		void BGMList::Init()
 		{
 			/* BGMのファイルパスを登録。*/
+			/* タイトルBGM。*/
 			g_soundEngine->ResistWaveFileBank(BGM_ID::Title, GetBGMFilePath("title").c_str());
+			/* ステージ1BGM。*/
 			g_soundEngine->ResistWaveFileBank(BGM_ID::Stage1, GetBGMFilePath("stage").c_str());
-			//g_soundEngine->ResistWaveFileBank(BGM_ID::Result, GetBGMFilePath("result").c_str());
 		}
 
 		void BGMList::PlayBGM(BGM_ID id, float volume)
@@ -25,7 +26,7 @@ namespace nsApp
 			if (m_currentBGM == id && m_bgmSource != nullptr)
 				return;
 
-			/* 前の曲が流れていたら、しっかり止めてスピーカーを壊す */
+			/* BGMを停止。*/
 			StopBGM();
 
 			/* 新しい曲のスピーカーを作って鳴らす */
@@ -35,10 +36,10 @@ namespace nsApp
 			/* 音量をセット */
 			m_bgmSource->SetVolume(volume);
 
-			/* 再生する！（true を渡すとループ再生になります！） */
+			/* 再生。*/
 			m_bgmSource->Play(true);
 
-			/* 今流れている曲のIDをメモしておく */
+			/* 今流れているBGMを保存。 */
 			m_currentBGM = id;
 		}
 
@@ -47,11 +48,14 @@ namespace nsApp
 			/* スピーカーが存在していたら、音を止めてから消去する */
 			if (m_bgmSource != nullptr)
 			{
+				/* BGMを停止する。*/
 				m_bgmSource->Stop();
+				/* BGMクラスを削除。*/
 				DeleteGO(m_bgmSource);
+				/* 再初期化。*/
 				m_bgmSource = nullptr;
 			}
-			/* 記録を None（何も鳴っていない状態）にリセット */
+			/* 音源をリセット。*/
 			m_currentBGM = BGM_ID::None;
 		}
 	}

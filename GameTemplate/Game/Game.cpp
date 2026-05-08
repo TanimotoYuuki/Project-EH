@@ -53,11 +53,15 @@ namespace nsApp
 
 		bool Game::Start()
 		{
+			/* 音源の生成。*/
+			m_soundLister = NewGO<nsSound::SoundLister>(0, "SoundManager");
+			m_soundLister->GetBGMList().Init();
+			m_soundLister->GetSEList().Init();
+
 			/* 初期ステージのセット。*/
 			/* @TODO ステージ選択画面からこの処理を呼ぶようにする。*/
 			nsApp::nsStage::LoadStageData::GetInstance().ChangeStage(nsApp::nsStage::StageID::stage1);
 
-			m_soundLister = NewGO<nsSound::SoundLister>(0, "SoundManager");
 			m_backGround = NewGO<nsStage::BackGround>(0, "BackGround");
 			/* カメラを生成。*/
 			m_camera = NewGO<Camera>(0, "camera");
@@ -185,8 +189,8 @@ namespace nsApp
 			{
 				//{"player1", WeaponType::GreatSword, ControllerType::NPC,INIT_CHARACTER_POSITION_PLAYER1},
 				//{"player2", WeaponType::Hammer, ControllerType::NPC,INIT_CHARACTER_POSITION_PLAYER2},
-				{"player3", WeaponType::Wand, ControllerType::Player_1P, INIT_CHARACTER_POSITION_PLAYER3},
-				//{"player4", WeaponType::TwinGun, ControllerType::Player_1P, INIT_CHARACTER_POSITION_PLAYER4}
+				//{"player3", WeaponType::Wand, ControllerType::Player_1P, INIT_CHARACTER_POSITION_PLAYER3},
+				{"player4", WeaponType::TwinGun, ControllerType::Player_1P, INIT_CHARACTER_POSITION_PLAYER4}
 			};
 
 			/* 作成したリストをセットする。*/

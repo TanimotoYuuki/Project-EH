@@ -1,5 +1,7 @@
 ﻿#include "stdafx.h"
 #include "Stage.h"
+#include "Src/Sound/SoundLister.h"
+
 
 namespace nsApp
 {
@@ -39,6 +41,12 @@ namespace nsApp
 				/* 当たり判定の作成。*/
 				m_stagePhysicsStaticObject.CreateFromModel(m_backGroundModel->GetModel(), m_backGroundModel->GetModel().GetWorldMatrix());
 			}
+
+
+			/* BGMの再生。*/
+			auto soundManager = FindGO<nsSound::SoundLister>("SoundManager");
+			if (soundManager != nullptr && reinterpret_cast<uintptr_t>(soundManager) != 0xFFFFFFFFFFFFFFFF)
+				soundManager->GetBGMList().PlayBGM(nsSound::BGM_ID::Stage1, 1.0f);
 		}
 
 
