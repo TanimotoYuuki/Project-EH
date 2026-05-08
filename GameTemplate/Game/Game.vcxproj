@@ -223,6 +223,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BiteAttackStrategy.cpp" />
+    <ClCompile Include="Boss.cpp" />
+    <ClCompile Include="BossAnimation.cpp" />
+    <ClCompile Include="BossAttackState.cpp" />
+    <ClCompile Include="BossDamageState.cpp" />
+    <ClCompile Include="BossDethState.cpp" />
+    <ClCompile Include="BossIdleState.cpp" />
+    <ClCompile Include="BossMoveState.cpp" />
+    <ClCompile Include="FireAttackStrategy.cpp" />
     <ClCompile Include="Src\Effect\EffectListener.cpp" />
     <ClCompile Include="Src\Actor\Gun\Factory\BulletFactory.cpp" />
     <ClCompile Include="CharacterHP.cpp" />
@@ -259,6 +268,7 @@
     <ClCompile Include="Src\Actor\Magic\MagicProjectotile.cpp" />
     <ClCompile Include="Src\Fade\Fade.cpp" />
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="IBossAttackStrategy.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MemberSelect.cpp" />
     <ClCompile Include="QuestSelect.cpp" />
@@ -294,7 +304,6 @@
     <ClCompile Include="Src\Actor\Character\Player\State\BasicState\PlayerWalkState.cpp" />
     <ClCompile Include="Src\Actor\Stage\LoadStageData.cpp" />
     <ClCompile Include="Src\Actor\Stage\Stage.cpp" />
-    <ClCompile Include="Src\Debug\Sandbag.cpp" />
     <ClCompile Include="Src\Effect\EffectList.cpp" />
     <ClCompile Include="Src\SceneLoader\SceneLoader.cpp" />
     <ClCompile Include="Src\Sound\BGMList.cpp" />
@@ -307,6 +316,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Preview|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="system\system.cpp" />
+    <ClCompile Include="TailAttackStrategy.cpp" />
     <ClCompile Include="GameTimeLimit.cpp" />
     <ClCompile Include="GameTimeUpDirection.cpp" />
     <ClCompile Include="Title.cpp" />
@@ -314,6 +324,17 @@
     <ClCompile Include="Src\UIAnimation\UIAnimation.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BiteAttackStrategy.h" />
+    <ClInclude Include="Boss.h" />
+    <ClInclude Include="BossAnimation.h" />
+    <ClInclude Include="BossAttackState.h" />
+    <ClInclude Include="BossDamageState.h" />
+    <ClInclude Include="BossDethState.h" />
+    <ClInclude Include="BossIdleState.h" />
+    <ClInclude Include="BossMoveState.h" />
+    <ClInclude Include="FireAttackStrategy.h" />
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="IBossAttackStrategy.h" />
     <ClInclude Include="Src\Effect\EffectListener.h" />
     <ClInclude Include="Src\Actor\Gun\Shooter\BulletFireRequest.h" />
     <ClInclude Include="Src\Actor\Gun\Shooter\IBulletFireListener.h" />
@@ -391,7 +412,6 @@
     <ClInclude Include="Src\Actor\Stage\LoadStageData.h" />
     <ClInclude Include="Src\Actor\Stage\Stage.h" />
     <ClInclude Include="Src\Actor\Stage\StageData.h" />
-    <ClInclude Include="Src\Debug\Sandbag.h" />
     <ClInclude Include="Src\Effect\EffectList.h" />
     <ClInclude Include="Src\SceneLoader\SceneLoader.h" />
     <ClInclude Include="Src\Sound\BGMList.h" />
@@ -401,6 +421,7 @@
     <ClInclude Include="Src\StateMachine\StateMachine.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="system\system.h" />
+    <ClInclude Include="TailAttackStrategy.h" />
     <ClInclude Include="GameTimeLimit.h" />
     <ClInclude Include="GameTimeUpDirection.h" />
     <ClInclude Include="Title.h" />
