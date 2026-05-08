@@ -14,14 +14,53 @@ namespace nsApp
 {
 	void PlayerInput::Update()
 	{
-		/* 入力判定が無効な場合は初期化して帰る */
+		/* 入力判定。*/
 		if (!m_isInputEnable)
 		{
-			InitInputJudgment();
+			m_isAttack = false;          //! 攻撃フラグ。
+			m_isMove = false;            //! 移動フラグ。
+			m_isJump = false;            //! ジャンプフラグ。
+			m_isRun = false;             //! 走りフラグ。
+			m_isDamage = false;          //! ダメージフラグ。
+			m_isDeath = false;           //! 死亡フラグ。
+			m_isNormalAttack = false;    //! 通常攻撃フラグ。
+			m_isChargeAttack = false;    //! チャージ攻撃フラグ。
+			m_isAirAttack = false;       //! 空中攻撃フラグ。
+			m_isComboAttack = false;     //! コンボ攻撃フラグ。
+			m_isRushStart = false;       //! 連続攻撃開始フラグ。
+			m_isRushEnd = false;         //! 連続攻撃終了フラグ。
+			m_moveVec = Vector3::Zero;   
 			return;
 		}
 
+		/* NPCの場合は操作をコントローラーの操作を受け付けないので、入力判定を無視する。*/
 		if (m_padInddex < 0)
+		{
+			m_moveVec = Vector3::Zero;   //! 移動ベクトルを初期化。
+			m_isMove = false;            //! 移動判定。
+			m_isAttack = false;          //! 攻撃判定。
+			m_isGuard = false;			 //! ガード判定。
+
+			return;
+		}
+
+		/* NPCの場合は操作をコントローラーの操作を受け付けないので、入力判定を無視する。*/
+		if (m_padInddex < 0)
+		{
+			m_moveVec = Vector3::Zero;   //! 移動ベクトルを初期化。
+			m_isMove = false;            //! 移動判定。
+			m_isAttack = false;          //! 攻撃判定。
+			m_isGuard = false;			 //! ガード判定。
+
+			return;
+		}
+
+		/* 移動入力判定。*/ 
+		m_stickX = g_pad[m_padInddex]->GetLStickXF();
+		m_stickY = g_pad[m_padInddex]->GetLStickYF();
+
+		/* ジャンプ, 斬り上げ判定。*/
+		if (g_pad[m_padInddex]->IsTrigger(enButtonA))
 		{
 			m_stickX = m_virtualStickX;
 			m_stickY = m_virtualStickY;

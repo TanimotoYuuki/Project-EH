@@ -175,9 +175,22 @@
     <ClCompile Include="Src\Actor\Character\Player\CharacterByWeapon\TwinGunCharacter.cpp" />
     <ClCompile Include="Src\Actor\Character\Player\Component\PlayerGenerator.cpp" />
     <ClCompile Include="Src\Actor\Character\NPC\NPCBrain.cpp" />
-    <ClCompile Include="Src\Actor\Character\NPC\NPCChaseState.cpp" />
-    <ClCompile Include="Src\Actor\Character\NPC\NPCIdleState.cpp" />
-    <ClCompile Include="Src\Actor\Character\NPC\NPCAttackState.cpp" />
+    <ClCompile Include="Src\Actor\Character\NPC\State\BasicState\NPCChaseState.cpp" />
+    <ClCompile Include="Src\Actor\Character\NPC\State\BasicState\NPCIdleState.cpp" />
+    <ClCompile Include="Src\Actor\Character\NPC\State\AttackState\NPCSwordAttackState.cpp" />
+    <ClCompile Include="Src\Actor\Character\NPC\State\AttackState\NPCHammerAttackState.cpp" />
+    <ClCompile Include="Src\Actor\Character\NPC\State\AttackState\NPCWandAttackState.cpp" />
+    <ClCompile Include="Src\Actor\Gun\Register\BulletModelRegister.cpp" />
+    <ClCompile Include="Src\Actor\Gun\Bullet\NormalBullet.cpp" />
+    <ClCompile Include="Src\Actor\Gun\Bullet\ChargeBullet.cpp" />
+    <ClCompile Include="Src\Actor\Gun\Bullet\RushBullet.cpp" />
+    <ClCompile Include="Src\Actor\Gun\Bullet\DashBullet.cpp" />
+    <ClCompile Include="Src\Actor\Gun\Bullet\HeavyBullett.cpp" />
+    <ClCompile Include="Src\Actor\Gun\Bullet\AirBullet.cpp" />
+    <ClCompile Include="Src\Actor\Gun\Parameter\BulletParameterTable.cpp" />
+    <ClCompile Include="Src\Actor\Gun\Factory\BulletFactory.cpp" />
+    <ClCompile Include="Src\Actor\Gun\Shooter\GunShooter.cpp" />
+    <ClCompile Include="Src\Effect\EffectListener.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -315,8 +328,24 @@
     <ClInclude Include="Src\Actor\Character\Player\Component\PlayerSpawnData.h" />
     <ClInclude Include="Src\Actor\Character\Player\Component\PlayerGenerator.h" />
     <ClInclude Include="Src\Actor\Character\NPC\NPCBrain.h" />
-    <ClInclude Include="Src\Actor\Character\NPC\NPCChaseState.h" />
-    <ClInclude Include="Src\Actor\Character\NPC\NPCIdleState.h" />
-    <ClInclude Include="Src\Actor\Character\NPC\NPCAttackState.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\State\BasicState\NPCChaseState.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\State\BasicState\NPCIdleState.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\State\AttackState\NPCSwordAttackState.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\State\AttackState\NPCHammerAttackState.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\State\AttackState\NPCWandAttackState.h" />
+    <ClInclude Include="Src\Actor\Gun\Bullet\IGunBullet.h" />
+    <ClInclude Include="Src\Actor\Gun\Register\BulletModelRegister.h" />
+    <ClInclude Include="Src\Actor\Gun\Bullet\NormalBullet.h" />
+    <ClInclude Include="Src\Actor\Gun\Bullet\ChargeBullet.h" />
+    <ClInclude Include="Src\Actor\Gun\Bullet\RushBullet.h" />
+    <ClInclude Include="Src\Actor\Gun\Bullet\DashBullet.h" />
+    <ClInclude Include="Src\Actor\Gun\Bullet\HeavyBullett.h" />
+    <ClInclude Include="Src\Actor\Gun\Bullet\AirBullet.h" />
+    <ClInclude Include="Src\Actor\Gun\Parameter\BulletParameterTable.h" />
+    <ClInclude Include="Src\Actor\Gun\Factory\BulletFactory.h" />
+    <ClInclude Include="Src\Actor\Gun\Shooter\BulletFireRequest.h" />
+    <ClInclude Include="Src\Actor\Gun\Shooter\IBulletFireListener.h" />
+    <ClInclude Include="Src\Actor\Gun\Parameter\BulletParameter.h" />
+    <ClInclude Include="Src\Effect\EffectListener.h" />
   </ItemGroup>
 </Project>

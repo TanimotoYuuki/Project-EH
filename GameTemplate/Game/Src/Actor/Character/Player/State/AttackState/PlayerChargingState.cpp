@@ -3,6 +3,7 @@
 #include "Src/Actor/Character/Player/Component/ComboRouteTable.h"
 #include "Src/Actor/Character/Player/CharacterByWeapon/WandCharacter.h"
 
+#include "Src/Actor/Character/Player/State/AttackState/PlayerChargeAttackState.h"
 #include "Src/Actor/Character/Player/State/AttackState/ComboState/PlayerMagicAttackState.h"
 #include "Src/Actor/Character/Player/State/AttackState/ComboState/PlayerHeelMagicState.h"
 
@@ -51,6 +52,11 @@ namespace nsApp
 			/* ハンマーの炎エフェクトを生成。*/
 			CreateFireEffect();
 
+			if (m_player->GetInputClass().IsChargeAttack())
+			{
+				m_stateMachine->ChangeState(new PlayerChargeAttackState());
+				return;
+			}
 
 		////////////////////////////////////////////////////////////////////////
 			// リファ。

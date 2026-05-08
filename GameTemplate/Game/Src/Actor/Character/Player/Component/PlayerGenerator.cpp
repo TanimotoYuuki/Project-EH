@@ -1,48 +1,50 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "PlayerGenerator.h"
 
 #include "Src/Actor/Character/Player/Player.h"
 #include "Src/Actor/Character/Player/CharacterByWeapon/HammerCharacter.h"
 #include "Src/Actor/Character/Player/CharacterByWeapon/SwordCharacter.h"
 #include "Src/Actor/Character/Player/CharacterByWeapon/WandCharacter.h"
+#include "Src/Actor/Character/Player/CharacterByWeapon/TwinGunCharacter.h"
 
 namespace nsApp
 {
 	PlayerGenerator::PlayerGenerator()
 	{
-		/* ƒvƒŒƒCƒAƒuƒ‹ƒLƒƒƒ‰ƒNƒ‰ƒX‚ğ“o˜^B*/
-		/* SwordB*/
+		/* ç”Ÿæˆå¯¾è±¡ã‚’ç™»éŒ²ã™ã‚‹ã€‚*/
+		/* Swordã€‚*/
 		m_characterFactory[WeaponType::GreatSword] = [](const char* name) { return NewGO<nsActor::SwordCharacter>(0, name); };
 
-        /* HammerB*/
+        /* Hammerã€‚*/
 		m_characterFactory[WeaponType::Hammer] = [](const char* name) { return NewGO<nsActor::HammerCharacter>(0, name); };
 
-		/* WandB*/
+		/* Wandã€‚*/
 		m_characterFactory[WeaponType::Wand] = [](const char* name) { return NewGO<nsActor::WandCharacter>(0, name); };
 
-		/* @TODO: eƒLƒƒƒ‰‚àÀ‘•‚Å‚«Ÿ‘æA“o˜^‚·‚éB*/
+		/* TwinGunã€‚*/
+		m_characterFactory[WeaponType::TwinGun] = [](const char* name) { return NewGO<nsActor::TwinGunCharacter>(0, name); };
 	}
 
 
 	void PlayerGenerator::SpawnPlayers(const std::vector<PlayerSpawnData>& spawnDataList)
 	{
-		/* */
+		/* ç”Ÿæˆç”¨å¤‰æ•°ã€‚*/
 		std::vector<nsActor::Player*> spawnedPlayers;
 
-		/* ƒŠƒXƒg‚Ì”‚¾‚¯ƒvƒŒƒCƒAƒuƒ‹ƒLƒƒƒ‰‚ğ¶¬‚·‚éB*/
+		/* ç”Ÿæˆãƒ‡ãƒ¼ã‚¿ã®ãƒªã‚¹ãƒˆã‚’ãƒ«ãƒ¼ãƒ—ã—ã¦ã€ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚’ç”Ÿæˆã™ã‚‹ã€‚*/
 		for (const auto& data : spawnDataList)
 		{
-			/* ¶¬‚·‚éƒLƒƒƒ‰‚ğ”‚¦A•Ší‚Ìí—Ş‚Æ¶¬–¼‚ğƒZƒbƒgB*/
+			/* æ­¦å™¨ã®æ•°ã‚’èª¿ã¹ã‚‹ã€‚*/
 			if (m_characterFactory.count(data.weaponType) > 0)
 				m_spawnPlayer = m_characterFactory[data.weaponType](data.playerName);
 
-			/* ¶¬‚É¬Œ÷‚µ‚½ê‡B*/
+			/* ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®nullãƒã‚§ãƒƒã‚¯ã€‚*/
 			if (m_spawnPlayer != nullptr)
 			{
-				/* */
+				/* ç”Ÿæˆã—ãŸãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã«ã‚¹ãƒãƒ¼ãƒ³ãƒ‡ãƒ¼ã‚¿ã‚’æ¸¡ã™ã€‚*/
 				m_spawnPlayer->InitializeSpawnData(data);
 
-				/* ¶¬‚µ‚½ƒvƒŒƒCƒ„[‚ğƒŠƒXƒg‚É•Û‘¶‚·‚éB*/
+				/* ç”Ÿæˆã—ãŸãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚’ãƒªã‚¹ãƒˆã«è¿½åŠ ã™ã‚‹ã€‚*/
 				spawnedPlayers.push_back(m_spawnPlayer);
 			}
 		}

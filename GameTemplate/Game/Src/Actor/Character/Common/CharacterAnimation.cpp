@@ -43,6 +43,8 @@ namespace nsApp
 			/* 銃キャラクターのアニメーションファイルパスを初期化。*/
 			/* 基本動作用。*/
 			InitTwinGunBasicAnimationFilePath();
+			/* 攻撃動作用。*/ 
+			InitTwinGunAttackAnimationFilePath();
 			break;
 		}
 
@@ -246,31 +248,31 @@ namespace nsApp
 	void CharacterAnimation::InitTwinGunBasicAnimationFilePath()
 	{
 		/* 待機状態。*/ 
-		m_basicAnimationFilePathList[CharacterBasicAnimationList::Idle] = GetBasicAnimationFilePath("TwinGun/Idle");
+		m_basicAnimationFilePathList[CharacterBasicAnimationList::Idle] = GetBasicAnimationFilePath("Gun/Idle");
 
 		/* 歩き状態。*/
-		m_basicAnimationFilePathList[CharacterBasicAnimationList::Walk] = GetBasicAnimationFilePath("TwinGun/Walk");
+		m_basicAnimationFilePathList[CharacterBasicAnimationList::Walk] = GetBasicAnimationFilePath("Gun/Walk");
 
 		/* 走り状態。*/
-		m_basicAnimationFilePathList[CharacterBasicAnimationList::Run] = GetBasicAnimationFilePath("TwinGun/Run");
+		m_basicAnimationFilePathList[CharacterBasicAnimationList::Run] = GetBasicAnimationFilePath("Gun/Run");
 
 		/* ジャンプ状態。*/
-		m_basicAnimationFilePathList[CharacterBasicAnimationList::Jump] = GetBasicAnimationFilePath("TwinGun/Jump");
+		m_basicAnimationFilePathList[CharacterBasicAnimationList::Jump] = GetBasicAnimationFilePath("Gun/Jump");
 
 		/* 被弾状態。*/
-		m_basicAnimationFilePathList[CharacterBasicAnimationList::Hit_Fly] = GetBasicAnimationFilePath("TwinGun/Hit");
+		m_basicAnimationFilePathList[CharacterBasicAnimationList::Hit_Fly] = GetBasicAnimationFilePath("Gun/Hit");
 
 		/* 起き上がり状態。*/
-		m_basicAnimationFilePathList[CharacterBasicAnimationList::Hit_UP] = GetBasicAnimationFilePath("TwinGun/GetUp");
+		m_basicAnimationFilePathList[CharacterBasicAnimationList::Hit_UP] = GetBasicAnimationFilePath("Gun/GetUp");
 
 		/* 死亡状態。*/
-		m_basicAnimationFilePathList[CharacterBasicAnimationList::Death] = GetBasicAnimationFilePath("TwinGun/Deth");
+		m_basicAnimationFilePathList[CharacterBasicAnimationList::Death] = GetBasicAnimationFilePath("Gun/Deth");
 
 		/* ガード状態。*/
-		m_basicAnimationFilePathList[CharacterBasicAnimationList::Guard] = GetBasicAnimationFilePath("TwinGun/Guard");
+		m_basicAnimationFilePathList[CharacterBasicAnimationList::Guard] = GetBasicAnimationFilePath("Gun/Guard");
 
 		/* 助ける状態。*/
-		m_basicAnimationFilePathList[CharacterBasicAnimationList::Help] = GetBasicAnimationFilePath("TwinGun/Help");
+		m_basicAnimationFilePathList[CharacterBasicAnimationList::Help] = GetBasicAnimationFilePath("Gun/Help");
 
 		/* 登録したアニメーションをリストに登録。*/
 		m_weaponDataList[WeaponType::TwinGun] = m_greatSwordData;
@@ -279,6 +281,26 @@ namespace nsApp
 
 	void CharacterAnimation::InitTwinGunAttackAnimationFilePath()
 	{
+		/* 通常攻撃。*/
+		m_twinGunData.weaponAnimationList[AttackType::NormalAttack] = GetWeaponAnimationFilePath("TwinGun/NormalAttack");
+
+		/* チャージ攻撃。*/
+		m_twinGunData.weaponAnimationList[AttackType::ChargeAttack] = GetWeaponAnimationFilePath("TwinGun/ChargeAttack");
+
+		/* 乱射開始。*/
+		m_twinGunData.weaponAnimationList[AttackType::RushAttack_Start] = GetWeaponAnimationFilePath("TwinGun/Rush_Start");
+
+		/* 乱射終了。*/
+		m_twinGunData.weaponAnimationList[AttackType::RushAttack_End] = GetWeaponAnimationFilePath("TwinGun/Rush_End");
+
+		/* 空中攻撃。*/
+		m_twinGunData.weaponAnimationList[AttackType::AirAttack] = GetWeaponAnimationFilePath("TwinGun/AirAttack");
+
+		/* 重攻撃。*/
+		m_twinGunData.weaponAnimationList[AttackType::HeavyAttack] = GetWeaponAnimationFilePath("TwinGun/HeavyAttack");
+
+		/* 登録したアニメーションをリストに登録。*/
+		m_weaponDataList[WeaponType::TwinGun] = m_twinGunData;
 	}
 
 
