@@ -59,6 +59,22 @@ namespace nsApp
 		 */
 		bool LoadWeaponModel(CharacterModelType weaponType);
 
+		/**
+		 * @brief サブの武器を読み込む。
+
+		 */
+		bool LoadSubWeaponModel(CharacterModelType subWeaponType);
+
+		/*
+		 * @brief モデルを破棄する。
+		 * @duration サブ武器モデルを破棄時に活用。
+		 */
+		inline void ResetSubWeaponModel()
+		{
+			m_subWeaponModelRender.reset();
+		}
+
+
 		/* アニメーションを再生する。
 		 * @param animationNumber 再生するアニメーションの配列の要素数を指定する。
 		 * @param interpolateTime アニメーションの補間時間を指定する。デフォルトは0.2秒。
@@ -81,6 +97,19 @@ namespace nsApp
 
 			return false;
 		}
+
+
+	private:
+		/* 行列から座標ベクトルを取り出す。*/
+		void ExtractCoordinatesFromMatrix();
+
+		/* 行列から回転ベクトルを取り出す。*/
+		void ExtractRotationCoordinates();
+
+		/* 取り出した回転行列データを手のMatrixデータに代入。*/
+		void AssignMatrixToHandData();
+	
+		/* */
 
 
 	/* セッター。*/
@@ -131,6 +160,7 @@ namespace nsApp
 			m_weaponRotationOffset = offset;	
 		}
 
+		
 
 	/* ゲッター。*/
 	public:
@@ -165,7 +195,10 @@ namespace nsApp
 		std::unordered_map<CharacterModelType, std::string> m_filePathList;		                                               //! モデルIDからファイルパスを文字列に変化。
 		std::unique_ptr<ModelRender> m_characterModelRender;                                                                   //! モデルを管理。
 		std::unique_ptr<ModelRender> m_weaponModelRender;                                                                      //! 武器モデルを管理。
+		std::unique_ptr<ModelRender> m_subWeaponModelRender;                                                                   //! サブ武器モデルを管理。
+
 		std::wstring m_attackBoneName = L"mixamorig:RightHand";                                                                //! デフォルトのボーン名。
+		std::wstring m_subWeaponBoneName = L"mixamorig:LeftHand";                                                              //! サブ武器を装備するボーン名。
 
 		/* ファイルパスを定数化するための変数群。*/
 		std::string m_modelFilePath;                                                                                           //! モデルのファイルパスを格納。
@@ -180,6 +213,7 @@ namespace nsApp
 
 		Matrix m_handMatrix; 																					               //! 武器を装備させるときの右手のボーンの行列を管理する変数。
 		Matrix m_rotationMatrix;                                                                                               //! 武器を装備させたときの武器の傾きを制御。
+		Matrix m_subWeaponHandMatrix;
 
 		Vector3 m_xAxis;                                                                                                       //! 武器を装備させるときの右手のボーンの行列から抽出したX軸を管理する変数。
 		Vector3 m_yAxis;                                                                                                       //! 武器を装備させるときの右手のボーンの行列から抽出したY軸を管理する変数。
@@ -187,5 +221,6 @@ namespace nsApp
 		Vector3 m_matrixPosition;
 		Vector3 m_weaponOffset;                                                                                                //! 武器の位置のずれを管理する変数。
 		Vector3 m_offsetPosition;                                                                                              //! 武器の位置のずれを管理する変数。
+		Vector3 m_subWeaponOffset;                                                                                             //! サブ武器の位置のずれを管理する変数。
 	};	
 }

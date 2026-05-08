@@ -1,11 +1,23 @@
 #include "stdafx.h"
 #include "PlayerAttackBaseState.h"
 #include "Src/Actor/Character/Player/State/BasicState/PlayerIdleState.h"
+#include "Src/Actor/Character/Player/State/BasicState/PlayerWalkState.h"
+#include "Src/Actor/Character/Player/State/BasicState/PlayerRunState.h"
 
 #include "Src/Actor/Character/Status/AttackParameterTable.h"
 #include "PresentDamageIndicator.h"
 
 #include "Src/Debug/Sandbag.h"
+
+
+namespace
+{
+	const auto ATTACK_END_FRAME = 5;			//! 攻撃終了フレーム。
+	const auto RUSH_COMBO_THRESHOLD = 2;		//! 連続攻撃の閾値。
+	const auto HIT_STOP_FRAME = 8;              //! ヒットストップのフレーム数。
+	const auto DAMAGE_TEXT_OFFSET_Y = 120.0f;   //! ダメージテキストのY軸オフセット。
+	const auto CRITICAL_PERCENTAGE = 100.0f;    //! クリティカル発生確立。
+}
 
 namespace nsApp
 {
@@ -15,6 +27,9 @@ namespace nsApp
 		{
 			/* 攻撃の種類ごとにキャストを行う。*/
 			m_player = static_cast<nsActor::Player*>(m_owner);
+
+			m_isHit = false;
+			m_inputRequests.clear();
 		}
 
 
@@ -63,19 +78,17 @@ namespace nsApp
 				return;
 			}
 
-			auto sandBag = FindGO<nsActor::Sandbag>("Sandbag");
-			if (sandBag != nullptr && reinterpret_cast<uintptr_t>(sandBag) != 0xFFFFFFFFFFFFFFFF)
+			if (!m_isHit)
 			{
-				if (m_player->GetWeaponHitDetection().IsHit(sandBag))
+				auto sandbag = FindGO<nsActor::Sandbag>("Sandbag");
+				if (sandbag != nullptr && reinterpret_cast<uint8_t>(sandbag) != 0xFFFFFFFFFFFFFFFF)
 				{
-					/* ダメージ数テキストを描画。*/
-					OnHitDamageText(sandBag);
+					OnHitDamageText(sandbag);
 
-					/* ヒットストップを発生させる。*/
-					m_player->SetHitStop(8);
-					sandBag->SetHitStop(8);
+					m_player->SetHitStop(HIT_STOP_FRAME);
+					sandbag->SetHitStop(HIT_STOP_FRAME);
 
-					return;
+					m_isHit = true;
 				}
 			}
 ///////////////////////////////////////////////////////////////////////////////////////////////////

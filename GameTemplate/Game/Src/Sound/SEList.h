@@ -1,25 +1,33 @@
 #pragma once
 /**
-* @file   SEList.h
-* @brief  SEのみを管理するクラス。
-* @author YamaguchiHayato。
-* @date   2026/03/21
-*/
+ * @file   SEList.h
+ * @brief  SEのみを管理するクラス。
+ * @author YamaguchiHayato。
+ * @date   2026/05/04
+ */
 
 #include "Src/Actor/Character/Common/CharacterAnimation.h"
 
 namespace nsApp
 {
 	namespace nsSound
-	{
+	{  
+		/*
+		 * @struct SEInfo。
+		 * @brief 再生するSEの情報を管理する。
+	     */
+		struct SEInfo
+		{
+			nsK2EngineLow::SoundSource* source = nullptr;	//! SEのサウンドエンジン。
+			float lifeTime = 0.0f;						    //! SEの寿命。
+			float currentTime = 0.0f;					    //! SEの現在の経過時間。
+			bool isLoop = false;					        //! SEをループ再生するかどうかのフラグ。
+		};
+
+
 		/* SEのIDリスト。*/
 		enum SE_ID : uint8_t
 		{
-			/*
-			 * SEの種類を記載していく。
-			 * @TODO: 必要になった際にSEを足していく。
-			 */
-
 			/* Sword。*/
 			NormalAttack_Sword,  //! 通常攻撃のSE。
 			RushAttack_Sword,    //! 連続攻撃のSE。
@@ -43,15 +51,39 @@ namespace nsApp
 		public:
 			/* コンストラクタとデストラクタ。*/
 			SEList() = default;
-			~SEList() = default;
+			virtual ~SEList();
 
 
 		public:
 			/* 初期化処理。*/
 			void Init();
 
-			/* SEの再生。*/ 
-			nsK2EngineLow::SoundSource* PlaySE(SE_ID id, float volume, bool flag);
+			/*
+			 * @brief 更新処理。
+			 * @param deltaTime: 前フレームからの経過時間。
+			 */
+			void Update(float deltaTime);
+
+			/*
+			 * @brief SEのキャッシュを解放する。
+			 */
+			void Clear();
+
+
+			/* 
+			 * @brief SEの再生。
+			 * @param id: SEの識別子。
+			 * @param volume: SEの音量。
+			 * @param flag: ループ再生するかどうかのフラグ。
+			 * @param lifeTime  単発SEの寿命。
+			 */ 
+			nsK2EngineLow::SoundSource* PlaySE(SE_ID id, float volume, bool flag, float lifeTime);
+
+			/**
+			 * @brief 指定したSEを停止して削除する。
+			 * @param soundSource 停止したいSoundSource。
+			 */
+			void StopSE(nsK2EngineLow::SoundSource*& soundSource);
 
 			/* @fun 
 			 * @brief 武器と攻撃タイプからSEを判別。
@@ -94,9 +126,9 @@ namespace nsApp
 
 		private:
 			std::unordered_map<WeaponType, std::unordered_map<AttackType, SE_ID>> m_attackSEmap; //! 武器と攻撃タイプからSE_IDを紐づけるマップ。
+			std::vector<SEInfo> m_playingSEs;													 //! 再生中のSEの情報を管理するベクター。
 
 			bool m_isLoop = false;																 //! ループ再生するかどうかのフラグ。
 		};
-
 	}
 }

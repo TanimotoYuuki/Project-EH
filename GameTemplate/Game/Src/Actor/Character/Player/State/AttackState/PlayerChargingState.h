@@ -110,7 +110,6 @@ namespace nsApp
             
 
         private:
-			nsActor::Player* m_player;          //! プレイヤーのポインタ。
             nsK2EngineLow::EffectEmitter* m_chargeEffect = nullptr;
             nsK2EngineLow::EffectEmitter* m_hammerEffect = nullptr;
 
@@ -121,7 +120,6 @@ namespace nsApp
 			Vector3 m_spawnEffectPosition;                              //! エフェクトの生成座標。
 			Vector3 m_currentEffectPosition;                            //! エフェクトの現在座標。
 			Vector3 m_weaponPosition;                                   //! 武器の座標。
-            Vector3 m_getPlayerPosition;                                //! プレイヤーの座標。
 
 			Quaternion m_fireEffectAngle = Quaternion::Identity;        //! 炎エフェクトの角度。
 

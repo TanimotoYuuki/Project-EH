@@ -31,16 +31,29 @@ namespace nsApp
 
 
 		public:
-			/* 初期化処理。*/
+			/* 
+			 * @brief 初期化処理。
+			 */
 			void Init();
-			/* BGMの再生。*/
+
+			/* 
+			 * @brief BGMの再生。
+			 * @param id BGMの種類。
+			 * @param volume BGMの大きさ。
+			 */
 			void PlayBGM(BGM_ID id, float volume);
-			/* BGMの停止。*/
+
+			/* 
+			 * @brief BGMの停止。
+			 */
 			void StopBGM();
 
 
 		public:
-			/* ファイルパスを格納。*/
+			/* 
+			 * @brief ファイルパスを格納。
+			 * @param bgmName BGMの名前。
+			 */
 			inline const std::string GetBGMFilePath(std::string bgmName)
 			{
 				std::string filePath = "Assets/sound/BGM/" + bgmName + ".wav";

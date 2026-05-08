@@ -1,4 +1,5 @@
 #pragma once
+#include "Src/Sound/SoundLister.h"
 #include "Src/UIAnimation/UIAnimation.h"
 /**
  * @file Title.h。
@@ -8,6 +9,11 @@
  */
 namespace nsApp
 {
+	namespace nsSound {
+		class SoundLister;
+	}
+
+
 	namespace nsTitle
 	{
 		/**
@@ -71,6 +77,17 @@ namespace nsApp
 			*/
 			void UpdateSprite();
 
+			/**
+			 * @brief BGMの再生。 
+			 */
+		    void StopBGM()
+			{
+				m_bgm->GetBGMList().StopBGM(); //! BGMを停止する。
+				DeleteGO(m_bgm);			   //! BGMクラスを削除する。
+				m_bgm = nullptr;			   //! 再初期化する。
+			}
+
+
 		public:/*メンバ関数。*/
 
 			/**
@@ -81,6 +98,11 @@ namespace nsApp
 			{
 				return m_didSelect;
 			}
+
+
+		private:
+			nsSound::SoundLister* m_bgm = nullptr; //! BGM。
+
 
 		private:/*メンバ変数。*/
 			SpriteRender m_backGround;/*背景。*/

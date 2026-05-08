@@ -4,6 +4,10 @@
 
 namespace nsApp
 {
+	namespace nsSound {
+		class SoundLister;
+	}
+
 	namespace nsStage
 	{
 		class Stage
@@ -33,6 +37,11 @@ namespace nsApp
 			{
 				return m_stageData;
 			}
+
+
+		private:
+			nsSound::SoundLister* m_bgm = nullptr; //! BGM。
+
 		};
 	}
 }
