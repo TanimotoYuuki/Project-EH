@@ -12,6 +12,7 @@ namespace nsApp
 	namespace nsActor {
 		class Player;
 		class Sandbag;
+		class Boss;
 	}
 
 	namespace nsGame
@@ -32,6 +33,7 @@ namespace nsApp
 		private:
 			nsApp::Camera* m_camera = nullptr;
 			nsActor::Player* m_player = nullptr;
+			nsActor::Boss* m_boss = nullptr;
 			nsActor::Sandbag* m_sandbag = nullptr;
 		};
 	}

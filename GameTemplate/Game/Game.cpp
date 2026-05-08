@@ -4,8 +4,10 @@
 #include "Src/Actor/Stage/LoadStageData.h"
 #include "Src/Camera/Camera.h"
 #include "Src/Actor/Character/Player/Player.h"
-#include "Src/Debug/Sandbag.h"
+/*#include "Src/Debug/Sandbag.h"*/
 #include "Src/Sound/SoundLister.h"
+#include "Boss.h"
+
 
 namespace nsApp
 {
@@ -15,7 +17,8 @@ namespace nsApp
 		{
 			DeleteGO(m_camera);
 			DeleteGO(m_player);
-			DeleteGO(m_sandbag);
+			DeleteGO(m_boss);
+			/*DeleteGO(m_sandbag); */
 		}
 
 
@@ -33,7 +36,14 @@ namespace nsApp
 			PhysicsWorld::GetInstance()->EnableDrawDebugWireFrame();
 
 			m_player = NewGO<nsActor::Player>(0, "player");
-			m_sandbag = NewGO<nsActor::Sandbag>(0, "Sandbag");
+
+			/*ボスを作成。*/
+			m_boss = NewGO<nsActor::Boss>(0, "boss");
+
+			/*ボスにプレイヤーをターゲットとして教える。*/
+			m_boss->SetTarget(m_player);
+
+			/*m_sandbag = NewGO<nsActor::Sandbag>(0, "Sandbag"); */
 			return true;
 		}
 

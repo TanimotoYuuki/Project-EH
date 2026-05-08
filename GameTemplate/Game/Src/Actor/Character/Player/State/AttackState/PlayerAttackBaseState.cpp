@@ -5,8 +5,6 @@
 #include "Src/Actor/Character/Status/AttackParameterTable.h"
 #include "PresentDamageIndicator.h"
 
-#include "Src/Debug/Sandbag.h"
-
 namespace nsApp
 {
 	namespace nsState
@@ -57,22 +55,6 @@ namespace nsApp
 				/* Idle状態へ遷移。*/
 				m_stateMachine->ChangeState(new PlayerIdleState());
 				return;
-			}
-
-			auto sandBag = FindGO<nsActor::Sandbag>("Sandbag");
-			if (sandBag != nullptr && reinterpret_cast<uintptr_t>(sandBag) != 0xFFFFFFFFFFFFFFFF)
-			{
-				if (m_player->GetWeaponHitDetection().IsHit(sandBag))
-				{
-					/* ダメージ数テキストを描画。*/
-					OnHitDamageText();
-
-					/* ヒットストップを発生させる。*/
-					m_player->SetHitStop(8);
-					sandBag->SetHitStop(8);
-
-					return;
-				}
 			}
 		}
 

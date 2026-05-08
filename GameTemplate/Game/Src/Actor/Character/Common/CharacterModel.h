@@ -23,8 +23,7 @@ namespace nsApp
 
 
 		/* 敵モデルを定義。*/
-		/* @TODO Enemy担当者にIDを増やしてもらう。*/
-		Enemy_Tutorial,      /* チュートリアル用の敵。*/
+		TutorialBoss,      /* チュートリアル用のボス。*/
 		GrayDragon,        /* 灰色のドラゴン。*/
 		GreenDragon,       /* 緑色のドラゴン。*/
 		RedDragon,         /* 赤色のドラゴン。*/
@@ -143,6 +142,12 @@ namespace nsApp
 			 return modelPath;
 		}
 
+		/*ボスモデルのファイルパスを格納。*/
+		inline const std::string GetBossModelFilePath(const std::string& filePath)
+		{
+			return m_modelBossModelFilePath + "/" + filePath + ".tkm";
+		}
+
 		/* 武器モデルのファイルパスを格納。*/
 		inline const std::string GetWeaponModelFilePath(std::string filePath)
 		{
@@ -173,6 +178,7 @@ namespace nsApp
 		std::string m_modelFilePath;                                                                                           /* モデルのファイルパスを格納。*/
 		std::string m_characterModelFilePath = "Assets/modelData/Character/CharacterModel/";                                   /* プレイヤー/NPCモデルのファイルパスを格納。*/
 		std::string m_modelExtension = ".tkm";                                                                                 /* プレイヤー/NPCモデルの拡張子を格納。*/
+		std::string m_modelBossModelFilePath = "Assets/modelData/Boss";
 		std::string m_weaponModelFilePath = "Assets/modelData/Character/Weapon/";                                              /* 武器モデルのファイルパスを格納。*/
 
 		int boneID;                                                                                                            /* ボーンIDを格納。*/
