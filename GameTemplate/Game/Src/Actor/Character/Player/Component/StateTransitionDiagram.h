@@ -1,9 +1,9 @@
 #pragma once
 /**
-* @file StateTransitionDiagram.h
-* @brief 状態遷移図を管理するクラス。
+* @file   StateTransitionDiagram.h
+* @brief  状態遷移図を管理するクラス。
 * @author Yamaguchi Hayato
-* @date 2026/03/16
+* @date 　2026/03/24
 */
 
 #include "stdint.h"
@@ -18,8 +18,8 @@ namespace nsApp
 	{
 		struct Transition
 		{
-			bool condition;                     /* 遷移条件。*/
-			nsActor::PlayerStateID nextStateID; /* 遷移先のステートID。*/
+			bool condition;                     //! 遷移条件。
+			nsActor::PlayerStateID nextStateID; //! 遷移先のステートID。
 		};
 
 
@@ -27,10 +27,10 @@ namespace nsApp
 		{
 		public:
 			/* 
-			* 状態遷移図を確認する。
-			* @param inputClass:   playerの入力を検知するクラス。
-			* @param transitionID: 遷移ID。
-			*/
+			 * 状態遷移図を確認する。
+			 * @param inputClass:   playerの入力を検知するクラス。
+			 * @param transitionID: 遷移ID。
+			 */
 			static bool CheckCommonTransition(const PlayerInput& inputClass, uint8_t& transitionID)
 			{
 				/* 状態遷移図。*/
@@ -58,6 +58,14 @@ namespace nsApp
 					{ inputClass.IsRushStart(), nsActor::PlayerStateID::enRushStart},
 					/* 連続攻撃終了判定。*/
 					{ inputClass.IsRushEnd(), nsActor::PlayerStateID::enRushEnd},
+					/* ガード状態。*/
+					{ inputClass.IsGuard(), nsActor::PlayerStateID::enGuard},
+					/* 助ける状態。*/
+					{ inputClass.IsHelp(), nsActor::PlayerStateID::enHelp},
+					/* 魔法攻撃状態。*/
+					{ inputClass.IsPressRB(), nsActor::PlayerStateID::enMagicAttack},
+					/* 回復魔法状態。*/
+					{ inputClass.IsPressRT(), nsActor::PlayerStateID::enHeelMagic},
 				};
 
 

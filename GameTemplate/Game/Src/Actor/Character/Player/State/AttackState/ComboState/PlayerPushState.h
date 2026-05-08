@@ -43,14 +43,19 @@ namespace nsApp
 			/* 突き進む処理。*/
 			void MoveForward();
 
+			/* 弾を発射。*/
+			void FireDashBullet();
+			
+			/* 速度の減衰率に応じて複数のステートに遷移。*/
+			bool TransitionMultiState();
+
 
 		private:
-			int m_loopTimer = 0;                  //! 連続攻撃のループ回数を管理。
+			int m_loopTimer = 0;                        //! 連続攻撃のループ回数を管理。
 			
-			float m_forwardSpeed = 0.0f;          //! 突き進む速度。
+			float m_forwardSpeed = 0.0f;                //! 突き進む速度。
 
-			Vector3 m_moveVector = Vector3::Zero; //! 突き進む方向を管理。
-
+			Vector3 m_moveVector = Vector3::Zero;	    //! 突き進む方向を管理。
 		};
 	}
 }

@@ -7,6 +7,7 @@
 */
 
 #include "Src/Actor/Character/Player/State/AttackState/PlayerAttackBaseState.h"
+#include "Src/Actor/Magic/MagicProjectotile.h"
 
 namespace nsApp
 {
@@ -24,6 +25,7 @@ namespace nsApp
 			/* ライフサイクル。*/
 			void Enter() override;
 			void Update() override;
+			void Exit() override;
 			bool RequestID(uint8_t& id) override;
 
 
@@ -31,13 +33,27 @@ namespace nsApp
 			/* 前進する処理。*/
 			void MoveForward();
 
+			/* ミサイルを召喚。*/
+			void SummonMissile();
+
+			/* キーフレームの数に応じてボーンの名前を変更する処理。*/ 
+			void AdjustBoneNameByKeyFrameNumber();
+
+			/* 銃の左右での撃ち分け処理。*/
+			void FireRushBullet(const wchar_t* boneName);
+
 
 		private:
-			int m_loopCount = 0;                  /* 連続攻撃のループ回数を管理するカウンター。*/
+			int m_loopCount = 0;                  //! 連続攻撃のループ回数を管理するカウンター。
 
-			float m_forwardSpeed = 0.0f;          /* 連続攻撃をする際、前方への移動速度。*/
+			float m_forwardSpeed = 0.0f;          //! 連続攻撃をする際、前方への移動速度。
 
-			Vector3 m_moveVector = Vector3::Zero; /* 前進する際の移動ベクトル。*/
+			bool m_isSummoned = false;            //! ミサイルを射出したかどうかを管理するフラグ。
+			bool m_isButtonReleased = false;      //! 攻撃ボタンが離されたかどうかを管理するフラグ。
+
+			Vector3 m_moveVector = Vector3::Zero; //! 前進する際の移動ベクトル。
+			Vector3 m_spawnPos = Vector3::Zero;   //! ミサイルを召喚する位置。
+			Vector3 m_subWeaponSpawnPos;		  //! サブ武器の生成位置。
 		};
 	}
 }

@@ -18,6 +18,9 @@ namespace nsApp
 			/* キャスト。*/
 			m_player = static_cast<nsActor::Player*>(m_owner);
 
+			/* 攻撃のタイプを設定する。*/
+			m_currentAttackType = AttackType::SlashUp;
+
 			/* アニメーションを再生。*/
 			m_player->PlayWeaponAnimation(AttackType::SlashUp);
 
@@ -39,6 +42,16 @@ namespace nsApp
 			if(inputClass.IsAirAttack() || inputClass.IsAttack())
 				m_inputRequests[ComboInputType::PressB] = true;
 
+			/* 杖の場合はエフェクトを発生させる。*/
+			if (m_player->GetCurrentWeapon() == WeaponType::Wand)
+			{
+				if (m_attackTimer == 10 && !m_isSummoned)
+				{
+					m_effectPosition = m_player->GetPosition();
+					m_effectPosition.y += 10.0f;
+					m_player->GetEffectList().PlayEffect(nsEffect::ShockWave, m_effectPosition, Quaternion::Identity, Vector3::One * 2.0f);
+				}
+			}
 
 			/* 斬り上げ時の上昇と落下処理。*/
 			m_jumpVelocity -= 30.0f; /* 重力を設定。*/

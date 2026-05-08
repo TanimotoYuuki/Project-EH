@@ -88,11 +88,14 @@ namespace nsK2Engine {
 
 	}
 
-	void ModelRender::InitForwardRendering(ModelInitData& initData)
+	void ModelRender::InitForwardRendering(ModelInitData& initData, AnimationClip* animClips, int numAnimationClip)
 	{
 		//インスタンシング描画用のデータを初期化。
 		InitInstancingDraw(1);
 		InitSkeleton(initData.m_tkmFilePath);
+
+		/* 受け取ったアニメーションを登録する。*/
+		InitAnimation(animClips, numAnimationClip, initData.m_modelUpAxis);
 
 		// todo アニメーション済み頂点バッファの計算処理を初期化。
 		InitComputeAnimatoinVertexBuffer(initData.m_tkmFilePath, initData.m_modelUpAxis);

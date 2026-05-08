@@ -52,9 +52,12 @@ namespace nsApp
 
 
 		private:
-			float m_jumpVelocity;   //! 斬り上げ時の上昇と落下を管理。
+			float m_jumpVelocity;      //! 斬り上げ時の上昇と落下を管理。
 
-			Vector3 m_slashUpSpeed;  //! 斬り上げ攻撃中の移動速度。
+			bool m_isSummoned = false; //! エフェクトを召喚したかどうかのフラグ。
+
+			Vector3 m_slashUpSpeed;    //! 斬り上げ攻撃中の移動速度。
+			Vector3 m_effectPosition;  //! エフェクトの位置。
 		};
 	}
 }

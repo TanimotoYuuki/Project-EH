@@ -182,6 +182,50 @@
     <ClCompile Include="FireAttackStrategy.cpp">
       <Filter>Src\Actor\Character\Boss\State</Filter>
     </ClCompile>
+    <ClCompile Include="Src\Actor\Character\Player\State\BasicState\PlayerGuardState.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\State\BasicState\PlayerReBoneState.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\State\BasicState\PlayerGetUpState.cpp" />
+    <ClCompile Include="Src\Fade\Fade.cpp" />
+    <ClCompile Include="Src\UIAnimation\UIAnimation.cpp" />
+    <ClCompile Include="Select.cpp" />
+    <ClCompile Include="QuestSelect.cpp" />
+    <ClCompile Include="MemberSelect.cpp" />
+    <ClCompile Include="CharacterHP.cpp" />
+    <ClCompile Include="ConfirmationSelect.cpp" />
+    <ClCompile Include="GameStartDirection.cpp" />
+    <ClCompile Include="GameTimeLimit.cpp" />
+    <ClCompile Include="Result.cpp" />
+    <ClCompile Include="GameEndSelect.cpp" />
+    <ClCompile Include="GameClearDirection.cpp" />
+    <ClCompile Include="GameTimeUpDirection.cpp" />
+    <ClCompile Include="GameOverDirection.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\CharacterByWeapon\IWeaponCharacter.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\CharacterByWeapon\SwordCharacter.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\CharacterByWeapon\HammerCharacter.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerHeavyAttackState.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\CharacterByWeapon\WandCharacter.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerHeelMagicState.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerMagicAttackState.cpp" />
+    <ClCompile Include="Src\Actor\Magic\MagicProjectotile.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\CharacterByWeapon\TwinGunCharacter.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\Component\PlayerGenerator.cpp" />
+    <ClCompile Include="Src\Actor\Character\NPC\NPCBrain.cpp" />
+    <ClCompile Include="Src\Actor\Character\NPC\State\BasicState\NPCChaseState.cpp" />
+    <ClCompile Include="Src\Actor\Character\NPC\State\BasicState\NPCIdleState.cpp" />
+    <ClCompile Include="Src\Actor\Character\NPC\State\AttackState\NPCSwordAttackState.cpp" />
+    <ClCompile Include="Src\Actor\Character\NPC\State\AttackState\NPCHammerAttackState.cpp" />
+    <ClCompile Include="Src\Actor\Character\NPC\State\AttackState\NPCWandAttackState.cpp" />
+    <ClCompile Include="Src\Actor\Gun\Register\BulletModelRegister.cpp" />
+    <ClCompile Include="Src\Actor\Gun\Bullet\NormalBullet.cpp" />
+    <ClCompile Include="Src\Actor\Gun\Bullet\ChargeBullet.cpp" />
+    <ClCompile Include="Src\Actor\Gun\Bullet\RushBullet.cpp" />
+    <ClCompile Include="Src\Actor\Gun\Bullet\DashBullet.cpp" />
+    <ClCompile Include="Src\Actor\Gun\Bullet\HeavyBullett.cpp" />
+    <ClCompile Include="Src\Actor\Gun\Bullet\AirBullet.cpp" />
+    <ClCompile Include="Src\Actor\Gun\Parameter\BulletParameterTable.cpp" />
+    <ClCompile Include="Src\Actor\Gun\Factory\BulletFactory.cpp" />
+    <ClCompile Include="Src\Actor\Gun\Shooter\GunShooter.cpp" />
+    <ClCompile Include="Src\Effect\EffectListener.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -322,5 +366,53 @@
     <ClInclude Include="FireAttackStrategy.h">
       <Filter>Src\Actor\Character\Boss\State</Filter>
     </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Player\State\BasicState\PlayerGuardState.h" />
+    <ClInclude Include="Src\Actor\Character\Player\State\BasicState\PlayerReBoneState.h" />
+    <ClInclude Include="Src\Actor\Character\Player\State\BasicState\PlayerGetUpState.h" />
+    <ClInclude Include="Src\Fade\Fade.h" />
+    <ClInclude Include="Src\UIAnimation\UIAnimation.h" />
+    <ClInclude Include="Select.h" />
+    <ClInclude Include="QuestSelect.h" />
+    <ClInclude Include="MemberSelect.h" />
+    <ClInclude Include="CharacterHP.h" />
+    <ClInclude Include="ConfirmationSelect.h" />
+    <ClInclude Include="GameStartDirection.h" />
+    <ClInclude Include="GameTimeLimit.h" />
+    <ClInclude Include="Result.h" />
+    <ClInclude Include="GameEndSelect.h" />
+    <ClInclude Include="GameClearDirection.h" />
+    <ClInclude Include="GameTimeUpDirection.h" />
+    <ClInclude Include="GameOverDirection.h" />
+    <ClInclude Include="Src\Actor\Character\Player\CharacterByWeapon\IWeaponCharacter.h" />
+    <ClInclude Include="Src\Actor\Character\Player\CharacterByWeapon\SwordCharacter.h" />
+    <ClInclude Include="Src\Actor\Character\Player\CharacterByWeapon\HammerCharacter.h" />
+    <ClInclude Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerHeavyAttackState.h" />
+    <ClInclude Include="Src\Actor\Character\Player\CharacterByWeapon\WandCharacter.h" />
+    <ClInclude Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerHeelMagicState.h" />
+    <ClInclude Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerMagicAttackState.h" />
+    <ClInclude Include="Src\Actor\Magic\MagicProjectotile.h" />
+    <ClInclude Include="Src\Actor\Character\Player\CharacterByWeapon\TwinGunCharacter.h" />
+    <ClInclude Include="Src\Actor\Character\Player\Component\PlayerSpawnData.h" />
+    <ClInclude Include="Src\Actor\Character\Player\Component\PlayerGenerator.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\NPCBrain.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\State\BasicState\NPCChaseState.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\State\BasicState\NPCIdleState.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\State\AttackState\NPCSwordAttackState.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\State\AttackState\NPCHammerAttackState.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\State\AttackState\NPCWandAttackState.h" />
+    <ClInclude Include="Src\Actor\Gun\Bullet\IGunBullet.h" />
+    <ClInclude Include="Src\Actor\Gun\Register\BulletModelRegister.h" />
+    <ClInclude Include="Src\Actor\Gun\Bullet\NormalBullet.h" />
+    <ClInclude Include="Src\Actor\Gun\Bullet\ChargeBullet.h" />
+    <ClInclude Include="Src\Actor\Gun\Bullet\RushBullet.h" />
+    <ClInclude Include="Src\Actor\Gun\Bullet\DashBullet.h" />
+    <ClInclude Include="Src\Actor\Gun\Bullet\HeavyBullett.h" />
+    <ClInclude Include="Src\Actor\Gun\Bullet\AirBullet.h" />
+    <ClInclude Include="Src\Actor\Gun\Parameter\BulletParameterTable.h" />
+    <ClInclude Include="Src\Actor\Gun\Factory\BulletFactory.h" />
+    <ClInclude Include="Src\Actor\Gun\Shooter\BulletFireRequest.h" />
+    <ClInclude Include="Src\Actor\Gun\Shooter\IBulletFireListener.h" />
+    <ClInclude Include="Src\Actor\Gun\Parameter\BulletParameter.h" />
+    <ClInclude Include="Src\Effect\EffectListener.h" />
   </ItemGroup>
 </Project>

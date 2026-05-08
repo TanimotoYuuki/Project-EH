@@ -1,4 +1,6 @@
 #pragma once
+#include "Src/Sound/SoundLister.h"
+#include "Src/UIAnimation/UIAnimation.h"
 /**
  * @file Title.h。
  * @brief タイトルクラス。
@@ -7,6 +9,11 @@
  */
 namespace nsApp
 {
+	namespace nsSound {
+		class SoundLister;
+	}
+
+
 	namespace nsTitle
 	{
 		/**
@@ -22,6 +29,16 @@ namespace nsApp
 			bool Start() override;/*開始処理。*/
 			void Update() override;/*更新処理。*/
 			void Render(RenderContext& rc);/*描画処理。*/
+
+		public:/*列挙型。*/
+
+			/*UIアニメーションをさせるスプライト。*/
+			enum EnUIAnimationSprite : uint8_t
+			{
+				enUIAnimationSprite_TitleNameUI,/*タイトル名UI*/
+				enUIAnimationSprite_PressAButtonUI,/*Aボタンを押してくださいを促すUI*/
+				enUIAnimationSprite_Num/*UIアニメーションをさせるスプライト。*/
+			};
 
 		private:/*メンバ関数。*/
 
@@ -45,17 +62,58 @@ namespace nsApp
 			*/
 			void InitPressAButtonUI();
 
+			/**
+			* @brief UIアニメーションの初期化。
+			*/
+			void InitUIAnimation();
+
+			/**
+			* @brief 演出の更新処理。
+			*/
+			void UpdateDirection();
+
+			/**
+			* @brief スプライトの更新処理。
+			*/
+			void UpdateSprite();
+
+			/**
+			 * @brief BGMの再生。 
+			 */
+		    void StopBGM()
+			{
+				m_bgm->GetBGMList().StopBGM(); //! BGMを停止する。
+				DeleteGO(m_bgm);			   //! BGMクラスを削除する。
+				m_bgm = nullptr;			   //! 再初期化する。
+			}
+
+
+		public:/*メンバ関数。*/
+
+			/**
+			* @brief 選択できたか？
+			* @return trueなら選択できている。
+			*/
+			inline bool DidSelect() const
+			{
+				return m_didSelect;
+			}
+
+
+		private:
+			nsSound::SoundLister* m_bgm = nullptr; //! BGM。
+
+
 		private:/*メンバ変数。*/
 			SpriteRender m_backGround;/*背景。*/
 			SpriteRender m_titleNameUI;/*タイトル名UI。*/
-			Vector3 m_titleNameUIPosition;/*タイトル名UIの位置。*/
-			Vector3 m_titleNameUIScale;/*タイトル名UIの大きさ。*/
 			SpriteRender m_pressAButtonUI;/*Aボタンを押してくださいを促すUI。*/
-			Vector3 m_pressAButtonUIPosition;/*Aボタンを押してくださいを促すUIの位置。*/
-			Vector3 m_pressAButtonUIScale;/*Aボタンを押してくださいを促すUIの大きさ。*/
+			std::unique_ptr<nsApp::nsUI::ScaleUIAnimation> m_scaleDownUIAnimation;/*UIの大きさを小さくするアニメーション。*/
+			std::unique_ptr<nsApp::nsUI::AlphaUIAnimation> m_alphaUIAnimation[enUIAnimationSprite_Num];/*UIの透明度を変えるアニメーション。*/
+			bool m_didSelect;/*選択できたか？*/
 
 		private:/*スプライトを表示するファイルパス用のメンバ変数。*/
-			std::string m_backGroundFilePath = "Assets/sprite/title/background/background.dds";/*背景。*/
+			std::string m_backGroundFilePath = "Assets/sprite/title/background/background.dds";/*背景のファイルパス。*/
 			std::string m_titleNameUIFilePath = "Assets/sprite/title/text/titleName.dds";/*タイトル名UIのファイルパス。*/
 			std::string m_pressAButtonUIFilePath = "Assets/sprite/title/text/pressAButton.dds";/*Aボタンを押してくださいを促すUIのファイルパス。*/
 		};

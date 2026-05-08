@@ -22,13 +22,22 @@ namespace nsApp
 
 		public:
 			/* ライフサイクル。*/
-			/*ステートに入った際、1回処理を行う。*/
 			void Enter() override;
-			/* ステートにいる間、毎フレーム処理を行う。*/
 			void Update() override;
-
-			/* 他の攻撃に遷移。*/
+			void Exit() override {};
 			bool RequestID(uint8_t& id);
+
+
+		private:
+			/*
+			 * @brief WandCharacterを使用している場合、攻撃の際にミサイルを召喚する処理。
+			 */
+			void SummonMissile();
+
+			/*
+			* @brief 銃弾を発射させる処理。
+			*/
+			void FireGunBullet();
 		};
 	}
 }

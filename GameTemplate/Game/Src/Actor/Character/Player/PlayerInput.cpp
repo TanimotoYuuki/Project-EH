@@ -3,114 +3,212 @@
 
 namespace
 {
-	const auto CHARGE_ATTACK_DETECTION = 30.0f; /* チャージ攻撃の判定時間。*/
+	const auto CHARGE_ATTACK_DETECTION = 30.0f; //! チャージ攻撃の判定時間。
 	const auto CHARGE_FLAG_TRUE = 1;
 	const auto CHARGE_FLAG_FALSE = 0;
+	const auto PAD_INDEX_NAM = 0;
 }
+
 
 namespace nsApp
 {
 	void PlayerInput::Update()
 	{
-		/* Bボタンを押しているかを取得。*/
-		m_isPressButton = g_pad[0]->IsPress(enButtonB);
-
 		/* 入力判定。*/
 		if (!m_isInputEnable)
 		{
-			m_isAttack = false;          /* 攻撃フラグ。*/
-			m_isMove = false;            /* 移動フラグ。*/
-			m_isJump = false;            /* ジャンプフラグ。*/
-			m_isRun = false;             /* 走りフラグ。*/
-			m_isDamage = false;          /* ダメージフラグ。*/
-			m_isDeath = false;           /* 死亡フラグ。*/
-			m_isNormalAttack = false;    /* 通常攻撃フラグ。*/
-			m_isChargeAttack = false;    /* チャージ攻撃フラグ。*/
-			m_isAirAttack = false;       /* 空中攻撃フラグ。*/
-			m_isComboAttack = false;     /* コンボ攻撃フラグ。*/
-			m_isRushStart = false;       /* 連続攻撃開始フラグ。*/
-			m_isRushEnd = false;         /* 連続攻撃終了フラグ。*/
+			m_isAttack = false;          //! 攻撃フラグ。
+			m_isMove = false;            //! 移動フラグ。
+			m_isJump = false;            //! ジャンプフラグ。
+			m_isRun = false;             //! 走りフラグ。
+			m_isDamage = false;          //! ダメージフラグ。
+			m_isDeath = false;           //! 死亡フラグ。
+			m_isNormalAttack = false;    //! 通常攻撃フラグ。
+			m_isChargeAttack = false;    //! チャージ攻撃フラグ。
+			m_isAirAttack = false;       //! 空中攻撃フラグ。
+			m_isComboAttack = false;     //! コンボ攻撃フラグ。
+			m_isRushStart = false;       //! 連続攻撃開始フラグ。
+			m_isRushEnd = false;         //! 連続攻撃終了フラグ。
 			m_moveVec = Vector3::Zero;   
 			return;
 		}
 
+		/* NPCの場合は操作をコントローラーの操作を受け付けないので、入力判定を無視する。*/
+		if (m_padInddex < 0)
+		{
+			m_moveVec = Vector3::Zero;   //! 移動ベクトルを初期化。
+			m_isMove = false;            //! 移動判定。
+			m_isAttack = false;          //! 攻撃判定。
+			m_isGuard = false;			 //! ガード判定。
+
+			return;
+		}
+
+		/* NPCの場合は操作をコントローラーの操作を受け付けないので、入力判定を無視する。*/
+		if (m_padInddex < 0)
+		{
+			m_moveVec = Vector3::Zero;   //! 移動ベクトルを初期化。
+			m_isMove = false;            //! 移動判定。
+			m_isAttack = false;          //! 攻撃判定。
+			m_isGuard = false;			 //! ガード判定。
+
+			return;
+		}
+
 		/* 移動入力判定。*/ 
-		m_stickX = g_pad[0]->GetLStickXF();
-		m_stickY = g_pad[0]->GetLStickYF();
+		m_stickX = g_pad[m_padInddex]->GetLStickXF();
+		m_stickY = g_pad[m_padInddex]->GetLStickYF();
 
 		/* ジャンプ, 斬り上げ判定。*/
-		if (g_pad[0]->IsTrigger(enButtonA))
+		if (g_pad[m_padInddex]->IsTrigger(enButtonA))
 		{
-			if (m_stickY > 0.5f)
-			{
-				m_isSlashUp = true;
-				m_isJump = false;
-			}
-
-			else
-			{
-				m_isJump = true;
-				m_isSlashUp = false;
-			}
+			m_stickX = m_virtualStickX;
+			m_stickY = m_virtualStickY;
 		}
-
-		/* Aボタンが押されていないならフラグを変えない。*/
 		else
 		{
-			m_isJump = false;
-			m_isSlashUp = false;
+			m_stickX = g_pad[m_padInddex]->GetLStickXF();
+			m_stickY = g_pad[m_padInddex]->GetLStickYF();
 		}
 
-		/* 斬り上げ判定。*/
-		m_isSlashUp = g_pad[0]->IsTrigger(enButtonLB2);
-
-		/* ジャンプ判定。*/
-		m_isJump = g_pad[0]->IsTrigger(enButtonA);
-
-		/* Bボタンを押した瞬間の攻撃判定を設定。*/
-		m_isAttack = g_pad[0]->IsTrigger(enButtonB);
-
-		/* カメラを考慮せずにとりあえずスティックの入力量で移動する。*/
-		m_moveVec = Vector3(m_stickX, 0.0, 0.0);
-
-		/* 少量でもスティックの移動量があるなら移動中とする。*/
+		/* スティック移動量の計算 */
+		m_moveVec = Vector3(m_stickX, 0.0f, 0.0f);
 		m_isMove = (m_moveVec.Length() > 0.1f);
 
-		/* ダメージ判定。*/
-		/* ※ボスが実装されるまで仮置き。*/
-		m_isDamage = g_pad[0]->IsTrigger(enButtonX);
+		/* Bボタン。*/
+		SummarizeButtonB();
 
-		/* 死亡判定。*/
-		/* ※テストでYボタン判定とする。*/
-		m_isDeath = g_pad[0]->IsTrigger(enButtonY);
+		/* ジャンプと斬り上げ判定の更新。*/
+		EvaluateJumpAndSlashUp();
 
-		/* スティックの押し具合は厳しいので特定のボタン同士で走れるようにする。*/
-		m_isRun = (g_pad[0]->IsPress(enButtonLB1) && m_isMove);
+		/* その他ボタン判定 */
+		SummarizeOtherButtons();
+
+		/* 走り判定 */
+		m_isRun = (CheckButtonPress(enButtonLB1) && m_isMove);
+
+		/* チャージ判定を更新する。*/
+		UpdateChargeTranslation();
 
 
-		/* 攻撃入力判定。*/
+		/* AIControllerの前フレームのボタンの情報を保持する。*/
+		if (m_padInddex < 0)
+			SetVirtualAttackButtons();
+	}
 
-        /* 通常攻撃。 
-		 * 30F 押しているかを判定とする。
-		 */
-		m_isNormalAttack = (!m_isPressButton && m_chargeButtonTimer > 0 && m_chargeButtonTimer < CHARGE_ATTACK_DETECTION);
 
-		/* チャージ攻撃。
-		* 30F以上(長押し) Bボタンを押しているかを判定。
-		*/
-		m_isChargeAttack = (!m_isPressButton && m_chargeButtonTimer >= CHARGE_ATTACK_DETECTION);
+	bool PlayerInput::CheckButtonPress(nsK2EngineLow::EnButton inputButtonType)
+	{
+		/* NPCの場合は仮想コントローラーフラグを返す。*/
+		if (m_padInddex < PAD_INDEX_NAM)
+		{
+			switch (inputButtonType)
+			{
+			case enButtonA: 
+				return m_isVirtualPressA;
 
-		/* 空中攻撃。
-		* 空中でBボタンを押しているかを判定。
-		*/
-		m_isAirAttack = g_pad[0]->IsTrigger(enButtonB);
+			case enButtonB:
+				return m_isVirtualPressB;
 
-		/* タイマー処理。
-		* 押せば加算。
-		* 離せばリセット。
-		*/
-		m_chargeButtonTimer = m_isPressButton ? m_chargeButtonTimer + CHARGE_FLAG_TRUE : CHARGE_FLAG_FALSE;
+			case enButtonX:
+				return m_isVirtualPressX;
 
-		m_isChargeStart = (m_isPressButton && m_chargeButtonTimer >= 5);
+			case enButtonY:
+				return m_isVirtualPressY;
+
+			case enButtonLB1:
+				return m_isVirtualPressLB1;
+
+			case enButtonLB2:
+				return m_isVirtualPressLB2;
+
+			case enButtonRB1:
+				return m_isVirtualPressRB1;	
+
+			case enButtonRB2:
+				return m_isVirtualPressRT;
+
+			default:
+				return false;
+			}
+		}
+
+		/* コントローラーで操作する場合はgamePadを読み込む。*/
+		return g_pad[m_padInddex]->IsPress(inputButtonType);
+	}
+
+
+	bool PlayerInput::CheckButtonTrigger(nsK2EngineLow::EnButton inputButtonType)
+	{
+		/* NPCの場合かつ前フレームは押されていなかった時にtrue */
+		if (m_padInddex < PAD_INDEX_NAM)
+		{
+			switch (inputButtonType)
+			{
+			case enButtonA:   
+				return m_isVirtualPressA && !m_prevVirtualPressA;
+
+			case enButtonB:   
+				return m_isVirtualPressB && !m_prevVirtualPressB;
+
+			case enButtonX:   
+				return m_isVirtualPressX && !m_prevVirtualPressX;
+
+			case enButtonY:   
+				return m_isVirtualPressY && !m_prevVirtualPressY;
+
+			case enButtonLB1: 
+				return m_isVirtualPressLB1 && !m_prevVirtualPressLB1;
+
+			case enButtonLB2: 
+				return m_isVirtualPressLB2 && !m_prevVirtualPressLB2;
+
+			case enButtonRB1: 
+				return m_isVirtualPressRB1 && !m_prevVirtualPressRB1;
+
+			case enButtonRB2: 
+				return m_isVirtualPressRT && !m_prevVirtualPressRT;
+
+			default:
+				return false;
+			}
+		}
+		return g_pad[m_padInddex]->IsTrigger(inputButtonType);
+	}
+
+
+	void PlayerInput::EvaluateJumpAndSlashUp()
+	{
+		SetJumpFlag(false);
+		SetSlashUpFlag(false);
+
+		if (CheckButtonTrigger(enButtonA))
+		{
+			if (m_stickY > 0.5f)
+				SetSlashUpFlag(true);
+			else
+				SetJumpFlag(true);
+		}
+
+		if(CheckButtonTrigger(enButtonLB2))
+			SetSlashUpFlag(true);
+	}
+
+
+	void PlayerInput::InitInputJudgment()
+	{
+		m_isAttack = false;          //! 攻撃フラグ。
+		m_isMove = false;            //! 移動フラグ。
+		m_isJump = false;            //! ジャンプフラグ。
+		m_isRun = false;             //! 走りフラグ。
+		m_isDamage = false;          //! ダメージフラグ。
+		m_isDeath = false;           //! 死亡フラグ。
+		m_isNormalAttack = false;    //! 通常攻撃フラグ。
+		m_isChargeAttack = false;    //! チャージ攻撃フラグ。
+		m_isAirAttack = false;       //! 空中攻撃フラグ。
+		m_isComboAttack = false;     //! コンボ攻撃フラグ。
+		m_isRushStart = false;       //! 連続攻撃開始フラグ。
+		m_isRushEnd = false;         //! 連続攻撃終了フラグ。
+		m_moveVec = Vector3::Zero;
 	}
 }

@@ -66,6 +66,12 @@ namespace nsApp
 		/* 当たっているかを検知。*/
         bool IsHit(nsActor::ICharacter* target);
 
+		/* 当たり判定の座標を取得。*/
+		inline const Vector3& GetPosition()
+		{
+			return m_position;
+		}
+
 
 	private:
 		std::vector<nsActor::ICharacter*> m_hitTargets; //! 当たった対象のリスト。

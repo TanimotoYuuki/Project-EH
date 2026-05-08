@@ -99,6 +99,9 @@ SPSOut PSMainCore( SPSIn psIn, int isShadowReciever)
     // 影パラメータ。
     psOut.metaricShadowSmooth.g = 255.0f * isShadowReciever;
     
+    // 表面のつやを消す。
+    psOut.metaricShadowSmooth.a = 0.0f;
+    
     return psOut;
 }
 // モデル用のピクセルシェーダーのエントリーポイント
