@@ -3,7 +3,7 @@
 #include "Src/Fade/Fade.h"
 
 #include "Src/Actor/Stage/LoadStageData.h"
-
+#include "GenerateDebug.h"
 #include "CharacterHP.h"
 #include "GameTimeLimit.h"
 #include "GameStartDirection.h"
@@ -91,6 +91,16 @@ namespace nsApp
 
 			/* プレイアブルキャラを生成する。*/
 			SpawnPlayCharacter();
+
+			//auto* Generator = NewGO<GenerateDebug>(0, "debug");
+			//
+			//if (g_pad[0]->IsTrigger(enButtonX))
+			//{
+			//	static bool debugFlag = true;
+			//	debugFlag = !debugFlag;
+			//	Generator->SetDebugMode(debugFlag);
+			//}
+
 			return true;
 		}
 

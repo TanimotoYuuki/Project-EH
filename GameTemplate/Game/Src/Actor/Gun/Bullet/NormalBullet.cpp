@@ -27,6 +27,8 @@ namespace nsApp
 			m_angle.SetRotationDegZ(-90.0f);
 			m_normalBulletRender->SetRotation(m_angle);
 
+			/* 弾丸の当たり判定の半径の設定。*/
+			InitCollision(m_angle, 2.5);
 			return true;
 		}
 
@@ -42,8 +44,22 @@ namespace nsApp
 			/* 角度を設定。*/
 			m_normalBulletRender->SetRotation(m_angle);
 
+			/* 座標を保存。*/
+			m_previousPosition = m_position;
+
 			/* 座標を更新。*/
 			UpdatebBulletPosition();
+
+			/* コリジョンの座標を更新。*/
+			UpdateBulletCollisionPosition();
+
+			/* ボスに当たったかチェック。*/ 
+			if (CheckHitBoss())
+			{
+				 //! @TODO: ダメージ処理。
+				DeleteGO(this);
+				return;
+			}
 		}
 
 

@@ -39,8 +39,24 @@ namespace nsApp
 			}
 
 			m_dashBulletRender->SetRotation(m_angle);
+
+			/* 座標を保存。*/
+			m_previousPosition = m_position;
+
 			/* 座標を更新*/
 			UpdateBulletPosition();
+
+			/* コリジョンの座標を更新。*/
+			UpdateBulletCollisionPosition();
+
+			/* ボスに当たったかチェック。*/
+			if (CheckHitBoss())
+			{
+				//! @TODO: ダメージ処理。
+				DeleteGO(this);
+				return;
+			}
+
 		}
 
 		void DashBullet::Render(RenderContext& rc)

@@ -24,6 +24,8 @@ namespace nsApp
 
             // 進行方向に向けて寝かせる
 			m_explosionBulletRender->SetRotation(m_angle);
+
+			InitCollision(m_angle, 7.0f); // 重攻撃は大きめの当たり判定
 			return true;
 		}
 
@@ -43,6 +45,8 @@ namespace nsApp
 				m_angle *= m_offset;
 			}
 
+			m_previousPosition = m_position;
+
 			/* 座標を移動させる。*/
 			m_position += m_direction * m_speed * g_gameTime->GetFrameDeltaTime();
 
@@ -54,6 +58,18 @@ namespace nsApp
 
 			/* モデルを更新する。*/
 			m_explosionBulletRender->Update();
+
+			/* コリジョンの座標を更新。*/
+			UpdateBulletCollisionPosition();
+
+			/* ボスに当たったかチェック。*/
+			if (CheckHitBoss())
+			{
+				//! @TODO: ダメージ処理。
+				DeleteGO(this);
+				return;
+			}
+
 		}
 
 

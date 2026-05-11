@@ -25,6 +25,8 @@ namespace nsApp
 
 			/* 弾の向きをセットする。*/ 
 			m_rushBulletRender->SetRotation(m_angle);
+
+			InitCollision(m_angle, 10.0f);
 			return true;
 		}
 
@@ -46,7 +48,22 @@ namespace nsApp
 
 			m_rushBulletRender->SetPosition(m_position);
 			m_rushBulletRender->SetRotation(m_angle);
+
+			m_previousPosition = m_position; 
+
 			UpdatebBulletPosition();
+
+			/* コリジョンの座標を更新。*/
+			UpdateBulletCollisionPosition();
+
+			/* ボスに当たったかチェック。*/
+			if (CheckHitBoss())
+			{
+				//! @TODO: ダメージ処理。
+				DeleteGO(this);
+				return;
+			}
+
 		}
 
 

@@ -62,7 +62,6 @@ namespace nsApp
 			/* 前進する処理。*/
 			MoveForward();
 
-////////////////////////////////////////////////////////////////////////////
 			if (m_player->GetCurrentWeapon() == WeaponType::TwinGun)
 			{
 				/* ボーンの切り替え。*/
@@ -72,42 +71,36 @@ namespace nsApp
 				if (!m_player->IsPlayAnimation())
 				{
 					m_loopCount++;
-
-					// ボタンが離されている。
-				    m_isButtonReleased = !m_player->GetInputClass().CheckButtonPress(enButtonB);
+					m_isButtonReleased = !m_player->GetInputClass().CheckButtonPress(enButtonB);
 
 					if (m_loopCount >= 4 || m_isButtonReleased)
+					{
 						m_stateMachine->ChangeState(new PlayerRushEndState());
-
+						return; // ★追加：自分が消滅するので即座にリターン！
+					}
 					else
 					{
-						// ループ継続：アニメーションを再再生し、タイマーをリセット
 						m_player->PlayWeaponAnimation(AttackType::RushAttack_Start);
 						m_attackTimer = 0;
 					}
 				}
 			}
-
-
-			/* @TODO:リファ。*/
-			/* ================================================== */
-			if (m_player->GetCurrentWeapon() == WeaponType::Wand)
+			else if (m_player->GetCurrentWeapon() == WeaponType::Wand)
 			{
-				if (m_attackTimer == 10 && !m_isSummoned)
-				{
+				if (m_attackTimer == 10 && !m_isSummoned) {
 					SummonMissile();
 					m_isSummoned = true;
 				}
 
-				/* 撃ち終わった後(12F以降)に、アニメが完了したらすぐIdleに戻す */
 				if (m_attackTimer > ATTACK_TIMER_12 && !m_player->IsPlayAnimation())
+				{
 					m_stateMachine->ChangeState(new PlayerIdleState());
+					return; 
+				}
 			}
-
 			else
 			{
-				if (m_attackTimer == 10 && !m_isSummoned)
-				{
+				if (m_attackTimer == 10 && !m_isSummoned) {
 					SummonMissile();
 					m_isSummoned = true;
 				}
@@ -115,17 +108,18 @@ namespace nsApp
 				if (m_attackTimer > 10 && !m_player->IsPlayAnimation())
 				{
 					m_loopCount++;
-
-					if (m_loopCount < 3)
-					{
+					if (m_loopCount < 3) {
 						m_player->PlayWeaponAnimation(AttackType::RushAttack_Start);
 						m_attackTimer = 0;
 					}
 					else
+					{
 						m_stateMachine->ChangeState(new PlayerRushEndState());
+						return; 
+					}
 				}
 			}
-/////////////////////////////////////////////////////////////////////////////////////////
+
 			PlayerAttackBaseState::Update();
 		}
 
@@ -201,7 +195,7 @@ namespace nsApp
 		void PlayerRushStartState::FireRushBullet(const wchar_t* boneName)
 		{
 			/* ボーンの位置を取得する。*/
-			m_subWeaponSpawnPos = m_player->GetBonePosition(boneName);
+			m_spawnPosition = m_player->GetBonePosition(boneName);
 			m_forwardDirection = m_player->GetForwardVector();
 
 			/* 乱射弾（enRush）を指定。*/

@@ -85,6 +85,9 @@ namespace nsApp
 				{
 					/* ダメージフォントの描画。*/
 					OnHitDamageText(boss);
+
+					/* ボスにダメージを与える。*/
+					boss->ApplyDamage(m_finalDamage);
 					/* ヒットストップを行う時間を設定。*/
 					m_player->SetHitStop(HIT_STOP_FRAME);
 					/* 対象にヒットストップをさせる時間を設定。*/

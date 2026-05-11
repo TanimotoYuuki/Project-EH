@@ -27,6 +27,7 @@ namespace nsApp
 			m_angle.SetRotationDegZ(-90.0f);
 			m_chargeBulletRender->SetRotation(m_angle);
 
+			InitCollision(m_angle, 3.0f);
 			return true;
 		}
 
@@ -42,8 +43,23 @@ namespace nsApp
 			/* 角度を更新。*/
 			m_chargeBulletRender->SetRotation(m_angle);
 
+			/* 座標を保存。*/
+			m_previousPosition = m_position;
+
 			/* 座標を更新する。*/
 			UpdatebBulletPosition();
+
+			/* コリジョンの座標を更新。*/
+			UpdateBulletCollisionPosition();
+
+			/* ボスに当たったかチェック。*/
+			if (CheckHitBoss())
+			{
+				//! @TODO: ダメージ処理。
+				DeleteGO(this);
+				return;
+			}
+
 		}
 
 

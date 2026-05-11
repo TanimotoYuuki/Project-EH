@@ -27,10 +27,12 @@ namespace nsApp
 
 			/* モデルの初期座標を設定する。*/
 			m_airBulletRender->SetPosition(m_position);
-
+			
+			m_angle.SetRotationDegZ(BULLET_ANGLE_OFFSET_Z);
 			/* モデルの角度を初期化する。*/
 			m_airBulletRender->SetRotation(m_angle);
 
+			InitCollision(m_angle, 8.0f);
 			return true;
 		}
 
@@ -51,8 +53,23 @@ namespace nsApp
 				m_angle *= m_offsetAngle;
 			}
 
+			/* 弾の座標を保存する。*/
+			m_previousPosition = m_position;
+
 			/* 弾の座標を更新する。*/ 
 			UpdateBulletPosition();
+
+			/* コリジョンの座標を更新。*/
+			UpdateBulletCollisionPosition();
+
+			/* ボスに当たったかチェック。*/
+			if (CheckHitBoss())
+			{
+				//! @TODO: ダメージ処理。
+				DeleteGO(this);
+				return;
+			}
+
 		}
 
 

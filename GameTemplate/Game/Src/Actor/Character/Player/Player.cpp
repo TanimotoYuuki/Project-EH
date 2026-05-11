@@ -176,7 +176,7 @@ namespace nsApp
 		void Player::InitAttackStatus()
 		{
 			/* 基本ダメージ数の初期化。*/
-			m_characterStatus.attack.normalDamage = 100.0f;	
+			m_characterStatus.attack.normalDamage = 15.0f;	
 
 			/* クリティカル率の初期化。*/ 
 			m_characterStatus.attack.criticalRate = 0.1f;
