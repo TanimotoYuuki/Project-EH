@@ -37,12 +37,7 @@ namespace nsApp
 		void NPCHammerAttackState::Enter()
 		{
 			/* キャストとキャッシュの取得 */
-			m_brain = static_cast<NPCBrain*>(m_owner);
-			m_body = m_brain->GetBody();
-			m_input = &m_body->GetInputClass();
-
-			/* タイマーの初期化 */
-			m_attackTimer = 0;
+			NPCAttackBaseState::Enter();
 
 			/* 攻撃パターンの抽選 */
 			m_randomPattern = rand() % NUM_HAMMER_PATTERNS;
@@ -54,10 +49,10 @@ namespace nsApp
 
 		void NPCHammerAttackState::Update()
 		{
-			auto target = m_brain->SearchTarget();
+			auto target = m_npcBrain->SearchTarget();
 
 			/* 早期リターン */
-			if (!target || !m_body)
+			if (!target || !m_getBody)
 				return;
 
 			/* 距離を計算 */
@@ -89,9 +84,9 @@ namespace nsApp
 
 		void NPCHammerAttackState::Exit()
 		{
-			if (m_input) {
-				m_input->SetVirtualButtonB(false);
-				m_input->SetVirtualController(0.0f, 0.0f);
+			if (m_npcInput) {
+				m_npcInput->SetVirtualButtonB(false);
+				m_npcInput->SetVirtualController(0.0f, 0.0f);
 			}
 		}
 
@@ -114,75 +109,30 @@ namespace nsApp
 		void NPCHammerAttackState::ExecuteMeleeHeavy()
 		{
 			if (m_attackTimer == COMBO_FIRST_INPUT)
-				m_input->SetVirtualButtonB(true);
+				m_npcInput->SetVirtualButtonB(true);
 
 			if (m_attackTimer == COMBO_HEAVY_INPUT)
-				m_input->SetVirtualButtonX(true);
+				m_npcInput->SetVirtualButtonX(true);
 		}
 
 
 		void NPCHammerAttackState::ExecuteMeleePush()
 		{
 			if (m_attackTimer < PUSH_HOLD_DURATION)
-				m_input->SetVirtualButtonLB1(true);
+				m_npcInput->SetVirtualButtonLB1(true);
 
 			if (m_attackTimer == PUSH_START_INPUT)
-				m_input->SetVirtualButtonB(true);
+				m_npcInput->SetVirtualButtonB(true);
 		}
 
 
 		void NPCHammerAttackState::ExecuteMeleeAir()
 		{
 			if (m_attackTimer == COMBO_FIRST_INPUT)
-				m_input->SetVirtualButtonA(true);
+				m_npcInput->SetVirtualButtonA(true);
 
 			if (m_attackTimer == COMBO_AIR_INPUT)
-				m_input->SetVirtualButtonB(true);
-		}
-
-
-		void NPCHammerAttackState::ResetVirtualInputs()
-		{
-			m_input->SetVirtualButtonA(false);    //! Aボタン
-			m_input->SetVirtualButtonB(false);    //! Bボタン
-			m_input->SetVirtualButtonX(false);    //! Xボタン
-			m_input->SetVirtualButtonLB1(false);  //! LB1ボタン
-			m_input->SetVirtualButtonLB2(false);  //! LB2ボタン
-			m_input->SetVirtualButtonRB1(false);  //! RB1ボタン
-			m_input->SetVirtualButtonRT(false);   //! RTボタン
-		}
-
-
-		void NPCHammerAttackState::PreventClipping(nsActor::Sandbag* target)
-		{
-			/* 早期リターン */
-			if (m_distance >= CLIPPING_LIMIT_DISTANCE || m_distance <= 0.0f)
-				return;
-
-			/* 距離の計算 */
-			m_pushBackDir = m_body->GetPosition() - target->GetPosition();
-			m_pushBackDir.y = 0.0f;
-
-			/* ベクトルの正規化 */
-			m_pushBackDir.Normalize();
-
-			/* めり込んだ分だけ座標を強制的に外側へ押し戻す */
-			m_currentPosition = m_body->GetPosition();
-			m_currentPosition.x += m_pushBackDir.x * (CLIPPING_LIMIT_DISTANCE - m_distance);
-			m_currentPosition.z += m_pushBackDir.z * (CLIPPING_LIMIT_DISTANCE - m_distance);
-
-			/* キャラクターコントローラーとプレイヤーの位置を更新 */
-			m_body->GetCharacterController().SetPosition(m_currentPosition);
-			m_body->SetPosition(m_currentPosition);
-		}
-
-
-		void NPCHammerAttackState::UpdateFacingDirection()
-		{
-			if (m_isAttacking) {
-				m_body->SetAngle(m_diff.x > 0.0f ? FACING_ANGLE_RIGHT : FACING_ANGLE_LEFT);
-				m_body->SetForwardVector(m_diff.x > 0.0f ? Vector3::Right : Vector3::Left);
-			}
+				m_npcInput->SetVirtualButtonB(true);
 		}
 
 
@@ -195,7 +145,7 @@ namespace nsApp
 			m_stickX = m_isAttacking ? (m_isDashAttack ? m_diff.x : 0.0f) : (m_distance < RETREAT_DISTANCE ? -m_diff.x : 0.0f);
 			m_stickZ = m_isAttacking ? (m_isDashAttack ? m_diff.z : 0.0f) : (m_distance < RETREAT_DISTANCE ? -m_diff.z : 0.0f);
 
-			m_input->SetVirtualController(m_stickX, m_stickZ);
+			m_npcInput->SetVirtualController(m_stickX, m_stickZ);
 		}
 
 		void NPCHammerAttackState::ExecutionFlow()

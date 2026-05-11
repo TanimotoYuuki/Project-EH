@@ -226,6 +226,7 @@
     <ClCompile Include="Src\Actor\Gun\Shooter\GunShooter.cpp" />
     <ClCompile Include="Src\Effect\EffectListener.cpp" />
     <ClCompile Include="Game2.cpp" />
+    <ClCompile Include="Src\Actor\Character\NPC\State\AttackState\NPCAttackBaseState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -414,5 +415,6 @@
     <ClInclude Include="Src\Actor\Gun\Parameter\BulletParameter.h" />
     <ClInclude Include="Src\Effect\EffectListener.h" />
     <ClInclude Include="Game2.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\State\AttackState\NPCAttackBaseState.h" />
   </ItemGroup>
 </Project>

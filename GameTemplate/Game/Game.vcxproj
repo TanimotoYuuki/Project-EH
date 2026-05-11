@@ -233,6 +233,7 @@
     <ClCompile Include="BossMoveState.cpp" />
     <ClCompile Include="FireAttackStrategy.cpp" />
     <ClCompile Include="Game2.cpp" />
+    <ClCompile Include="Src\Actor\Character\NPC\State\AttackState\NPCAttackBaseState.cpp" />
     <ClCompile Include="Src\Effect\EffectListener.cpp" />
     <ClCompile Include="Src\Actor\Gun\Factory\BulletFactory.cpp" />
     <ClCompile Include="CharacterHP.cpp" />
@@ -335,6 +336,7 @@
     <ClInclude Include="FireAttackStrategy.h" />
     <ClInclude Include="Game2.h" />
     <ClInclude Include="IBossAttackStrategy.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\State\AttackState\NPCAttackBaseState.h" />
     <ClInclude Include="Src\Effect\EffectListener.h" />
     <ClInclude Include="Src\Actor\Gun\Shooter\BulletFireRequest.h" />
     <ClInclude Include="Src\Actor\Gun\Shooter\IBulletFireListener.h" />
