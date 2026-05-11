@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "NPCChaseState.h"
+#include "Boss.h"
 #include "Src/Actor/Character/NPC/State/BasicState/NPCIdleState.h"
 #include "Src/Actor/Character/Player/Player.h"
 
@@ -73,7 +74,7 @@ namespace nsApp
 		}
 
 
-		void NPCChaseState::ExecuteChaseAction(nsActor::Sandbag* target)
+		void NPCChaseState::ExecuteChaseAction(nsActor::ICharacter* target)
 		{
 			if (target == nullptr)
 			{

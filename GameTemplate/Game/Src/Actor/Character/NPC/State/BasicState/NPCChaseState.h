@@ -49,12 +49,17 @@ namespace nsApp
 			 * @brief 距離をつめる対象を設定する。
 			 * @param target: 距離をつめる対象。
 			 */
-			void ExecuteChaseAction(nsActor::Sandbag* target);
+			void ExecuteChaseAction(nsActor::ICharacter* target);
+
 
 			/* 攻撃ステートへの遷移を関数化。*/
 			void TransitionToAttackState();
 
-			/* 距離計算メソッド。*/
+
+			/* 
+			 * @brief 距離計算メソッド。
+			 * @param targetObject: 距離を計算する対象。
+			 */
 			inline void ComputeDistance(nsActor::ICharacter* targetObject)
 			{
 				m_difference = targetObject->GetPosition() - m_body->GetPosition();

@@ -49,7 +49,7 @@ namespace nsApp
          * @brief ターゲットを探索する処理。
          * @TODO: 現在のターゲットはテスト。
          */
-		nsActor::Sandbag* SearchTarget();
+		nsActor::ICharacter* SearchTarget();
 
 
 	/* セッター。*/

@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "NPCBrain.h"
+#include "Boss.h"
+
 #include "Src/Actor/Character/Player/PlayerInput.h"
 #include "Src/Actor/Character/Player/Player.h"
 
@@ -33,10 +35,10 @@ namespace nsApp
 	}
 
 
-	nsActor::Sandbag* NPCBrain::SearchTarget()
+	nsActor::ICharacter* NPCBrain::SearchTarget()
 	{
 		/* –Ú•W‚ğ’Tõ‚·‚éB*/
-		auto target  = FindGO<nsActor::Sandbag>("Sandbag");
+		auto target  = FindGO<nsActor::Boss>("Boss");
 
 		/* Œ©‚Â‚©‚ç‚È‚©‚Á‚½ê‡B*/
 		if (target == nullptr || reinterpret_cast<uintptr_t>(target) == 0xFFFFFFFFFFFFFFFF)

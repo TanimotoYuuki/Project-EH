@@ -7,7 +7,7 @@
 #include "Src/Actor/Character/Status/AttackParameterTable.h"
 #include "PresentDamageIndicator.h"
 #include "Src/Debug/Sandbag.h"
-
+#include "Boss.h"
 
 namespace
 {
@@ -26,7 +26,9 @@ namespace nsApp
 			/* 攻撃の種類ごとにキャストを行う。*/
 			m_player = static_cast<nsActor::Player*>(m_owner);
 
+			/* ヒットフラグ。*/
 			m_isHit = false;
+
 			m_inputRequests.clear();
 		}
 
@@ -78,14 +80,16 @@ namespace nsApp
 
 			if (!m_isHit)
 			{
-				auto sandbag = FindGO<nsActor::Sandbag>("Sandbag");
-				if (sandbag != nullptr && reinterpret_cast<uint8_t>(sandbag) != 0xFFFFFFFFFFFFFFFF)
+				auto boss = FindGO<nsActor::Boss>("Boss");
+				if (boss != nullptr && reinterpret_cast<uint8_t>(boss) != 0xFFFFFFFFFFFFFFFF)
 				{
-					OnHitDamageText(sandbag);
-
+					/* ダメージフォントの描画。*/
+					OnHitDamageText(boss);
+					/* ヒットストップを行う時間を設定。*/
 					m_player->SetHitStop(HIT_STOP_FRAME);
-					sandbag->SetHitStop(HIT_STOP_FRAME);
-
+					/* 対象にヒットストップをさせる時間を設定。*/
+					boss->SetHitStop(HIT_STOP_FRAME);
+					/* ヒットフラグを設定。*/
 					m_isHit = true;
 				}
 			}
