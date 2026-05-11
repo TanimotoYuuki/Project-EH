@@ -7,6 +7,7 @@
 #include "MemberSelect.h"
 #include "ConfirmationSelect.h"
 #include "Game.h"
+#include "Game2.h"
 #include "GameClearDirection.h"
 #include "GameEndSelect.h"
 #include "Result.h"
@@ -196,24 +197,24 @@ namespace nsApp
 		/*デストラクタ。*/
 		InGameScene::~InGameScene()
 		{
-			DeleteGO(m_game);
+			DeleteGO(m_game2);
 		}
 
 		/*開始処理。*/
 		bool InGameScene::Start()
 		{
-			m_game = NewGO<Game>(0, "game");
+			m_game2 = NewGO<Game2>(0, "game");
 			return true;
 		}
 		
 		/*更新処理。*/
 		void InGameScene::Update()
 		{
-			if (m_game->GetGameClearDirectionInstance() != nullptr)
+			if (m_game2->GetGameClearDirectionInstance() != nullptr)
 			{
 				if (m_gameClearDirection == nullptr)
 				{
-					m_gameClearDirection = m_game->GetGameClearDirectionInstance();
+					m_gameClearDirection = m_game2->GetGameClearDirectionInstance();
 				}
 
 				if (m_gameClearDirection->IsDirectionFinished())
@@ -228,12 +229,12 @@ namespace nsApp
 			}
 
 			/*ゲームオーバー、もしくはタイムアップのどちらかの状態になったら。*/
-			if (m_game->GetGameTimeUpDirectionInstance() != nullptr ||
-				m_game->GetGameOverDirectionInstance() != nullptr)
+			if (m_game2->GetGameTimeUpDirectionInstance() != nullptr ||
+				m_game2->GetGameOverDirectionInstance() != nullptr)
 			{
 				if (m_gameEndSelect == nullptr)
 				{
-					m_gameEndSelect = m_game->GetGameEndSelectInstance();
+					m_gameEndSelect = m_game2->GetGameEndSelectInstance();
 					return;
 				}
 

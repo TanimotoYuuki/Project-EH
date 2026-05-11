@@ -232,6 +232,7 @@
     <ClCompile Include="BossIdleState.cpp" />
     <ClCompile Include="BossMoveState.cpp" />
     <ClCompile Include="FireAttackStrategy.cpp" />
+    <ClCompile Include="Game2.cpp" />
     <ClCompile Include="Src\Effect\EffectListener.cpp" />
     <ClCompile Include="Src\Actor\Gun\Factory\BulletFactory.cpp" />
     <ClCompile Include="CharacterHP.cpp" />
@@ -267,7 +268,6 @@
     <ClCompile Include="Src\Actor\Gun\Shooter\GunShooter.cpp" />
     <ClCompile Include="Src\Actor\Magic\MagicProjectotile.cpp" />
     <ClCompile Include="Src\Fade\Fade.cpp" />
-    <ClCompile Include="Game.cpp" />
     <ClCompile Include="IBossAttackStrategy.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MemberSelect.cpp" />
@@ -333,7 +333,7 @@
     <ClInclude Include="BossIdleState.h" />
     <ClInclude Include="BossMoveState.h" />
     <ClInclude Include="FireAttackStrategy.h" />
-    <ClInclude Include="Game.h" />
+    <ClInclude Include="Game2.h" />
     <ClInclude Include="IBossAttackStrategy.h" />
     <ClInclude Include="Src\Effect\EffectListener.h" />
     <ClInclude Include="Src\Actor\Gun\Shooter\BulletFireRequest.h" />
@@ -374,7 +374,6 @@
     <ClInclude Include="Src\Actor\Gun\Bullet\RushBullet.h" />
     <ClInclude Include="Src\Actor\Magic\MagicProjectotile.h" />
     <ClInclude Include="Src\Fade\Fade.h" />
-    <ClInclude Include="Game.h" />
     <ClInclude Include="MemberSelect.h" />
     <ClInclude Include="QuestSelect.h" />
     <ClInclude Include="Select.h" />

@@ -59,7 +59,6 @@
     <ClCompile Include="system\system.cpp">
       <Filter>system</Filter>
     </ClCompile>
-    <ClCompile Include="Game.cpp" />
     <ClCompile Include="Src\Actor\Stage\Stage.cpp">
       <Filter>Src\Actor\Stage</Filter>
     </ClCompile>
@@ -226,13 +225,13 @@
     <ClCompile Include="Src\Actor\Gun\Factory\BulletFactory.cpp" />
     <ClCompile Include="Src\Actor\Gun\Shooter\GunShooter.cpp" />
     <ClCompile Include="Src\Effect\EffectListener.cpp" />
+    <ClCompile Include="Game2.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="system\system.h">
       <Filter>system</Filter>
     </ClInclude>
-    <ClInclude Include="Game.h" />
     <ClInclude Include="Src\Actor\Stage\StageData.h">
       <Filter>Src\Actor\Stage</Filter>
     </ClInclude>
@@ -414,5 +413,6 @@
     <ClInclude Include="Src\Actor\Gun\Shooter\IBulletFireListener.h" />
     <ClInclude Include="Src\Actor\Gun\Parameter\BulletParameter.h" />
     <ClInclude Include="Src\Effect\EffectListener.h" />
+    <ClInclude Include="Game2.h" />
   </ItemGroup>
 </Project>

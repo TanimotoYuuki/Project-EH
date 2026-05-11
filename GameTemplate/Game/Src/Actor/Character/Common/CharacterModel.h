@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 /**
 * @file   CharacterModel.h
 * @brief  キャラクターモデル/アニメーションを管理するクラス。

@@ -2,7 +2,7 @@
 
 /**
 * @file Game.h
-* @brief ãƒ‡ãƒ¼ã‚¿ã®çµ±åˆã‚¯ãƒ©ã‚¹ã€‚
+* @brief ƒf[ƒ^‚Ì“‡ƒNƒ‰ƒXB
 * @author All
 * @date 2026/05/08
 */
@@ -35,31 +35,32 @@ namespace nsApp
 		class GameClearDirection;
 		class GameTimeUpDirection;
 		class GameOverDirection;
-		class Game : public IGameObject
+
+		class Game2 : public IGameObject
 		{
 		public:
-			/* ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã¨ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã€‚*/
-			Game() = default;
-			~Game();
-			
+			/* ƒRƒ“ƒXƒgƒ‰ƒNƒ^‚ÆƒfƒXƒgƒ‰ƒNƒ^B*/
+			Game2() = default;
+			~Game2();
+
 
 		public:
-			/* ã‚µã‚¤ã‚¯ãƒ«ã€‚*/
+			/* ƒTƒCƒNƒ‹B*/
 			bool Start();
 			void Update();
 			void Render(RenderContext& rc);
 
 
 		private:
-			/* ãƒ—ãƒ¬ã‚¤ã‚¢ãƒ–ãƒ«ã‚­ãƒ£ãƒ©ã‚’ç”Ÿæˆã™ã‚‹ã€‚*/
+			/* ƒvƒŒƒCƒAƒuƒ‹ƒLƒƒƒ‰‚ğ¶¬‚·‚éB*/
 			void SpawnPlayCharacter();
 
 
 		public:
 
 			/**
-			* @brief ã‚²ãƒ¼ãƒ ã‚¯ãƒªã‚¢æ¼”å‡ºã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã®å–å¾—ã€‚
-			* @return ã‚²ãƒ¼ãƒ ã‚¯ãƒªã‚¢æ¼”å‡ºã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã€‚
+			* @brief ƒQ[ƒ€ƒNƒŠƒA‰‰o‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚Ìæ“¾B
+			* @return ƒQ[ƒ€ƒNƒŠƒA‰‰o‚ÌƒCƒ“ƒXƒ^ƒ“ƒXB
 			*/
 			inline GameClearDirection* GetGameClearDirectionInstance() const
 			{
@@ -67,8 +68,8 @@ namespace nsApp
 			}
 
 			/**
-			* @brief æ™‚é–“åˆ‡ã‚Œæ¼”å‡ºã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã®å–å¾—ã€‚
-			* @return æ™‚é–“åˆ‡ã‚Œæ¼”å‡ºã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã€‚
+			* @brief ŠÔØ‚ê‰‰o‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚Ìæ“¾B
+			* @return ŠÔØ‚ê‰‰o‚ÌƒCƒ“ƒXƒ^ƒ“ƒXB
 			*/
 			inline GameTimeUpDirection* GetGameTimeUpDirectionInstance() const
 			{
@@ -76,8 +77,8 @@ namespace nsApp
 			}
 
 			/**
-			* @brief ã‚²ãƒ¼ãƒ ã‚ªãƒ¼ãƒãƒ¼æ¼”å‡ºã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã®å–å¾—ã€‚
-			* @return ã‚²ãƒ¼ãƒ ã‚ªãƒ¼ãƒãƒ¼æ¼”å‡ºã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã€‚
+			* @brief ƒQ[ƒ€ƒI[ƒo[‰‰o‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚Ìæ“¾B
+			* @return ƒQ[ƒ€ƒI[ƒo[‰‰o‚ÌƒCƒ“ƒXƒ^ƒ“ƒXB
 			*/
 			inline GameOverDirection* GetGameOverDirectionInstance() const
 			{
@@ -85,8 +86,8 @@ namespace nsApp
 			}
 
 			/**
-			* @brief ã‚²ãƒ¼ãƒ ãŒçµ‚äº†ã—ãŸæ™‚ã«é¸æŠã™ã‚‹ç”»é¢ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã®å–å¾—ã€‚
-			* @return ã‚²ãƒ¼ãƒ ãŒçµ‚äº†ã—ãŸæ™‚ã«é¸æŠã™ã‚‹ç”»é¢ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã€‚
+			* @brief ƒQ[ƒ€‚ªI—¹‚µ‚½‚É‘I‘ğ‚·‚é‰æ–Ê‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚Ìæ“¾B
+			* @return ƒQ[ƒ€‚ªI—¹‚µ‚½‚É‘I‘ğ‚·‚é‰æ–Ê‚ÌƒCƒ“ƒXƒ^ƒ“ƒXB
 			*/
 			inline GameEndSelect* GetGameEndSelectInstance() const
 			{
@@ -94,8 +95,8 @@ namespace nsApp
 			}
 
 		private:
-			nsApp::nsSound::SoundLister* m_soundLister = nullptr; //! ã‚µã‚¦ãƒ³ãƒ‰ãƒªã‚¹ã‚¿ãƒ¼ã€‚
-			nsApp::nsStage::BackGround* m_backGround = nullptr; //! èƒŒæ™¯ã€‚
+			nsApp::nsSound::SoundLister* m_soundLister = nullptr; //! ƒTƒEƒ“ƒhƒŠƒXƒ^[B
+			nsApp::nsStage::BackGround* m_backGround = nullptr; //! ”wŒiB
 			nsApp::Camera* m_camera = nullptr;
 			nsActor::Player* m_player = nullptr;
 			nsActor::Boss* m_boss = nullptr;
