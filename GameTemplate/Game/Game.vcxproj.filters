@@ -228,6 +228,9 @@
     <ClCompile Include="Game2.cpp" />
     <ClCompile Include="Src\Actor\Character\NPC\State\AttackState\NPCAttackBaseState.cpp" />
     <ClCompile Include="Src\Actor\Gun\Bullet\IGunBullet.cpp" />
+    <ClCompile Include="Src\Actor\Magic\Parameter\MagicParameter.cpp" />
+    <ClCompile Include="Src\Actor\Magic\Parameter\MagicParameterTable.cpp" />
+    <ClCompile Include="Src\Actor\Magic\Factory\MagicFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -417,6 +420,8 @@
     <ClInclude Include="Src\Effect\EffectListener.h" />
     <ClInclude Include="Game2.h" />
     <ClInclude Include="Src\Actor\Character\NPC\State\AttackState\NPCAttackBaseState.h" />
-    <ClInclude Include="GenerateDebug.h" />
+    <ClInclude Include="Src\Actor\Magic\Parameter\MagicParameter.h" />
+    <ClInclude Include="Src\Actor\Magic\Parameter\MagicParameterTable.h" />
+    <ClInclude Include="Src\Actor\Magic\Factory\MagicFactory.h" />
   </ItemGroup>
 </Project>

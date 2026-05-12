@@ -75,6 +75,7 @@ namespace nsApp
 			m_player->GetWeaponHitDetection().Enable();
 		}
 
+
 		void PlayerAirAttackState::Update()
 		{
 			m_attackTimer++;
@@ -82,9 +83,7 @@ namespace nsApp
 			if (m_player->GetCurrentWeapon() == WeaponType::TwinGun)
 			{
 				if (m_attackTimer == FIRE_FRAME_FIRST || m_attackTimer == FIRE_FRAME_SECOND)
-				{
 					FireAirBullet();
-				}
 			}
 			else if (m_player->GetCurrentWeapon() == WeaponType::Wand)
 			{
@@ -120,6 +119,7 @@ namespace nsApp
 			}
 		}
 
+
 		void PlayerAirAttackState::Exit()
 		{
 			if (m_player && m_player->GetCurrentWeapon() == WeaponType::TwinGun)
@@ -130,6 +130,7 @@ namespace nsApp
 			}
 			PlayerAttackBaseState::Exit();
 		}
+
 
 		void PlayerAirAttackState::UpdateAirMovement(float deltaTime)
 		{
@@ -177,6 +178,7 @@ namespace nsApp
 			}
 		}
 
+
 		bool PlayerAirAttackState::CheckLanding()
 		{
 			if (m_attackTimer <= AIR_ATTACK_DURATION || !GET_PLAYER_CHARACON.IsOnGround())
@@ -190,6 +192,7 @@ namespace nsApp
 			return true;
 		}
 
+
 		void PlayerAirAttackState::CreateShockWaveEffect()
 		{
 			m_landingPosition = m_player->GetWeaponHitDetection().GetPosition();
@@ -198,6 +201,7 @@ namespace nsApp
 
 			m_player->GetEffectList().PlayEffect(nsEffect::ShockWave, m_landingPosition, Quaternion::Identity, Vector3::One * SHOCKWAVE_SCALE);
 		}
+
 
 		bool PlayerAirAttackState::CheckAnimationEndTransition()
 		{
@@ -213,6 +217,7 @@ namespace nsApp
 			return false;
 		}
 
+
 		Vector3 PlayerAirAttackState::ComputeMissile(float angle)
 		{
 			m_gunShootDir = m_player->GetForwardVector();
@@ -221,18 +226,20 @@ namespace nsApp
 			return m_gunShootDir;
 		}
 
+
 		void PlayerAirAttackState::SpawnMissile()
 		{
-			m_missileShootDir = m_player->GetWeaponHitDetection().GetPosition();
-			m_missileShootDir.y += MISSILE_SPAWN_OFFSET_Y;
+			/* 特殊な角度で生成したい場合、武器を情報を取得。*/
+			m_spawnPosition = m_player->GetWeaponHitDetection().GetPosition();
 
+			/* 角度を変えて複数発生成。*/
 			for (const float& angle : MISSILE_ANGLE_LIST)
 			{
-				m_missileShootDir = ComputeMissile(angle);
-				m_airMissile = NewGO<nsActor::MagicProjectotile>(0, "AirMissile");
-				m_airMissile->Initialize(nsActor::MagicType::enAirMagic, m_missileShootDir, m_missileShootDir);
+				m_forwardDirection = ComputeMissile(angle);
+				ConstructAndTransmitMagicRequest(nsActor::MagicType::enAirMagic, m_spawnPosition, m_forwardDirection);
 			}
 		}
+
 
 		void PlayerAirAttackState::FireAirBullet()
 		{

@@ -16,7 +16,7 @@ namespace nsApp
 	struct MagicParameter
 	{
 		float speedPerSecond = 0.0f;				//! 射出速度。
-		float ligeTime = 0.0f;						//! 生成時間。
+		float lifeTime = 0.0f;						//! 生成時間。
 		float damage = 0.0f;						//! ダメージ量。
 		float radius = 0.0f;						//! 半径。
 		float spawnOffsetY = 0.0f;					//! 生成時のY軸オフセット。

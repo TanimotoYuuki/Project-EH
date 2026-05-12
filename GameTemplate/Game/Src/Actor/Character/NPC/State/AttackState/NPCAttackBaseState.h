@@ -36,7 +36,7 @@ namespace nsApp
 
 
 		protected:
-			/* 共通処理。*/
+		/* 共通処理。*/
 			/**
 			 * @brief ターゲットとの距離を計算する処理。
 			 * @param targetObject ターゲットのオブジェクト。
@@ -51,18 +51,18 @@ namespace nsApp
 			}
 
 			/**
-			 * @brief 
-			 * @param target 
+			 * @brief ターゲットとの位置の差分を元にした押し返す方向を計算する処理。
+			 * @param target ターゲットのオブジェクト。
 			 */
 			void PreventClipping(nsActor::ICharacter* target);
 
 			/**
-			 * @brief 
+			 * @brief ターゲットの方を向く処理。
 			 */
 			void UpdateFacingDirection();
 
 			/**
-			 * @brief 
+			 * @brief 攻撃のタイマーをリセットする処理。
 			 */
 			void ResetVirtualInputs();
 

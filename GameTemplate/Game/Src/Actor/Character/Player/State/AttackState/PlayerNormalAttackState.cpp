@@ -3,6 +3,7 @@
 #include "Src/Actor/Magic/MagicProjectotile.h"
 #include "Src/Actor/Gun/Bullet/NormalBullet.h"
 #include "Src/Actor/Gun/Factory/BulletFactory.h"
+#include "Src/Actor/Magic/Factory/MagicFactory.h"
 
 namespace
 {
@@ -57,16 +58,9 @@ namespace nsApp
 
 		void PlayerNormalAttackState::SummonMissile()
 		{
-			if(m_player->GetCurrentWeapon() == WeaponType::Wand)
-			{
-				m_spawnPosition = m_player->GetWeaponHitDetection().GetPosition();
-				m_spawnPosition.y += 10.0f;
-				m_spawnPosition += m_player->GetForwardVector() * 10.0f;
-
-				/* ミサイルを生成する。*/
-				auto* normalMagicMissile = NewGO<nsActor::MagicProjectotile>(0, "NormalMagic");
-				normalMagicMissile->Initialize(nsActor::MagicType::enNormalMagic, m_spawnPosition, m_player->GetForwardVector());
-			}
+			/* 魔法の生成。*/
+			if (m_player->GetCurrentWeapon() == WeaponType::Wand)
+				ConstructAndTransmitMagicRequest(nsActor::MagicType::enNormalMagic);
 		}
 
 

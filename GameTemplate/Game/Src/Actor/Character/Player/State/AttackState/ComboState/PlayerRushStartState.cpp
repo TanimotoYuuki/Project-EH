@@ -162,23 +162,9 @@ namespace nsApp
 
 		void PlayerRushStartState::SummonMissile()
 		{
+			/* 魔法を生成する。*/
 			if (m_player->GetCurrentWeapon() == WeaponType::Wand)
-			{
-				m_spawnPos = m_player->GetWeaponHitDetection().GetPosition();
-				m_spawnPos.y += INCREASE_VALUE_Y;
-				m_spawnPos += m_player->GetForwardVector() * INCREASE_VALUE_Y;
-
-				auto* rushMagic = NewGO<nsActor::MagicProjectotile>(0, "RushMagic");
-
-				/* 目標を設定。
-				 *  ※今はテスト用で他プレイアブルキャラを目標に。
-				 * ボスが実装され次第、切り替える。
-				 */
-				rushMagic->SetTarget(m_player->SearchCharacter());
-
-				/* 魔法の種類を設定する。*/
-				rushMagic->Initialize(nsActor::MagicType::enRushMagic, m_spawnPos, m_player->GetForwardVector());
-			}
+				ConstructAndTransmitMagicRequest(nsActor::MagicType::enRushMagic, m_player->SearchCharacter());
 		}
 
 
