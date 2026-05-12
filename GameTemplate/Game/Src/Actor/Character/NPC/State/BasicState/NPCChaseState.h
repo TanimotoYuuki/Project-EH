@@ -16,7 +16,6 @@ namespace nsApp
 	namespace nsActor
 	{
 		class Player;
-		class Sandbag;
 	}
 
 	namespace nsState
@@ -63,6 +62,9 @@ namespace nsApp
 			inline void ComputeDistance(nsActor::ICharacter* targetObject)
 			{
 				m_difference = targetObject->GetPosition() - m_body->GetPosition();
+				
+				m_difference.y = 0.0f; //! …•½•ûŒü‚Ì‹——£‚Ì‚İ‚ğl—¶‚·‚é‚½‚ßAY²‚Ì·•ª‚ğ0‚É‚·‚éB
+
 				m_distance = m_difference.Length();
 			}
 

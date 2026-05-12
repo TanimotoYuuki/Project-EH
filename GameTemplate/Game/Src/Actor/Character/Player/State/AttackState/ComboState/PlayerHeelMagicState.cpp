@@ -27,27 +27,12 @@ namespace nsApp
 				m_chargeLevel = 1.0f;
 		}
 
+
 		void PlayerHeelMagicState::Update()
 		{
 				m_attackTimer++;
 
 				ComputeHeelEffectScale();
-
-				/* ★追加：杖を構えている間（例えば5〜20フレームの間）、毎フレーム小さなパーティクルを出し続ける！ */
-				if (m_attackTimer >= 5 && m_attackTimer <= 20)
-				{
-					Vector3 pos = m_player->GetPosition();
-					pos.y += 5.0f; // 足元から少し上
-					// ランダムに散らすための計算（円状に広がるように）
-					float randX = (rand() % 40) - 20.0f;
-					float randZ = (rand() % 40) - 20.0f;
-					pos.x += randX;
-					pos.z += randZ;
-
-					// 小さな光の粒を上に昇らせる（※エフェクトIDは調整してください）
-					m_player->GetEffectList().PlayEffect(nsEffect::HeelMagic_Particle, pos, Quaternion::Identity, Vector3::One * 2.0f);
-				}
-
 
 				/* 大爆発（メインの回復エフェクト）とエリアヒールの発動 */
 				if (m_attackTimer == 25) {

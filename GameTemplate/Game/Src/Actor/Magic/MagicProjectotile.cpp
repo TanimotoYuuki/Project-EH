@@ -119,7 +119,7 @@ namespace nsApp
 		{
 			if (m_magicCollider == nullptr) return false;
 
-			auto boss = FindGO<nsActor::Boss>("Boss"); // 銃と表記を統一（大文字のBoss）
+			auto boss = FindGO<nsActor::Boss>("boss"); // 銃と表記を統一（大文字のBoss）
 			if (boss != nullptr && reinterpret_cast<uintptr_t>(boss) != 0xFFFFFFFFFFFFFFFF)
 			{
 				if (m_magicCollider->IsHit(boss->GetController())) {

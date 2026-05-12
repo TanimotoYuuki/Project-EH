@@ -233,6 +233,7 @@
     <ClCompile Include="BossMoveState.cpp" />
     <ClCompile Include="FireAttackStrategy.cpp" />
     <ClCompile Include="Game2.cpp" />
+    <ClCompile Include="Src\Actor\Character\NPC\State\AttackState\NPCTwinGunAttackState.cpp" />
     <ClCompile Include="Src\Actor\Magic\Factory\MagicFactory.cpp" />
     <ClCompile Include="Src\Actor\Magic\Parameter\MagicParameterTable.cpp" />
     <ClCompile Include="Src\Actor\Magic\Parameter\MagicParameter.cpp" />
@@ -334,6 +335,7 @@
     <ClInclude Include="FireAttackStrategy.h" />
     <ClInclude Include="Game2.h" />
     <ClInclude Include="IBossAttackStrategy.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\State\AttackState\NPCTwinGunAttackState.h" />
     <ClInclude Include="Src\Actor\Magic\Factory\MagicFactory.h" />
     <ClInclude Include="Src\Actor\Magic\Parameter\MagicParameterTable.h" />
     <ClInclude Include="Src\Actor\Magic\Parameter\MagicParameter.h" />

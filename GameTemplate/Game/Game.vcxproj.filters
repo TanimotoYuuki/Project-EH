@@ -225,6 +225,7 @@
     <ClCompile Include="Src\Actor\Magic\Parameter\MagicParameter.cpp" />
     <ClCompile Include="Src\Actor\Magic\Parameter\MagicParameterTable.cpp" />
     <ClCompile Include="Src\Actor\Magic\Factory\MagicFactory.cpp" />
+    <ClCompile Include="Src\Actor\Character\NPC\State\AttackState\NPCTwinGunAttackState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -411,5 +412,6 @@
     <ClInclude Include="Src\Actor\Magic\Parameter\MagicParameter.h" />
     <ClInclude Include="Src\Actor\Magic\Parameter\MagicParameterTable.h" />
     <ClInclude Include="Src\Actor\Magic\Factory\MagicFactory.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\State\AttackState\NPCTwinGunAttackState.h" />
   </ItemGroup>
 </Project>

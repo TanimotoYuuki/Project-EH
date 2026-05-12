@@ -77,15 +77,17 @@ namespace nsApp
 
 		void IGunBullet::Render(RenderContext& rc)
 		{
-			if (m_modelRender) m_modelRender->Draw(rc);
+			if (m_modelRender) 
+				m_modelRender->Draw(rc);
 		}
 
 
 		bool IGunBullet::CheckHitBoss()
 		{
-			if (m_bulletCollider == nullptr) return false;
+			if (m_bulletCollider == nullptr)
+				return false;
 
-			auto boss = FindGO<nsActor::Boss>("Boss"); 
+			auto boss = FindGO<nsActor::Boss>("boss"); 
 			if (boss != nullptr && reinterpret_cast<uintptr_t>(boss) != 0xFFFFFFFFFFFFFFFF)
 			{
 				if (m_bulletCollider->IsHit(boss->GetController()))

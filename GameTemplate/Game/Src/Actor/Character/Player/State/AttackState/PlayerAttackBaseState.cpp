@@ -7,7 +7,6 @@
 #include "Src/Actor/Character/Status/AttackParameterTable.h"
 #include "Src/Actor/Magic/Factory/MagicFactory.h"
 #include "PresentDamageIndicator.h"
-#include "Src/Debug/Sandbag.h"
 #include "Boss.h"
 
 namespace
@@ -31,6 +30,8 @@ namespace nsApp
 			m_isHit = false;
 
 			m_inputRequests.clear();
+
+			m_attackTimer = 0;
 		}
 
 
@@ -81,7 +82,7 @@ namespace nsApp
 
 			if (!m_isHit)
 			{
-				auto boss = FindGO<nsActor::Boss>("Boss");
+				auto boss = FindGO<nsActor::Boss>("boss");
 				if (boss != nullptr && reinterpret_cast<uint8_t>(boss) != 0xFFFFFFFFFFFFFFFF)
 				{
 					/* ダメージフォントの描画。*/

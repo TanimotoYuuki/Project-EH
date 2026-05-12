@@ -13,7 +13,6 @@ namespace nsApp
 {
 	namespace nsActor {
 		class Player;
-		class Sandbag;
 	}
 
 	namespace nsState

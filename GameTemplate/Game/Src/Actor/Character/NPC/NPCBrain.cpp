@@ -38,7 +38,7 @@ namespace nsApp
 	nsActor::ICharacter* NPCBrain::SearchTarget()
 	{
 		/* –Ú•W‚ğ’Tõ‚·‚éB*/
-		auto target  = FindGO<nsActor::Boss>("Boss");
+		auto target  = FindGO<nsActor::Boss>("boss");
 
 		/* Œ©‚Â‚©‚ç‚È‚©‚Á‚½ê‡B*/
 		if (target == nullptr || reinterpret_cast<uintptr_t>(target) == 0xFFFFFFFFFFFFFFFF)

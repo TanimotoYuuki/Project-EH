@@ -9,7 +9,7 @@ namespace
 	const auto NUM_HAMMER_PATTERNS = 3;            //! ハンマーNPCが持つ攻撃パターンの総数
 
 	/* 距離・間合い関連 */
-	const auto CHASE_TRANSITION_DISTANCE = 100.0f; //! 敵がこの距離より離れたら追跡ステートへ戻る
+	const auto CHASE_TRANSITION_DISTANCE = 180.0f; //! 敵がこの距離より離れたら追跡ステートへ戻る
 	const auto RETREAT_DISTANCE = 50.0f;           //! 攻撃後のクールタイム中に、この距離より近ければ後ろに下がる
 	const auto CLIPPING_LIMIT_DISTANCE = 40.0f;    //! めり込みを防止する限界距離（見えない壁）
 
@@ -47,6 +47,7 @@ namespace nsApp
 				NPCHammerPattern::enAir;
 		}
 
+
 		void NPCHammerAttackState::Update()
 		{
 			auto target = m_npcBrain->SearchTarget();
@@ -68,7 +69,6 @@ namespace nsApp
 			m_attackTimer++;
 
 			/* ベクトルの正規化と攻撃状態の判定 */
-			m_diff.Normalize();
 			m_isAttacking = (m_attackTimer < ATTACK_DURATION);
 
 			/* 実行フロー */

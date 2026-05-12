@@ -46,8 +46,14 @@ namespace nsApp
 				/* 距離を計算。*/
 				m_diff = targetObject->GetPosition() - m_getBody->GetPosition();
 
+				m_diff.y = 0.0f;  //! Y軸の差分は無視する。
+
 				/* 距離を保存。*/
 				m_distance = m_diff.Length();
+
+				/* 保存した長さを1として方向ベクトルとして正規化。*/
+				if (m_distance > 0.001f)
+					m_diff.Normalize();
 			}
 
 			/**

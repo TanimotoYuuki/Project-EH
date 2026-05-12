@@ -7,15 +7,13 @@
  * @date   2026/04/27
  */
 
-#include "Src/Debug/Sandbag.h"
 #include "Src/Actor/Character/Common/IState.h"
-
+#include "Src/Actor/Character/Common/ICharacter.h"
 
 namespace nsApp
 {
 	namespace nsActor {
 		class Player;
-		class Sandbag;
 	}
 
 
@@ -79,7 +77,6 @@ namespace nsApp
 	private:
 		nsActor::Player* m_outer = nullptr;                           //! ポインタを持つ対象。
 		nsActor::Player* m_helpTarget = nullptr;                    //! 助ける対象。
-		nsActor::Sandbag* m_testTarget = nullptr;                     //! ターゲット。
 		nsState::StateMachine<NPCBrain>* m_npcStateMachine = nullptr; //! NPCの状態を管理するステートマシン。
 
 
