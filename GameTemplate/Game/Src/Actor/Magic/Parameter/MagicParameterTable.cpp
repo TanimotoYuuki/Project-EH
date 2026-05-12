@@ -3,23 +3,34 @@
 
 namespace
 {
+	Quaternion MakeAngle(float angleX, float angleY, float angleZ)
+	{
+		Quaternion localMakeAngleX, localMakeAngleY, localMakeAngleZ;
+		localMakeAngleX.SetRotationDegX(angleX);
+		localMakeAngleY.SetRotationDegY(angleY);
+		localMakeAngleZ.SetRotationDegZ(angleZ);
+
+		return localMakeAngleX * localMakeAngleY * localMakeAngleZ;
+	}
+
+	const auto MAGIC_ANGLE = MakeAngle(90.0f, 0.0f, 0.0f);
 }
 
 namespace nsApp
 {
 	const std::unordered_map<nsActor::MagicType, MagicParameter> MagicParameterTable::m_magicTable =
 	{
-		/* 通常魔法: スピード 120(秒間), 寿命 1.5秒, ダメージ 10 */
-		{ nsActor::MagicType::enNormalMagic, { 120.0f, 1.5f, 10.0f, 10.0f, 10.0f, 10.0f, Vector3::One * 0.5f, Quaternion::Identity, SearchMissileModelPath("NormalAttackMissile") } },
+		/* 通常魔法*/
+		{ nsActor::MagicType::enNormalMagic, { 120.0f, 1.5f, 10.0f, 10.0f, 10.0f, 10.0f, Vector3::One * 0.5f, MAGIC_ANGLE, SearchMissileModelPath("NormalAttackMissile") } },
 
-		/* 連打魔法: 少し寿命を長く設定 */
-		{ nsActor::MagicType::enRushMagic,   { 140.0f, 2.0f, 8.0f,  10.0f, 10.0f, 15.0f, Vector3::One * 0.5f, Quaternion::Identity, SearchMissileModelPath("PressingAttackMissile") } },
+		/* 連打魔法*/
+		{ nsActor::MagicType::enRushMagic,   { 140.0f, 2.0f, 8.0f,  10.0f, 10.0f, 15.0f, Vector3::One * 0.5f, MAGIC_ANGLE, SearchMissileModelPath("PressingAttackMissile") } },
 
-		/* チャージ魔法: 威力3倍、当たり判定も大きく、生成位置をさらに前方に */
-		{ nsActor::MagicType::enChargeMagic, { 180.0f, 2.5f, 30.0f, 20.0f, 10.0f, 20.0f, Vector3::One * 1.0f, Quaternion::Identity, SearchMissileModelPath("ChargeAttackMissile") } },
+		/* チャージ魔法。*/
+		{ nsActor::MagicType::enChargeMagic, { 180.0f, 2.5f, 30.0f, 20.0f, 10.0f, 20.0f, Vector3::One * 1.0f, MAGIC_ANGLE, SearchMissileModelPath("ChargeAttackMissile") } },
 
-		/* 空中魔法: 基本は通常魔法と同じだが、ばら撒き用に調整可能 */
-		{ nsActor::MagicType::enAirMagic,    { 120.0f, 1.2f, 10.0f, 10.0f, 12.0f, 15.0f, Vector3::One * 0.5f, Quaternion::Identity, SearchMissileModelPath("NormalAttackMissile") } },
+		/* 空中魔法 */
+		{ nsActor::MagicType::enAirMagic,    { 120.0f, 1.2f, 10.0f, 10.0f, 12.0f, 15.0f, Vector3::One * 0.5f, MAGIC_ANGLE, SearchMissileModelPath("NormalAttackMissile") } },
 	};
 
 
@@ -34,18 +45,8 @@ namespace nsApp
 			/* 見つかった場合。*/
 			return missileIterator->second;
 		}
-	}
 
-
-	Quaternion MagicParameterTable::MakeAngle(float angleX, float angleY, float angleZ)
-	{
-		/* 関数内でローカル変数を定義する。 */
-		Quaternion localMakeAngleX, localMakeAngleY, localMakeAngleZ;
-		localMakeAngleX.SetRotationDegX(angleX); //! X軸の回転角を設定。
-		localMakeAngleY.SetRotationDegY(angleY); //! Y軸の回転角を設定。
-		localMakeAngleZ.SetRotationDegZ(angleZ); //! Z軸の回転角を設定。
-
-		/* 最終的な回転行列の計算結果を戻り値とする。*/
-		return localMakeAngleX * localMakeAngleY * localMakeAngleZ;
+		/* 安全対策。*/
+		return m_magicTable.at(nsActor::MagicType::enNormalMagic);
 	}
 }

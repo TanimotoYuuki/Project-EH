@@ -68,13 +68,19 @@ namespace nsApp
 
 		/* セッター。*/
 		public:
-			/* ダメージ数を設定。*/
+			/* 
+			 * @brief ダメージ数を設定。
+			 * @param damage 設定するダメージ数。
+			 */
 			inline void SetDamage(float damage)
 			{
 				m_damage = damage;
 			}
 
-			/* 目標を設定。*/
+			/* 
+			 * @brief 目標を設定。
+			 * @param target 設定する目標。
+			 */
 			inline void SetTarget(nsActor::ICharacter* target)
 			{
 				m_target = target;
@@ -95,7 +101,12 @@ namespace nsApp
 				return "Assets/modelData/Character/Weapon/" + modelName + ".tkm";
 			}
 
-			/* 角度計算。*/
+			/* 
+			 * @brief 角度計算。
+			 * @param degX X軸の回転角度。
+			 * @param degY Y軸の回転角度。
+			 * @param degZ Z軸の回転角度。
+			 */
 			Quaternion MakeAngle(float degX, float degY, float degZ)
 			{
 				m_angleX.SetRotationDegX(degX);
@@ -137,8 +148,7 @@ namespace nsApp
 
 			ModelRender m_missileMddel;							 //! ミサイルを描画するレンダー。
 
-			int m_lifeTimer = 0;                                 //! 魔法の生成時間を管理するタイマー。
-			
+			float m_currentLifeTime = 0.0f;                      //! 秒数管理用の寿命			
 			float m_damage = 0.0f;                               //! 魔法のダメージ量。
 			float m_moveSpeed = 0.0f;                            //! 移動速度。
 			float m_trajectoryLengthSquared = 0.0f;              //! 軌道の長さの二乗。

@@ -51,8 +51,6 @@ namespace nsApp
 		default:
 			break;
 		}
-
-
 	}
 
 
@@ -222,7 +220,10 @@ namespace nsApp
         /* 連打攻撃。*/
 		m_wandData.weaponAnimationList[AttackType::RushAttack_Start] = GetWeaponAnimationFilePath("Wand/RushAttack");
 
-        /* 空中攻撃。*/
+		/* 連打終了(仮)*/
+		m_wandData.weaponAnimationList[AttackType::RushAttack_End] = GetWeaponAnimationFilePath("Wand/RushAttack");
+
+       /* 空中攻撃。*/
 		m_wandData.weaponAnimationList[AttackType::AirAttack] = GetWeaponAnimationFilePath("Wand/ChargeAttack");
 
 		/* 斬り上げ枠。*/

@@ -27,8 +27,8 @@ namespace
 	const auto UNIFIED_LIFE = 1.0f;									    //! 共通の描画時間。
 	const auto UNIFIED_SCALE = Vector3::One * 1.0f;						//! 共通のスケール。
 
-	const auto BULLET_ANGLE = MakeAngle(0.0f, 0.0f, -90.0f);            //! 弾丸の基本的な角度。モデルの向きに合わせて設定。
-	const auto HEAVY_ANGLE = MakeAngle(90.0f, 0.0f, 0.0f);				//! 爆発弾の角度。モデルの向きに合わせて設定。
+	const auto BULLET_ANGLE = MakeAngle(0.0f, 0.0f, -90.0f);            // ! 弾丸の基本的な角度。モデルの向きに合わせて設定。
+	const auto HEAVY_ANGLE = MakeAngle(90.0f, 0.0f, 0.0f);
 }
 
 
