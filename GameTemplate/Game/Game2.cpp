@@ -3,7 +3,6 @@
 #include "Src/Fade/Fade.h"
 
 #include "Src/Actor/Stage/LoadStageData.h"
-#include "GenerateDebug.h"
 #include "CharacterHP.h"
 #include "GameTimeLimit.h"
 #include "GameStartDirection.h"
@@ -92,15 +91,6 @@ namespace nsApp
 			/* プレイアブルキャラを生成する。*/
 			SpawnPlayCharacter();
 
-			//auto* Generator = NewGO<GenerateDebug>(0, "debug");
-			//
-			//if (g_pad[0]->IsTrigger(enButtonX))
-			//{
-			//	static bool debugFlag = true;
-			//	debugFlag = !debugFlag;
-			//	Generator->SetDebugMode(debugFlag);
-			//}
-
 			return true;
 		}
 
@@ -181,8 +171,8 @@ namespace nsApp
 			{
 				//{"player1", WeaponType::GreatSword, ControllerType::NPC,INIT_CHARACTER_POSITION_PLAYER1},
 				//{"player2", WeaponType::Hammer, ControllerType::NPC,INIT_CHARACTER_POSITION_PLAYER2},
-				//{"player3", WeaponType::Wand, ControllerType::Player_1P, INIT_CHARACTER_POSITION_PLAYER3},
-				{"player4", WeaponType::TwinGun, ControllerType::Player_1P, INIT_CHARACTER_POSITION_PLAYER4}
+				{"player3", WeaponType::Wand, ControllerType::Player_1P, INIT_CHARACTER_POSITION_PLAYER3},
+				//{"player4", WeaponType::TwinGun, ControllerType::Player_1P, INIT_CHARACTER_POSITION_PLAYER4}
 			};
 
 			/* 作成したリストをセットする。*/

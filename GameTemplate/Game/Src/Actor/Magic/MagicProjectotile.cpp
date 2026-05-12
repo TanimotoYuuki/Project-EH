@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "MagicProjectotile.h"
+#include "Boss.h"
 #include <unordered_map>
 
 namespace nsApp
@@ -8,7 +9,6 @@ namespace nsApp
 	{
 		namespace
 		{
-
 			/* モデル名を取得。*/
 			inline const std::string SearchMissileModelPath(const std::string& modelName)
 			{
@@ -58,17 +58,20 @@ namespace nsApp
 		}
 
 
-		void MagicProjectotile::Initialize(MagicType type, const Vector3& spawnPosition, const Vector3& forwardDirection)
+		MagicProjectotile::~MagicProjectotile()
+		{
+			if(m_magicCollider != nullptr)
+				DeleteGO(m_magicCollider);
+		}
+
+
+		void MagicProjectotile::Initialize(MagicType type, const Vector3& spawnPosition, const Vector3& forwardDirection, const MagicParameter& param)
 		{
 			m_magicType = type;
 			m_position = spawnPosition;
-			m_lifeTimer = 0;
-
-			/* テーブルから条件にあった魔法を取り出す。*/
-			const auto& param = MAGIC_PARAM_TABLE.at(type);
-
+			
 			/* 射出速度を初期化。*/
-			m_velocity = forwardDirection * param.speed;
+			m_velocity = forwardDirection * param.speedPerSecond;
 			/* モデルの大きさを初期化。*/
 			m_scale = param.scale;
 
@@ -80,13 +83,18 @@ namespace nsApp
 			SetDamage(param.damage);
 			/* 各ミサイルモデルのパスを初期化。*/
 			m_missileMddel.Init(param.modelPath.c_str());
+
 			/* ミサイルの当たり判定を初期化。*/
-			m_hitDetection.Init(param.hitRadius);
+			m_magicCollider = NewGO<nsK2Engine::CollisionObject>(0, "MagicCollision");
+			m_magicCollider->CreateSphere(m_position, m_angle, param.hitRadius);
+			m_magicCollider->SetIsEnableAutoDelete(false);
 		}
 
 
 		void MagicProjectotile::Update()
 		{
+			m_previousPosition = m_position;
+
 			/* 位置を更新する。*/
 			m_position += m_velocity;
 
@@ -111,6 +119,12 @@ namespace nsApp
 			m_missileMddel.SetPosition(m_position);
 			/* 最終更新。*/
 			m_missileMddel.Update();
+
+			if(CheckHitBoss())
+			{
+				DeleteGO(this);
+				return;
+			}
 		}
 
 
@@ -155,5 +169,48 @@ namespace nsApp
 					}
 				}
 			}
-		}	}
+		}	
+
+
+		bool MagicProjectotile::CheckHitBoss()
+		{
+			if (m_magicCollider == nullptr)
+				return false;
+
+
+			auto boss = FindGO<nsActor::Boss>("boss");
+			if (boss != nullptr && reinterpret_cast<uintptr_t>(boss) != 0xFFFFFFFFFFFFFFFF)
+			{
+				if (m_magicCollider->IsHit(boss->GetController())) {
+					boss->ApplyDamage(static_cast<int>(m_damage));
+					return true;
+				}
+
+				m_bossPosition = boss->GetPosition();
+				m_bossPosition.y += 50.0f; // ボスの高さに合わせて中心を狙う
+
+				m_missileTrajectory = m_position - m_previousPosition;
+				m_vectorToBossTarget = m_bossPosition - m_previousPosition;
+
+				m_trajectoryLengthSquared = m_missileTrajectory.LengthSq();
+
+				if (m_trajectoryLengthSquared > 0.0f)
+				{
+					m_closestPointRatio = m_vectorToBossTarget.Dot(m_missileTrajectory) / m_trajectoryLengthSquared;
+
+					if (m_closestPointRatio >= 0.0f && m_closestPointRatio <= 1.0f)
+					{
+						m_closestPointOnTrajectory = m_previousPosition + (m_missileTrajectory * m_closestPointRatio);
+						m_distanceToBoss = (m_bossPosition - m_closestPointOnTrajectory).Length();
+
+						if (m_distanceToBoss < 150.0f) {
+							boss->ApplyDamage(static_cast<int>(m_damage));
+							return true;
+						}
+					}
+				}
+			}
+			return false;
+		}
+	}
 }
