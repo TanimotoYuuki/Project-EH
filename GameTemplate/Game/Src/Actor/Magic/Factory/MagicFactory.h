@@ -9,6 +9,7 @@
 
 #include "Src/Actor/Character/Common/CharacterAnimation.h"
 #include "Src/Actor/Character/Common/ICharacter.h"
+#include "Src/Actor/Magic/MagicProjectotile.h"
 
 namespace nsApp
 {

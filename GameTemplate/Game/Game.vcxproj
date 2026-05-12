@@ -246,8 +246,6 @@
     <ClCompile Include="GameEndSelect.cpp" />
     <ClCompile Include="GameOverDirection.cpp" />
     <ClCompile Include="GameStartDirection.cpp" />
-    <ClCompile Include="Src\Actor\Gun\Bullet\AirBullet.cpp" />
-    <ClCompile Include="Src\Actor\Gun\Bullet\HeavyBullett.cpp" />
     <ClCompile Include="Result.cpp" />
     <ClCompile Include="Src\Actor\Character\NPC\NPCBrain.cpp" />
     <ClCompile Include="Src\Actor\Character\NPC\State\AttackState\NPCHammerAttackState.cpp" />
@@ -265,11 +263,7 @@
     <ClCompile Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerHeelMagicState.cpp" />
     <ClCompile Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerMagicAttackState.cpp" />
     <ClCompile Include="Src\Actor\Gun\Register\BulletModelRegister.cpp" />
-    <ClCompile Include="Src\Actor\Gun\Bullet\ChargeBullet.cpp" />
-    <ClCompile Include="Src\Actor\Gun\Bullet\DashBullet.cpp" />
-    <ClCompile Include="Src\Actor\Gun\Bullet\NormalBullet.cpp" />
     <ClCompile Include="Src\Actor\Gun\Parameter\BulletParameterTable.cpp" />
-    <ClCompile Include="Src\Actor\Gun\Bullet\RushBullet.cpp" />
     <ClCompile Include="Src\Actor\Gun\Shooter\GunShooter.cpp" />
     <ClCompile Include="Src\Actor\Magic\MagicProjectotile.cpp" />
     <ClCompile Include="Src\Fade\Fade.cpp" />
@@ -355,8 +349,6 @@
     <ClInclude Include="GameEndSelect.h" />
     <ClInclude Include="GameOverDirection.h" />
     <ClInclude Include="GameStartDirection.h" />
-    <ClInclude Include="Src\Actor\Gun\Bullet\AirBullet.h" />
-    <ClInclude Include="Src\Actor\Gun\Bullet\HeavyBullett.h" />
     <ClInclude Include="Result.h" />
     <ClInclude Include="Src\Actor\Character\NPC\NPCBrain.h" />
     <ClInclude Include="Src\Actor\Character\NPC\State\AttackState\NPCHammerAttackState.h" />
@@ -375,12 +367,8 @@
     <ClInclude Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerHeelMagicState.h" />
     <ClInclude Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerMagicAttackState.h" />
     <ClInclude Include="Src\Actor\Gun\Register\BulletModelRegister.h" />
-    <ClInclude Include="Src\Actor\Gun\Bullet\ChargeBullet.h" />
-    <ClInclude Include="Src\Actor\Gun\Bullet\DashBullet.h" />
     <ClInclude Include="Src\Actor\Gun\Bullet\IGunBullet.h" />
-    <ClInclude Include="Src\Actor\Gun\Bullet\NormalBullet.h" />
     <ClInclude Include="Src\Actor\Gun\Parameter\BulletParameterTable.h" />
-    <ClInclude Include="Src\Actor\Gun\Bullet\RushBullet.h" />
     <ClInclude Include="Src\Actor\Magic\MagicProjectotile.h" />
     <ClInclude Include="Src\Fade\Fade.h" />
     <ClInclude Include="MemberSelect.h" />

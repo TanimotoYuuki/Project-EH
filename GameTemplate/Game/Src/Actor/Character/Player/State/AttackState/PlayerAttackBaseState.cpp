@@ -5,6 +5,7 @@
 #include "Src/Actor/Character/Player/State/BasicState/PlayerRunState.h"
 
 #include "Src/Actor/Character/Status/AttackParameterTable.h"
+#include "Src/Actor/Magic/Factory/MagicFactory.h"
 #include "PresentDamageIndicator.h"
 #include "Src/Debug/Sandbag.h"
 #include "Boss.h"

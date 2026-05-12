@@ -2,7 +2,6 @@
 #include "PlayerRushStartState.h"
 #include "Src/Actor/Character/Player/State/AttackState/ComboState/PlayerRushEndState.h"
 #include "Src/Actor/Character/Player/State/BasicState/PlayerIdleState.h"
-#include "Src/Actor/Gun/Bullet/RushBullet.h"
 #include "Src/Actor/Gun/Factory/BulletFactory.h"
 
 namespace

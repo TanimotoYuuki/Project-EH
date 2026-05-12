@@ -8,6 +8,8 @@
 
 #include "Src/Actor/Character/Common/IState.h"
 #include "Src/Actor/Character/Player/Player.h"
+#include "Src/Actor/Magic/MagicProjectotile.h"
+#include "Src/Actor/Magic/Factory/MagicFactory.h"
 #include "Src/Actor/Character/Player/Component/ComboRouteTable.h"
 
 /** @def

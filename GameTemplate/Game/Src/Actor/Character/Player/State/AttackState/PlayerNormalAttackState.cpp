@@ -1,7 +1,6 @@
 ﻿#include "stdafx.h"
 #include "PlayerNormalAttackState.h"
 #include "Src/Actor/Magic/MagicProjectotile.h"
-#include "Src/Actor/Gun/Bullet/NormalBullet.h"
 #include "Src/Actor/Gun/Factory/BulletFactory.h"
 #include "Src/Actor/Magic/Factory/MagicFactory.h"
 

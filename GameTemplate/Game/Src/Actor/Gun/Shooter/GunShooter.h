@@ -18,11 +18,13 @@ namespace nsApp
 	public:
 		/**
 		 * @brief 情報を送る主を指定する。 
+		 * @param listener 発射情報を受け取るリスナー。
 		 */
 		void Subscribe(IBulletFireListener* listener);
 
 		/**
 		 * @brief 銃の発射処理を行う。
+		 * @param request 発射に必要な情報をまとめた構造体。
 		 */
 		void Fire(const BulletFireRequest& request);
 

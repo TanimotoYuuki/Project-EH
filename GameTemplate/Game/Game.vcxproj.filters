@@ -215,12 +215,6 @@
     <ClCompile Include="Src\Actor\Character\NPC\State\AttackState\NPCHammerAttackState.cpp" />
     <ClCompile Include="Src\Actor\Character\NPC\State\AttackState\NPCWandAttackState.cpp" />
     <ClCompile Include="Src\Actor\Gun\Register\BulletModelRegister.cpp" />
-    <ClCompile Include="Src\Actor\Gun\Bullet\NormalBullet.cpp" />
-    <ClCompile Include="Src\Actor\Gun\Bullet\ChargeBullet.cpp" />
-    <ClCompile Include="Src\Actor\Gun\Bullet\RushBullet.cpp" />
-    <ClCompile Include="Src\Actor\Gun\Bullet\DashBullet.cpp" />
-    <ClCompile Include="Src\Actor\Gun\Bullet\HeavyBullett.cpp" />
-    <ClCompile Include="Src\Actor\Gun\Bullet\AirBullet.cpp" />
     <ClCompile Include="Src\Actor\Gun\Parameter\BulletParameterTable.cpp" />
     <ClCompile Include="Src\Actor\Gun\Factory\BulletFactory.cpp" />
     <ClCompile Include="Src\Actor\Gun\Shooter\GunShooter.cpp" />
@@ -406,12 +400,6 @@
     <ClInclude Include="Src\Actor\Character\NPC\State\AttackState\NPCWandAttackState.h" />
     <ClInclude Include="Src\Actor\Gun\Bullet\IGunBullet.h" />
     <ClInclude Include="Src\Actor\Gun\Register\BulletModelRegister.h" />
-    <ClInclude Include="Src\Actor\Gun\Bullet\NormalBullet.h" />
-    <ClInclude Include="Src\Actor\Gun\Bullet\ChargeBullet.h" />
-    <ClInclude Include="Src\Actor\Gun\Bullet\RushBullet.h" />
-    <ClInclude Include="Src\Actor\Gun\Bullet\DashBullet.h" />
-    <ClInclude Include="Src\Actor\Gun\Bullet\HeavyBullett.h" />
-    <ClInclude Include="Src\Actor\Gun\Bullet\AirBullet.h" />
     <ClInclude Include="Src\Actor\Gun\Parameter\BulletParameterTable.h" />
     <ClInclude Include="Src\Actor\Gun\Factory\BulletFactory.h" />
     <ClInclude Include="Src\Actor\Gun\Shooter\BulletFireRequest.h" />

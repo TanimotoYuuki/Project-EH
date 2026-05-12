@@ -86,7 +86,7 @@ namespace nsApp
 
 			/* ミサイルの当たり判定を初期化。*/
 			m_magicCollider = NewGO<nsK2Engine::CollisionObject>(0, "MagicCollision");
-			m_magicCollider->CreateSphere(m_position, m_angle, param.hitRadius);
+			m_magicCollider->CreateSphere(m_position, m_angle, param.radius);
 			m_magicCollider->SetIsEnableAutoDelete(false);
 		}
 
