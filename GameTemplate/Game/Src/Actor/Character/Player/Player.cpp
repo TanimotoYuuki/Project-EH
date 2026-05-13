@@ -94,13 +94,6 @@ namespace nsApp
 			m_effectListener.Initialize(this);
 			m_gunShooter.Subscribe(&m_effectListener);
 
-			/* NPCの場合、padIndexを0にする。*/
-			if (m_playerInput.GetPadIndex() < 0)
-			{
-				m_brain = new NPCBrain();
-				m_brain->Init(this);
-			}
-
 			/* */
 			m_stateMachine->ChangeState(m_stateFactory[PlayerStateID::enIdle]());
 			return true;
@@ -132,9 +125,8 @@ namespace nsApp
 				m_playerInput.SetInputEnable(true);
 
 			/* NPCの場合、仮想のコントローラーによる判定を行う。*/
-			if (m_playerInput.GetPadIndex() < 0)
+			if (m_brain != nullptr)
 				m_brain->Update();
-
 
 			/* モデルの更新より先に入力判定を更新する。*/
 			m_playerInput.Update();

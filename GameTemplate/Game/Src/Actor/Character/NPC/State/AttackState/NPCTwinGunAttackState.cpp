@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "NPCTwinGunAttackState.h"
 #include "Src/Actor/Character/NPC/State/BasicState/NPCChaseState.h"
+#include "Src/Actor/Character/Player/InputSystem/VirtualInputAdapter.h"
 
 namespace
 {
@@ -83,24 +84,24 @@ namespace nsApp
 		{
 			/* Bボタンを複数回押して乱射（RushAttack）を誘発 */
 			if (m_attackTimer == COMBO_FIRST_INPUT || m_attackTimer == COMBO_SECOND_INPUT || m_attackTimer == COMBO_THIRD_INPUT)
-				m_npcInput->SetVirtualButtonB(true);
+				m_virtualInput->SetButton(enButtonB,true);
 		}
 
 		void NPCTwinGunAttackState::ExecuteShootHeavy()
 		{
 			/* Xボタンで重攻撃（爆発弾）を撃つ */
 			if (m_attackTimer == COMBO_FIRST_INPUT)
-				m_npcInput->SetVirtualButtonX(true);
+				m_virtualInput->SetButton(enButtonX, true);
 		}
 
 		void NPCTwinGunAttackState::ExecuteShootAir()
 		{
 			/* Aボタンでジャンプし、空中でBを押して射撃 */
 			if (m_attackTimer == COMBO_FIRST_INPUT)
-				m_npcInput->SetVirtualButtonA(true);
+				m_virtualInput->SetButton(enButtonA,true);
 
 			if (m_attackTimer == COMBO_AIR_INPUT)
-				m_npcInput->SetVirtualButtonB(true);
+				m_virtualInput->SetButton(enButtonB, true);
 		}
 
 		void NPCTwinGunAttackState::UpdateMovement()
@@ -109,7 +110,7 @@ namespace nsApp
 			m_stickX = m_isAttacking ? 0.0f : (m_distance < RETREAT_DISTANCE ? -m_diff.x : 0.0f);
 			m_stickZ = m_isAttacking ? 0.0f : (m_distance < RETREAT_DISTANCE ? -m_diff.z : 0.0f);
 
-			m_npcInput->SetVirtualController(m_stickX, m_stickZ);
+			m_virtualInput->SetLStick(m_stickX, m_stickZ);
 		}
 
 		void NPCTwinGunAttackState::ExecutionFlow()

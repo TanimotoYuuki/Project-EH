@@ -13,6 +13,7 @@ namespace nsApp
 	class Camera;
 	class GameEndSelect;
 	class PlayerGenerator;
+	class PlayerControlerHub;
 
 	namespace nsSound {
 		class SoundLister;
@@ -107,7 +108,13 @@ namespace nsApp
 			GameTimeUpDirection* m_gameTimeUpDirection = nullptr;
 			GameOverDirection* m_gameOverDirection = nullptr;
 			GameEndSelect* m_gameEndSelect = nullptr;
+
+
+			////////////////////////////////////////////////////////
+			//Player生成: メンバ選択クラスに移動をするなら移動して
+			////////////////////////////////////////////////////////
 			PlayerGenerator* m_generator = nullptr;
+			PlayerControlerHub* m_playerHub = nullptr;
 		};
 	}
 }

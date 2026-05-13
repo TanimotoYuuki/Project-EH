@@ -26,7 +26,7 @@ namespace nsApp
 	}
 
 
-	void PlayerGenerator::SpawnPlayers(const std::vector<PlayerSpawnData>& spawnDataList)
+	std::vector<nsActor::Player*> PlayerGenerator::SpawnPlayers(const std::vector<PlayerSpawnData>& spawnDataList)
 	{
 		/* 生成用変数。*/
 		std::vector<nsActor::Player*> spawnedPlayers;
@@ -49,5 +49,6 @@ namespace nsApp
 			}
 		}
 
+		return spawnedPlayers;
 	}
 }

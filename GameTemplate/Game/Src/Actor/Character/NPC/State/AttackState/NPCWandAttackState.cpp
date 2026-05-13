@@ -2,7 +2,7 @@
 #include "NPCWandAttackState.h"
 #include "Src/Actor/Character/NPC/State/BasicState/NPCChaseState.h"
 #include "Src/Actor/Character/NPC/State/AttackState/NPCAttackBaseState.h"
-
+#include "Src/Actor/Character/Player/InputSystem/VirtualInputAdapter.h"
 
 namespace
 {
@@ -99,24 +99,24 @@ namespace nsApp
 		void NPCWandAttackState::ExecuteMagicAttack()
 		{
 			if (m_attackTimer == COMBO_FIRST_INPUT)
-				m_npcInput->SetVirtualButtonRB1(true);
+				m_virtualInput->SetButton(enButtonRB1,true);
 		}
 
 
 		void NPCWandAttackState::ExecuteMagicHeal()
 		{
 			if (m_attackTimer == COMBO_FIRST_INPUT)
-				m_npcInput->SetVirtualButtonRT(true);
+				m_virtualInput->SetButton(enButtonRB2,true);
 		}
 
 
 		void NPCWandAttackState::ExecuteMeleeAir()
 		{
 			if (m_attackTimer == COMBO_FIRST_INPUT)
-				m_npcInput->SetVirtualButtonA(true);
+				m_virtualInput->SetButton(enButtonA,true);
 
 			if (m_attackTimer == COMBO_AIR_INPUT)
-				m_npcInput->SetVirtualButtonB(true);
+				m_virtualInput->SetButton(enButtonB,true);
 		}
 
 		void NPCWandAttackState::UpdateMovement()
@@ -125,7 +125,7 @@ namespace nsApp
 			m_stickX = m_isAttacking ? 0.0f : (m_distance < RETREAT_DISTANCE ? -m_diff.x : 0.0f);
 			m_stickZ = m_isAttacking ? 0.0f : (m_distance < RETREAT_DISTANCE ? -m_diff.z : 0.0f);
 
-			m_npcInput->SetVirtualController(m_stickX, m_stickZ);
+			m_virtualInput->SetLStick(m_stickX, m_stickZ);
 		}
 
 

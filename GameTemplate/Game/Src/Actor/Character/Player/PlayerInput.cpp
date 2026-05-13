@@ -15,26 +15,15 @@ namespace nsApp
 	void PlayerInput::Update()
 	{
 		/* 入力判定。*/
-		if (!m_isInputEnable)
+		if (!m_isInputEnable || !m_inputDevice)
 		{
 			InitInputJudgment();
 			return;
 		}
 
-		/* NPCの場合は操作をコントローラーの操作を受け付けないので、入力判定を無視する。*/
-		if (m_padInddex < PAD_INDEX_NAM)
-		{
-			/* NPCの場合は仮想コントローラーを読み取る。*/
-			m_stickX = m_virtualStickX;
-			m_stickY = m_virtualStickY;
-		}
-
-		else
-		{
-			/* 移動入力判定。*/
-			m_stickX = g_pad[m_padInddex]->GetLStickXF();
-			m_stickY = g_pad[m_padInddex]->GetLStickYF();
-		}
+		/* 移動入力判定。*/
+		m_stickX = m_inputDevice->GetLStickX();
+		m_stickY = m_inputDevice->GetLStickY();
 
 		/* スティック移動量の計算 */
 		m_moveVec = Vector3(m_stickX, 0.0f, 0.0f);
@@ -58,91 +47,25 @@ namespace nsApp
 
 		/* チャージ判定を更新する。*/
 		UpdateChargeTranslation();
-
-
-		/* AIControllerの前フレームのボタンの情報を保持する。*/
-		if (m_padInddex < 0)
-			SetVirtualAttackButtons();
 	}
 
 
 	bool PlayerInput::CheckButtonPress(nsK2EngineLow::EnButton inputButtonType)
 	{
-		/* NPCの場合は仮想コントローラーフラグを返す。*/
-		if (m_padInddex < PAD_INDEX_NAM)
-		{
-			switch (inputButtonType)
-			{
-			case enButtonA: 
-				return m_isVirtualPressA;
-
-			case enButtonB:
-				return m_isVirtualPressB;
-
-			case enButtonX:
-				return m_isVirtualPressX;
-
-			case enButtonY:
-				return m_isVirtualPressY;
-
-			case enButtonLB1:
-				return m_isVirtualPressLB1;
-
-			case enButtonLB2:
-				return m_isVirtualPressLB2;
-
-			case enButtonRB1:
-				return m_isVirtualPressRB1;	
-
-			case enButtonRB2:
-				return m_isVirtualPressRT;
-
-			default:
-				return false;
-			}
-		}
+		if (!m_inputDevice)
+			return false;
 
 		/* コントローラーで操作する場合はgamePadを読み込む。*/
-		return g_pad[m_padInddex]->IsPress(inputButtonType);
+		return m_inputDevice->IsPress(inputButtonType);
 	}
 
 
 	bool PlayerInput::CheckButtonTrigger(nsK2EngineLow::EnButton inputButtonType)
 	{
-		/* NPCの場合かつ前フレームは押されていなかった時にtrue */
-		if (m_padInddex < PAD_INDEX_NAM)
-		{
-			switch (inputButtonType)
-			{
-			case enButtonA:   
-				return m_isVirtualPressA && !m_prevVirtualPressA;
+		if (!m_inputDevice)
+			return false;
 
-			case enButtonB:   
-				return m_isVirtualPressB && !m_prevVirtualPressB;
-
-			case enButtonX:   
-				return m_isVirtualPressX && !m_prevVirtualPressX;
-
-			case enButtonY:   
-				return m_isVirtualPressY && !m_prevVirtualPressY;
-
-			case enButtonLB1: 
-				return m_isVirtualPressLB1 && !m_prevVirtualPressLB1;
-
-			case enButtonLB2: 
-				return m_isVirtualPressLB2 && !m_prevVirtualPressLB2;
-
-			case enButtonRB1: 
-				return m_isVirtualPressRB1 && !m_prevVirtualPressRB1;
-
-			case enButtonRB2: 
-				return m_isVirtualPressRT && !m_prevVirtualPressRT;
-
-			default:
-				return false;
-			}
-		}
-		return g_pad[m_padInddex]->IsTrigger(inputButtonType);
+		return m_inputDevice->IsTrigger(inputButtonType);
 	}
 
 

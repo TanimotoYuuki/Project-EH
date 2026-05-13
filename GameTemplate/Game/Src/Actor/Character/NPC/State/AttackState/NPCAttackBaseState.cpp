@@ -1,9 +1,9 @@
 #include "stdafx.h"
 #include "NPCAttackBaseState.h"
+#include "Src/Actor/Character/Player/InputSystem/VirtualInputAdapter.h"
 
 namespace
 {
-	const auto VIRTUAL_INPUT_VALUE_RESET = 0.0f;	//! 仮想入力のリセット値。
 	const auto CLIPPING_LIMIT_DISTANCE = 40.0f;     //! クリッピングを防止する距離。
 }
 
@@ -19,8 +19,8 @@ namespace nsApp
 			/* NPCの体を取得。*/
 			m_getBody = m_npcBrain->GetBody();
 
-			/* 入力情報を取得。*/
-			m_npcInput = &m_getBody->GetInputClass();
+			/* NPCBrainクラスからAdapterを取得。*/
+			m_virtualInput = m_npcBrain->GetVirtualInputAdapter();
 
 			/* タイマーを初期化。*/
 			SetAttackTimer(0);
@@ -29,14 +29,8 @@ namespace nsApp
 
 		void NPCAttackBaseState::Exit()
 		{
-			if (m_npcInput)
-			{
-				/* 攻撃用仮想コントローラーを取得(Bボタン)。*/
-				m_npcInput->SetVirtualButtonB(false);
-
-				/* 仮想コントローラー情報をリセット。*/
-				m_npcInput->SetVirtualController(VIRTUAL_INPUT_VALUE_RESET, VIRTUAL_INPUT_VALUE_RESET);
-			}
+			if (m_virtualInput)
+				m_virtualInput->Reset();
 		}
 
 
@@ -69,18 +63,11 @@ namespace nsApp
 
 		void NPCAttackBaseState::ResetVirtualInputs() 
 		{
-			/* 入力情報がなければリターン。*/
-			if (!m_npcInput)
+			if (!m_virtualInput)
 				return;
 
-			/* 仮想コントローラー情報をリセット。*/
-			m_npcInput->SetVirtualButtonA(false);
-			m_npcInput->SetVirtualButtonB(false);
-			m_npcInput->SetVirtualButtonX(false);
-			m_npcInput->SetVirtualButtonLB1(false);
-			m_npcInput->SetVirtualButtonLB2(false);
-			m_npcInput->SetVirtualButtonRB1(false);
-			m_npcInput->SetVirtualButtonRT(false);
+			/* 入力情報のリセット。*/
+			m_virtualInput->Reset();
 		}
 	}
 }

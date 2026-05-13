@@ -6,6 +6,7 @@
 #include "Src/Actor/Character/Player/Player.h"
 
 #include "Src/Actor/Character/NPC/State/BasicState/NPCIdleState.h"
+#include "Src/Actor/Character/Player/InputSystem/VirtualInputAdapter.h"
 
 namespace nsApp
 {
@@ -23,8 +24,11 @@ namespace nsApp
 	void NPCBrain::Update()
 	{
 		/* 早期リターン。*/
-		if (m_outer == nullptr)
+		if (m_outer == nullptr || m_virtualInputAdapter == nullptr)
 			return;
+
+		/* フレーム開始の処理。*/
+		m_virtualInputAdapter->BeginFlame();
 
 		/* ターゲットを探す。*/
 		m_helpTarget = m_outer->SearchCharacter();

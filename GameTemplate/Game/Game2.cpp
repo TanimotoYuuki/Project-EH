@@ -17,6 +17,7 @@
 #include "Boss.h"
 #include "Src/Actor/Stage/BackGround.h"
 #include "Src/Actor/Character/Player/Component/PlayerGenerator.h"
+#include "PlayerControlerHub.h"
 
 namespace
 {
@@ -47,6 +48,7 @@ namespace nsApp
 			DeleteGO(m_gameEndSelect);
 
 			delete m_generator;
+			delete m_playerHub;
 		}
 
 
@@ -97,6 +99,9 @@ namespace nsApp
 
 		void Game2::Update()
 		{
+			if(m_playerHub)
+				m_playerHub->Update();
+
 			if (m_gameStartDirection != nullptr)
 			{
 				if (m_gameStartDirection->IsDirectionFinished())
@@ -169,14 +174,18 @@ namespace nsApp
 			/* PlayerGeneratorを用い、プレイアブルキャラを作成する。*/
 			std::vector<PlayerSpawnData> partyData =
 			{
-				//{"player1", WeaponType::GreatSword, ControllerType::NPC,INIT_CHARACTER_POSITION_PLAYER1},
-				//{"player2", WeaponType::Hammer, ControllerType::NPC,INIT_CHARACTER_POSITION_PLAYER2},
-				//{"player3", WeaponType::Wand, ControllerType::Player_1P, INIT_CHARACTER_POSITION_PLAYER3},
+				{"player1", WeaponType::GreatSword, ControllerType::Player_1P ,INIT_CHARACTER_POSITION_PLAYER1},
+				{"player2", WeaponType::Hammer, ControllerType::NPC,INIT_CHARACTER_POSITION_PLAYER2},
+				{"player3", WeaponType::Wand, ControllerType::NPC, INIT_CHARACTER_POSITION_PLAYER3},
 				{"player4", WeaponType::TwinGun, ControllerType::NPC, INIT_CHARACTER_POSITION_PLAYER4}
 			};
 
 			/* 作成したリストをセットする。*/
-			m_generator->SpawnPlayers(partyData);
+			auto players = m_generator->SpawnPlayers(partyData);
+
+			/* Hubを生成する。*/
+			m_playerHub = new PlayerControlerHub();
+			m_playerHub->Initialize(players, partyData);
 		}
 	}
 }

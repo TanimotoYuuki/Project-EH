@@ -13,8 +13,7 @@
 
 namespace nsApp
 {
-	namespace nsActor
-	{
+	namespace nsActor {
 		class Player;
 	}
 
@@ -61,10 +60,11 @@ namespace nsApp
 			 */
 			inline void ComputeDistance(nsActor::ICharacter* targetObject)
 			{
+				/* 距離の計算。*/
 				m_difference = targetObject->GetPosition() - m_body->GetPosition();
-				
-				m_difference.y = 0.0f; //! 水平方向の距離のみを考慮するため、Y軸の差分を0にする。
-
+				/* y軸は加味しない。*/
+				m_difference.y = 0.0f;
+				/* 距離ベクトルの長さを保存する。*/
 				m_distance = m_difference.Length();
 			}
 
@@ -72,7 +72,7 @@ namespace nsApp
 		private:
 			NPCBrain* m_brain = nullptr;			  //! NPCの親クラスのポインタ。
 			nsActor::Player* m_body = nullptr;	      //! NPCのボディクラスのポインタ。
-			PlayerInput* m_input = nullptr;			  //! NPCの入力クラスのポインタ。
+			VirtualInputAdapter* m_vInput = nullptr;  //! NPCの入力クラスのポインタ。
 
 
 		private:

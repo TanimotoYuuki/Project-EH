@@ -74,14 +74,15 @@ namespace nsApp
 			 */
 			inline virtual void InitializeSpawnData(const PlayerSpawnData& data)
 			{
-				/* コントローラーの種類をセット。*/
-				m_playerInput.SetPadIndex(static_cast<int>(data.controllerType));
-
-				/* 設定座標にスポーン。*/
+				/* 座標をセット。*/
 				m_currentPosition = data.spawnPosition;
-
-				/* キャラコンをセット。*/
 				m_characterController.SetPosition(m_currentPosition);
+
+				if (m_brain == nullptr)
+				{
+					m_brain = new NPCBrain();
+					m_brain->Init(this);
+				}
 			}
 
 
@@ -335,6 +336,14 @@ namespace nsApp
 			inline GunShooter& GetGunShooter()
 			{
 				return m_gunShooter;
+			}
+
+			/**
+			 * @brief NPCの思考クラスを取得する。
+			 */
+			inline NPCBrain* GetBrain()
+			{
+				return m_brain;
 			}
 
 

@@ -1,4 +1,5 @@
 ﻿#include "stdafx.h"
+#include "Src/Actor/Character/Player/InputSystem/VirtualInputAdapter.h"
 #include "Src/Actor/Character/NPC/State/AttackState/NPCHammerAttackState.h"
 #include "Src/Actor/Character/NPC/State/BasicState/NPCChaseState.h"
 #include "Src/Actor/Character/Player/Player.h"
@@ -82,13 +83,6 @@ namespace nsApp
 				Enter();
 		}
 
-		void NPCHammerAttackState::Exit()
-		{
-			if (m_npcInput) {
-				m_npcInput->SetVirtualButtonB(false);
-				m_npcInput->SetVirtualController(0.0f, 0.0f);
-			}
-		}
 
 		void NPCHammerAttackState::ExecuteCurrentCombo()
 		{
@@ -109,30 +103,30 @@ namespace nsApp
 		void NPCHammerAttackState::ExecuteMeleeHeavy()
 		{
 			if (m_attackTimer == COMBO_FIRST_INPUT)
-				m_npcInput->SetVirtualButtonB(true);
+				m_virtualInput->SetButton(enButtonB, true);
 
 			if (m_attackTimer == COMBO_HEAVY_INPUT)
-				m_npcInput->SetVirtualButtonX(true);
+				m_virtualInput->SetButton(enButtonX,true);
 		}
 
 
 		void NPCHammerAttackState::ExecuteMeleePush()
 		{
 			if (m_attackTimer < PUSH_HOLD_DURATION)
-				m_npcInput->SetVirtualButtonLB1(true);
+				m_virtualInput->SetButton(enButtonLB1 ,true);
 
 			if (m_attackTimer == PUSH_START_INPUT)
-				m_npcInput->SetVirtualButtonB(true);
+				m_virtualInput->SetButton(enButtonB ,true);
 		}
 
 
 		void NPCHammerAttackState::ExecuteMeleeAir()
 		{
 			if (m_attackTimer == COMBO_FIRST_INPUT)
-				m_npcInput->SetVirtualButtonA(true);
+				m_virtualInput->SetButton(enButtonA ,true);
 
 			if (m_attackTimer == COMBO_AIR_INPUT)
-				m_npcInput->SetVirtualButtonB(true);
+				m_virtualInput->SetButton(enButtonB ,true);
 		}
 
 
@@ -145,8 +139,9 @@ namespace nsApp
 			m_stickX = m_isAttacking ? (m_isDashAttack ? m_diff.x : 0.0f) : (m_distance < RETREAT_DISTANCE ? -m_diff.x : 0.0f);
 			m_stickZ = m_isAttacking ? (m_isDashAttack ? m_diff.z : 0.0f) : (m_distance < RETREAT_DISTANCE ? -m_diff.z : 0.0f);
 
-			m_npcInput->SetVirtualController(m_stickX, m_stickZ);
+			m_virtualInput->SetLStick(m_stickX, m_stickZ);
 		}
+
 
 		void NPCHammerAttackState::ExecutionFlow()
 		{

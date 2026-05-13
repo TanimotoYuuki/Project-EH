@@ -1,5 +1,6 @@
 ﻿#include "stdafx.h"
 #include "NPCSwordAttackState.h"
+#include "Src/Actor/Character/Player/InputSystem/VirtualInputAdapter.h"
 #include "Src/Actor/Character/NPC/State/BasicState/NPCChaseState.h"
 
 namespace
@@ -108,15 +109,15 @@ namespace nsApp
 			/* 攻撃のタイミングでBボタンを押す。*/ 
 			/* 1段目の攻撃入力。*/ 
 			if (m_attackTimer == COMBO_FIRST_INPUT)
-				m_npcInput->SetVirtualButtonB(true);
+				m_virtualInput->SetButton(enButtonB,true);
 
 			/* 2段目の攻撃入力。*/
 			if (m_attackTimer == COMBO_SECOND_INPUT)
-				m_npcInput->SetVirtualButtonB(true);
+				m_virtualInput->SetButton(enButtonB,true);
 
 			/* 3段目の攻撃入力。*/
 			if (m_attackTimer == COMBO_THIRD_INPUT)
-				m_npcInput->SetVirtualButtonB(true);
+				m_virtualInput->SetButton(enButtonB,true);
 		}
 
 
@@ -126,22 +127,22 @@ namespace nsApp
 			/* LB1を押してダッシュ開始。*/
 			/* 1段目の攻撃入力。*/
 			if (m_attackTimer == COMBO_FIRST_INPUT)
-				m_npcInput->SetVirtualButtonA(true);
+				m_virtualInput->SetButton(enButtonA,true);
 
 			/* ダッシュの持続入力。*/
 			/* LB1を長押ししてダッシュを持続。*/
 			if (m_attackTimer == COMBO_SECOND_INPUT)
-				m_npcInput->SetVirtualButtonB(true);
+				m_virtualInput->SetButton(enButtonB,true);
 		}
 
 
 		void NPCSwordAttackState::ExecuteMeleeAir()
 		{
 			if (m_attackTimer == 1) 
-				m_npcInput->SetVirtualButtonA(true);
+				m_virtualInput->SetButton(enButtonA,true);
 
 			if (m_attackTimer == 15) 
-				m_npcInput->SetVirtualButtonB(true);
+				m_virtualInput->SetButton(enButtonB,true);
 		}
 
 
@@ -150,7 +151,7 @@ namespace nsApp
 			m_stickX = m_isAttacking ? 0.0f : (m_distance < RETREAT_DISTANCE ? -m_diff.x : 0.0f);
 			m_stickZ = m_isAttacking ? 0.0f : (m_distance < RETREAT_DISTANCE ? -m_diff.z : 0.0f);
 
-			m_npcInput->SetVirtualController(m_stickX, m_stickZ);
+			m_virtualInput->SetLStick(m_stickX, m_stickZ);
 		}
 
 

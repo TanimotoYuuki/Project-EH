@@ -38,9 +38,9 @@ namespace nsApp
 
 
 		private:
-			NPCBrain* m_brain = nullptr;       //! NPCの親クラスのポインタ。
-			nsActor::Player *m_body = nullptr; //! NPCのボディクラスのポインタ。
-			PlayerInput* m_input = nullptr;    //! NPCの入力クラスのポインタ。
+			NPCBrain* m_brain = nullptr;			   //! NPCの親クラスのポインタ。
+			nsActor::Player *m_body = nullptr;		   //! NPCのボディクラスのポインタ。
+			VirtualInputAdapter* m_vInput = nullptr;   //! NPCの入力クラスのポインタ。
 		};
 	}
 }

@@ -10,13 +10,14 @@
 #include "Src/Actor/Character/Common/IState.h"
 #include "Src/Actor/Character/Common/ICharacter.h"
 
+
 namespace nsApp
 {
 	namespace nsActor {
 		class Player;
 	}
 
-
+	class VirtualInputAdapter;
 	class NPCBrain
 	{
 	public:
@@ -58,6 +59,15 @@ namespace nsApp
 		 */
 		void Init(nsActor::Player* outer);
 
+		/**
+		 * @brief VirtualInputAdapterをセットする処理。
+		 * @param virtualInput VirtualInputAdapterのポインタ。
+		 */
+		inline void SetVirtualInputAdapter(VirtualInputAdapter* virtualInput)
+		{
+			m_virtualInputAdapter = virtualInput;
+		}
+
 
 	/* ゲッター。*/
 	public:
@@ -73,11 +83,18 @@ namespace nsApp
 			return m_helpTarget;
 		}
 
+		/* 仮想コントローラーを取得する。*/
+		inline VirtualInputAdapter* GetVirtualInputAdapter() const
+		{
+			return m_virtualInputAdapter;
+		}
+
 
 	private:
 		nsActor::Player* m_outer = nullptr;                           //! ポインタを持つ対象。
-		nsActor::Player* m_helpTarget = nullptr;                    //! 助ける対象。
+		nsActor::Player* m_helpTarget = nullptr;                      //! 助ける対象。
 		nsState::StateMachine<NPCBrain>* m_npcStateMachine = nullptr; //! NPCの状態を管理するステートマシン。
+		VirtualInputAdapter* m_virtualInputAdapter = nullptr;         //! VirtualInputAdapterのポインタ。
 
 
 	private:

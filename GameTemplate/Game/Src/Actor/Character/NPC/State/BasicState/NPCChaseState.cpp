@@ -8,6 +8,7 @@
 #include "Src/Actor/Character/NPC/State/AttackState/NPCHammerAttackState.h"
 #include "Src/Actor/Character/NPC/State/AttackState/NPCWandAttackState.h"
 #include "Src/Actor/Character/NPC/State/AttackState/NPCTwinGunAttackState.h"
+#include "Src/Actor/Character/Player/InputSystem/VirtualInputAdapter.h"
 
 namespace
 {
@@ -26,8 +27,7 @@ namespace nsApp
 			m_brain = static_cast<NPCBrain*>(m_owner);
 			m_body = m_brain->GetBody();
 			if(m_body)
-				m_input = &m_body->GetInputClass();
-
+				m_vInput = m_brain->GetVirtualInputAdapter();
 		}
 
 
@@ -38,7 +38,7 @@ namespace nsApp
 
 
 			/* Playerクラスを参照できているかチェック。*/
-			if (!m_body || !m_input)
+			if (!m_body || !m_vInput)
 				return;
 
 			/* 救出対象がいれば救出行動を優先する。*/
@@ -62,14 +62,14 @@ namespace nsApp
 			{
 				/* 距離が遠ければ近づく。*/
 				m_difference.Normalize();
-				m_input->SetVirtualController(m_difference.x, m_difference.z);
+				m_vInput->SetLStick(m_difference.x, m_difference.z);
 			}
 
 			else
 			{
 				/* 近づくとYボタンで救助。*/
-				m_input->SetVirtualController(0.0f, 0.0f);
-				m_input->SetVirtualButtonY(true);
+				m_vInput->SetLStick(0.0f, 0.0f);
+				m_vInput->SetButton(enButtonY,true);
 			}
 			return true;
 		}
@@ -95,12 +95,12 @@ namespace nsApp
 			{
 				/* 距離が遠ければ近づく */
 				m_difference.Normalize();
-				m_input->SetVirtualController(m_difference.x, m_difference.z);
+				m_vInput->SetLStick(m_difference.x, m_difference.z);
 			}
 			else
 			{
 				/* 近づいたら立ち止まって攻撃ステートへ遷移 */
-				m_input->SetVirtualController(0.0f, 0.0f);
+				m_vInput->SetLStick(0.0f, 0.0f);
 				TransitionToAttackState();
 			}
 		}

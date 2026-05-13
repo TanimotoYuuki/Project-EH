@@ -75,24 +75,24 @@ namespace nsApp
 
 		protected:
 			/* 共通インスタンス。*/
-			nsApp::NPCBrain* m_npcBrain = nullptr;		 //! NPCの思考部分を管理するクラス。
-			nsActor::Player* m_getBody = nullptr;		 //! プレイヤーのインスタンス。
-			PlayerInput* m_npcInput = nullptr;			 //! プレイヤーの入力クラスのインスタンス。
+			nsApp::NPCBrain* m_npcBrain = nullptr;		   //! NPCの思考部分を管理するクラス。
+			nsActor::Player* m_getBody = nullptr;		   //! プレイヤーのインスタンス。
+			VirtualInputAdapter* m_virtualInput = nullptr; //! 仮想コントローラー。
 
 
 		protected:
-			int m_attackTimer = 0;					     //! 攻撃のタイマー。
-			int m_randomPattern = 0;    				 //! 攻撃パターンの乱数を保存する変数。
+			int m_attackTimer = 0;					       //! 攻撃のタイマー。
+			int m_randomPattern = 0;    				   //! 攻撃パターンの乱数を保存する変数。
 
-			float m_distance = 0.0f;					 //! ターゲットとの距離。
-			float m_stickX = 0.0f;					     //! スティックのX軸の値。
-			float m_stickZ = 0.0f;						 //! スティックのZ軸の値。
+			float m_distance = 0.0f;					   //! ターゲットとの距離。
+			float m_stickX = 0.0f;					       //! スティックのX軸の値。
+			float m_stickZ = 0.0f;						   //! スティックのZ軸の値。
 
-			bool m_isAttacking = false;					 //! ターゲットの方を向いているか。
+			bool m_isAttacking = false;					   //! ターゲットの方を向いているか。
 
-			Vector3 m_diff = Vector3::Zero;				 //! ターゲットとの位置の差分。
-			Vector3 m_pushBakeDirection = Vector3::Zero; //! ターゲットとの位置の差分を元にした押し返す方向。
-			Vector3 m_currentPosition = Vector3::Zero;   //! NPCの現在の位置。
+			Vector3 m_diff = Vector3::Zero;				   //! ターゲットとの位置の差分。
+			Vector3 m_pushBakeDirection = Vector3::Zero;   //! ターゲットとの位置の差分を元にした押し返す方向。
+			Vector3 m_currentPosition = Vector3::Zero;     //! NPCの現在の位置。
 		};
 	}
 }
