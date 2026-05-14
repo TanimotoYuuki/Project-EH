@@ -1,12 +1,13 @@
 ﻿#include "stdafx.h"
 #include "NPCWandAttackState.h"
 #include "Src/Actor/Character/NPC/State/BasicState/NPCChaseState.h"
-#include "Src/Actor/Character/Player/Player.h"
+#include "Src/Actor/Character/NPC/State/AttackState/NPCAttackBaseState.h"
+#include "Src/Actor/Character/Player/InputSystem/VirtualInputAdapter.h"
 
 namespace
 {
 	/* 距離・間合い関連 */
-	const auto CHASE_TRANSITION_DISTANCE = 200.0f; //! 敵がこの距離より離れたら追跡ステートへ戻る（杖は長めに設定）
+	const auto CHASE_TRANSITION_DISTANCE = 300.0f; //! 敵がこの距離より離れたら追跡ステートへ戻る（杖は長めに設定）
 	const auto RETREAT_DISTANCE = 100.0f;          //! 攻撃後のクールタイム中に、この距離より近ければ後ろに下がる（杖は遠目）
 	const auto CLIPPING_LIMIT_DISTANCE = 40.0f;    //! めり込みを防止する限界距離（見えない壁）
 
@@ -30,15 +31,11 @@ namespace nsApp
 		void NPCWandAttackState::Enter()
 		{
 			/* キャストとキャッシュの取得。*/
-			m_brain = static_cast<NPCBrain*>(m_owner);
-			m_body = m_brain->GetBody();
-			m_input = &m_body->GetInputClass();
+			NPCAttackBaseState::Enter();
 
-			/* タイマーの初期化。*/
-			m_attackTimer = 0;
 
 			/* 思考ロジック：HPが半分以下なら回復魔法、それ以外は魔法か空中攻撃 */
-			if (m_body->GetCharacterStatus().hp.currentHP <= (m_body->GetCharacterStatus().hp.maxHP / 2))
+			if (m_getBody->GetCharacterStatus().hp.currentHP <= (m_getBody->GetCharacterStatus().hp.maxHP / 2))
 				m_currentPattern = NPCWandPattern::enMagicHeal;
 
 			else
@@ -51,10 +48,10 @@ namespace nsApp
 
 		void NPCWandAttackState::Update()
 		{
-			auto target = m_brain->SearchTarget();
+			auto target = m_npcBrain->SearchTarget();
 
 			/* 早期リターン。*/
-			if (!target || !m_body)
+			if (!target || !m_getBody)
 				return;
 
 			/* 距離を計算。*/
@@ -70,7 +67,6 @@ namespace nsApp
 			m_attackTimer++;
 
 			/* ベクトルの正規化と攻撃状態の判定。*/
-			m_diff.Normalize();
 			m_isAttacking = (m_attackTimer < ATTACK_DURATION);
 
 			/* 実行フロー。*/
@@ -84,14 +80,6 @@ namespace nsApp
 				Enter();
 		}
 
-
-		void NPCWandAttackState::Exit()
-		{
-			if (m_input) {
-				m_input->SetVirtualButtonB(false);
-				m_input->SetVirtualController(0.0f, 0.0f);
-			}
-		}
 
 		void NPCWandAttackState::ExecuteCurrentCombo()
 		{
@@ -111,71 +99,25 @@ namespace nsApp
 		void NPCWandAttackState::ExecuteMagicAttack()
 		{
 			if (m_attackTimer == COMBO_FIRST_INPUT)
-				m_input->SetVirtualButtonRB1(true);
+				m_virtualInput->SetButton(enButtonRB1,true);
 		}
 
 
 		void NPCWandAttackState::ExecuteMagicHeal()
 		{
 			if (m_attackTimer == COMBO_FIRST_INPUT)
-				m_input->SetVirtualButtonRT(true);
+				m_virtualInput->SetButton(enButtonRB2,true);
 		}
 
 
 		void NPCWandAttackState::ExecuteMeleeAir()
 		{
 			if (m_attackTimer == COMBO_FIRST_INPUT)
-				m_input->SetVirtualButtonA(true);
+				m_virtualInput->SetButton(enButtonA,true);
 
 			if (m_attackTimer == COMBO_AIR_INPUT)
-				m_input->SetVirtualButtonB(true);
+				m_virtualInput->SetButton(enButtonB,true);
 		}
-
-
-		void NPCWandAttackState::ResetVirtualInputs()
-		{
-			m_input->SetVirtualButtonA(false);    //! Aボタン。
-			m_input->SetVirtualButtonB(false);    //! Bボタン。
-			m_input->SetVirtualButtonX(false);    //! Xボタン。
-			m_input->SetVirtualButtonLB1(false);  //! LB1ボタン。
-			m_input->SetVirtualButtonLB2(false);  //! LB2ボタン。
-			m_input->SetVirtualButtonRB1(false);  //! RB1ボタン。
-			m_input->SetVirtualButtonRT(false);   //! RTボタン。
-		}
-
-
-		void NPCWandAttackState::PreventClipping(nsActor::Sandbag* target)
-		{
-			/* 早期リターン。*/
-			if (m_distance >= CLIPPING_LIMIT_DISTANCE || m_distance <= 0.0f)
-				return;
-
-			/* 距離の計算。*/
-			m_pushBackDir = m_body->GetPosition() - target->GetPosition();
-			m_pushBackDir.y = 0.0f;
-
-			/* ベクトルの正規化。*/
-			m_pushBackDir.Normalize();
-
-			/* めり込んだ分だけ座標を強制的に外側へ押し戻す。*/
-			m_currentPosition = m_body->GetPosition();
-			m_currentPosition.x += m_pushBackDir.x * (CLIPPING_LIMIT_DISTANCE - m_distance);
-			m_currentPosition.z += m_pushBackDir.z * (CLIPPING_LIMIT_DISTANCE - m_distance);
-
-			/* キャラクターコントローラーとプレイヤーの位置を更新。*/
-			m_body->GetCharacterController().SetPosition(m_currentPosition);
-			m_body->SetPosition(m_currentPosition);
-		}
-
-
-		void NPCWandAttackState::UpdateFacingDirection()
-		{
-			if (m_isAttacking) {
-				m_body->SetAngle(m_diff.x > 0.0f ? FACING_ANGLE_RIGHT : FACING_ANGLE_LEFT);
-				m_body->SetForwardVector(m_diff.x > 0.0f ? Vector3::Right : Vector3::Left);
-			}
-		}
-
 
 		void NPCWandAttackState::UpdateMovement()
 		{
@@ -183,7 +125,7 @@ namespace nsApp
 			m_stickX = m_isAttacking ? 0.0f : (m_distance < RETREAT_DISTANCE ? -m_diff.x : 0.0f);
 			m_stickZ = m_isAttacking ? 0.0f : (m_distance < RETREAT_DISTANCE ? -m_diff.z : 0.0f);
 
-			m_input->SetVirtualController(m_stickX, m_stickZ);
+			m_virtualInput->SetLStick(m_stickX, m_stickZ);
 		}
 
 

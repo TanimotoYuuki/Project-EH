@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 /**
 * @file Game.h
@@ -42,7 +42,7 @@ namespace nsApp
 			/* コンストラクタとデストラクタ。*/
 			Game() = default;
 			~Game();
-
+			
 
 		public:
 			/* サイクル。*/

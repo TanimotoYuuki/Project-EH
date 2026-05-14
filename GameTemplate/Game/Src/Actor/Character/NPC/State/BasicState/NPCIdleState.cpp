@@ -1,6 +1,7 @@
 ﻿#include "stdafx.h"
 #include "NPCIdleState.h"
-#include "Src/Actor/Character/NPC/State/BasicState/NPCChaseState.h" 
+#include "Src/Actor/Character/NPC/State/BasicState/NPCChaseState.h"
+#include "Src/Actor/Character/Player/InputSystem/VirtualInputAdapter.h"
 #include "Src/Actor/Character/Player/Player.h"
 
 namespace nsApp
@@ -11,14 +12,11 @@ namespace nsApp
 		{
 			/* キャスト。*/
 			m_brain = static_cast<NPCBrain*>(m_owner);
-			/* 仮想コントローラーの入力をリセットする。*/
 			m_body = m_brain->GetBody();
-			if (m_body)
-			{
-				m_body->GetInputClass().SetVirtualController(0.0f, 0.0f);
-				m_body->GetInputClass().SetVirtualButtonB(false);
-				m_body->GetInputClass().SetVirtualButtonY(false);
-			}
+
+			m_vInput = m_brain->GetVirtualInputAdapter();
+			if (m_vInput)
+				m_vInput->Reset();
 		}
 
 

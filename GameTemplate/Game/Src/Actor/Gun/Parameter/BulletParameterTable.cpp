@@ -4,129 +4,46 @@
 
 namespace
 {
-	const auto UNIFIED_SPEED = 500.0f;
-	const auto UNIFIED_LIFE = 1.0f;
-
-	namespace nsNormalBullet
+	/**
+	 * @brief 弾丸の角度を作成する。
+	 * @param angleX X軸の角度。
+	 * @param angleY Y軸の角度。
+	 * @param angleZ Z軸の角度。
+	 * @return 回転行列の計算結果。
+     */
+	Quaternion MakeAngle(float angleX, float angleY, float angleZ)
 	{
-		const auto SPEED = UNIFIED_SPEED;			   //! 通常弾の速度。
-		const auto LIFE_TIME = UNIFIED_LIFE;	       //! 通常弾の生存時間。
-		const auto OFFSET_Y = 10.0f;				   //! 通常弾の生成位置のY軸オフセット。
-		const auto FORWARD_OFFSET = 10.0f;			   //! 通常弾の生成位置の前方オフセット。
+		/* 関数内でローカル変数を定義する。 */
+		Quaternion localMakeAngleX, localMakeAngleY, localMakeAngleZ;
+		localMakeAngleX.SetRotationDegX(angleX);						//! X軸の回転角を設定。
+		localMakeAngleY.SetRotationDegY(angleY);					    //! Y軸の回転角を設定。
+		localMakeAngleZ.SetRotationDegZ(angleZ);						//! Z軸の回転角を設定。
+
+		/* 最終的な回転行列の計算結果を戻り値とする。*/
+		return localMakeAngleX * localMakeAngleY * localMakeAngleZ;
 	}
 
-	namespace nsChargeBullet
-	{
-		const auto SPEED = UNIFIED_SPEED;				//! チャージ弾の速度。
-		const auto LIFE_TIME = UNIFIED_LIFE;		    //! チャージ弾の生存時間。
-		const auto OFFSET_Y = 10.0f;				    //! チャージ弾の生成位置のY軸オフセット。
-		const auto FORWARD_OFFSET = 10.0f;				//! チャージ弾の生成位置の前方オフセット。
-	}
+	const auto UNIFIED_SPEED = 500.0f;								    //! 共通の射出速度。 
+	const auto UNIFIED_LIFE = 1.0f;									    //! 共通の描画時間。
+	const auto UNIFIED_SCALE = Vector3::One * 1.0f;						//! 共通のスケール。
 
-	namespace nsRushBullet
-	{
-		const auto SPEED = UNIFIED_SPEED;				 //! 突進弾の速度。
-		const auto LIFE_TIME = UNIFIED_LIFE;		     //! 突進弾の生存時間。
-		const auto OFFSET_Y = 10.0f;					 //! 突進弾の生成位置のY軸オフセット。
-		const auto FORWARD_OFFSET = 10.0f;				 //! 突進弾の生成位置の前方オフセット。
-	}
-
-	namespace nsEnExplosive
-	{
-		const auto SPEED = UNIFIED_SPEED;		         //! 爆発弾の速度。
-		const auto LIFE_TIME = UNIFIED_LIFE;		     //! 爆発弾の生存時間。
-		const auto OFFSET_Y = 20.0f;				     //! 爆発弾の生成位置のY軸オフセット。
-		const auto FORWARD_OFFSET = 30.0f;				 //! 爆発弾の生成位置の前方オフセット。
-	}
-
-	namespace nsAirialBullet
-	{
-		const auto SPEED = UNIFIED_SPEED;		         //! 空中弾の速度。
-		const auto LIFE_TIME = UNIFIED_LIFE;		     //! 空中弾の生存時間。
-		const auto OFFSET_Y = 12.0f;					 //! 空中弾の生成位置のY軸オフセット。
-		const auto FORWARD_OFFSET = 22.0f;			     //! 空中弾の生成位置の前方オフセット。
-	}
-
-	namespace nsDashBullet
-	{
-		const auto SPEED = UNIFIED_SPEED;				 //! ダッシュ弾の速度。
-		const auto LIFE_TIME = UNIFIED_LIFE;		     //! ダッシュ弾の生存時間。
-		const auto OFFSET_Y = 8.0f;						 //! ダッシュ弾の生成位置のY軸オフセット。
-		const auto FORWARD_OFFSET = 18.0f;				 //! ダッシュ弾の生成位置の前方オフセット。
-	}
+	const auto BULLET_ANGLE = MakeAngle(0.0f, 0.0f, -90.0f);            // ! 弾丸の基本的な角度。モデルの向きに合わせて設定。
+	const auto HEAVY_ANGLE = MakeAngle(90.0f, 0.0f, 0.0f);
 }
+
 
 namespace nsApp
 {
 	/* 各弾丸のパラメータを設定する。*/
 	const std::unordered_map<BulletType, BulletParameter> BulletParameterTable::m_bulletParameterTable =
 	{
-		/* 通常弾。*/
-		{ 
-			BulletType::enNormal, 
-		    {
-			    nsNormalBullet::SPEED, 
-				nsNormalBullet::LIFE_TIME, 
-				nsNormalBullet::OFFSET_Y, 
-				nsNormalBullet::FORWARD_OFFSET 
-	        }
-		},
-
-		/* チャージ弾。*/
-		{ 
-			BulletType::enCharge,    
-		    {
-				nsChargeBullet::SPEED,
-				nsChargeBullet::LIFE_TIME,
-				nsChargeBullet::OFFSET_Y,
-			    nsChargeBullet::FORWARD_OFFSET
-	        }
-		},
-
-		/* 突進弾。*/
-		{
-			BulletType::enRush,     
-		    {
-				nsRushBullet::SPEED,
-				nsRushBullet::LIFE_TIME, 
-				nsRushBullet::OFFSET_Y,
-				nsRushBullet::FORWARD_OFFSET 
-	        }
-		},
-
-		/* 爆発弾。*/
-		{
-			BulletType::enExplosive, 
-		    {
-				nsEnExplosive::SPEED,
-				nsEnExplosive::LIFE_TIME,
-				nsEnExplosive::OFFSET_Y, 
-				nsEnExplosive::FORWARD_OFFSET
-	        }
-		},
-
-		/* 空中弾。*/
-		{ 
-			BulletType::enAirial,  
-		    {
-				nsAirialBullet::SPEED,
-				nsAirialBullet::LIFE_TIME, 
-				nsAirialBullet::OFFSET_Y,
-				nsAirialBullet::FORWARD_OFFSET 
-	        }
-		},
-
-		/* ダッシュ弾。*/
-		{ 
-			BulletType::enDash,      
-		    {
-				nsDashBullet::SPEED,
-				nsDashBullet::LIFE_TIME,
-				nsDashBullet::OFFSET_Y, 
-				nsDashBullet::FORWARD_OFFSET 
-	        }
-		}
-	};
+		{ BulletType::enNormal,    { BulletType::enNormal,    UNIFIED_SPEED, UNIFIED_LIFE, 10.0f, 15.0f, 10.0f, 10.0f, UNIFIED_SCALE, BULLET_ANGLE, GetModelPath("NormalBullet") } },
+		{ BulletType::enCharge,    { BulletType::enCharge,    UNIFIED_SPEED, UNIFIED_LIFE, 30.0f, 20.0f, 10.0f, 10.0f, UNIFIED_SCALE, BULLET_ANGLE, GetModelPath("ChargeBullet") } },
+		{ BulletType::enRush,      { BulletType::enRush,      UNIFIED_SPEED, UNIFIED_LIFE, 8.0f,  15.0f, 10.0f, 10.0f, UNIFIED_SCALE, BULLET_ANGLE, GetModelPath("NormalBullet") } },
+		{ BulletType::enExplosive, { BulletType::enExplosive, UNIFIED_SPEED, UNIFIED_LIFE, 50.0f, 40.0f, 20.0f, 30.0f, UNIFIED_SCALE, HEAVY_ANGLE,  GetModelPath("ExplosionBullet") } },
+		{ BulletType::enAirial,    { BulletType::enAirial,    UNIFIED_SPEED, UNIFIED_LIFE, 10.0f, 15.0f, 12.0f, 22.0f, UNIFIED_SCALE, BULLET_ANGLE, GetModelPath("AirBullet") } },
+		{ BulletType::enDash,      { BulletType::enDash,      UNIFIED_SPEED, UNIFIED_LIFE, 15.0f, 20.0f, 8.0f,  18.0f, UNIFIED_SCALE, BULLET_ANGLE, GetModelPath("DashBullet") } }
+	}; 
 
 	const BulletParameter& BulletParameterTable::GetParameter(BulletType type)
 	{
@@ -139,4 +56,6 @@ namespace nsApp
 
 		return m_bulletParameterTable.at(BulletType::enNormal);
 	}
+
+
 }

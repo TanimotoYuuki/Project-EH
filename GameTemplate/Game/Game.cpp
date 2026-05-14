@@ -41,7 +41,7 @@ namespace nsApp
 			DeleteGO(m_backGround);
 			DeleteGO(m_camera);
 			DeleteGO(m_player);
-
+		  DeleteGO(m_boss);
 			DeleteGO(m_gameClearDirection);
 			DeleteGO(m_gameTimeUpDirection);
 			DeleteGO(m_gameOverDirection);

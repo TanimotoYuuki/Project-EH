@@ -59,7 +59,6 @@
     <ClCompile Include="system\system.cpp">
       <Filter>system</Filter>
     </ClCompile>
-    <ClCompile Include="Game.cpp" />
     <ClCompile Include="Src\Actor\Stage\Stage.cpp">
       <Filter>Src\Actor\Stage</Filter>
     </ClCompile>
@@ -216,16 +215,19 @@
     <ClCompile Include="Src\Actor\Character\NPC\State\AttackState\NPCHammerAttackState.cpp" />
     <ClCompile Include="Src\Actor\Character\NPC\State\AttackState\NPCWandAttackState.cpp" />
     <ClCompile Include="Src\Actor\Gun\Register\BulletModelRegister.cpp" />
-    <ClCompile Include="Src\Actor\Gun\Bullet\NormalBullet.cpp" />
-    <ClCompile Include="Src\Actor\Gun\Bullet\ChargeBullet.cpp" />
-    <ClCompile Include="Src\Actor\Gun\Bullet\RushBullet.cpp" />
-    <ClCompile Include="Src\Actor\Gun\Bullet\DashBullet.cpp" />
-    <ClCompile Include="Src\Actor\Gun\Bullet\HeavyBullett.cpp" />
-    <ClCompile Include="Src\Actor\Gun\Bullet\AirBullet.cpp" />
     <ClCompile Include="Src\Actor\Gun\Parameter\BulletParameterTable.cpp" />
     <ClCompile Include="Src\Actor\Gun\Factory\BulletFactory.cpp" />
     <ClCompile Include="Src\Actor\Gun\Shooter\GunShooter.cpp" />
     <ClCompile Include="Src\Effect\EffectListener.cpp" />
+    <ClCompile Include="Game2.cpp" />
+    <ClCompile Include="Src\Actor\Character\NPC\State\AttackState\NPCAttackBaseState.cpp" />
+    <ClCompile Include="Src\Actor\Gun\Bullet\IGunBullet.cpp" />
+    <ClCompile Include="Src\Actor\Magic\Parameter\MagicParameter.cpp" />
+    <ClCompile Include="Src\Actor\Magic\Parameter\MagicParameterTable.cpp" />
+    <ClCompile Include="Src\Actor\Magic\Factory\MagicFactory.cpp" />
+    <ClCompile Include="Src\Actor\Character\NPC\State\AttackState\NPCTwinGunAttackState.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\InputSystem\VirtualInputAdapter.cpp" />
+    <ClCompile Include="PlayerControlerHub.cpp" />
     <ClCompile Include="Src\Debug\Sandbag.cpp" />
     <ClCompile Include="BossRoarState.cpp" />
   </ItemGroup>
@@ -234,7 +236,6 @@
     <ClInclude Include="system\system.h">
       <Filter>system</Filter>
     </ClInclude>
-    <ClInclude Include="Game.h" />
     <ClInclude Include="Src\Actor\Stage\StageData.h">
       <Filter>Src\Actor\Stage</Filter>
     </ClInclude>
@@ -404,18 +405,22 @@
     <ClInclude Include="Src\Actor\Character\NPC\State\AttackState\NPCWandAttackState.h" />
     <ClInclude Include="Src\Actor\Gun\Bullet\IGunBullet.h" />
     <ClInclude Include="Src\Actor\Gun\Register\BulletModelRegister.h" />
-    <ClInclude Include="Src\Actor\Gun\Bullet\NormalBullet.h" />
-    <ClInclude Include="Src\Actor\Gun\Bullet\ChargeBullet.h" />
-    <ClInclude Include="Src\Actor\Gun\Bullet\RushBullet.h" />
-    <ClInclude Include="Src\Actor\Gun\Bullet\DashBullet.h" />
-    <ClInclude Include="Src\Actor\Gun\Bullet\HeavyBullett.h" />
-    <ClInclude Include="Src\Actor\Gun\Bullet\AirBullet.h" />
     <ClInclude Include="Src\Actor\Gun\Parameter\BulletParameterTable.h" />
     <ClInclude Include="Src\Actor\Gun\Factory\BulletFactory.h" />
     <ClInclude Include="Src\Actor\Gun\Shooter\BulletFireRequest.h" />
     <ClInclude Include="Src\Actor\Gun\Shooter\IBulletFireListener.h" />
     <ClInclude Include="Src\Actor\Gun\Parameter\BulletParameter.h" />
     <ClInclude Include="Src\Effect\EffectListener.h" />
+    <ClInclude Include="Game2.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\State\AttackState\NPCAttackBaseState.h" />
+    <ClInclude Include="Src\Actor\Magic\Parameter\MagicParameter.h" />
+    <ClInclude Include="Src\Actor\Magic\Parameter\MagicParameterTable.h" />
+    <ClInclude Include="Src\Actor\Magic\Factory\MagicFactory.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\State\AttackState\NPCTwinGunAttackState.h" />
+    <ClInclude Include="Src\Actor\Character\Player\InputSystem\IInputDevice.h" />
+    <ClInclude Include="Src\Actor\Character\Player\InputSystem\GamePadInputAdapter.h" />
+    <ClInclude Include="Src\Actor\Character\Player\InputSystem\VirtualInputAdapter.h" />
+    <ClInclude Include="PlayerControlerHub.h" />
     <ClInclude Include="Src\Debug\Sandbag.h" />
     <ClInclude Include="BossRoarState.h" />
   </ItemGroup>

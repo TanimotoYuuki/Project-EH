@@ -9,6 +9,10 @@
 
 namespace nsApp
 {
+	/**
+	 * @struct BulletFireRequest
+	 * @brief 発射する弾丸のリクエスト情報をまとめる構造体。
+	 */
 	struct BulletFireRequest
 	{
 		BulletType kind = BulletType::enNone; 	   //! 発射する弾丸の種類。

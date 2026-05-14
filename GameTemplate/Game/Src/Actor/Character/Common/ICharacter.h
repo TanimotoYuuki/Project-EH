@@ -61,6 +61,21 @@ namespace nsApp
 			virtual void Render(RenderContext& rc) override;
 
 
+		public:
+			/* 
+			 * @brief ダメージを受け取る処理。
+			 * @param damage 受けるダメージ量。
+			 */
+			virtual void ApplyDamage(int damage)
+			{
+				m_characterStatus.hp.currentHP -= damage;
+
+				/* 値がマイナスにならないように補正。*/
+				if (m_characterStatus.hp.currentHP < 0)
+					m_characterStatus.hp.currentHP = 0;
+			}
+
+
 		/* セッター。*/
 		public:
 			/* ヒットストップを設定。*/

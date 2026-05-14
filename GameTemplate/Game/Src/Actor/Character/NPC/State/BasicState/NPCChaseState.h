@@ -13,10 +13,8 @@
 
 namespace nsApp
 {
-	namespace nsActor
-	{
+	namespace nsActor {
 		class Player;
-		class Sandbag;
 	}
 
 	namespace nsState
@@ -49,15 +47,24 @@ namespace nsApp
 			 * @brief 距離をつめる対象を設定する。
 			 * @param target: 距離をつめる対象。
 			 */
-			void ExecuteChaseAction(nsActor::Sandbag* target);
+			void ExecuteChaseAction(nsActor::ICharacter* target);
+
 
 			/* 攻撃ステートへの遷移を関数化。*/
 			void TransitionToAttackState();
 
-			/* 距離計算メソッド。*/
+
+			/* 
+			 * @brief 距離計算メソッド。
+			 * @param targetObject: 距離を計算する対象。
+			 */
 			inline void ComputeDistance(nsActor::ICharacter* targetObject)
 			{
+				/* 距離の計算。*/
 				m_difference = targetObject->GetPosition() - m_body->GetPosition();
+				/* y軸は加味しない。*/
+				m_difference.y = 0.0f;
+				/* 距離ベクトルの長さを保存する。*/
 				m_distance = m_difference.Length();
 			}
 
@@ -65,7 +72,7 @@ namespace nsApp
 		private:
 			NPCBrain* m_brain = nullptr;			  //! NPCの親クラスのポインタ。
 			nsActor::Player* m_body = nullptr;	      //! NPCのボディクラスのポインタ。
-			PlayerInput* m_input = nullptr;			  //! NPCの入力クラスのポインタ。
+			VirtualInputAdapter* m_vInput = nullptr;  //! NPCの入力クラスのポインタ。
 
 
 		private:

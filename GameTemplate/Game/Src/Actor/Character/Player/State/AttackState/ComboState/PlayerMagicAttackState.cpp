@@ -20,6 +20,8 @@ namespace nsApp
 
 			/* “–‚½‚è”»’è‚ð•t—^B*/
 			m_player->GetWeaponHitDetection().Enable();
+
+			m_attackTimer++;
 		}
 
 

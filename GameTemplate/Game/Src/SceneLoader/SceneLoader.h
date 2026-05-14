@@ -88,6 +88,7 @@ namespace nsApp
 		*  @brief インゲーム選択シーンクラス。
 		*/
 		class Game;
+		class Game2;
 		class GameClearDirection;
 		class InGameScene : public IScene
 		{
@@ -100,7 +101,8 @@ namespace nsApp
 			void Update() override;/*更新処理。*/
 
 		private:/*メンバ変数。*/
-			Game* m_game = nullptr;/*インゲーム用のインスタンス。*/
+//			Game* m_game = nullptr;/*インゲーム用のインスタンス。*/
+			Game2* m_game2 = nullptr;/*インゲーム用のインスタンス。*/
 			GameClearDirection* m_gameClearDirection = nullptr;/*ゲームクリア演出用のインスタンス。*/
 			GameEndSelect* m_gameEndSelect = nullptr;/*ゲーム終了選択用のインスタンス。*/
 		};

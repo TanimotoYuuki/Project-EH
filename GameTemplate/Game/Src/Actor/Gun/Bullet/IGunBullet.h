@@ -1,12 +1,12 @@
 #pragma once
 /**
  * @file   IGunBullet.h
- * @brief  弾丸の親クラス。
+ * @brief  すべての弾丸の処理を統一したクラス。
  * @author Yamaguchi Hayato
- * @date 2026/04/30
  */
 
 #include "Src/Actor/Actor.h"
+#include "Src/Actor/Gun/Parameter/BulletParameter.h"
 
 namespace nsApp
 {
@@ -15,60 +15,62 @@ namespace nsApp
 		class IGunBullet : public Actor
 		{
 		public:
-			/* コンストラクタとデストラクタ。*/
 			IGunBullet() = default;
-			virtual ~IGunBullet() = default;
+			virtual ~IGunBullet();
+
+			/**
+			 * @brief 弾丸の初期化。パラメータを丸ごと受け取る。
+			 * @param param 弾丸のパラメータ。BulletParameter構造体でまとめて管理。
+			 * @param spawnPosition 弾丸の生成位置。プレイヤーの位置や向きから計算される。
+			 */
+			void Initialize(const BulletParameter& param, const Vector3& spawnPosition, const Vector3& forwardDirection);
 
 
 		public:
+			/* ライフサイクル。*/
+			bool Start() override
+			{
+				return true; 
+			}
+			void Update() override;
+			void Render(RenderContext& rc) override;
+
+
+		private:
 			/**
-			 * @brief 弾丸の初期化処理。
-			 * @param spawnPosition 弾丸のスポーン位置。
-			 * @param shotDirection 弾丸の発射方向。
-			 * @param speed 弾丸の速度。
-			 * @param lifeTime 弾丸の寿命。
+			 * @brief　弾丸がボスにヒットしたかを判定する関数。直接の球体判定と、すり抜け防止の線分判定の両方を行う。
+			 * @return 衝突判定を返す。
 			 */
-			virtual void InitializeBullet(const Vector3& spawnPosition, const Vector3& shotDirection, float speed, float lifeTime)
-			{
-				m_position = spawnPosition;
-				m_direction = shotDirection;
-				m_speed = speed;
-				m_lifeTime = lifeTime;
-			}
+			bool CheckHitBoss();
 
 
-		    /**
-		     * @brief 初期化処理。
-		     */
-			virtual bool Start() override { return false; };
+			void TargetMoving() {};
 
 
-		    /**
-		     * @brief 更新処理。 
-		     */
-			virtual void Update() override = 0; 
+		private:
+			BulletParameter m_param;									//! 弾丸のパラメータ。 
+			nsK2Engine::CollisionObject* m_bulletCollider = nullptr;    //! 弾丸の当たり判定オブジェクト。
+			std::unique_ptr<ModelRender> m_modelRender;					//! 弾丸のモデルレンダラー。
 
 
-		protected:
-			/*
-			 * @brief 弾丸の寿命時間を管理。
-			 */
-			bool CheckLifeTime()
-			{
-				m_lifeTime -= g_gameTime->GetFrameDeltaTime();
-				if (m_lifeTime <= 0)
-					return true;
+		private:
+			Vector3 m_position = Vector3::Zero;							//! 弾丸の現在位置。
+			Vector3 m_previousPosition = Vector3::Zero;					//! 弾丸の前フレームの位置。軌道計算に使用。
+			Vector3 m_velocity = Vector3::Zero;							//! 弾丸の速度ベクトル。
+			Vector3 m_bossPosition = Vector3::Zero;						//! ボスの位置。ヒット判定や軌道計算に使用。
+			Vector3 m_bulletTrajectory = Vector3::Zero;					//! 弾丸の軌道ベクトル。前フレームからの移動量。
+			Vector3 m_vectorToBossTarget = Vector3::Zero;				//! ボスへのベクトル。前フレームからボスへの距離を表す。
+			Vector3 m_closestPointOnTrajectory = Vector3::Zero;			//! 弾丸の軌道上の最も近い点。ボスへの距離計算に使用。
 
-				return false;
-			}
+			Quaternion m_angle = Quaternion::Identity;					//! 弾丸の回転角。モデルの向きに合わせて設定。
+			Quaternion m_direction = Quaternion::Identity;				//! 弾丸の向き。前方向ベクトルから計算される。
 
-
-		protected:
-			Vector3 m_position = Vector3::Zero;      //! 弾丸の位置。
-			Vector3 m_direction = Vector3::Zero;     //! 弾丸の発射方向。
-
-			float m_speed = 0.0f;                    //! 弾丸の速度。
-			float m_lifeTime = 0;                    //! 弾丸の寿命。
+			float m_currentLifeTime = 0.0f;								//! 弾丸の現在の寿命。初期化時にパラメータから設定され、時間経過で減少する。
+			float m_speedPerSecond = 0.0f;								//! 弾丸の速度。初期化時にパラメータから設定され、前方向ベクトルに乗算される。
+			float m_distanceToBoss = 0.0f;								//! ボスへの距離。ヒット判定に使用。
+			float m_trajectoryLengthSquared = 0.0f;						//! 弾丸の軌道の長さの二乗。軌道上の最も近い点を計算するために使用。
+			float m_closestPointRatio = 0.0f;							//! 弾丸の軌道上の最も近い点の位置を表す比率。0.0fは前フレームの位置、1.0fは現在の位置を表す。
+			float m_deltaTime = 0.0f;									//! フレームごとの時間差。Update関数内で計算され、軌道計算や寿命減少に使用される。
 		};
 	}
 }
