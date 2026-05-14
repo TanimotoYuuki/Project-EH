@@ -1,9 +1,9 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "BossAttackState.h"
 #include "Boss.h"
 #include <random>
 
-/*ŠeUŒ‚ƒXƒgƒ‰ƒeƒW[B*/
+/*å„æ”»æ’ƒã‚¹ãƒˆãƒ©ãƒ†ã‚¸ãƒ¼ã€‚*/
 #include "BiteAttackStrategy.h"
 #include "TailAttackStrategy.h"
 #include "FireAttackStrategy.h"
@@ -17,7 +17,7 @@ namespace nsApp
 			m_boss = static_cast<nsActor::Boss*>(m_owner);
 
 
-			/*ƒ‰ƒ“ƒ_ƒ€‚ÅUŒ‚‘I‘ğB*/
+			/*ãƒ©ãƒ³ãƒ€ãƒ ã§æ”»æ’ƒé¸æŠã€‚*/
 			static std::mt19937 gen(std::random_device{}());
 			std::uniform_int_distribution<> dist(0, 99);
 			int r = dist(gen);
@@ -35,7 +35,7 @@ namespace nsApp
 				m_strategy = std::make_unique<nsAI::FireAttackStrategy>();
 			}
 
-			/*UŒ‚ŠJnB*/
+			/*æ”»æ’ƒé–‹å§‹ã€‚*/
 			if (m_strategy)
 			{
 				m_strategy->Enter(m_boss);
@@ -52,13 +52,13 @@ namespace nsApp
 
 		void BossAttackState::Exit()
 		{
-			/*”O‚Ì‚½‚ß”jŠüB*/
+			/*å¿µã®ãŸã‚ç ´æ£„ã€‚*/
 			m_strategy.reset();
 		}
 
 		bool BossAttackState::RequestID(uint8_t& id)
 		{
-			/*UŒ‚I—¹‚µ‚½‚çIdle‚ÖB*/
+			/*æ”»æ’ƒçµ‚äº†ã—ãŸã‚‰Idleã¸ã€‚*/
 			if (m_strategy && m_strategy->IsEnd())
 			{
 				id = static_cast<uint8_t>(nsActor::BossStateID::enIdle);

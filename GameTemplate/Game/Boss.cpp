@@ -5,32 +5,46 @@
 #include "BossMoveState.h"
 #include "BossAttackState.h"
 #include "BossDamageState.h"
+#include "BossRoarState.h"
 #include "BossDethState.h"
 
 namespace
 {
 	const Vector3 START_POSITION{ 200.0,100.0f,0.0f };
 	const int BOSS_MAX_HP = 5000;
-	const float ROT_SPEED = 0.1f;
+	const float ROT_SPEED = 5.0f;
 }
 
 namespace nsApp
 {
 	namespace nsActor
 	{
-		/*ボスごとのオフセット設定テーブル。*/
+		/*ボスごとのベースオフセット。モデルの原点位置に合わせて調整。*/
 		const std::unordered_map<CharacterModelType, Vector3> BOSS_OFFSETS =
 		{
-			{CharacterModelType::GrayDragon,	Vector3(0.0f,10.0f,0.0f)},
-			{CharacterModelType::TutorialBoss,	Vector3(0.0f,50.0f,0.0f)},
-			{CharacterModelType::RedDragon,		Vector3(0.0f,45.0f,0.0f)},
-			{CharacterModelType::GreenDragon,	Vector3(0.0f,20.0f,0.0f)},
+			{CharacterModelType::GrayDragon,	Vector3(0.0f,0.0f,0.0f)},
+			{CharacterModelType::TutorialBoss,	Vector3(0.0f,0.0f,0.0f)},
+			{CharacterModelType::RedDragon,		Vector3(0.0f,0.0f,0.0f)},
+			{CharacterModelType::GreenDragon,	Vector3(0.0f,0.0,0.0f)},
 		};
+
+		/*ボスタイプを文字列に変換。*/
+		static const char* BossTypeToString(CharacterModelType bossType)
+		{
+			switch (bossType)
+			{
+			case CharacterModelType::GrayDragon:   return "GrayDragon";
+			case CharacterModelType::GreenDragon:  return "GreenDragon";
+			case CharacterModelType::RedDragon:    return "RedDragon";
+			case CharacterModelType::TutorialBoss: return "TutorialBoss";
+			default:                               return "TutorialBoss";
+			}
+		}
 
 		/*特定のステートの時だけ追加で浮かせるテーブル。*/
 		const std::unordered_map<BossStateID, Vector3> STATE_OFFSETS =
 		{
-			{BossStateID::enAttack,		Vector3(0.0f,25.0f,0.0f)},
+
 			{BossStateID::enDamage,		Vector3(0.0f,5.0f,0.0f)},
 		};
 
@@ -56,12 +70,12 @@ namespace nsApp
 
 			/*アニメーションの初期化。*/
 			m_BossAimation = std::make_unique<BossAnimation>();
-			m_BossAimation->Init("TutorialBoss");/*ここのモデルを変えたら下のキャラモデルも変更してね。*/
+			m_BossAimation->Init(BossTypeToString(m_bossType));
 
 			/*モデルの読み込み。*/
 			m_model.LoadCharacterModel
 			(
-				CharacterModelType::TutorialBoss,/*ここだよ。*/
+				m_bossType,
 				m_BossAimation->GetAnimationClips(),
 				(int)BossAnimationID::Max
 			);
@@ -155,8 +169,16 @@ namespace nsApp
 			/*プレイヤーの方向を向く処理。*/
 			UpdateRotation(g_gameTime->GetFrameDeltaTime());
 
-			/*座標反映。*/
-			m_position = m_BossController.GetPosition();
+			/*位置を固定。*/
+			if (m_isYLocked)
+			{
+				m_position.y = m_lockedYPosition;
+				m_BossController.SetPosition(m_position);
+			}
+			else
+			{
+				m_position = m_BossController.GetPosition();
+			}
 			/*z軸を固定。*/
 			m_position.z = 0.0f;
 
@@ -166,7 +188,7 @@ namespace nsApp
 			/*回転反映。*/
 			m_model.SettRotation(m_rotation);
 
-			Vector3 finalOffset = m_modelOffset;
+			Vector3 finalOffset = m_modelOffset + m_modelDynamicOffset;
 
 			auto it = STATE_OFFSETS.find((BossStateID)m_currentStateID);
 			if (it != STATE_OFFSETS.end())
@@ -183,24 +205,32 @@ namespace nsApp
 		/*プレイヤーの方向を向く処理。*/
 		void Boss::UpdateRotation(float deltaTime)
 		{
-			if (!m_target) return;
+			if (!m_target||m_target->IsDead()) return;
 
 			Vector3 toTarget = m_target->GetPosition() - m_position;
+			toTarget.y = 0.0f;
 
-			/*左右だけで判断。*/
-			if (toTarget.x > 0)
+			if (toTarget.LengthSq() < FLT_EPSILON)
 			{
-				m_forward = Vector3::Right;
+				return;
+			}
+
+			toTarget.Normalize();
+			m_forward = toTarget;
+
+			Quaternion targetRot;
+			targetRot.SetRotationYFromDirectionXZ(m_forward);
+
+			float rate = ROT_SPEED * deltaTime;
+			if (rate >= 1.0f)
+			{
+				m_rotation = targetRot;
 			}
 			else
 			{
-				m_forward = Vector3::Left;
+				Quaternion currentRot = m_rotation;
+				m_rotation.Slerp(rate, currentRot, targetRot);
 			}
-
-			Quaternion rot;
-			rot.SetRotationYFromDirectionXZ(m_forward);
-
-			m_rotation = rot;
 		}
 
 		/*噛みつき攻撃。*/ 
@@ -258,6 +288,8 @@ namespace nsApp
 			m_stateFactory[BossStateID::enMove] = []() {return new nsState::BossMoveState(); };
 			/*攻撃アニメーション。*/
 			m_stateFactory[BossStateID::enAttack] = []() {return new nsState::BossAttackState(); };
+			/*咆哮アニメーション。*/
+			m_stateFactory[BossStateID::enRoar] = []() {return new nsState::BossRoarState(); };
 			/*被弾アニメーション。*/
 			m_stateFactory[BossStateID::enDamage] = []() {return new nsState::BossDamageState(); };
 			/*死亡アニメーション。*/

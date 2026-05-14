@@ -231,6 +231,7 @@
     <ClCompile Include="BossDethState.cpp" />
     <ClCompile Include="BossIdleState.cpp" />
     <ClCompile Include="BossMoveState.cpp" />
+    <ClCompile Include="BossRoarState.cpp" />
     <ClCompile Include="FireAttackStrategy.cpp" />
     <ClCompile Include="Src\Effect\EffectListener.cpp" />
     <ClCompile Include="Src\Actor\Gun\Factory\BulletFactory.cpp" />
@@ -322,6 +323,7 @@
     <ClCompile Include="Title.cpp" />
     <ClCompile Include="Src\Actor\Character\Common\WeaponHitDetection.cpp" />
     <ClCompile Include="Src\UIAnimation\UIAnimation.cpp" />
+    <ClCompile Include="Src\Debug\Sandbag.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BiteAttackStrategy.h" />
@@ -332,8 +334,8 @@
     <ClInclude Include="BossDethState.h" />
     <ClInclude Include="BossIdleState.h" />
     <ClInclude Include="BossMoveState.h" />
+    <ClInclude Include="BossRoarState.h" />
     <ClInclude Include="FireAttackStrategy.h" />
-    <ClInclude Include="Game.h" />
     <ClInclude Include="IBossAttackStrategy.h" />
     <ClInclude Include="Src\Effect\EffectListener.h" />
     <ClInclude Include="Src\Actor\Gun\Shooter\BulletFireRequest.h" />
@@ -427,6 +429,7 @@
     <ClInclude Include="Title.h" />
     <ClInclude Include="Src\UIAnimation\UIAnimation.h" />
     <ClInclude Include="Src\Actor\Character\Common\WeaponHitDetection.h" />
+    <ClInclude Include="Src\Debug\Sandbag.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
