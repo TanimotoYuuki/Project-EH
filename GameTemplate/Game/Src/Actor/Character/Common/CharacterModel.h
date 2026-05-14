@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 /**
 * @file   CharacterModel.h
 * @brief  キャラクターモデル/アニメーションを管理するクラス。
@@ -37,7 +37,7 @@ namespace nsApp
 	};
 
 
-	class CharacterModel 
+	class CharacterModel
 	{
 	public:
 		/* コンストラクタとデストラクタ。*/
@@ -46,7 +46,7 @@ namespace nsApp
 
 
 	public:
-	    /* モデルを読み込む。
+		/* モデルを読み込む。
 		 * @param characterType モデルの種類をしているする。
 		 * @param animationClip アニメーションクリップの配列。
 		 * @param numClips      アニメーションクリップの数。
@@ -88,7 +88,7 @@ namespace nsApp
 		void Update();
 
 		/* アニメーションが再生終了したか。*/
-	    bool IsPlayAnimation()
+		bool IsPlayAnimation()
 		{
 			/* nullチェック。*/
 			if (m_characterModelRender != nullptr)
@@ -108,7 +108,7 @@ namespace nsApp
 
 		/* 取り出した回転行列データを手のMatrixデータに代入。*/
 		void AssignMatrixToHandData();
-	
+
 		/* */
 
 
@@ -129,7 +129,7 @@ namespace nsApp
 		}
 
 		/* キャラモデルの大きさを設定。*/
-	    inline void SetCharacterScale(const Vector3& scale)
+		inline void SetCharacterScale(const Vector3& scale)
 		{
 			if (m_characterModelRender)
 				m_characterModelRender->SetScale(scale);
@@ -143,7 +143,7 @@ namespace nsApp
 		}
 
 		/* 武器のずれを調整。*/
-		inline void SetWeaponOffset(const Vector3& offset) 
+		inline void SetWeaponOffset(const Vector3& offset)
 		{
 			m_weaponOffset = offset;
 		}
@@ -157,18 +157,18 @@ namespace nsApp
 		/* 武器の傾きを設定。*/
 		inline void SetWeaponAngle(const Quaternion offset)
 		{
-			m_weaponRotationOffset = offset;	
+			m_weaponRotationOffset = offset;
 		}
 
-		
 
-	/* ゲッター。*/
+
+		/* ゲッター。*/
 	public:
 		/* キャラモデルのファイルパスを格納。*/
 		inline const std::string GetCharacterModelFilePath(std::string filePath)
 		{
-			 std::string modelPath = m_characterModelFilePath + filePath + m_modelExtension;
-			 return modelPath;
+			std::string modelPath = m_characterModelFilePath + filePath + m_modelExtension;
+			return modelPath;
 		}
 
 		/*ボスモデルのファイルパスを格納。*/
@@ -188,7 +188,7 @@ namespace nsApp
 		* 指定したボーンのワールド行列を取得する。
 		* @param boneName 取得したいボーンの名前を指定する。
 		*/
-	    Matrix GetWorldMatrix(const wchar_t* boneName);
+		Matrix GetWorldMatrix(const wchar_t* boneName);
 
 		/* 武器の座標を取得。*/
 		inline const Vector3& GetWeaponPosition() const
@@ -197,7 +197,7 @@ namespace nsApp
 		}
 
 
-	private:	
+	private:
 		std::unordered_map<CharacterModelType, std::string> m_filePathList;		                                               //! モデルIDからファイルパスを文字列に変化。
 		std::unique_ptr<ModelRender> m_characterModelRender;                                                                   //! モデルを管理。
 		std::unique_ptr<ModelRender> m_weaponModelRender;                                                                      //! 武器モデルを管理。
@@ -229,5 +229,5 @@ namespace nsApp
 		Vector3 m_weaponOffset;                                                                                                //! 武器の位置のずれを管理する変数。
 		Vector3 m_offsetPosition;                                                                                              //! 武器の位置のずれを管理する変数。
 		Vector3 m_subWeaponOffset;                                                                                             //! サブ武器の位置のずれを管理する変数。
-	};	
+	};
 }

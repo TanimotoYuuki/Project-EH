@@ -1,18 +1,18 @@
-#pragma once
+﻿#pragma once
+
 /**
 * @file Game.h
 * @brief データの統合クラス。
 * @author All
-* @date 2026/03/23
+* @date 2026/05/08
 */
 
-#include "Level3DRender/LevelRender.h"
 
 namespace nsApp
 {
 	class Camera;
 	class GameEndSelect;
-	class PlayerGenerator;	
+	class PlayerGenerator;
 
 	namespace nsSound {
 		class SoundLister;
@@ -23,7 +23,7 @@ namespace nsApp
 	}
 
 	namespace nsActor {
-		class Sandbag;
+		class Player;
 		class Boss;
 	}
 
@@ -35,6 +35,7 @@ namespace nsApp
 		class GameClearDirection;
 		class GameTimeUpDirection;
 		class GameOverDirection;
+
 		class Game : public IGameObject
 		{
 		public:
@@ -47,7 +48,7 @@ namespace nsApp
 			/* サイクル。*/
 			bool Start();
 			void Update();
-			void Render(RenderContext& rc)override;
+			void Render(RenderContext& rc);
 
 
 		private:
@@ -56,7 +57,7 @@ namespace nsApp
 
 
 		public:
-			
+
 			/**
 			* @brief ゲームクリア演出のインスタンスの取得。
 			* @return ゲームクリア演出のインスタンス。
@@ -99,7 +100,6 @@ namespace nsApp
 			nsApp::Camera* m_camera = nullptr;
 			nsActor::Player* m_player = nullptr;
 			nsActor::Boss* m_boss = nullptr;
-			nsActor::Sandbag* m_sandbag = nullptr;
 			CharacterHP* m_characterHP = nullptr;
 			GameTimeLimit* m_gameTimeLimit = nullptr;
 			GameStartDirection* m_gameStartDirection = nullptr;
@@ -107,7 +107,6 @@ namespace nsApp
 			GameTimeUpDirection* m_gameTimeUpDirection = nullptr;
 			GameOverDirection* m_gameOverDirection = nullptr;
 			GameEndSelect* m_gameEndSelect = nullptr;
-			nsActor::Sandbag* m_sandbag = nullptr; //! サンドバッグ。
 			PlayerGenerator* m_generator = nullptr;
 		};
 	}

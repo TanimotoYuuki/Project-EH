@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "Game.h"
 #include "Src/Fade/Fade.h"
 
@@ -14,7 +14,6 @@
 
 #include "Src/Camera/Camera.h"
 #include "Src/Actor/Character/Player/Player.h"
-/*#include "Src/Debug/Sandbag.h"*/
 #include "Src/Sound/SoundLister.h"
 #include "Boss.h"
 #include "Src/Actor/Stage/BackGround.h"
@@ -42,17 +41,13 @@ namespace nsApp
 			DeleteGO(m_backGround);
 			DeleteGO(m_camera);
 			DeleteGO(m_player);
-			DeleteGO(m_boss);
-			/*DeleteGO(m_sandbag); */
 
-			DeleteGO(m_sandbag);
 			DeleteGO(m_gameClearDirection);
 			DeleteGO(m_gameTimeUpDirection);
 			DeleteGO(m_gameOverDirection);
 			DeleteGO(m_gameEndSelect);
 
 			delete m_generator;
-
 		}
 
 
@@ -72,12 +67,13 @@ namespace nsApp
 			m_camera = NewGO<Camera>(0, "camera");
 
 			PhysicsWorld::GetInstance()->EnableDrawDebugWireFrame();
-      
+
 			m_player = NewGO<nsActor::Player>(0, "player");
 
 			/*ボスを作成。*/
 			m_boss = NewGO<nsActor::Boss>(0, "boss");
-
+			/*ボスの種類を設定。*/
+			m_boss->SetBossType(CharacterModelType::TutorialBoss);
 			/*ボスにプレイヤーをターゲットとして教える。*/
 			m_boss->SetTarget(m_player);
 
@@ -94,7 +90,6 @@ namespace nsApp
 
 			/*フェードインに切り替える。*/
 			nsApp::nsFade::Fade::GetInstance()->ChangeFadeType(nsApp::nsFade::Fade::EnFadeType::enFadeType_FadeIn);
-			m_sandbag = NewGO<nsActor::Sandbag>(0, "Sandbag");
 
 			/* プレイアブルキャラを生成する。*/
 			SpawnPlayCharacter();
@@ -155,30 +150,6 @@ namespace nsApp
 					}
 				}
 			}
-
-			/*ゲームオーバー演出。*/
-			/*現在は左を入力することで演出を流すようにしている。*/
-			/*TODO:今後はキャラクター全員のHPが0になったら演出を流すようにする。*/
-			//if (m_gameOverDirection == nullptr)
-			//{
-			//	if (g_pad[0]->IsTrigger(enButtonLeft))
-			//	{
-			//		m_gameOverDirection = NewGO<GameOverDirection>(2, "gameOverDirection");
-			//		m_characterHP->Deactivate();
-			//		m_gameTimeLimit->Deactivate();
-			//	}
-			//}
-			//else
-			//{
-			//	if (m_gameEndSelect == nullptr)
-			//	{
-			//		if (m_gameOverDirection->IsDirectionFinished())
-			//		{
-			//			m_gameOverDirection->Deactivate();
-			//			m_gameEndSelect = NewGO<GameEndSelect>(2, "gameEndSelect");
-			//		}
-			//	}
-			//}
 
 			/* 現在のステージの更新を行う。*/
 			nsApp::nsStage::LoadStageData::GetInstance().Update();
