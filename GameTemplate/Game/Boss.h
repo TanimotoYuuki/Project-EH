@@ -142,6 +142,15 @@ namespace nsApp
 			/*ダメージを受けているか。*/
 			bool IsDamage();
 
+			/* 
+			 * @brief ダメージを受ける。
+			 * @param damage ダメージ量。
+			 */
+			inline void ApplyDamage(int damage)
+			{
+				ICharacter::ApplyDamage(damage);
+			}
+
 		private:
 			/*ステートの登録。*/
 			void RegisterState();

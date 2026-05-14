@@ -14,7 +14,22 @@ namespace nsApp
 	class BulletParameterTable
 	{
 	public:
+		/**
+		 * @brief 弾丸の種類に応じたパラメータを取得する。
+		 * @param kindBullet 弾丸の種類。
+		 * @return 弾丸のパラメータ。
+		 */
 		static const BulletParameter& GetParameter(BulletType kindBullet);
+
+		/**
+		 * @brief 弾丸のモデルファイルのパスを取得する。
+		 * @param name モデル名。
+		 * @return モデルファイルのパス。
+		 */
+		static inline std::string GetModelPath(const std::string& name)
+		{
+			return "Assets/modelData/Character/Weapon/" + name + ".tkm";
+		}
 
 
 	private:

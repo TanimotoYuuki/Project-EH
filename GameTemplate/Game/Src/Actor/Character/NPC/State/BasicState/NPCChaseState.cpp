@@ -1,17 +1,20 @@
 #include "stdafx.h"
 #include "NPCChaseState.h"
+#include "Boss.h"
 #include "Src/Actor/Character/NPC/State/BasicState/NPCIdleState.h"
 #include "Src/Actor/Character/Player/Player.h"
 
 #include "Src/Actor/Character/NPC/State/AttackState/NPCSwordAttackState.h"
 #include "Src/Actor/Character/NPC/State/AttackState/NPCHammerAttackState.h"
 #include "Src/Actor/Character/NPC/State/AttackState/NPCWandAttackState.h"
+#include "Src/Actor/Character/NPC/State/AttackState/NPCTwinGunAttackState.h"
+#include "Src/Actor/Character/Player/InputSystem/VirtualInputAdapter.h"
 
 namespace
 {
 	const auto HELP_RANGE = 80.0f;           //! 味方を救助可能な距離
-	const auto ATTACK_RANGE_MELEE = 60.0f;   //! 近接職（剣・ハンマー）が攻撃を開始する距離
-	const auto ATTACK_RANGE_MAGIC = 100.0f;  //! 遠距離職（杖）が攻撃を開始する距離
+	const auto ATTACK_RANGE_MELEE = 150.0f;   //! 近接職（剣・ハンマー）が攻撃を開始する距離
+	const auto ATTACK_RANGE_MAGIC = 250.0f;  //! 遠距離職（杖）が攻撃を開始する距離
 }
 
 namespace nsApp
@@ -24,8 +27,7 @@ namespace nsApp
 			m_brain = static_cast<NPCBrain*>(m_owner);
 			m_body = m_brain->GetBody();
 			if(m_body)
-				m_input = &m_body->GetInputClass();
-
+				m_vInput = m_brain->GetVirtualInputAdapter();
 		}
 
 
@@ -36,7 +38,7 @@ namespace nsApp
 
 
 			/* Playerクラスを参照できているかチェック。*/
-			if (!m_body || !m_input)
+			if (!m_body || !m_vInput)
 				return;
 
 			/* 救出対象がいれば救出行動を優先する。*/
@@ -60,20 +62,20 @@ namespace nsApp
 			{
 				/* 距離が遠ければ近づく。*/
 				m_difference.Normalize();
-				m_input->SetVirtualController(m_difference.x, m_difference.z);
+				m_vInput->SetLStick(m_difference.x, m_difference.z);
 			}
 
 			else
 			{
 				/* 近づくとYボタンで救助。*/
-				m_input->SetVirtualController(0.0f, 0.0f);
-				m_input->SetVirtualButtonY(true);
+				m_vInput->SetLStick(0.0f, 0.0f);
+				m_vInput->SetButton(enButtonY,true);
 			}
 			return true;
 		}
 
 
-		void NPCChaseState::ExecuteChaseAction(nsActor::Sandbag* target)
+		void NPCChaseState::ExecuteChaseAction(nsActor::ICharacter* target)
 		{
 			if (target == nullptr)
 			{
@@ -84,7 +86,7 @@ namespace nsApp
 
 			/* 武器に応じて攻撃開始距離を変える */
 			m_myWeapon = m_body->GetCurrentWeapon();
-			m_attackRange = (m_myWeapon == WeaponType::Wand) ? ATTACK_RANGE_MAGIC : ATTACK_RANGE_MELEE;
+			m_attackRange = (m_myWeapon == WeaponType::Wand || m_myWeapon == WeaponType::TwinGun) ? ATTACK_RANGE_MAGIC : ATTACK_RANGE_MELEE;
 
 			ComputeDistance(target);
 
@@ -93,12 +95,12 @@ namespace nsApp
 			{
 				/* 距離が遠ければ近づく */
 				m_difference.Normalize();
-				m_input->SetVirtualController(m_difference.x, m_difference.z);
+				m_vInput->SetLStick(m_difference.x, m_difference.z);
 			}
 			else
 			{
 				/* 近づいたら立ち止まって攻撃ステートへ遷移 */
-				m_input->SetVirtualController(0.0f, 0.0f);
+				m_vInput->SetLStick(0.0f, 0.0f);
 				TransitionToAttackState();
 			}
 		}
@@ -117,7 +119,10 @@ namespace nsApp
 			else if (m_myWeapon == WeaponType::Hammer)
 				m_stateMachine->ChangeState(new NPCHammerAttackState());
 
-			/* それ以外（剣など）の場合。*/
+			/* それ以外の場合。*/
+			else if (m_myWeapon == WeaponType::TwinGun)
+				m_stateMachine->ChangeState(new NPCTwinGunAttackState());
+
 			else
 				m_stateMachine->ChangeState(new NPCSwordAttackState());
 		}

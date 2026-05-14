@@ -20,6 +20,7 @@ namespace nsApp
 	public:
 		/**
 		 * @brief 弾丸が発射した瞬間にコール。
+		 * @param request 発射のリクエスト。
 		 */
 		virtual void OnBulletFired(const BulletFireRequest& request) = 0;
 	};

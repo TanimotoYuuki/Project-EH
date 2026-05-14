@@ -2,41 +2,39 @@
 
 /**
  * @file   NPCBrain.h
- * @brief  NPC‚Ìvl•”•ª‚ğŠÇ—‚·‚éƒNƒ‰ƒXB
- * @author Yamaguchi HayatoB
+ * @brief  NPCã®æ€è€ƒéƒ¨åˆ†ã‚’ç®¡ç†ã™ã‚‹ã‚¯ãƒ©ã‚¹ã€‚
+ * @author Yamaguchi Hayatoã€‚
  * @date   2026/04/27
  */
 
-#include "Src/Debug/Sandbag.h"
 #include "Src/Actor/Character/Common/IState.h"
-#include "Src/StateMachine/StateMachine.h"
+#include "Src/Actor/Character/Common/ICharacter.h"
 
 
 namespace nsApp
 {
 	namespace nsActor {
 		class Player;
-		class Sandbag;
 	}
 
-
+	class VirtualInputAdapter;
 	class NPCBrain
 	{
 	public:
-		/* ƒRƒ“ƒXƒgƒ‰ƒNƒ^‚ÆƒfƒXƒgƒ‰ƒNƒ^B*/
+		/* ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã¨ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã€‚*/
 		NPCBrain() = default;
 		virtual ~NPCBrain() = default;
 
 
 	public:
 		/**
-         * @brief XVˆ—B
+         * @brief æ›´æ–°å‡¦ç†ã€‚
          */
 		void Update();
 
 
 		/**
-		 * @brief vl‚ğØ‚è‘Ö‚¦‚éˆ—B
+		 * @brief æ€è€ƒã‚’åˆ‡ã‚Šæ›¿ãˆã‚‹å‡¦ç†ã€‚
 		 * @param 
 		 */
 		inline void ChangeState(nsState::IState<NPCBrain>* nextState)
@@ -47,45 +45,60 @@ namespace nsApp
 
 
 		/**
-         * @brief ƒ^[ƒQƒbƒg‚ğ’Tõ‚·‚éˆ—B
-         * @TODO: Œ»İ‚Ìƒ^[ƒQƒbƒg‚ÍƒeƒXƒgB
+         * @brief ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã‚’æ¢ç´¢ã™ã‚‹å‡¦ç†ã€‚
+         * @TODO: ç¾åœ¨ã®ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã¯ãƒ†ã‚¹ãƒˆã€‚
          */
-		nsActor::Sandbag* SearchTarget();
+		nsActor::ICharacter* SearchTarget();
 
 
-	/* ƒZƒbƒ^[B*/
+	/* ã‚»ãƒƒã‚¿ãƒ¼ã€‚*/
 	public:
 		/* 
- 	     * @brief ‰Šú‰»ˆ—B
-		 * param outer: ƒ|ƒCƒ“ƒ^‚ğ‚Â‘ÎÛB
+ 	     * @brief åˆæœŸåŒ–å‡¦ç†ã€‚
+		 * param outer: ãƒã‚¤ãƒ³ã‚¿ã‚’æŒã¤å¯¾è±¡ã€‚
 		 */
 		void Init(nsActor::Player* outer);
 
+		/**
+		 * @brief VirtualInputAdapterã‚’ã‚»ãƒƒãƒˆã™ã‚‹å‡¦ç†ã€‚
+		 * @param virtualInput VirtualInputAdapterã®ãƒã‚¤ãƒ³ã‚¿ã€‚
+		 */
+		inline void SetVirtualInputAdapter(VirtualInputAdapter* virtualInput)
+		{
+			m_virtualInputAdapter = virtualInput;
+		}
 
-	/* ƒQƒbƒ^[B*/
+
+	/* ã‚²ãƒƒã‚¿ãƒ¼ã€‚*/
 	public:
-		/* PlayerƒNƒ‰ƒX‚ğæ“¾‚·‚éB*/
+		/* Playerã‚¯ãƒ©ã‚¹ã‚’å–å¾—ã™ã‚‹ã€‚*/
 		inline nsActor::Player* GetBody() const
 		{
 			return m_outer;
 		}
 
-		/* •‚¯‚é‘ÎÛ‚ğæ“¾B*/
+		/* åŠ©ã‘ã‚‹å¯¾è±¡ã‚’å–å¾—ã€‚*/
 		inline nsActor::Player* GetHelpTarget() const
 		{
 			return m_helpTarget;
 		}
 
+		/* ä»®æƒ³ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼ã‚’å–å¾—ã™ã‚‹ã€‚*/
+		inline VirtualInputAdapter* GetVirtualInputAdapter() const
+		{
+			return m_virtualInputAdapter;
+		}
+
 
 	private:
-		nsActor::Player* m_outer = nullptr;                           //! ƒ|ƒCƒ“ƒ^‚ğ‚Â‘ÎÛB
-		nsActor::Player* m_helpTarget = nullptr;                    //! •‚¯‚é‘ÎÛB
-		nsActor::Sandbag* m_testTarget = nullptr;                     //! ƒ^[ƒQƒbƒgB
-		nsState::StateMachine<NPCBrain>* m_npcStateMachine = nullptr; //! NPC‚Ìó‘Ô‚ğŠÇ—‚·‚éƒXƒe[ƒgƒ}ƒVƒ“B
+		nsActor::Player* m_outer = nullptr;                           //! ãƒã‚¤ãƒ³ã‚¿ã‚’æŒã¤å¯¾è±¡ã€‚
+		nsActor::Player* m_helpTarget = nullptr;                      //! åŠ©ã‘ã‚‹å¯¾è±¡ã€‚
+		nsState::StateMachine<NPCBrain>* m_npcStateMachine = nullptr; //! NPCã®çŠ¶æ…‹ã‚’ç®¡ç†ã™ã‚‹ã‚¹ãƒ†ãƒ¼ãƒˆãƒã‚·ãƒ³ã€‚
+		VirtualInputAdapter* m_virtualInputAdapter = nullptr;         //! VirtualInputAdapterã®ãƒã‚¤ãƒ³ã‚¿ã€‚
 
 
 	private:
-		int m_attackIntervalTimer = 0;						          //! UŒ‚‚ÌƒCƒ“ƒ^[ƒoƒ‹ƒ^ƒCƒ}[B
+		int m_attackIntervalTimer = 0;						          //! æ”»æ’ƒã®ã‚¤ãƒ³ã‚¿ãƒ¼ãƒãƒ«ã‚¿ã‚¤ãƒãƒ¼ã€‚
 	};
 }
 

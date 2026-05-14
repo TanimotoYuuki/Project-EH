@@ -47,6 +47,8 @@ namespace nsApp
 			if (!m_player)
 				return;
 
+			m_attackTimer++;
+
 			if (m_attackTimer == FIRE_FRAME && m_player->GetCurrentWeapon() == WeaponType::TwinGun)
 				FireChargeBullet();
 

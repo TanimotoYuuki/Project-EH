@@ -39,7 +39,7 @@ namespace nsApp
 		 * @brief 渡されたマップを元にPlayerを生成する。
 		 * @param spawnDataList Player生成に必要なデータのリスト。
 		 */
-		void SpawnPlayers(const std::vector<PlayerSpawnData>& spawnDataList);
+		std::vector<nsActor::Player*> SpawnPlayers(const std::vector<PlayerSpawnData>& spawnDataList);
 
 
 	private:

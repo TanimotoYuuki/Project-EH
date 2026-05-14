@@ -8,6 +8,8 @@
 
 #include "Src/Actor/Character/Common/IState.h"
 #include "Src/Actor/Character/Player/Player.h"
+#include "Src/Actor/Magic/MagicProjectotile.h"
+#include "Src/Actor/Magic/Factory/MagicFactory.h"
 #include "Src/Actor/Character/Player/Component/ComboRouteTable.h"
 
 /** @def
@@ -51,6 +53,7 @@ namespace nsApp
 				m_attackTimer = timer;
 			}
 
+
 			/**
 			 * @brief 生成する弾丸を通知する。
 			 * @param request 弾丸の生成に必要な情報を格納する構造体。
@@ -73,6 +76,34 @@ namespace nsApp
 
 				/* GunShooterクラスに発射処理を依頼。*/
 				m_player->GetGunShooter().Fire(request);
+			}
+
+
+			/**
+			 * @brief 魔法の生成
+			 * @param type 生成する魔法の種類。
+			 * @param target 魔法のターゲット(デフォルト値で初期化済み)。
+			 * @detail プレイヤーの座標と向きを自動取得してセットするバージョン。
+			 */
+			inline void ConstructAndTransmitMagicRequest(nsActor::MagicType type, nsActor::ICharacter* target = nullptr)
+			{
+				m_spawnPosition = m_player->GetWeaponHitDetection().GetPosition();
+				m_forwardDirection = m_player->GetForwardVector();
+				MagicFactory::CreateMagicObject(type, m_spawnPosition, m_forwardDirection, target);
+			}
+
+
+			/**
+			 * @brief 魔法の生成
+			 * @param type 生成する魔法の種類。
+			 * @param customPos 魔法の生成位置を指定するための引数。
+			 * @param customDir 魔法の発射方向を指定するための引数。
+			 * @param target 魔法のターゲット(デフォルト値で初期化済み)。
+			 * @detail プレイヤーの座標と向きを使用せず、引数で指定した座標と向きで魔法を生成するバージョン。
+			 */
+			inline void ConstructAndTransmitMagicRequest(nsActor::MagicType type, const Vector3& customPos, const Vector3& customDir, nsActor::ICharacter* target = nullptr)
+			{
+				MagicFactory::CreateMagicObject(type, customPos, customDir, target);
 			}
 
 
