@@ -228,6 +228,8 @@
     <ClCompile Include="Src\Actor\Character\NPC\State\AttackState\NPCTwinGunAttackState.cpp" />
     <ClCompile Include="Src\Actor\Character\Player\InputSystem\VirtualInputAdapter.cpp" />
     <ClCompile Include="PlayerControlerHub.cpp" />
+    <ClCompile Include="Src\Debug\Sandbag.cpp" />
+    <ClCompile Include="BossRoarState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -419,5 +421,7 @@
     <ClInclude Include="Src\Actor\Character\Player\InputSystem\GamePadInputAdapter.h" />
     <ClInclude Include="Src\Actor\Character\Player\InputSystem\VirtualInputAdapter.h" />
     <ClInclude Include="PlayerControlerHub.h" />
+    <ClInclude Include="Src\Debug\Sandbag.h" />
+    <ClInclude Include="BossRoarState.h" />
   </ItemGroup>
 </Project>

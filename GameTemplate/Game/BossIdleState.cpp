@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "BossIdleState.h"
 #include "Boss.h"
+#include <random>
 
 
 namespace
@@ -37,7 +38,16 @@ namespace nsApp
 			/*ˆê’èŠÔŒã‚ÉMove‚ÖˆÚsB*/
 			if (m_timer <= 0.0f)
 			{
-				id = static_cast<uint8_t>(nsActor::BossStateID::enMove);
+				static std::mt19937 gen(std::random_device{}());
+				std::uniform_int_distribution<int> dist(0, 1);
+				if (dist(gen) == 0)
+				{
+					id = static_cast<uint8_t>(nsActor::BossStateID::enMove);
+				}
+				else
+				{
+					id = static_cast<uint8_t>(nsActor::BossStateID::enRoar);
+				}
 				return true;
 			}
 			return false;

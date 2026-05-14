@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "BiteAttackStrategy.h"
 #include "Boss.h"
 
@@ -8,16 +8,17 @@ namespace nsApp
 	{
 		void BiteAttackStrategy::Enter(nsActor::Boss* boss)
 		{
-			/*UŒ‚ŠÔB*/
+			/*æ”»æ’ƒæ™‚é–“ã€‚*/
 			m_timer = 1.0f;
 
-			/*UŒ‚ƒtƒ‰ƒO‰Šú‰»B*/
+			/*æ”»æ’ƒãƒ•ãƒ©ã‚°åˆæœŸåŒ–ã€‚*/
 			m_isAttack = false;
 
-			/*ƒAƒjƒ[ƒVƒ‡ƒ“Ä¶B*/
-			boss->PlayAnimation(nsActor::BossAnimationID::BiteAttack);
+			/*Yä½ç½®ã‚’ãƒ­ãƒƒã‚¯ã€‚*/
+			boss->LockYPosition(boss->GetPosition().y);
 
-			boss->SetModelOffset(Vector3{ 0.0f,30.0f,0.0f });
+			/*ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³å†ç”Ÿã€‚*/
+			boss->PlayAnimation(nsActor::BossAnimationID::BiteAttack);
 		}
 
 		void BiteAttackStrategy::Update(nsActor::Boss* boss)
@@ -30,10 +31,10 @@ namespace nsApp
 				m_isAttack = true;
 			}
 
-			// UŒ‚‚ªI‚í‚é ‚ÉƒIƒtƒZƒbƒg‚ğ 0 ‚É–ß‚·
+			// æ”»æ’ƒãŒçµ‚ã‚ã‚‹é ƒã«ãƒ­ãƒƒã‚¯è§£é™¤
 			if (m_timer <= 0.1f)
 			{
-				boss->SetModelOffset(Vector3::Zero);
+				boss->UnlockYPosition();
 			}
 		}
 

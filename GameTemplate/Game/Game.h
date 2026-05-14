@@ -35,6 +35,7 @@ namespace nsApp
 		class GameClearDirection;
 		class GameTimeUpDirection;
 		class GameOverDirection;
+
 		class Game : public IGameObject
 		{
 		public:
