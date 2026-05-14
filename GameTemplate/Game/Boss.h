@@ -15,6 +15,7 @@ namespace nsApp
 		{
 			enIdle,
 			enMove,
+			enRoar,
 			enAttack,
 			enDamage,
 			enDeath,
@@ -63,17 +64,44 @@ namespace nsApp
 				m_target = target;
 			}
 
+			/*ボスタイプを設定。*/
+			inline void SetBossType(CharacterModelType type)
+			{
+				m_bossType = type;
+			}
+
 			void SetModelOffset(const Vector3& offset)
 			{
-				m_modelOffset = offset;
+				m_modelDynamicOffset = offset;
+			}
+
+			/*Y位置ロック。*/
+			inline void LockYPosition(float yPos)
+			{
+				m_isYLocked = true;
+				m_lockedYPosition = yPos;
+			}
+
+			inline void UnlockYPosition()
+			{
+				m_isYLocked = false;
 			}
 
 			/*ゲッター。*/
 
-			/*前方向を取得。。*/
-			inline Vector3 GetForward()
+			/*前方向を取得。*/
+			inline Vector3 GetForward() const
 			{
 				return m_forward;
+			}
+
+			/*前方向を設定。*/
+			inline void SetForward(const Vector3& forward)
+			{
+				if (forward.LengthSq() > 0.0f)
+				{
+					m_forward = forward;
+				}
 			}
 
 			/*座標を取得。*/
@@ -146,6 +174,10 @@ namespace nsApp
 
 			int m_prevHP = 0;/*HPの変化を検出するための前のHP。*/
 			float m_dir = 1.0f;
+			Vector3 m_modelDynamicOffset = Vector3::Zero;
+
+			bool m_isYLocked = false;          //Y位置をロックしているか
+			float m_lockedYPosition = 0.0f;    //ロック時のY位置
 
 			/*ステート。*/		
 			std::unordered_map<BossStateID, std::function<StateType* ()>> m_stateFactory;

@@ -28,11 +28,28 @@ namespace nsApp
 			float dt = g_gameTime->GetFrameDeltaTime();
 			m_timer -= dt;
 
-			Vector3 moveStep = m_boss->GetForward() * MOVE_SPEED;
+			Vector3 moveDirection = Vector3::Zero;
+			if (m_boss->GetTarget())
+			{
+				moveDirection = m_boss->GetTarget()->GetPosition() - m_boss->GetPosition();
+				moveDirection.y = 0.0f;
+				if (moveDirection.LengthSq() > FLT_EPSILON)
+				{
+					moveDirection.Normalize();
+				}
+			}
+
+			if (moveDirection.LengthSq() > FLT_EPSILON)
+			{
+				m_boss->SetForward(moveDirection);
+			}
+
+			Vector3 moveStep = moveDirection * MOVE_SPEED;
 			moveStep.z = 0.0f;
 
 			m_boss->GetController().Execute(moveStep, dt);
 		}
+
 
 		void BossMoveState::Exit()
 		{

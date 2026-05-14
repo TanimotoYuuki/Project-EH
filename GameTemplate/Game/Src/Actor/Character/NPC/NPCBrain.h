@@ -9,6 +9,7 @@
 
 #include "Src/Debug/Sandbag.h"
 #include "Src/Actor/Character/Common/IState.h"
+#include "Src/StateMachine/StateMachine.h"
 
 
 namespace nsApp
