@@ -141,6 +141,9 @@ namespace nsK2EngineLow {
             psoDesc.BlendState.RenderTarget[0].SrcBlend = D3D12_BLEND_SRC_ALPHA;
             psoDesc.BlendState.RenderTarget[0].DestBlend = D3D12_BLEND_INV_SRC_ALPHA;
             psoDesc.BlendState.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
+            psoDesc.BlendState.RenderTarget[0].SrcBlendAlpha = D3D12_BLEND_ONE;
+            psoDesc.BlendState.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_INV_SRC_ALPHA;
+            psoDesc.BlendState.RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD;
         }
         else if (initData.m_alphaBlendMode == AlphaBlendMode_Add) {
             //加算合成。
@@ -214,6 +217,8 @@ namespace nsK2EngineLow {
         InitPipelineState(initData);
         //ディスクリプタヒープを初期化。
         InitDescriptorHeap(initData);
+
+        m_isInited = true;
     }
     void Sprite::Update(const Vector3& pos, const Quaternion& rot, const Vector3& scale, const Vector2& pivot)
     {

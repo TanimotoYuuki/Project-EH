@@ -67,6 +67,13 @@ namespace nsK2Engine {
 
 		}
 		/// <summary>
+		/// 背景描画パスから呼ばれる処理。
+		/// </summary>
+		virtual void OnRenderBackGround(RenderContext& rc)
+		{
+
+		}
+		/// <summary>
 		/// レンダラーが描画するオブジェクトの最大座標と最小座標を取得。
 		/// </summary>
 		/// <param name="aabb"></param>

@@ -13,8 +13,9 @@ namespace nsK2Engine {
 		/// <param name="filePath">ファイルパス。</param>
 		/// <param name="w">画像の横幅。</param>
 		/// <param name="h">画像の縦幅。</param>
+		/// <param name="isBackGraundRender">背景描画パスで描画するかどうか？ trueならモデルよりも先に描画する。</param>
 		/// <param name="alphaBlendMode">デフォルトは半透明合成。</param>
-		void Init(const char* filePath, const float w, const float h, AlphaBlendMode alphaBlendMode = AlphaBlendMode_Trans);
+		void Init(const char* filePath, const float w, const float h, bool isBackGroundRender = false, AlphaBlendMode alphaBlendMode = AlphaBlendMode_Trans);
 		/// <summary>
 		/// 座標を設定。zは0.0fで。
 		/// </summary>
@@ -85,6 +86,10 @@ namespace nsK2Engine {
 		/// <param name="mulColor">乗算カラー。</param>
 		void SetMulColor(const Vector4& mulColor)
 		{
+			if (m_backGroundSprite.IsInited()) {
+				m_backGroundSprite.SetMulColor(mulColor); 
+				return; 
+			};
 			m_sprite.SetMulColor(mulColor);
 		}
 		/// <summary>
@@ -93,6 +98,10 @@ namespace nsK2Engine {
 		/// <returns></returns>
 		const Vector4& GetMulColor() const
 		{
+			if (m_backGroundSprite.IsInited())
+			{
+				return m_backGroundSprite.GetMulColor();
+			}
 			return m_sprite.GetMulColor();
 		}
 		/// <summary>
@@ -100,10 +109,18 @@ namespace nsK2Engine {
 		/// </summary>
 		void Update()
 		{
-			m_sprite.Update(m_position,
-				m_rotation,
-				m_scale,
-				m_pivot);
+			if (m_backGroundSprite.IsInited()){
+				m_backGroundSprite.Update(m_position,
+					m_rotation,
+					m_scale,
+					m_pivot);
+			}
+			else {
+				m_sprite.Update(m_position,
+					m_rotation,
+					m_scale,
+					m_pivot);
+			}
 		}
 		/// <summary>
 		/// 描画処理。
@@ -118,10 +135,23 @@ namespace nsK2Engine {
 		/// <param name="rc"></param>
 		void OnRender2D(RenderContext& rc) override
 		{
-			m_sprite.Draw(rc);
+			if (m_sprite.IsInited()) {
+				m_sprite.Draw(rc);
+			}
+		}
+		/// <summary>
+		/// 背景描画パスから呼ばれる処理。
+		/// </summary>
+		/// <param name="rc"></param>
+		void OnRenderBackGround(RenderContext& rc) override
+		{
+			if (m_backGroundSprite.IsInited()) {
+				m_backGroundSprite.Draw(rc);
+			}
 		}
 	private:
 		Sprite			m_sprite;								//スプライト。
+		Sprite          m_backGroundSprite;						//背景スプライト。
 		Vector3			m_position = Vector3::Zero;				//座標。
 		Quaternion		m_rotation = Quaternion::Identity;		//回転。
 		Vector3			m_scale = Vector3::One;					//大きさ。
