@@ -33,12 +33,18 @@ namespace nsApp
 		EnSceneID m_sceneID = enSceneID_Num;/*シーンID。*/
 	};
 
+	namespace nsOption
+	{
+		class Option;
+	}
 	namespace nsTitle
 	{
 		/**
 		*  @brief タイトルシーンクラス。
 		*/
 		class Title;
+		class TitleSelect;
+		class TitleBackGround;
 		class TitleScene : public IScene
 		{
 		public:
@@ -51,9 +57,17 @@ namespace nsApp
 
 		private:/*メンバ変数。*/
 			Title* m_title = nullptr;/*タイトルシーン用のインスタンス。*/
+			TitleSelect* m_titleSelect = nullptr;/*タイトル選択用のインスタンス。*/
+			TitleBackGround* m_titleBackGround = nullptr;/*タイトル背景用のインスタンス。*/
+			nsApp::nsOption::Option* m_option = nullptr;/*設定用のインスタンス。*/
 		};
 	}
 
+
+	namespace nsHowToPlay
+	{
+		class HowToPlay;
+	}
 	class GameEndSelect;
 	namespace nsSelect
 	{
@@ -63,6 +77,7 @@ namespace nsApp
 		class Select;
 		class QuestSelect;
 		class MemberSelect;
+		class RoleSelect;
 		class ConfirmationSelect;
 		class SelectScene : public IScene
 		{
@@ -78,10 +93,17 @@ namespace nsApp
 			Select* m_select = nullptr;/*選択シーン用のインスタンス。*/
 			QuestSelect* m_questSelect = nullptr;/*クエスト選択用のインスタンス。*/
 			MemberSelect* m_memberSelect = nullptr;/*メンバー選択用のインスタンス。*/
+			RoleSelect* m_roleSelect = nullptr;/*役割選択用のインスタンス。*/
 			ConfirmationSelect* m_confirmationSelect = nullptr;/*確認選択用のインスタンス。*/
+			nsApp::nsOption::Option* m_option = nullptr;/*設定用のインスタンス。*/
+			nsApp::nsHowToPlay::HowToPlay* m_howToPlay = nullptr;/*操作方法用のインスタンス。*/
 		};
 	}
 
+	namespace nsSelect
+	{
+		class ConfirmationSelect;
+	}
 	namespace nsGame
 	{
 		/**
@@ -89,6 +111,7 @@ namespace nsApp
 		*/
 		class Game;
 		class GameClearDirection;
+		class Pause;
 		class InGameScene : public IScene
 		{
 		public:
@@ -103,6 +126,9 @@ namespace nsApp
 			Game* m_game = nullptr;/*インゲーム用のインスタンス。*/
 			GameClearDirection* m_gameClearDirection = nullptr;/*ゲームクリア演出用のインスタンス。*/
 			GameEndSelect* m_gameEndSelect = nullptr;/*ゲーム終了選択用のインスタンス。*/
+			Pause* m_pause = nullptr;/*ポーズ用のインスタンス。*/
+			nsApp::nsSelect::ConfirmationSelect* m_confirmationSelect = nullptr;/*確認選択用のインスタンス。*/
+			nsApp::nsHowToPlay::HowToPlay* m_howToPlay = nullptr;/*操作方法用のインスタンス。*/
 		};
 	}
 

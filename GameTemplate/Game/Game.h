@@ -37,6 +37,7 @@ namespace nsApp
 		class GameClearDirection;
 		class GameTimeUpDirection;
 		class GameOverDirection;
+		class Pause;
 		class Game : public IGameObject
 		{
 		public:
@@ -89,6 +90,15 @@ namespace nsApp
 				return m_gameEndSelect;
 			}
 
+			/**
+			* @brief ポーズのインスタンスの取得。
+			* @return ポーズのインスタンス。
+			*/
+			inline Pause* GetPauseInstance() const
+			{
+				return m_pause;
+			}
+
 		private:
 			nsApp::nsSound::SoundLister* m_soundLister = nullptr; //! サウンドリスター。
 			nsApp::nsStage::BackGround* m_backGround = nullptr; //! 背景。
@@ -100,7 +110,7 @@ namespace nsApp
 			GameTimeUpDirection* m_gameTimeUpDirection = nullptr;
 			GameOverDirection* m_gameOverDirection = nullptr;
 			GameEndSelect* m_gameEndSelect = nullptr;
-
+			Pause* m_pause = nullptr;
 			nsActor::Player* m_player = nullptr;   //! プレイヤー。
 			nsActor::Player* m_player2 = nullptr;  //! プレイヤー2。
 			nsActor::Sandbag* m_sandbag = nullptr; //! サンドバッグ。

@@ -224,12 +224,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CharacterHP.cpp" />
-    <ClCompile Include="ConfirmationSelect.cpp" />
-    <ClCompile Include="GameClearDirection.cpp" />
-    <ClCompile Include="GameEndSelect.cpp" />
-    <ClCompile Include="GameOverDirection.cpp" />
-    <ClCompile Include="GameStartDirection.cpp" />
-    <ClCompile Include="Result.cpp" />
+    <ClCompile Include="Src\Select\ConfirmationSelect.cpp" />
+    <ClCompile Include="Src\Direction\GameClearDirection.cpp" />
+    <ClCompile Include="Src\Select\GameEndSelect.cpp" />
+    <ClCompile Include="Src\Direction\GameOverDirection.cpp" />
+    <ClCompile Include="Src\Direction\GameStartDirection.cpp" />
+    <ClCompile Include="HowToPlay.cpp" />
+    <ClCompile Include="Option.cpp" />
+    <ClCompile Include="Src\Scene\InGame\Pause.cpp" />
+    <ClCompile Include="Src\Scene\ResultScene\Result.cpp" />
     <ClCompile Include="Src\Actor\Character\Player\CharacterByWeapon\HammerCharacter.cpp" />
     <ClCompile Include="Src\Actor\Character\Player\CharacterByWeapon\IWeaponCharacter.cpp" />
     <ClCompile Include="Src\Actor\Character\Player\CharacterByWeapon\SwordCharacter.cpp" />
@@ -238,12 +241,13 @@
     <ClCompile Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerHeelMagicState.cpp" />
     <ClCompile Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerMagicAttackState.cpp" />
     <ClCompile Include="Src\Actor\Magic\MagicProjectotile.cpp" />
+    <ClCompile Include="Src\Scene\SelectScene\RoleSelect.cpp" />
     <ClCompile Include="Src\Fade\Fade.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="MemberSelect.cpp" />
-    <ClCompile Include="QuestSelect.cpp" />
-    <ClCompile Include="Select.cpp" />
+    <ClCompile Include="Src\Scene\SelectScene\MemberSelect.cpp" />
+    <ClCompile Include="Src\Scene\SelectScene\QuestSelect.cpp" />
+    <ClCompile Include="Src\Scene\SelectScene\Select.cpp" />
     <ClCompile Include="PresentDamageIndicator.cpp" />
     <ClCompile Include="Src\Actor\Actor.cpp" />
     <ClCompile Include="Src\Actor\Character\Player\State\AttackState\PlayerChargingState.cpp" />
@@ -289,19 +293,24 @@
     </ClCompile>
     <ClCompile Include="system\system.cpp" />
     <ClCompile Include="GameTimeLimit.cpp" />
-    <ClCompile Include="GameTimeUpDirection.cpp" />
-    <ClCompile Include="Title.cpp" />
+    <ClCompile Include="Src\Direction\GameTimeUpDirection.cpp" />
+    <ClCompile Include="Src\Scene\TitleScene\Title.cpp" />
     <ClCompile Include="Src\Actor\Character\Common\WeaponHitDetection.cpp" />
     <ClCompile Include="Src\UIAnimation\UIAnimation.cpp" />
+    <ClCompile Include="Src\Scene\TitleScene\TitleBackGround.cpp" />
+    <ClCompile Include="Src\Scene\TitleScene\TitleSelect.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CharacterHP.h" />
-    <ClInclude Include="ConfirmationSelect.h" />
-    <ClInclude Include="GameClearDirection.h" />
-    <ClInclude Include="GameEndSelect.h" />
-    <ClInclude Include="GameOverDirection.h" />
-    <ClInclude Include="GameStartDirection.h" />
-    <ClInclude Include="Result.h" />
+    <ClInclude Include="Src\Select\ConfirmationSelect.h" />
+    <ClInclude Include="Src\Direction\GameClearDirection.h" />
+    <ClInclude Include="Src\Select\GameEndSelect.h" />
+    <ClInclude Include="Src\Direction\GameOverDirection.h" />
+    <ClInclude Include="Src\Direction\GameStartDirection.h" />
+    <ClInclude Include="HowToPlay.h" />
+    <ClInclude Include="Option.h" />
+    <ClInclude Include="Src\Scene\InGame\Pause.h" />
+    <ClInclude Include="Src\Scene\ResultScene\Result.h" />
     <ClInclude Include="Src\Actor\Character\Player\CharacterByWeapon\HammerCharacter.h" />
     <ClInclude Include="Src\Actor\Character\Player\CharacterByWeapon\IWeaponCharacter.h" />
     <ClInclude Include="Src\Actor\Character\Player\CharacterByWeapon\SwordCharacter.h" />
@@ -310,11 +319,12 @@
     <ClInclude Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerHeelMagicState.h" />
     <ClInclude Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerMagicAttackState.h" />
     <ClInclude Include="Src\Actor\Magic\MagicProjectotile.h" />
+    <ClInclude Include="Src\Scene\SelectScene\RoleSelect.h" />
     <ClInclude Include="Src\Fade\Fade.h" />
     <ClInclude Include="Game.h" />
-    <ClInclude Include="MemberSelect.h" />
-    <ClInclude Include="QuestSelect.h" />
-    <ClInclude Include="Select.h" />
+    <ClInclude Include="Src\Scene\SelectScene\MemberSelect.h" />
+    <ClInclude Include="Src\Scene\SelectScene\QuestSelect.h" />
+    <ClInclude Include="Src\Scene\SelectScene\Select.h" />
     <ClInclude Include="PresentDamageIndicator.h" />
     <ClInclude Include="Src\Actor\Actor.h" />
     <ClInclude Include="Src\Actor\Character\Player\State\AttackState\PlayerChargingState.h" />
@@ -360,10 +370,12 @@
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="system\system.h" />
     <ClInclude Include="GameTimeLimit.h" />
-    <ClInclude Include="GameTimeUpDirection.h" />
-    <ClInclude Include="Title.h" />
+    <ClInclude Include="Src\Direction\GameTimeUpDirection.h" />
+    <ClInclude Include="Src\Scene\TitleScene\Title.h" />
     <ClInclude Include="Src\UIAnimation\UIAnimation.h" />
     <ClInclude Include="Src\Actor\Character\Common\WeaponHitDetection.h" />
+    <ClInclude Include="Src\Scene\TitleScene\TitleBackGround.h" />
+    <ClInclude Include="Src\Scene\TitleScene\TitleSelect.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -74,6 +74,8 @@ namespace nsApp
 		/*更新処理。*/
 		void CharacterHP::Update()
 		{
+			/*現在はボスがいないためRB2ボタンでHPを減らすようにしている。*/
+			/*TODO: ボスの攻撃を実装後に喰らったダメージを設定してHPを減らすようにする。*/
 			if (g_pad[0]->IsTrigger(enButtonRB2))
 			{
 				SetCharacterDamage(enCharacter_One, 5);
