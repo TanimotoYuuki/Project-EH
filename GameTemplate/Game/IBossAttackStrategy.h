@@ -2,7 +2,10 @@
 
 namespace nsApp
 {
-	namespace nsActor { class Boss; }
+	namespace nsActor
+	{
+		class Boss;
+	}
 
 	namespace nsAI
 	{
@@ -11,8 +14,9 @@ namespace nsApp
 		public:
 			virtual ~IBossAttackStrategy() = default;
 
-			virtual void Enter(nsActor::Boss* boss) = 0;
-			virtual void Update(nsActor::Boss* boss) = 0;
+			virtual void Enter(nsActor::Boss *boss) = 0;
+			virtual void Update(nsActor::Boss *boss) = 0;
+			virtual void Exit(nsActor::Boss *boss) = 0;
 			virtual bool IsEnd() = 0;
 		};
 	}
