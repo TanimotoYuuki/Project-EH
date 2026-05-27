@@ -1,8 +1,8 @@
 #pragma once
 /**
 * @file   BackGround.h
-* @brief  ƒXƒe[ƒW”wŒi‚ğŠÇ—‚·‚éƒNƒ‰ƒXB
-* @author Yamaguchi HayatoB
+* @brief  ã‚¹ãƒ†ãƒ¼ã‚¸èƒŒæ™¯ã‚’ç®¡ç†ã™ã‚‹ã‚¯ãƒ©ã‚¹ã€‚
+* @author Yamaguchi Hayatoã€‚
 * @date   2026/03/21
 */
 
@@ -21,7 +21,7 @@ namespace nsApp
 
 
 		private:
-			nsK2Engine::SkyCube* m_skyCube = nullptr; //! ƒXƒJƒCƒLƒ…[ƒuB
+			nsK2Engine::SkyCube* m_skyCube = nullptr; //! ã‚¹ã‚«ã‚¤ã‚­ãƒ¥ãƒ¼ãƒ–ã€‚
 		};
 	}
 }

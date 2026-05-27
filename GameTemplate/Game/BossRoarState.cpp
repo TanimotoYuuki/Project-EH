@@ -1,6 +1,14 @@
 #include "stdafx.h"
 #include "BossRoarState.h"
 #include "Boss.h"
+#include <random>
+
+namespace
+{
+	const float ROAR_DURATION = 1.5f;
+
+	std::mt19937 g_randomGen(std::random_device{}());
+}
 
 namespace nsApp
 {
@@ -9,7 +17,7 @@ namespace nsApp
 		void BossRoarState::Enter()
 		{
 			m_boss = static_cast<nsActor::Boss*>(m_owner);
-			m_timer = 1.5f;
+			m_timer = ROAR_DURATION;
 			m_boss->PlayAnimation(nsActor::BossAnimationID::Scream);
 		}
 
@@ -26,10 +34,39 @@ namespace nsApp
 		{
 			if (m_timer <= 0.0f)
 			{
-				id = static_cast<uint8_t>(nsActor::BossStateID::enMove);
+				using namespace nsAI;
+
+				std::uniform_int_distribution<int> dist(0, 99);
+				int choice = dist(g_randomGen);
+
+				float hpRatio = m_boss->GetHPRatio();
+
+				if (hpRatio < BossAIConfig::LOW_HP_RATIO)
+				{
+					if (choice < 70)
+					{
+						id = static_cast<uint8_t>(nsActor::BossStateID::enMove);
+					}
+					else
+					{
+						id = static_cast<uint8_t>(nsActor::BossStateID::enAttack);
+					}
+				}
+				else
+				{
+					if (choice < BossAIConfig::ROAR_MOVE_CHANCE)
+					{
+						id = static_cast<uint8_t>(nsActor::BossStateID::enMove);
+					}
+					else
+					{
+						id = static_cast<uint8_t>(nsActor::BossStateID::enAttack);
+					}
+				}
 				return true;
 			}
 			return false;
 		}
 	}
 }
+

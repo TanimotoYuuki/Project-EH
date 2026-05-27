@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "NPCBrain.h"
 #include "Boss.h"
 
@@ -13,27 +13,27 @@ namespace nsApp
 	void NPCBrain::Init(nsActor::Player* outer)
 	{
 		m_outer = outer;
-		/* NPC—p‚ÌƒXƒe[ƒgƒ}ƒV[ƒ“‚Ì¶¬B*/
+		/* NPCç”¨ã®ã‚¹ãƒ†ãƒ¼ãƒˆãƒã‚·ãƒ¼ãƒ³ã®ç”Ÿæˆã€‚*/
 		m_npcStateMachine = new nsState::StateMachine<NPCBrain>(this);
 
-		/* NPC—pƒXƒe[ƒgƒNƒ‰ƒX‚ğ¶¬B*/
+		/* NPCç”¨ã‚¹ãƒ†ãƒ¼ãƒˆã‚¯ãƒ©ã‚¹ã‚’ç”Ÿæˆã€‚*/
 		m_npcStateMachine->ChangeState(new nsState::NPCIdleState());
 	}
 
 
 	void NPCBrain::Update()
 	{
-		/* ‘ŠúƒŠƒ^[ƒ“B*/
+		/* æ—©æœŸãƒªã‚¿ãƒ¼ãƒ³ã€‚*/
 		if (m_outer == nullptr || m_virtualInputAdapter == nullptr)
 			return;
 
-		/* ƒtƒŒ[ƒ€ŠJn‚Ìˆ—B*/
+		/* ãƒ•ãƒ¬ãƒ¼ãƒ é–‹å§‹ã®å‡¦ç†ã€‚*/
 		m_virtualInputAdapter->BeginFlame();
 
-		/* ƒ^[ƒQƒbƒg‚ğ’T‚·B*/
+		/* ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã‚’æ¢ã™ã€‚*/
 		m_helpTarget = m_outer->SearchCharacter();
 
-		/* ƒ^[ƒQƒbƒg‚ª‹‚È‚¢ê‡‚Í‰½‚à‚µ‚È‚¢B*/
+		/* ã‚¿ãƒ¼ã‚²ãƒƒãƒˆãŒå±…ãªã„å ´åˆã¯ä½•ã‚‚ã—ãªã„ã€‚*/
 		if (m_npcStateMachine != nullptr)
 			m_npcStateMachine->Update();
 	}
@@ -41,10 +41,10 @@ namespace nsApp
 
 	nsActor::ICharacter* NPCBrain::SearchTarget()
 	{
-		/* –Ú•W‚ğ’Tõ‚·‚éB*/
+		/* ç›®æ¨™ã‚’æ¢ç´¢ã™ã‚‹ã€‚*/
 		auto target  = FindGO<nsActor::Boss>("boss");
 
-		/* Œ©‚Â‚©‚ç‚È‚©‚Á‚½ê‡B*/
+		/* è¦‹ã¤ã‹ã‚‰ãªã‹ã£ãŸå ´åˆã€‚*/
 		if (target == nullptr || reinterpret_cast<uintptr_t>(target) == 0xFFFFFFFFFFFFFFFF)
 			return nullptr;
 

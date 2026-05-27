@@ -51,7 +51,6 @@ namespace nsApp
 			delete m_playerHub;
 		}
 
-
 		bool Game2::Start()
 		{
 			/* 音源の生成。*/
@@ -67,13 +66,14 @@ namespace nsApp
 			/* カメラを生成。*/
 			m_camera = NewGO<Camera>(0, "camera");
 
-			PhysicsWorld::GetInstance()->EnableDrawDebugWireFrame();
+			// PhysicsWorld::GetInstance()->EnableDrawDebugWireFrame();
 
 			m_player = NewGO<nsActor::Player>(0, "player");
 
 			/*ボスを作成。*/
 			m_boss = NewGO<nsActor::Boss>(0, "boss");
-
+			/*ボスの種類を設定。*/
+			m_boss->SetBossType(CharacterModelType::RedDragon);
 			/*ボスにプレイヤーをターゲットとして教える。*/
 			m_boss->SetTarget(m_player);
 
@@ -96,10 +96,9 @@ namespace nsApp
 			return true;
 		}
 
-
 		void Game2::Update()
 		{
-			if(m_playerHub)
+			if (m_playerHub)
 				m_playerHub->Update();
 
 			if (m_gameStartDirection != nullptr)
@@ -158,13 +157,11 @@ namespace nsApp
 			nsApp::nsStage::LoadStageData::GetInstance().Update();
 		}
 
-
-		void Game2::Render(RenderContext& rc)
+		void Game2::Render(RenderContext &rc)
 		{
 			/* 現在のステージを描画する。*/
 			nsApp::nsStage::LoadStageData::GetInstance().Draw(rc);
 		}
-
 
 		void Game2::SpawnPlayCharacter()
 		{
@@ -173,12 +170,11 @@ namespace nsApp
 
 			/* PlayerGeneratorを用い、プレイアブルキャラを作成する。*/
 			std::vector<PlayerSpawnData> partyData =
-			{
-				{"player1", WeaponType::GreatSword, ControllerType::Player_1P ,INIT_CHARACTER_POSITION_PLAYER1},
-				{"player2", WeaponType::Hammer, ControllerType::NPC,INIT_CHARACTER_POSITION_PLAYER2},
-				{"player3", WeaponType::Wand, ControllerType::NPC, INIT_CHARACTER_POSITION_PLAYER3},
-				{"player4", WeaponType::TwinGun, ControllerType::NPC, INIT_CHARACTER_POSITION_PLAYER4}
-			};
+				{
+					{"player1", WeaponType::GreatSword, ControllerType::Player_1P, INIT_CHARACTER_POSITION_PLAYER1},
+					{"player2", WeaponType::Hammer, ControllerType::NPC, INIT_CHARACTER_POSITION_PLAYER2},
+					{"player3", WeaponType::Wand, ControllerType::NPC, INIT_CHARACTER_POSITION_PLAYER3},
+					{"player4", WeaponType::TwinGun, ControllerType::NPC, INIT_CHARACTER_POSITION_PLAYER4}};
 
 			/* 作成したリストをセットする。*/
 			auto players = m_generator->SpawnPlayers(partyData);

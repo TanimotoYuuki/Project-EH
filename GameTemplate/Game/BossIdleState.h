@@ -1,6 +1,7 @@
 #pragma once
 #include "Src/Actor/Actor.h"
 #include "Src/Actor/Character/Common/IState.h"
+#include "BossAIConfig.h"
 
 
 namespace nsApp

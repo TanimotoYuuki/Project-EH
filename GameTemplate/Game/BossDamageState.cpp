@@ -8,11 +8,13 @@ namespace nsApp
 	{
 		void BossDamageState::Enter()
 		{
-			m_boss = static_cast<nsActor::Boss*>(m_owner);
+			m_boss = static_cast<nsActor::Boss *>(m_owner);
 
 			m_timer = 0.5f;
 
 			m_boss->PlayAnimation(nsActor::BossAnimationID::GetHit);
+			// ダメージ判定をリセット
+			m_boss->ResetPrevHP();
 		}
 
 		void BossDamageState::Update()
@@ -22,10 +24,9 @@ namespace nsApp
 
 		void BossDamageState::Exit()
 		{
-
 		}
 
-		bool BossDamageState::RequestID(uint8_t& id)
+		bool BossDamageState::RequestID(uint8_t &id)
 		{
 			if (m_timer <= 0.0f)
 			{

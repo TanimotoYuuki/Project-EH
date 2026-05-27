@@ -41,7 +41,7 @@ namespace nsApp
 			DeleteGO(m_backGround);
 			DeleteGO(m_camera);
 			DeleteGO(m_player);
-		  DeleteGO(m_boss);
+			DeleteGO(m_boss);
 			DeleteGO(m_gameClearDirection);
 			DeleteGO(m_gameTimeUpDirection);
 			DeleteGO(m_gameOverDirection);
@@ -49,7 +49,6 @@ namespace nsApp
 
 			delete m_generator;
 		}
-
 
 		bool Game::Start()
 		{
@@ -66,18 +65,14 @@ namespace nsApp
 			/* カメラを生成。*/
 			m_camera = NewGO<Camera>(0, "camera");
 
-			PhysicsWorld::GetInstance()->EnableDrawDebugWireFrame();
+			// PhysicsWorld::GetInstance()->EnableDrawDebugWireFrame();
 
 			m_player = NewGO<nsActor::Player>(0, "player");
 
 			/*ボスを作成。*/
 			m_boss = NewGO<nsActor::Boss>(0, "boss");
 			/*ボスの種類を設定。*/
-			m_boss->SetBossType(CharacterModelType::TutorialBoss);
-			/*ボスにプレイヤーをターゲットとして教える。*/
-			m_boss->SetTarget(m_player);
-
-			/*m_sandbag = NewGO<nsActor::Sandbag>(0, "Sandbag"); */
+			m_boss->SetBossType(CharacterModelType::RedDragon);
 			m_characterHP = NewGO<CharacterHP>(0, "characterHP");
 			m_characterHP->Deactivate();
 
@@ -95,7 +90,6 @@ namespace nsApp
 			SpawnPlayCharacter();
 			return true;
 		}
-
 
 		void Game::Update()
 		{
@@ -155,13 +149,11 @@ namespace nsApp
 			nsApp::nsStage::LoadStageData::GetInstance().Update();
 		}
 
-
-		void Game::Render(RenderContext& rc)
+		void Game::Render(RenderContext &rc)
 		{
 			/* 現在のステージを描画する。*/
 			nsApp::nsStage::LoadStageData::GetInstance().Draw(rc);
 		}
-
 
 		void Game::SpawnPlayCharacter()
 		{
@@ -170,12 +162,11 @@ namespace nsApp
 
 			/* PlayerGeneratorを用い、プレイアブルキャラを作成する。*/
 			std::vector<PlayerSpawnData> partyData =
-			{
-				//{"player1", WeaponType::GreatSword, ControllerType::NPC,INIT_CHARACTER_POSITION_PLAYER1},
-				//{"player2", WeaponType::Hammer, ControllerType::NPC,INIT_CHARACTER_POSITION_PLAYER2},
-				//{"player3", WeaponType::Wand, ControllerType::Player_1P, INIT_CHARACTER_POSITION_PLAYER3},
-				{"player4", WeaponType::TwinGun, ControllerType::Player_1P, INIT_CHARACTER_POSITION_PLAYER4}
-			};
+				{
+					//{"player1", WeaponType::GreatSword, ControllerType::NPC,INIT_CHARACTER_POSITION_PLAYER1},
+					//{"player2", WeaponType::Hammer, ControllerType::NPC,INIT_CHARACTER_POSITION_PLAYER2},
+					//{"player3", WeaponType::Wand, ControllerType::Player_1P, INIT_CHARACTER_POSITION_PLAYER3},
+					{"player4", WeaponType::TwinGun, ControllerType::Player_1P, INIT_CHARACTER_POSITION_PLAYER4}};
 
 			/* 作成したリストをセットする。*/
 			m_generator->SpawnPlayers(partyData);
