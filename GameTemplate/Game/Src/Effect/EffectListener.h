@@ -42,7 +42,7 @@ namespace nsApp
 
 
 	private:
-		nsActor::Player* m_target;   //! プレイヤーへの参照。
+		nsActor::Player* m_target = nullptr;   //! プレイヤーへの参照。
 		nsSound::SoundLister* m_soundManager = nullptr;
 
 	private:

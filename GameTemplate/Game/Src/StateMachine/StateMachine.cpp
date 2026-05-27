@@ -43,30 +43,43 @@ namespace nsApp
 		}
 
 
-		CLASS_T
-	    void StateMachine<T_NAME>::ChangeState(IState<T_NAME>* newState)
-		{
-			/* 現在のステートを終了する。*/
-			m_currentState->Exit();
-			/* 現在のステートを削除する。*/
-			delete m_currentState;
+CLASS_T
+        void StateMachine<T_NAME>::ChangeState(IState<T_NAME>* newState)
+        {
+            // 【変更なし】元のコードのまま、普通に新しいステートをセットします。
+            // ※ただし、Updateの実行中にここが呼ばれると、一時的に m_currentState が入れ替わります。
+            m_currentState->Exit();
+            delete m_currentState;
 
-			/* nullが渡されているならNullStateで保護する。*/
-			m_currentState = (newState == nullptr) ? new NullState<T_NAME>() : newState;
+            m_currentState = (newState == nullptr) ? new NullState<T_NAME>() : newState;
 
-			/* ステートの登録。*/
-			m_currentState->Register(m_owner, this);
-			/* ステートの初期化処理を予備だす。*/
-			m_currentState->Enter();
-		}
+            m_currentState->Register(m_owner, this);
+            m_currentState->Enter();
+        }
 
 
-		CLASS_T
-	    void StateMachine<T_NAME>::Update()
-		{
-			m_currentState->Update();
-		}
+        CLASS_T
+        void StateMachine<T_NAME>::Update()
+        {
+            // 1. 現在のステートのポインタ（アドレス）をローカル変数にコピーしておく
+            IState<T_NAME>* pActiveState = m_currentState;
 
+            // 2. ステートの Update を実行する
+            pActiveState->Update();
+
+            // 3. 【超重要】もし Update の中で ChangeState() が呼び出されていた場合、
+            //    m_currentState の中身は「新しいステート」にすり替わっています。
+            //    逆に、pActiveState の中身は「deleteされて消えた古いステート」を指しています。
+            
+            // もし両者が一致していない ＝ Update中にステートが切り替わった、と判断できる
+            if (m_currentState != pActiveState)
+            {
+                // すでに自分自身は破壊されている（ゾンビ状態）ので、
+                // これ以上この関数（Update）の中で m_player などを触らないように
+                // 即座にリターンして安全に処理を終わらせます。
+                return;
+            }
+        }
 		/* Actorクラスに対してテンプレートの使用可能にする。*/
 		template class StateMachine<nsApp::nsActor::Actor>;
 

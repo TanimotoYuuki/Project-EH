@@ -6,7 +6,7 @@ namespace nsApp
 {
 	namespace nsAI
 	{
-		void BiteAttackStrategy::Enter(nsActor::Boss* boss)
+		void BiteAttackStrategy::Enter(nsActor::Boss *boss)
 		{
 			/*攻撃時間。*/
 			m_timer = 1.0f;
@@ -21,7 +21,7 @@ namespace nsApp
 			boss->PlayAnimation(nsActor::BossAnimationID::BiteAttack);
 		}
 
-		void BiteAttackStrategy::Update(nsActor::Boss* boss)
+		void BiteAttackStrategy::Update(nsActor::Boss *boss)
 		{
 			m_timer -= g_gameTime->GetFrameDeltaTime();
 
@@ -38,9 +38,19 @@ namespace nsApp
 			}
 		}
 
+		void BiteAttackStrategy::Exit(nsActor::Boss *boss)
+		{
+			// 攻撃判定を無効化
+			if (boss)
+			{
+				boss->GetBiteHit().Disable();
+				boss->UnlockYPosition();
+			}
+		}
+
 		bool BiteAttackStrategy::IsEnd()
 		{
-			return m_timer<= 0.0f;
+			return m_timer <= 0.0f;
 		}
 	}
 }

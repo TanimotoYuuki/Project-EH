@@ -28,29 +28,35 @@ namespace nsApp
 
         void PlayerHeavyAttackState::Update()
         {
+            nsActor::Player* pPlayer = m_player;
             PlayerAttackBaseState::Update();
 
-            if (m_player->GetCurrentWeapon() == WeaponType::TwinGun)
+            if (pPlayer->GetCurrentWeapon() == WeaponType::TwinGun)
             {
                 if (m_attackTimer == 8) 
                     FireHeavyBullet();
                 
 
-                if (!m_player->IsPlayAnimation()) {
+                if (!pPlayer->IsPlayAnimation()) {
                     m_stateMachine->ChangeState(new PlayerIdleState());
                     return;
                 }
             }
             else 
-                if (m_attackTimer > 10 && !m_player->IsPlayAnimation()) 
-                    m_stateMachine->ChangeState(new PlayerIdleState);
+            {
+                if (m_attackTimer > 10 && !pPlayer->IsPlayAnimation())
+                {
+                    m_stateMachine->ChangeState(new PlayerIdleState()); 
+                } 
+            }
         }
 
 
         void PlayerHeavyAttackState::FireHeavyBullet()
         {
-            m_spawnPosition = m_player->GetBonePosition(L"mixamorig:RightHand");
-            m_forwardDirection = m_player->GetForwardVector();
+            nsActor::Player* pPlayer=m_player;
+            m_spawnPosition = pPlayer->GetBonePosition(L"mixamorig:RightHand");
+            m_forwardDirection = pPlayer->GetForwardVector();
 
             /* 爆発弾（enExplosive）を指定。*/
             ConstructAndTransmitBulletRequest(BulletType::enExplosive);

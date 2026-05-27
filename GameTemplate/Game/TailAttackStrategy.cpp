@@ -12,7 +12,7 @@ namespace nsApp
 {
 	namespace nsAI
 	{
-		void TailAttackStrategy::Enter(nsActor::Boss* boss)
+		void TailAttackStrategy::Enter(nsActor::Boss *boss)
 		{
 			m_timer = ATTACK_TIME;
 			m_isHit = false;
@@ -21,7 +21,7 @@ namespace nsApp
 			boss->PlayAnimation(nsActor::BossAnimationID::TailAttack);
 		}
 
-		void TailAttackStrategy::Update(nsActor::Boss* boss)
+		void TailAttackStrategy::Update(nsActor::Boss *boss)
 		{
 			m_timer -= g_gameTime->GetFrameDeltaTime();
 
@@ -30,6 +30,15 @@ namespace nsApp
 			{
 				m_isHit = true;
 				boss->AttackTail();
+			}
+		}
+
+		void TailAttackStrategy::Exit(nsActor::Boss *boss)
+		{
+			// UŒ‚”»’è‚ð–³Œø‰»
+			if (boss)
+			{
+				boss->GetTailHit().Disable();
 			}
 		}
 

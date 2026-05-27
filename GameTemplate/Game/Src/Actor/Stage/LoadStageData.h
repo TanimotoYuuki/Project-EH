@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "Src/Actor/Stage/Stage.h"
  
 namespace nsApp
@@ -8,10 +8,10 @@ namespace nsApp
 		class LoadStageData
 		{ 
 		private:
-			std::vector<StageData> m_stageDataList;                     /* ‘SƒXƒe[ƒW‚Ìƒ}ƒXƒ^[ƒf[ƒ^B*/
-			std::unique_ptr<Stage> m_currentStage;                      /* Œ»İÀs’†‚ÌƒXƒe[ƒWƒCƒ“ƒXƒ^ƒ“ƒXB*/
-			StageData m_currentStageData;                               /* Œ»İ‚ÌƒXƒe[ƒW‚Ìƒ}ƒXƒ^[ƒf[ƒ^B*/
-			StageID m_currentStageID = StageID::stageNum;               /* Œ»İ‚ÌƒXƒe[ƒWIDB*/
+			std::vector<StageData> m_stageDataList;                     /* å…¨ã‚¹ãƒ†ãƒ¼ã‚¸ã®ãƒã‚¹ã‚¿ãƒ¼ãƒ‡ãƒ¼ã‚¿ã€‚*/
+			std::unique_ptr<Stage> m_currentStage;                      /* ç¾åœ¨å®Ÿè¡Œä¸­ã®ã‚¹ãƒ†ãƒ¼ã‚¸ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã€‚*/
+			StageData m_currentStageData;                               /* ç¾åœ¨ã®ã‚¹ãƒ†ãƒ¼ã‚¸ã®ãƒã‚¹ã‚¿ãƒ¼ãƒ‡ãƒ¼ã‚¿ã€‚*/
+			StageID m_currentStageID = StageID::stageNum;               /* ç¾åœ¨ã®ã‚¹ãƒ†ãƒ¼ã‚¸IDã€‚*/
 
 
 		private:
@@ -20,45 +20,45 @@ namespace nsApp
 
 
 		private:
-			static LoadStageData m_instance;       /* ƒVƒ“ƒOƒ‹ƒgƒ“ƒCƒ“ƒXƒ^ƒ“ƒXB*/
+			static LoadStageData m_instance;       /* ã‚·ãƒ³ã‚°ãƒ«ãƒˆãƒ³ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã€‚*/
 
 
-		/* ƒQƒbƒ^[B*/
+		/* ã‚²ãƒƒã‚¿ãƒ¼ã€‚*/
 		public:
-			/* ƒCƒ“ƒXƒ^ƒ“ƒX‚ğæ“¾B*/
+			/* ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’å–å¾—ã€‚*/
 			inline static LoadStageData& GetInstance()
 			{ 
 				return m_instance;
 			}
 
-			/* Œ»İ‚ÌƒXƒe[ƒW‚ğæ“¾B*/
+			/* ç¾åœ¨ã®ã‚¹ãƒ†ãƒ¼ã‚¸ã‚’å–å¾—ã€‚*/
 			inline Stage* GetCurrentStage() const
 			{
 				return m_currentStage.get();
 			}
 
 		public:
-			 /* ƒRƒs\ƒ€[ƒu‚ğ‹Ö~‚·‚éB*/
+			 /* ã‚³ãƒ”â€•ãƒ ãƒ¼ãƒ–ã‚’ç¦æ­¢ã™ã‚‹ã€‚*/
 			LoadStageData(const LoadStageData&) = delete;
 			void operator = (const LoadStageData&) = delete;
 
 
 		public:
-			/* ƒXƒe[ƒWƒŠƒXƒg‚ğ“Ç‚İ‚ŞB*/
+			/* ã‚¹ãƒ†ãƒ¼ã‚¸ãƒªã‚¹ãƒˆã‚’èª­ã¿è¾¼ã‚€ã€‚*/
 			void CreateStageDataList();
 
-			/* ƒXƒe[ƒW‚ğØ‚è‘Ö‚¦‚éˆ—B*/
+			/* ã‚¹ãƒ†ãƒ¼ã‚¸ã‚’åˆ‡ã‚Šæ›¿ãˆã‚‹å‡¦ç†ã€‚*/
 			void ChangeStage(StageID requestStageID);
 
-			/* XVˆ—B*/
+			/* æ›´æ–°å‡¦ç†ã€‚*/
 			void Update();
 
-			/* •`‰æˆ—B*/
+			/* æç”»å‡¦ç†ã€‚*/
 			void Draw(RenderContext& rc);
 
 
 		private:
-			/* ƒXƒe[ƒW1‚ğ‰Šú‰»B*/
+			/* ã‚¹ãƒ†ãƒ¼ã‚¸1ã‚’åˆæœŸåŒ–ã€‚*/
 			void InitStage1();
 		};
 	}
