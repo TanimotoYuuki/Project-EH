@@ -104,9 +104,6 @@ namespace nsApp
 			/* ダメージ判定。*/
 			m_isDamage = CheckButtonTrigger(enButtonLeft);
 
-			/* 志望判定。*/
-			m_isDeath = CheckButtonTrigger(enButtonDown);
-
 			/* Xボタン判定。*/
 			m_isPressX = CheckButtonTrigger(enButtonX); 
 
@@ -215,12 +212,6 @@ namespace nsApp
 			return m_isDamage;	
 		}
 
-		/* 死亡判定。*/
-		inline bool IsDeath() const
-		{
-			return m_isDeath;
-		}
-
 		/* 移動ベクトルを取得。*/
 		inline Vector3 GetMoveVector() const
 		{
@@ -272,7 +263,6 @@ namespace nsApp
 		bool m_isMove = false;					//! 移動したかどうかを判定。
 		bool m_isRun = false;					//! 走ったかどうかを判定。
 		bool m_isDamage = false;				//! ダメージを受けたかどうかを判定。
-		bool m_isDeath = false;					//! 死亡したかどうかを判定。
 		bool m_isNormalAttack = false;			//! 攻撃入力を検知。
 		bool m_isAirAttack = false;				//! 空中攻撃入力を検知。
 		bool m_isComboAttack = false;			//! コンボ攻撃入力を検知。
