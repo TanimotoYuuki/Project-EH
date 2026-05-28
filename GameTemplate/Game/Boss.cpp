@@ -11,7 +11,7 @@
 
 namespace
 {
-	const Vector3 START_POSITION{200.0, 100.0f, 0.0f};
+	const Vector3 START_POSITION{200.0, 50.0f, 0.0f};
 	const int BOSS_MAX_HP = 5000;
 	const float ROT_SPEED = 5.0f;
 }

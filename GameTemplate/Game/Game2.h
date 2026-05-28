@@ -14,6 +14,7 @@ namespace nsApp
 	class GameEndSelect;
 	class PlayerGenerator;
 	class PlayerControlerHub;
+	class DamageIndicatorPool;
 
 	namespace nsSound {
 		class SoundLister;
@@ -26,6 +27,10 @@ namespace nsApp
 	namespace nsActor {
 		class Player;
 		class Boss;
+	}
+
+	namespace nsUI {
+		class ReboneGaugeUIManager;
 	}
 
 	namespace nsGame
@@ -98,9 +103,11 @@ namespace nsApp
 		private:
 			nsApp::nsSound::SoundLister* m_soundLister = nullptr; //! サウンドリスター。
 			nsApp::nsStage::BackGround* m_backGround = nullptr; //! 背景。
+			nsUI::ReboneGaugeUIManager* m_reboneGaugeUIManager = nullptr;
 			nsApp::Camera* m_camera = nullptr;
 			nsActor::Player* m_player = nullptr;
 			nsActor::Boss* m_boss = nullptr;
+			DamageIndicatorPool* m_damageIndicatorPool = nullptr;
 			CharacterHP* m_characterHP = nullptr;
 			GameTimeLimit* m_gameTimeLimit = nullptr;
 			GameStartDirection* m_gameStartDirection = nullptr;
@@ -115,6 +122,23 @@ namespace nsApp
 			////////////////////////////////////////////////////////
 			PlayerGenerator* m_generator = nullptr;
 			PlayerControlerHub* m_playerHub = nullptr;
+
+
+			/**
+			 * @brief デバッグ用の回復テスト関数。
+			 */
+			void DebugUpdateHealTest();
+
+			/**
+			 * @brief デバッグ用のダメージテスト関数。
+			 */
+			void DebugDamageParty();
+
+			/**
+		     * @brief デバッグ用のHP表示関数。
+			 */
+			void DebugPrintPartyHP();
+
 		};
 	}
 }

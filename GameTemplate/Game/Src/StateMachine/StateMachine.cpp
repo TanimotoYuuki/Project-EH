@@ -43,43 +43,59 @@ namespace nsApp
 		}
 
 
-CLASS_T
-        void StateMachine<T_NAME>::ChangeState(IState<T_NAME>* newState)
-        {
-            // 【変更なし】元のコードのまま、普通に新しいステートをセットします。
-            // ※ただし、Updateの実行中にここが呼ばれると、一時的に m_currentState が入れ替わります。
-            m_currentState->Exit();
-            delete m_currentState;
+		CLASS_T
+	    void StateMachine<T_NAME>::ChangeState(IState<T_NAME>* newState)
+		{
+			if (newState == nullptr)
+			{
+				newState = new NullState<T_NAME>();
+			}
 
-            m_currentState = (newState == nullptr) ? new NullState<T_NAME>() : newState;
+			if (m_isUpdating)
+			{
+				if (m_nextState != nullptr)
+				{
+					delete m_nextState;
+					m_nextState = nullptr;
+				}
 
-            m_currentState->Register(m_owner, this);
-            m_currentState->Enter();
-        }
+				m_nextState = newState;
+				return;
+			}
+
+			if(m_currentState != nullptr)
+			{
+				m_currentState->Exit();
+				delete m_currentState;
+				m_currentState = nullptr;
+			}
+
+			m_currentState = newState;
+			m_currentState->Register(m_owner, this);
+			m_currentState->Enter();
+		}
 
 
-        CLASS_T
-        void StateMachine<T_NAME>::Update()
-        {
-            // 1. 現在のステートのポインタ（アドレス）をローカル変数にコピーしておく
-            IState<T_NAME>* pActiveState = m_currentState;
+		CLASS_T
+	    void StateMachine<T_NAME>::Update()
+		{
+			m_isUpdating = true;
 
-            // 2. ステートの Update を実行する
-            pActiveState->Update();
+			if (m_currentState != nullptr)
+			{
+				m_currentState->Update();
+			}
 
-            // 3. 【超重要】もし Update の中で ChangeState() が呼び出されていた場合、
-            //    m_currentState の中身は「新しいステート」にすり替わっています。
-            //    逆に、pActiveState の中身は「deleteされて消えた古いステート」を指しています。
-            
-            // もし両者が一致していない ＝ Update中にステートが切り替わった、と判断できる
-            if (m_currentState != pActiveState)
-            {
-                // すでに自分自身は破壊されている（ゾンビ状態）ので、
-                // これ以上この関数（Update）の中で m_player などを触らないように
-                // 即座にリターンして安全に処理を終わらせます。
-                return;
-            }
-        }
+			m_isUpdating = false;
+
+			if (m_nextState != nullptr)
+			{
+				IState<T_NAME>* nextState = m_nextState;
+				m_nextState = nullptr;
+				ChangeState(nextState);
+			}
+		}
+
 		/* Actorクラスに対してテンプレートの使用可能にする。*/
 		template class StateMachine<nsApp::nsActor::Actor>;
 
