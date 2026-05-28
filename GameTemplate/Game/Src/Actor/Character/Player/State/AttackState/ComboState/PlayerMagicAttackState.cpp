@@ -7,49 +7,84 @@ namespace nsApp
 {
 	namespace nsState
 	{
-		void PlayerMagicAttackState::Enter()
+		void PlayerMagicAttackState::PlayAttackAnimation()
 		{
-			/* キャスト。*/
-			m_player = static_cast<nsActor::Player*>(m_owner);
-
 			/* 攻撃の種類をセット。*/
 			m_currentAttackType = AttackType::MagicAttack;
 
-			/* アニメーションを再生。*/
+			/* 再生するアニメーションの種類をセット。*/
 			m_player->PlayWeaponAnimation(AttackType::MagicAttack);
+		}
+
+
+		void PlayerMagicAttackState::OnEnterAttack()
+		{
+			/* チャージしていない場合は発動不可。*/
+			const int chargeLevel = m_player->GetEffectScale();
+			if (chargeLevel <= 0)
+			{
+				m_canExecuteMagicAttack = false;
+				m_hasSpawnedLaserEffect = true;
+				return;
+			}
+
+			m_canExecuteMagicAttack = true;
 
 			/* 当たり判定を付与。*/
 			m_player->GetWeaponHitDetection().Enable();
 
-			m_attackTimer++;
+			/* エフェクト生成フラグを初期化。*/
+			m_hasSpawnedLaserEffect = false;
 		}
 
 
-		void PlayerMagicAttackState::Update()
+		void PlayerMagicAttackState::OnAttackTick()
 		{
-			/* タイマーの更新。*/
-			m_attackTimer++;
+		}
 
-			/* nフレーム目でエフェクトを再生させる。*/
-			if (m_attackTimer == 15)
+
+		bool PlayerMagicAttackState::OnUpdateAttack()
+		{
+			if (!m_canExecuteMagicAttack)
+			{
+				m_stateMachine->ChangeState(new PlayerIdleState());
+				return true;
+			}
+
+			if (!m_hasSpawnedLaserEffect && m_attackTimer >= 15)
+			{
 				SpawnLaserEffect();
 
-			/* アニメーションが終わったら待機状態へ戻る */
-			if (m_attackTimer > 400 && !m_player->IsPlayAnimation())
+				/* 魔法使用後はチャージをリセット。*/
+				m_player->SetChargeLevel(0);
+
+				m_hasSpawnedLaserEffect = true;
+			}
+
+			if (m_attackTimer > 500 && !m_player->IsPlayAnimation())
+			{
 				m_stateMachine->ChangeState(new PlayerIdleState());
+				return true;
+			}
+
+			if (m_attackTimer > 500)
+			{
+				m_stateMachine->ChangeState(new PlayerIdleState());
+				return true;
+			}
+
+			return true;
 		}
 
 
-		void PlayerMagicAttackState::Exit()
+		void PlayerMagicAttackState::OnExitAttack()
 		{
-			/* ステート終了時にはエフェクトを停止指させる。*/
+			/* 終了時にエフェクトを安全に消去 */
 			if (m_laserEffect != nullptr)
 			{
 				m_laserEffect->Stop();
 				m_laserEffect = nullptr;
 			}
-
-			PlayerAttackBaseState::Exit();
 		}
 
 

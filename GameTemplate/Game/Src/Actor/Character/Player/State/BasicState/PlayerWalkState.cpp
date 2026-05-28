@@ -42,8 +42,7 @@ namespace nsApp
 
 				/* 現在の座標にスティックの入力量と速度を加算。*/
 				m_moveVector = m_moveDirection * m_walkSpeed;
-				m_player->GetCharacterController().Execute(m_moveVector, MOVE_FRAME_TIME);
-				m_player->SetPosition(m_player->GetCharacterController().GetPosition());
+				m_player->MoveWithBattleClamp(m_moveVector, MOVE_FRAME_TIME);
 
 				/* 回転軸を制御。*/
 				if (m_moveDirection.x > 0.01f)

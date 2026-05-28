@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "PlayerChargingState.h"
+#include "Src/Actor/Character/Player/Player.h"
 #include "Src/Actor/Character/Player/Component/ComboRouteTable.h"
 #include "Src/Actor/Character/Player/CharacterByWeapon/WandCharacter.h"
 
@@ -13,6 +14,8 @@ namespace
 	const auto EFFECT_SCALE = Vector3::One * 5.0f; //! エフェクトの大きさ。
 	const auto EFFECT_POSITION = 50.0f;            //! エフェクトの位置。
 	const auto FIRE_EFFECT_ANGLE = 22.5f;          //! 炎エフェクトの角度。
+	constexpr int kRequiredChargeFrame = 30;
+
 }
 
 /** @def
@@ -63,6 +66,13 @@ namespace nsApp
 			/* ボタンアクションで派生。*/
 			if (m_player->GetCurrentWeapon() == WeaponType::Wand)
 			{
+				constexpr int kRequiredChargeFrame = 30;
+				const bool isChargeReady = m_chargingTimer >= kRequiredChargeFrame;
+
+				/* チャージが足りない間はRB/RTを受け付けない。*/
+				if (!isChargeReady)
+					return;
+
 				/* RBButtonで魔法攻撃状態に遷移。*/
 				if (m_player->GetInputClass().IsPressRB())
 				{
@@ -76,8 +86,8 @@ namespace nsApp
 					m_stateMachine->ChangeState(new PlayerHeelMagicState());
 					return;
 				}
-			}
-		////////////////////////////////////////////////////////////////////////
+			}		
+			////////////////////////////////////////////////////////////////////////
 		}
 
 
@@ -97,12 +107,6 @@ namespace nsApp
 
 			if (m_player)
 				m_player->StopWeaponSE();
-		}
-
-
-		bool PlayerChargingState::RequestID(uint8_t& id)
-		{
-			return CheckCombo(PLAYER_STATE_ID::enCharging, id);
 		}
 
 
