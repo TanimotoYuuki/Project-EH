@@ -1,9 +1,9 @@
 #pragma once
 /**
 * @file   StateTransitionDiagram.h
-* @brief  ó‘Ô‘JˆÚ}‚ğŠÇ—‚·‚éƒNƒ‰ƒXB
+* @brief  çŠ¶æ…‹é·ç§»å›³ã‚’ç®¡ç†ã™ã‚‹ã‚¯ãƒ©ã‚¹ã€‚
 * @author Yamaguchi Hayato
-* @date @2026/03/24
+* @date ã€€2026/03/24
 */
 
 #include "stdint.h"
@@ -18,8 +18,8 @@ namespace nsApp
 	{
 		struct Transition
 		{
-			bool condition;                     //! ‘JˆÚğŒB
-			nsActor::PlayerStateID nextStateID; //! ‘JˆÚæ‚ÌƒXƒe[ƒgIDB
+			bool condition;                     //! é·ç§»æ¡ä»¶ã€‚
+			nsActor::PlayerStateID nextStateID; //! é·ç§»å…ˆã®ã‚¹ãƒ†ãƒ¼ãƒˆIDã€‚
 		};
 
 
@@ -27,61 +27,55 @@ namespace nsApp
 		{
 		public:
 			/* 
-			 * ó‘Ô‘JˆÚ}‚ğŠm”F‚·‚éB
-			 * @param inputClass:   player‚Ì“ü—Í‚ğŒŸ’m‚·‚éƒNƒ‰ƒXB
-			 * @param transitionID: ‘JˆÚIDB
-			 * @param currentStateID: Œ»İ‚ÌƒXƒe[ƒgIDB
+			 * çŠ¶æ…‹é·ç§»å›³ã‚’ç¢ºèªã™ã‚‹ã€‚
+			 * @param inputClass:   playerã®å…¥åŠ›ã‚’æ¤œçŸ¥ã™ã‚‹ã‚¯ãƒ©ã‚¹ã€‚
+			 * @param transitionID: é·ç§»IDã€‚
+			 * @param currentStateID: ç¾åœ¨ã®ã‚¹ãƒ†ãƒ¼ãƒˆIDã€‚
 			 */
 			static bool CheckCommonTransition(const PlayerInput& inputClass, uint8_t& transitionID, uint8_t currentStateID = 0xFF)
 			{
-				/* ó‘Ô‘JˆÚ}B*/
+				/* çŠ¶æ…‹é·ç§»å›³ã€‚*/
 				Transition transitionDiagram[] =
 				{
-					/* €–Só‘ÔB*/
-					{ inputClass.IsDeath(), nsActor::PlayerStateID::enDeath },
-					/* ƒ_ƒ[ƒWó‘ÔB(Hitó‘Ô’†‚ÍÄ“xƒ_ƒ[ƒW‘JˆÚ‚ğ”­¶‚³‚¹‚È‚¢)B*/
-					{ inputClass.IsDamage() && currentStateID != static_cast<uint8_t>(nsActor::PlayerStateID::enHit), nsActor::PlayerStateID::enHit },
-					/* ‘–‚èó‘ÔB*/
-					{ inputClass.IsRun(), nsActor::PlayerStateID::enRun },
-					/* ƒWƒƒƒ“ƒvó‘ÔB*/
-					{ inputClass.IsJump(), nsActor::PlayerStateID::enJump },
-					/* •à‚«ó‘ÔB*/
-					{ inputClass.IsMove(), nsActor::PlayerStateID::enWalk },
-					/* ’ÊíUŒ‚ó‘ÔB*/
-					{ inputClass.IsNormalAttack(), nsActor::PlayerStateID::enNormalAttack },
-					/* ƒ`ƒƒ[ƒWó‘ÔB*/
-					{ inputClass.IsCharging(), nsActor::PlayerStateID::enCharging},
-					/* ƒ`ƒƒ[ƒWUŒ‚ó‘ÔB*/
-					{ inputClass.IsChargeAttack(), nsActor::PlayerStateID::enChargeAttack },
-					/* ƒRƒ“ƒ{UŒ‚ó‘ÔB*/
-					{ inputClass.IsComboAttack(), nsActor::PlayerStateID::enComboAttack },
-					/* ˜A‘±UŒ‚ŠJn”»’èB*/
-					{ inputClass.IsRushStart(), nsActor::PlayerStateID::enRushStart},
-					/* ˜A‘±UŒ‚I—¹”»’èB*/
-					{ inputClass.IsRushEnd(), nsActor::PlayerStateID::enRushEnd},
-					/* ƒK[ƒhó‘ÔB*/
-					{ inputClass.IsGuard(), nsActor::PlayerStateID::enGuard},
-					/* •‚¯‚éó‘ÔB*/
+					/* ãƒ€ãƒ¡ãƒ¼ã‚¸çŠ¶æ…‹ã€‚*/
+					{ inputClass.IsDamage(), nsActor::PlayerStateID::enHit },
+					/* åŠ©ã‘ã‚‹çŠ¶æ…‹ã€‚*/
 					{ inputClass.IsHelp(), nsActor::PlayerStateID::enHelp},
-					/* –‚–@UŒ‚ó‘ÔB*/
-					{ inputClass.IsPressRB(), nsActor::PlayerStateID::enMagicAttack},
-					/* ‰ñ•œ–‚–@ó‘ÔB*/
-					{ inputClass.IsPressRT(), nsActor::PlayerStateID::enHeelMagic},
+					/* èµ°ã‚ŠçŠ¶æ…‹ã€‚*/
+					{ inputClass.IsRun(), nsActor::PlayerStateID::enRun },
+					/* ã‚¸ãƒ£ãƒ³ãƒ—çŠ¶æ…‹ã€‚*/
+					{ inputClass.IsJump(), nsActor::PlayerStateID::enJump },
+					/* æ­©ãçŠ¶æ…‹ã€‚*/
+					{ inputClass.IsMove(), nsActor::PlayerStateID::enWalk },
+					/* é€šå¸¸æ”»æ’ƒçŠ¶æ…‹ã€‚*/
+					{ inputClass.IsNormalAttack(), nsActor::PlayerStateID::enNormalAttack },
+					/* ãƒãƒ£ãƒ¼ã‚¸çŠ¶æ…‹ã€‚*/
+					{ inputClass.IsCharging(), nsActor::PlayerStateID::enCharging},
+					/* ãƒãƒ£ãƒ¼ã‚¸æ”»æ’ƒçŠ¶æ…‹ã€‚*/
+					{ inputClass.IsChargeAttack(), nsActor::PlayerStateID::enChargeAttack },
+					/* ã‚³ãƒ³ãƒœæ”»æ’ƒçŠ¶æ…‹ã€‚*/
+					{ inputClass.IsComboAttack(), nsActor::PlayerStateID::enComboAttack },
+					/* é€£ç¶šæ”»æ’ƒé–‹å§‹åˆ¤å®šã€‚*/
+					{ inputClass.IsRushStart(), nsActor::PlayerStateID::enRushStart},
+					/* é€£ç¶šæ”»æ’ƒçµ‚äº†åˆ¤å®šã€‚*/
+					{ inputClass.IsRushEnd(), nsActor::PlayerStateID::enRushEnd},
+					/* ã‚¬ãƒ¼ãƒ‰çŠ¶æ…‹ã€‚*/
+					{ inputClass.IsGuard(), nsActor::PlayerStateID::enGuard},
 				};
 
 
-				/* ğŒ‚ğ–‚½‚µ‚Ä‚¢‚é‚Ì‚©Šm”FB*/
+				/* æ¡ä»¶ã‚’æº€ãŸã—ã¦ã„ã‚‹ã®ã‹ç¢ºèªã€‚*/
 				for (const auto& transion : transitionDiagram)
 				{
 					if (transion.condition)
 					{
-						/* ‘JˆÚæ‚ğƒLƒƒƒXƒgB*/
+						/* é·ç§»å…ˆã‚’ã‚­ãƒ£ã‚¹ãƒˆã€‚*/
 						transitionID = static_cast<uint8_t>(transion.nextStateID);
 						return true;
 					}
 				}
 
-				/* ‚Ç‚ê‚É‚à–‚½‚µ‚Ä‚¢‚È‚¢ê‡B*/
+				/* ã©ã‚Œã«ã‚‚æº€ãŸã—ã¦ã„ãªã„å ´åˆã€‚*/
 				return false;
 			}
 		};

@@ -51,8 +51,6 @@ namespace nsApp
 
 					/* モデルの初期化処理を実行。*/
 					m_currentStage->Initialize();
-
-					/* @TODO: 必要ならここでPlayerの座標を更新。*/
 					return;
 				}
 			}

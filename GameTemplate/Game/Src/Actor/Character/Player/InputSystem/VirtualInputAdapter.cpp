@@ -13,6 +13,22 @@ namespace nsApp
 	{
 		/* 現在の入力情報を前フレーム入力として一括辞退。*/
 		m_previousButtons = m_currentButtons;
+
+		for (auto it = m_buttonHoldFrames.begin(); it != m_buttonHoldFrames.end();)
+		{
+			if (it->second > 0)
+			{
+				it->second--;
+				m_currentButtons[it->first] = true;
+				++it;
+			}
+
+			else
+			{
+				m_currentButtons[it->first] = false;
+				it = m_buttonHoldFrames.erase(it);
+			}
+		}
 	}
 
 
@@ -23,7 +39,8 @@ namespace nsApp
 		m_currentButtons.clear();  
 		/* 前フレームの入力状態。*/
 		m_previousButtons.clear();
-
+		/* 入力の保持フレーム数。*/
+		m_buttonHoldFrames.clear();
 		/* スティックの値。*/
 		/* X軸。*/
 		m_stickX = INPUT_VOLUME;

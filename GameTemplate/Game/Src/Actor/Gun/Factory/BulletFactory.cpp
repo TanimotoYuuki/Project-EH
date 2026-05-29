@@ -19,11 +19,25 @@ namespace nsApp
 		spawnPosition.y += bulletParam.spawnOffsetY;
 		spawnPosition += normalizedDirection * bulletParam.spawnForwardOffset;
 
-		/* 弾丸を生成。*/
-		auto* bullet = NewGO<nsActor::IGunBullet>(0, "Bullet");
+		/* 未使用の弾丸を探す。*/
+		nsActor::IGunBullet* bullet = nullptr;
 
-		/* 生成に成功している場合、初期化。*/
-		if (bullet)
+		const auto& bullets = FindGOs<nsActor::IGunBullet>("Bullet");
+		for (auto* pooledBullet : bullets)
+		{
+			if (pooledBullet != nullptr && !pooledBullet->IsInUse())
+			{
+				bullet = pooledBullet;
+				break;
+			}
+		}
+
+		/* 未使用の弾丸がなければ新規生成する。*/
+		if (bullet == nullptr)
+			bullet = NewGO<nsActor::IGunBullet>(0, "Bullet");
+
+		/* 取得に成功している場合、初期化。*/
+		if (bullet != nullptr)
 			bullet->Initialize(bulletParam, spawnPosition, normalizedDirection);
 	}
 }

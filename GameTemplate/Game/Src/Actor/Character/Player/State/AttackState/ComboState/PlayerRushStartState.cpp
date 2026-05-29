@@ -9,7 +9,7 @@ namespace
 	const auto MOVE_FRAME_SPEED = 1.0 / 60.0f; //! 前進するフレーム数。
 	const auto INCREASE_VALUE_Y = 10.0f;       //! Y軸の上昇値。
 	const auto ATTACK_TIMER_5 = 5;             //! 攻撃タイマーの5フレーム目。
-	const auto ATTACK_TIMER_12 = 5;            //! 攻撃タイマーの12フレーム目。
+	const auto ATTACK_TIMER_12 = 12;           //! 攻撃タイマーの12フレーム目。
 	const auto WEAPON_ANGLE = -90.0f;          //! 武器の角度。
 }
 	
@@ -33,109 +33,105 @@ namespace nsApp
 {
 	namespace nsState
 	{
-		void PlayerRushStartState::Enter()
+		void PlayerRushStartState::PlayAttackAnimation()
 		{
-			/* キャラスト。*/
-			m_player = static_cast<nsActor::Player*>(m_owner);
-
-			/* 攻撃のタイプを設定する。*/
 			m_currentAttackType = AttackType::RushAttack_Start;
-
-			/* アニメーションを再生。*/
 			m_player->PlayWeaponAnimation(AttackType::RushAttack_Start);
 
-			/* GunCharacterの場合、もう一つ銃モデルをロードする。*/
 			if (m_player->GetCurrentWeapon() == WeaponType::TwinGun)
 			{
 				m_player->LoadSubWeapon(CharacterModelType::Weapon_TwinGun);
-				m_player->SetWeaponRotationAngle(Vector3::Front, -WEAPON_ANGLE);
+				m_player->SetWeaponRotationAngle(Vector3::Front, 90.0f);
 			}
-
-			/* 当たり判定を有効にする。*/ 
-			m_player->GetWeaponHitDetection().Enable();
 		}
 
 
-		void PlayerRushStartState::Update()
+		void PlayerRushStartState::OnEnterAttack()
 		{
-			/* 前進する処理。*/
+			/* 当たり判定を付与。*/
+			m_player->GetWeaponHitDetection().Enable();
+
+			m_loopCount = 0;
+		}
+
+
+		bool PlayerRushStartState::OnUpdateAttack()
+		{
+			/* 移動処理。*/
 			MoveForward();
 
-			if (m_player->GetCurrentWeapon() == WeaponType::TwinGun)
+			/* 銃の場合。*/
+			if(m_player->GetCurrentWeapon() == WeaponType::TwinGun)
 			{
-				/* ボーンの切り替え。*/
-				AdjustBoneNameByKeyFrameNumber();
-
-				/* ループと終了の判定 */
+				/* アニメーションの終了判定。*/
 				if (!m_player->IsPlayAnimation())
 				{
+					/* count。*/
 					m_loopCount++;
-					m_isButtonReleased = !m_player->GetInputClass().CheckButtonPress(enButtonB);
 
-					if (m_loopCount >= 4 || m_isButtonReleased)
+					/* Bボタンの判定を取得。*/
+					m_isReleased = !m_player->GetInputClass().CheckButtonPress(enButtonB);
+
+					/* countが4回以上なら。*/
+					if (m_loopCount >= 4 || m_isReleased)
 					{
+						/* 連続攻撃終了ステートへ遷移。*/
 						m_stateMachine->ChangeState(new PlayerRushEndState());
-						return; // ★追加：自分が消滅するので即座にリターン！
+						return true;
 					}
+
 					else
 					{
+						/* アニメーションを再生。*/
 						m_player->PlayWeaponAnimation(AttackType::RushAttack_Start);
-						m_attackTimer = 0;
+						/* 攻撃タイマーをリセット。*/
+						SetAttackTimer(0);
 					}
 				}
 			}
+
 			else if (m_player->GetCurrentWeapon() == WeaponType::Wand)
 			{
-				if (m_attackTimer == 10 && !m_isSummoned) {
-					SummonMissile();
-					m_isSummoned = true;
-				}
-
-				if (m_attackTimer > ATTACK_TIMER_12 && !m_player->IsPlayAnimation())
+				if (m_attackTimer > 12 && !m_player->IsPlayAnimation())
 				{
 					m_stateMachine->ChangeState(new PlayerIdleState());
-					return; 
-				}
-			}
-			else
-			{
-				if (m_attackTimer == 10 && !m_isSummoned) {
-					SummonMissile();
-					m_isSummoned = true;
-				}
-
-				if (m_attackTimer > 10 && !m_player->IsPlayAnimation())
-				{
-					m_loopCount++;
-					if (m_loopCount < 3) {
-						m_player->PlayWeaponAnimation(AttackType::RushAttack_Start);
-						m_attackTimer = 0;
-					}
-					else
-					{
-						m_stateMachine->ChangeState(new PlayerRushEndState());
-						return; 
-					}
+					return true;
 				}
 			}
 
-			PlayerAttackBaseState::Update();
+			return false;
 		}
 
 
-		void PlayerRushStartState::Exit()
+		void PlayerRushStartState::OnExitAttack()
 		{
 			if (m_player && m_player->GetCurrentWeapon() == WeaponType::TwinGun)
 			{
+				/* サブウェポンの描画をリセット。*/
 				m_player->ResetSubWeapon();
-				m_player->SetWeaponRotationAngle(Vector3::Front ,WEAPON_ANGLE);
+				/* 武器の角度をリセット。*/
+				m_player->SetWeaponRotationAngle(Vector3::Front, -90.0f);
 			}
-
-			PlayerAttackBaseState::Exit();
 		}
 
 
-		bool PlayerRushStartState::RequestID(uint8_t& id)
+		void PlayerRushStartState::OnAttackTick()
+		{
+			if (m_player->GetCurrentWeapon() == WeaponType::TwinGun)
+				AdjustBoneNameByKeyFrameNumber(); // 内部で m_attackTimer のチェックをしている
+
+			else if (m_player->GetCurrentWeapon() == WeaponType::Wand)
+			{
+				if (m_attackTimer == 10 && !m_isSummoned)
+				{
+					ConstructAndTransmitMagicRequest(nsActor::MagicType::enRushMagic, m_player->SearchCharacter());
+					m_isSummoned = true;
+				}
+			}
+		}
+
+
+		bool PlayerRushStartState::OnRequestAttackID(uint8_t& id)
 		{
 			return CheckCombo(nsActor::PlayerStateID::enRushStart, id);
 		}

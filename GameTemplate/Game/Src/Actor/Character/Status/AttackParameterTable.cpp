@@ -3,13 +3,13 @@
 
 namespace
 {
-	const auto CONSECUTIVE_ATTACK_RATE = 0.5f;   //! 連続攻撃のダメージ倍率。
-	const auto NORMAL_ATTACK_DAMAGE_RATE = 1.0f; //! 通常攻撃のダメージ倍率。
-	const auto PUSH_FORWARD_DAMAGE_RATE = 1.0f;  //! 斬り上げ攻撃のダメージ倍率。
-	const auto CHARGE_ATTACK_DAMAGE_RATE = 1.5f; //! チャージ攻撃のダメージ倍率。
-	const auto AIR_ATTACK_DAMAGE_RATE = 2.0f;    //! バックスラッシュ(空中攻撃)のダメージ倍率。
-	const auto MAGIC_ATTACK_DAMAGE_RATE = 1.0f;  //! 魔法攻撃のダメージ倍率。
-	const auto HEEL_MAGIC_HEEL_RATE = 0.0f;      //! 回復魔法の回復倍率。
+	const auto CONSECUTIVE_ATTACK_RATE = 1.0f;   //! 連続攻撃のダメージ倍率 
+	const auto NORMAL_ATTACK_DAMAGE_RATE = 2.0f; //! 通常攻撃のダメージ倍率 
+	const auto PUSH_FORWARD_DAMAGE_RATE = 2.0f;  //! 斬り上げ攻撃のダメージ倍率
+	const auto CHARGE_ATTACK_DAMAGE_RATE = 5.0f; //! チャージ攻撃のダメージ倍率 
+	const auto AIR_ATTACK_DAMAGE_RATE = 3.0f;    //! バックスラッシュ(空中攻撃)のダメージ倍率 
+	const auto MAGIC_ATTACK_DAMAGE_RATE = 2.5f;  //! 魔法攻撃のダメージ倍率 
+	const auto HEEL_MAGIC_HEEL_RATE = 0.0f;      //! 回復魔法の回復倍率 
 }
 
 namespace nsApp
@@ -42,7 +42,6 @@ namespace nsApp
 		{AttackType::MagicAttack, {MAGIC_ATTACK_DAMAGE_RATE, 0.0f}},
 
 		/* 回復魔法。*/
-		/* @TODO: ダメージ倍率を回復倍率として実装。*/
 		{AttackType::HeelMagic, {HEEL_MAGIC_HEEL_RATE, 0.0f}},
 	};
 
@@ -56,5 +55,4 @@ namespace nsApp
 
 		return m_table.at(AttackType::NormalAttack);
 	}
-
 }

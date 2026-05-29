@@ -133,7 +133,7 @@
       <Filter>Src\Actor\Character\Player\State\AttackState</Filter>
     </ClCompile>
     <ClCompile Include="Src\Camera\Camera.cpp" />
-    <ClCompile Include="PresentDamageIndicator.cpp" />
+    <ClCompile Include="Src\Actor\Character\Common\Damage\PresentDamageIndicator.cpp" />
     <ClCompile Include="Src\Actor\Character\Common\WeaponHitDetection.cpp" />
     <ClCompile Include="Src\Camera\Camera.cpp">
       <Filter>Src\Camera</Filter>
@@ -227,9 +227,19 @@
     <ClCompile Include="Src\Actor\Magic\Factory\MagicFactory.cpp" />
     <ClCompile Include="Src\Actor\Character\NPC\State\AttackState\NPCTwinGunAttackState.cpp" />
     <ClCompile Include="Src\Actor\Character\Player\InputSystem\VirtualInputAdapter.cpp" />
-    <ClCompile Include="PlayerControlerHub.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\InputSystem\PlayerControlerHub.cpp" />
     <ClCompile Include="Src\Debug\Sandbag.cpp" />
     <ClCompile Include="BossRoarState.cpp" />
+    <ClCompile Include="Src\Actor\Character\Common\Damage\DamageProcessor.cpp" />
+    <ClCompile Include="Src\Actor\Character\Common\Damage\DamageIndicatorPool.cpp" />
+    <ClCompile Include="Src\Actor\Heel\HeelArea.cpp" />
+    <ClCompile Include="Src\Actor\Character\NPC\State\BasicState\NPCHelpState.cpp" />
+    <ClCompile Include="ResourceUtility.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\Component\RescueStatusManager.cpp" />
+    <ClCompile Include="Src\Actor\Character\NPC\Component\NPCCombatHelper.cpp" />
+    <ClCompile Include="Src\UI\ReboneGage\ReboneGaugeUI.cpp" />
+    <ClCompile Include="Src\UI\ReboneGage\ReboneGageManager.cpp" />
+    <ClCompile Include="Src\Actor\Character\NPC\Component\RescueStatusLister.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -327,7 +337,7 @@
     <ClInclude Include="Src\Camera\Camera.h">
       <Filter>Src\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="PresentDamageIndicator.h" />
+    <ClInclude Include="Src\Actor\Character\Common\Damage\PresentDamageIndicator.h" />
     <ClInclude Include="Src\Actor\Character\Common\WeaponHitDetection.h" />
     <ClInclude Include="Src\Actor\Character\Status\AttackParameterTable.h" />
     <ClInclude Include="Src\Actor\Stage\BackGround.h" />
@@ -420,8 +430,24 @@
     <ClInclude Include="Src\Actor\Character\Player\InputSystem\IInputDevice.h" />
     <ClInclude Include="Src\Actor\Character\Player\InputSystem\GamePadInputAdapter.h" />
     <ClInclude Include="Src\Actor\Character\Player\InputSystem\VirtualInputAdapter.h" />
-    <ClInclude Include="PlayerControlerHub.h" />
+    <ClInclude Include="Src\Actor\Character\Player\InputSystem\PlayerControlerHub.h" />
     <ClInclude Include="Src\Debug\Sandbag.h" />
     <ClInclude Include="BossRoarState.h" />
+    <ClInclude Include="Src\Actor\Character\Common\Damage\DamageRequest.h" />
+    <ClInclude Include="Src\Actor\Character\Common\Damage\DamageProcessor.h" />
+    <ClInclude Include="Src\Actor\Character\Common\Pool\IPoolable.h" />
+    <ClInclude Include="Src\Actor\Character\Common\Pool\GameObjectPool.h" />
+    <ClInclude Include="Src\Actor\Character\Common\Damage\DamageIndicatorPool.h" />
+    <ClInclude Include="Src\Actor\Heel\HeelArea.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\State\BasicState\NPCHelpState.h" />
+    <ClInclude Include="ResourceUtility.h" />
+    <ClInclude Include="Src\Actor\Character\Player\Component\RescueStatusManager.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\Component\NPCCombatHelper.h" />
+    <ClInclude Include="Src\UI\ReboneGage\ReboneGaugeUI.h" />
+    <ClInclude Include="Src\UI\ReboneGage\ReboneGageManager.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\Component\RescueStatusLister.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Src\Actor\Character\Common\Pool\GameObjectPool.inl" />
   </ItemGroup>
 </Project>

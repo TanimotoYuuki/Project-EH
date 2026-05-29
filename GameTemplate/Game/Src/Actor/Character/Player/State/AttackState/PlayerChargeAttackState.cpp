@@ -16,47 +16,35 @@ namespace nsApp
 {
 	namespace nsState
 	{
-		void PlayerChargeAttackState::Enter()
+		void PlayerChargeAttackState::PlayAttackAnimation()
 		{
-			/* キャスト。*/
-			m_player = static_cast<nsActor::Player*>(m_owner);
-
-			/* タイマーをリセット。*/
-			m_attackTimer = 0.0f;
-
-			/* 武器の種類によってチャージ後の攻撃のアニメーションを変化させる。*/
+			/* 武器の種類によってアニメーションを変化させる。*/
 			if (m_player->GetCurrentWeapon() == WeaponType::Hammer)
 			{
-				CURRENT_WEAPON::HeavyAttack;
-				PLAYER_PLAY_ANIMATION(AttackType::ChargeAttack);
+				m_currentAttackType = AttackType::HeavyAttack;
+				m_player->PlayWeaponAnimation(AttackType::ChargeAttack);
 			}
 
 			else
 			{
-				CURRENT_WEAPON::ChargeAttack;
-				PLAYER_PLAY_ANIMATION(AttackType::ChargeAttack);
+				m_currentAttackType = AttackType::ChargeAttack;
+				m_player->PlayWeaponAnimation(AttackType::ChargeAttack);
 			}
-
-			/* 当たり判定を有効にする。*/
-			m_player->GetWeaponHitDetection().Enable();
 		}
 
 
-		void PlayerChargeAttackState::Update()
+		void PlayerChargeAttackState::OnAttackTick()
 		{
-			if (!m_player)
-				return;
+			/* 1フレーム目では当たり判定を有効化させる。*/
+			if (m_attackTimer == 1)
+				m_player->GetWeaponHitDetection().Enable();
 
-			m_attackTimer++;
-
+			/* 弾丸を生成。*/
 			if (m_attackTimer == FIRE_FRAME && m_player->GetCurrentWeapon() == WeaponType::TwinGun)
 				FireChargeBullet();
-
-			/* 親クラスを更新。*/
-			PlayerAttackBaseState::Update();
 		}
 
-		
+
 		void PlayerChargeAttackState::FireChargeBullet()
 		{
 			/* 武器の当たり判定を取得する。*/

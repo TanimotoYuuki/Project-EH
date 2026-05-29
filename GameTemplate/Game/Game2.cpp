@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <time.h>
 #include "Game2.h"
 #include "Src/Fade/Fade.h"
 
@@ -17,7 +18,13 @@
 #include "Boss.h"
 #include "Src/Actor/Stage/BackGround.h"
 #include "Src/Actor/Character/Player/Component/PlayerGenerator.h"
-#include "PlayerControlerHub.h"
+#include "Src/Actor/Character/Player/InputSystem/PlayerControlerHub.h"
+
+#include "Src/Actor/Character/Common/Damage/DamageIndicatorPool.h"
+#include "Src/Actor/Character/Common/Damage/DamageProcessor.h"
+#include "Src/UI/ReboneGage/ReboneGageManager.h"
+#include <Windows.h>
+
 
 namespace
 {
@@ -30,22 +37,158 @@ namespace
 	const auto INIT_CHARACTER_POSITION_PLAYER4 = Vector3(50.0f, INIT_CHARACTER_POSITION_Y, INIT_CHARACTER_POSITION_Z);
 }
 
+namespace
+{
+	bool IsTriggerKey(int keyCode)
+	{
+		static SHORT prevKeyState[256] = { 0 };
+
+		SHORT currentKeyState = GetAsyncKeyState(keyCode);
+		bool isCurrentDown = (currentKeyState & 0x8000) != 0;
+		bool isPrevDown = (prevKeyState[keyCode] & 0x8000) != 0;
+
+		prevKeyState[keyCode] = currentKeyState;
+
+		return isCurrentDown && !isPrevDown;
+	}
+}
+
 namespace nsApp
 {
 	namespace nsGame
 	{
+
+		void Game2::DebugUpdateHealTest()
+		{
+			/* 1ã‚­ãƒ¼ã§å‘³æ–¹å…¨å“¡ã«ãƒ‡ãƒãƒƒã‚°ãƒ€ãƒ¡ãƒ¼ã‚¸ã‚’ä¸ãˆã‚‹ã€‚*/
+			if (IsTriggerKey('1'))
+			{
+				OutputDebugStringA("[DEBUG] 1 DamageParty\n");
+				DebugDamageParty();
+			}
+
+			/* 2ã‚­ãƒ¼ã§å‘³æ–¹å…¨å“¡ã®HPã‚’è¡¨ç¤ºã™ã‚‹ã€‚*/
+			if (IsTriggerKey('2'))
+			{
+				OutputDebugStringA("[DEBUG] 2 PrintPartyHP\n");
+				DebugPrintPartyHP();
+			}
+		}
+
+		void Game2::DebugDamageParty()
+		{
+			constexpr int DEBUG_DAMAGE = 300;
+
+			const char* playerNames[] =
+			{
+				"player1",
+				"player2",
+				"player3",
+				"player4"
+			};
+
+			for (const char* name : playerNames)
+			{
+				auto player = FindGO<nsActor::Player>(name);
+
+				if (player == nullptr)
+				{
+					char debugText[256];
+					sprintf_s(
+						debugText,
+						"[DEBUG DAMAGE] %s not found\n",
+						name
+					);
+
+					OutputDebugStringA(debugText);
+					continue;
+				}
+
+				player->ApplyDamage(DEBUG_DAMAGE);
+
+				const auto& hp = player->GetCharacterStatus().hp;
+
+				char debugText[256];
+				sprintf_s(
+					debugText,
+					"[DEBUG DAMAGE] %s HP: %d / %d\n",
+					name,
+					hp.currentHP,
+					hp.maxHP
+				);
+
+				OutputDebugStringA(debugText);
+			}
+		}
+
+		void Game2::DebugPrintPartyHP()
+		{
+			const char* playerNames[] =
+			{
+				"player1",
+				"player2",
+				"player3",
+				"player4"
+			};
+
+			for (const char* name : playerNames)
+			{
+				auto player = FindGO<nsActor::Player>(name);
+
+				if (player == nullptr)
+				{
+					char debugText[256];
+					sprintf_s(
+						debugText,
+						"[DEBUG HP] %s not found\n",
+						name
+					);
+
+					OutputDebugStringA(debugText);
+					continue;
+				}
+
+				const auto& hp = player->GetCharacterStatus().hp;
+
+				char debugText[256];
+				sprintf_s(
+					debugText,
+					"[DEBUG HP] %s HP: %d / %d\n",
+					name,
+					hp.currentHP,
+					hp.maxHP
+				);
+
+				OutputDebugStringA(debugText);
+			}
+		}
+
+
 		Game2::~Game2()
 		{
+			if (m_reboneGaugeUIManager != nullptr)
+			{
+				m_reboneGaugeUIManager->ClearPlayers();
+				delete m_reboneGaugeUIManager;
+				m_reboneGaugeUIManager = nullptr;
+			}
+
+
 			nsApp::nsStage::LoadStageData::GetInstance().ChangeStage(nsApp::nsStage::StageID::Invalid);
 			DeleteGO(m_soundLister);
 			DeleteGO(m_backGround);
 			DeleteGO(m_camera);
-			DeleteGO(m_player);
 
 			DeleteGO(m_gameClearDirection);
 			DeleteGO(m_gameTimeUpDirection);
 			DeleteGO(m_gameOverDirection);
 			DeleteGO(m_gameEndSelect);
+
+			m_player = nullptr;
+
+			DamageProcessor::SetDamageIndicatorPool(nullptr);
+			DeleteGO(m_damageIndicatorPool);
+			m_damageIndicatorPool = nullptr;
 
 			delete m_generator;
 			delete m_playerHub;
@@ -53,29 +196,33 @@ namespace nsApp
 
 		bool Game2::Start()
 		{
-			/* ‰¹Œ¹‚Ì¶¬B*/
+			/* ä¹±æ•°ã®åˆæœŸåŒ–ã€‚*/
+			srand(static_cast<unsigned int>(time(nullptr)));
+
+			/* éŸ³æºã®ç”Ÿæˆã€‚*/
 			m_soundLister = NewGO<nsSound::SoundLister>(0, "SoundManager");
 			m_soundLister->GetBGMList().Init();
 			m_soundLister->GetSEList().Init();
 
-			/* ‰ŠúƒXƒe[ƒW‚ÌƒZƒbƒgB*/
-			/* @TODO ƒXƒe[ƒW‘I‘ğ‰æ–Ê‚©‚ç‚±‚Ìˆ—‚ğŒÄ‚Ô‚æ‚¤‚É‚·‚éB*/
+			/* åˆæœŸã‚¹ãƒ†ãƒ¼ã‚¸ã®ã‚»ãƒƒãƒˆã€‚*/
+			/* @TODO ã‚¹ãƒ†ãƒ¼ã‚¸é¸æŠç”»é¢ã‹ã‚‰ã“ã®å‡¦ç†ã‚’å‘¼ã¶ã‚ˆã†ã«ã™ã‚‹ã€‚*/
 			nsApp::nsStage::LoadStageData::GetInstance().ChangeStage(nsApp::nsStage::StageID::stage1);
 
 			m_backGround = NewGO<nsStage::BackGround>(0, "BackGround");
-			/* ƒJƒƒ‰‚ğ¶¬B*/
+			/* ã‚«ãƒ¡ãƒ©ã‚’ç”Ÿæˆã€‚*/
 			m_camera = NewGO<Camera>(0, "camera");
 
-			// PhysicsWorld::GetInstance()->EnableDrawDebugWireFrame();
 
-			m_player = NewGO<nsActor::Player>(0, "player");
+			/* ãƒ€ãƒ¡ãƒ¼ã‚¸ãƒ—ãƒ¼ãƒ«ã‚’ç”Ÿæˆã€‚*/
+			m_damageIndicatorPool = NewGO<DamageIndicatorPool>(0, "damagePool");
+			DamageProcessor::SetDamageIndicatorPool(m_damageIndicatorPool);
 
-			/*ƒ{ƒX‚ğì¬B*/
-			m_boss = NewGO<nsActor::Boss>(0, "boss");
-			/*ƒ{ƒX‚Ìí—Ş‚ğİ’èB*/
-			m_boss->SetBossType(CharacterModelType::GrayDragon);
-			/*ƒ{ƒX‚ÉƒvƒŒƒCƒ„[‚ğƒ^[ƒQƒbƒg‚Æ‚µ‚Ä‹³‚¦‚éB*/
-			m_boss->SetTarget(m_player);
+			///*ãƒœã‚¹ã‚’ä½œæˆã€‚*/
+			//m_boss = NewGO<nsActor::Boss>(0, "boss");
+			///*ãƒœã‚¹ã®ç¨®é¡ã‚’è¨­å®šã€‚*/
+			//m_boss->SetBossType(CharacterModelType::RedDragon);
+			///*ãƒœã‚¹ã«ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚’ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã¨ã—ã¦æ•™ãˆã‚‹ã€‚*/
+			//m_boss->SetTarget(m_player);
 
 			m_characterHP = NewGO<CharacterHP>(0, "characterHP");
 			m_characterHP->Deactivate();
@@ -87,10 +234,13 @@ namespace nsApp
 			m_gameStartDirection = NewGO<GameStartDirection>(2, "gameStartDirection");
 			m_gameStartDirection->Deactivate();
 
-			/*ƒtƒF[ƒhƒCƒ“‚ÉØ‚è‘Ö‚¦‚éB*/
+			/*ãƒ•ã‚§ãƒ¼ãƒ‰ã‚¤ãƒ³ã«åˆ‡ã‚Šæ›¿ãˆã‚‹ã€‚*/
 			nsApp::nsFade::Fade::GetInstance()->ChangeFadeType(nsApp::nsFade::Fade::EnFadeType::enFadeType_FadeIn);
 
-			/* ƒvƒŒƒCƒAƒuƒ‹ƒLƒƒƒ‰‚ğ¶¬‚·‚éB*/
+			/* UIã‚’ç”Ÿæˆã€‚*/
+			m_reboneGaugeUIManager = new nsUI::ReboneGaugeUIManager();
+			m_reboneGaugeUIManager->Init();
+
 			SpawnPlayCharacter();
 
 			return true;
@@ -98,7 +248,9 @@ namespace nsApp
 
 		void Game2::Update()
 		{
-			if (m_playerHub)
+			DebugUpdateHealTest();
+
+			if(m_playerHub)
 				m_playerHub->Update();
 
 			if (m_gameStartDirection != nullptr)
@@ -118,9 +270,9 @@ namespace nsApp
 				}
 			}
 
-			/*ƒQ[ƒ€ƒNƒŠƒA‰‰oB*/
-			/*Œ»İ‚Í¶‚ğ“ü—Í‚·‚é‚±‚Æ‚Å‰‰o‚ğ—¬‚·‚æ‚¤‚É‚µ‚Ä‚¢‚éB*/
-			/*TODO:¡Œã‚Íƒ{ƒX‚ÌHP‚ª0‚É‚È‚Á‚½‚ç‰‰o‚ğ—¬‚·‚æ‚¤‚É‚·‚éB*/
+			/*ã‚²ãƒ¼ãƒ ã‚¯ãƒªã‚¢æ¼”å‡ºã€‚*/
+			/*ç¾åœ¨ã¯å·¦ã‚’å…¥åŠ›ã™ã‚‹ã“ã¨ã§æ¼”å‡ºã‚’æµã™ã‚ˆã†ã«ã—ã¦ã„ã‚‹ã€‚*/
+			/*TODO:ä»Šå¾Œã¯ãƒœã‚¹ã®HPãŒ0ã«ãªã£ãŸã‚‰æ¼”å‡ºã‚’æµã™ã‚ˆã†ã«ã™ã‚‹ã€‚*/
 			if (m_gameClearDirection == nullptr)
 			{
 				if (g_pad[0]->IsTrigger(enButtonLeft))
@@ -131,7 +283,7 @@ namespace nsApp
 				}
 			}
 
-			/*ŠÔØ‚ê‰‰oB*/
+			/*æ™‚é–“åˆ‡ã‚Œæ¼”å‡ºã€‚*/
 			if (m_gameTimeUpDirection == nullptr)
 			{
 				if (m_gameTimeLimit->IsTimeUp())
@@ -153,33 +305,52 @@ namespace nsApp
 				}
 			}
 
-			/* Œ»İ‚ÌƒXƒe[ƒW‚ÌXV‚ğs‚¤B*/
+
+			/* ç¾åœ¨ã®ã‚¹ãƒ†ãƒ¼ã‚¸ã®æ›´æ–°ã‚’è¡Œã†ã€‚*/
 			nsApp::nsStage::LoadStageData::GetInstance().Update();
+
+			if(m_reboneGaugeUIManager != nullptr)
+				m_reboneGaugeUIManager->Update();
 		}
+
 
 		void Game2::Render(RenderContext &rc)
 		{
-			/* Œ»İ‚ÌƒXƒe[ƒW‚ğ•`‰æ‚·‚éB*/
+			/* ç¾åœ¨ã®ã‚¹ãƒ†ãƒ¼ã‚¸ã‚’æç”»ã™ã‚‹ã€‚*/
 			nsApp::nsStage::LoadStageData::GetInstance().Draw(rc);
+
+			if(m_reboneGaugeUIManager != nullptr)
+				m_reboneGaugeUIManager->Render(rc);
 		}
+
 
 		void Game2::SpawnPlayCharacter()
 		{
-			/* ¶¬ƒVƒXƒeƒ€ƒNƒ‰ƒX‚ğ¶¬‚·‚éB*/
+			/* ç”Ÿæˆã‚·ã‚¹ãƒ†ãƒ ã‚¯ãƒ©ã‚¹ã‚’ç”Ÿæˆã™ã‚‹ã€‚*/
 			m_generator = new PlayerGenerator();
 
-			/* PlayerGenerator‚ğ—p‚¢AƒvƒŒƒCƒAƒuƒ‹ƒLƒƒƒ‰‚ğì¬‚·‚éB*/
+			/* PlayerGeneratorã‚’ç”¨ã„ã€ãƒ—ãƒ¬ã‚¤ã‚¢ãƒ–ãƒ«ã‚­ãƒ£ãƒ©ã‚’ä½œæˆã™ã‚‹ã€‚*/
 			std::vector<PlayerSpawnData> partyData =
-				{
-					{"player1", WeaponType::GreatSword, ControllerType::Player_1P, INIT_CHARACTER_POSITION_PLAYER1},
-					{"player2", WeaponType::Hammer, ControllerType::NPC, INIT_CHARACTER_POSITION_PLAYER2},
-					{"player3", WeaponType::Wand, ControllerType::NPC, INIT_CHARACTER_POSITION_PLAYER3},
-					{"player4", WeaponType::TwinGun, ControllerType::NPC, INIT_CHARACTER_POSITION_PLAYER4}};
+			{
+				{"player1", WeaponType::GreatSword, ControllerType::NPC ,INIT_CHARACTER_POSITION_PLAYER1},
+				{"player2", WeaponType::Hammer, ControllerType::NPC,INIT_CHARACTER_POSITION_PLAYER2},
+				{"player3", WeaponType::Wand, ControllerType::Player_1P, INIT_CHARACTER_POSITION_PLAYER3},
+				{"player4", WeaponType::TwinGun, ControllerType::NPC, INIT_CHARACTER_POSITION_PLAYER4}
+			};
 
-			/* ì¬‚µ‚½ƒŠƒXƒg‚ğƒZƒbƒg‚·‚éB*/
+			/* ä½œæˆã—ãŸãƒªã‚¹ãƒˆã‚’ã‚»ãƒƒãƒˆã™ã‚‹ã€‚*/
 			auto players = m_generator->SpawnPlayers(partyData);
+			if (!players.empty())
+				m_player = players[0];
 
-			/* Hub‚ğ¶¬‚·‚éB*/
+			/* ReboneUIã‚’ç™»éŒ²ã€‚*/
+			if (m_reboneGaugeUIManager != nullptr)
+			{
+				for (auto* player : players)
+					m_reboneGaugeUIManager->RegisterPlayer(player);
+			}
+
+			/* Hubã‚’ç”Ÿæˆã™ã‚‹ã€‚*/
 			m_playerHub = new PlayerControlerHub();
 			m_playerHub->Initialize(players, partyData);
 		}

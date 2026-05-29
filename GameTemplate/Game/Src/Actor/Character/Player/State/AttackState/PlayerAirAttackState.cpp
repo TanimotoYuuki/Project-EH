@@ -37,7 +37,7 @@ namespace
 	const auto SHOCKWAVE_SCALE = 2.0f;                     //! 衝撃波のスケール
 	const auto MISSILE_SPAWN_OFFSET_Y = 10.0f;             //! ミサイル生成のY軸オフセット
 
-	const float MISSILE_ANGLE_LIST[] = { -45.0f, -22.5f, 0.0f, 22.5f, 45.0f }; //! ミサイル角度
+	const float MISSILE_ANGLE_LIST[] = {-22.5f, 0.0f, 22.5f}; //! ミサイル角度
 }
 
 #define GET_PLAYER_CHARACON m_player->GetCharacterController()
@@ -46,88 +46,90 @@ namespace nsApp
 {
 	namespace nsState
 	{
-		void PlayerAirAttackState::Enter()
+		void PlayerAirAttackState::PlayAttackAnimation()
 		{
-			m_player = static_cast<nsActor::Player*>(m_owner);
+			/* 攻撃の種類を設定。*/
 			m_currentAttackType = AttackType::AirAttack;
 
-			SetAttackTimer(AIR_ATTACK_TIMER_INIT);
-			m_recoilVector = Vector3::Zero;
-
+			/* 銃の場合。*/
 			if (m_player->GetCurrentWeapon() == WeaponType::TwinGun)
 			{
+				/* サブウェポンモデルをロードする。*/
 				m_player->LoadSubWeapon(CharacterModelType::Weapon_TwinGun);
-
-				m_baseRot = Quaternion::Identity;
-				m_baseRot.SetRotationDegZ(WEAPON_ANGLE_BASE_Z);
-
-				m_aimDown = Quaternion::Identity;
-				m_aimDown.SetRotationDegX(WEAPON_AIM_DOWN_X);
-
+				/* 角度を調整。*/
+				m_baseRot.SetRotationDegZ(-90.0f);
+				m_aimDown.SetRotationDegX(90.0f);
+				/* 最終的な回転行列を計算する。*/
 				m_player->SetWeaponRotationByQuaternion(m_baseRot * m_aimDown);
 			}
-			else
-			{
-				m_player->PlayWeaponAnimation(AttackType::AirAttack);
-			}
 
+			else
+				/* 銃以外の場合は武器は1本。*/
+				m_player->PlayWeaponAnimation(AttackType::AirAttack);
+		}
+
+
+		void PlayerAirAttackState::OnEnterAttack()
+		{
+			m_recoilVector = Vector3::Zero;
+			/* 当たり判定を付与。*/
 			m_player->GetWeaponHitDetection().Enable();
 		}
 
 
-		void PlayerAirAttackState::Update()
+		bool PlayerAirAttackState::OnUpdateAttack()
 		{
-			m_attackTimer++;
-
-			if (m_player->GetCurrentWeapon() == WeaponType::TwinGun)
-			{
-				if (m_attackTimer == FIRE_FRAME_FIRST || m_attackTimer == FIRE_FRAME_SECOND)
-					FireAirBullet();
-			}
-			else if (m_player->GetCurrentWeapon() == WeaponType::Wand)
-			{
-				if (m_attackTimer == WAND_SPAWN_FRAME && !m_isSpawningMissile)
-				{
-					SpawnMissile();
-					m_isSpawningMissile = true;
-				}
-			}
-
 			if (!m_isLanding)
 			{
 				UpdateAirMovement(MOVE_FRAME_TIME);
 				CheckLanding();
 			}
+
 			else
 			{
+				/* 着地後の終了判定。*/
 				if (m_player->GetCurrentWeapon() == WeaponType::TwinGun)
 				{
-					m_player->SetPostureOffset(Quaternion::Identity);
-					m_stateMachine->ChangeState(new PlayerIdleState());
-					return;
-				}
+					if (m_player->GetCurrentWeapon() == WeaponType::TwinGun)
+						m_player->SetPostureOffset(Quaternion::Identity);
 
-				else
+					m_stateMachine->ChangeState(new PlayerIdleState());
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+
+		void PlayerAirAttackState::OnAttackTick()
+		{
+			/* 銃の場合。*/
+			if (m_player->GetCurrentWeapon() == WeaponType::TwinGun)
+			{
+				if (m_attackTimer == 5 || m_attackTimer == 15)
+					FireAirBullet();
+			}
+
+			/* 杖の場合。*/
+			else if (m_player->GetCurrentWeapon() == WeaponType::Wand)
+			{
+				if (m_attackTimer == 10 && !m_isSpawningMissile)
 				{
-					if (!m_player->IsPlayAnimation())
-					{
-						m_stateMachine->ChangeState(new PlayerIdleState());
-						return;
-					}
+					SpawnMissile();
+					m_isSpawningMissile = true;
 				}
 			}
 		}
 
 
-		void PlayerAirAttackState::Exit()
+		void PlayerAirAttackState::OnExitAttack()
 		{
 			if (m_player && m_player->GetCurrentWeapon() == WeaponType::TwinGun)
 			{
-				m_baseRot = Quaternion::Identity;
-				m_baseRot.SetRotationDegZ(WEAPON_ANGLE_BASE_Z);
+				m_baseRot.SetRotationDegZ(-90.0f);
 				m_player->SetWeaponRotationByQuaternion(m_baseRot);
 			}
-			PlayerAttackBaseState::Exit();
 		}
 
 

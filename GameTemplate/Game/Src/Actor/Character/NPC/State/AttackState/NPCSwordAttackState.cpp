@@ -55,12 +55,18 @@ namespace nsApp
 
 		void NPCSwordAttackState::Update()
 		{
+			if (CheckHelpTransition())
+				return;
+
 			/* 目標を探索する。*/
-			auto target = m_npcBrain->SearchTarget();
+			nsActor::ICharacter* target = m_npcBrain->SearchTarget();
 
 			/* 早期リターン。*/
-			if (!target || !m_getBody) 
+			if (target == nullptr || m_getBody == nullptr)
+			{
+				m_stateMachine->ChangeState(new NPCChaseState());
 				return;
+			}
 
 			/* 距離を計算。*/
 			ComputeDistance(target);
@@ -109,15 +115,15 @@ namespace nsApp
 			/* 攻撃のタイミングでBボタンを押す。*/ 
 			/* 1段目の攻撃入力。*/ 
 			if (m_attackTimer == COMBO_FIRST_INPUT)
-				m_virtualInput->SetButton(enButtonB,true);
+				m_virtualInput->RequestButton(enButtonB,3);
 
 			/* 2段目の攻撃入力。*/
 			if (m_attackTimer == COMBO_SECOND_INPUT)
-				m_virtualInput->SetButton(enButtonB,true);
+				m_virtualInput->RequestButton(enButtonB,3);
 
 			/* 3段目の攻撃入力。*/
 			if (m_attackTimer == COMBO_THIRD_INPUT)
-				m_virtualInput->SetButton(enButtonB,true);
+				m_virtualInput->RequestButton(enButtonB,3);
 		}
 
 
@@ -127,22 +133,22 @@ namespace nsApp
 			/* LB1を押してダッシュ開始。*/
 			/* 1段目の攻撃入力。*/
 			if (m_attackTimer == COMBO_FIRST_INPUT)
-				m_virtualInput->SetButton(enButtonA,true);
+				m_virtualInput->RequestButton(enButtonA,3);
 
 			/* ダッシュの持続入力。*/
 			/* LB1を長押ししてダッシュを持続。*/
 			if (m_attackTimer == COMBO_SECOND_INPUT)
-				m_virtualInput->SetButton(enButtonB,true);
+				m_virtualInput->RequestButton(enButtonB,3);
 		}
 
 
 		void NPCSwordAttackState::ExecuteMeleeAir()
 		{
 			if (m_attackTimer == 1) 
-				m_virtualInput->SetButton(enButtonA,true);
+				m_virtualInput->RequestButton(enButtonA,3);
 
 			if (m_attackTimer == 15) 
-				m_virtualInput->SetButton(enButtonB,true);
+				m_virtualInput->RequestButton(enButtonB,3);
 		}
 
 

@@ -21,12 +21,13 @@ namespace nsApp
 			virtual ~PlayerRushStartState() = default;
 
 
-		public:
-			/* ライフサイクル。*/
-			void Enter() override;
-			void Update() override;
-			void Exit() override;
-			bool RequestID(uint8_t& id) override;
+		protected:
+			void PlayAttackAnimation() override;
+			void OnEnterAttack() override;
+			bool OnUpdateAttack() override;
+			void OnExitAttack() override;
+			bool OnRequestAttackID(uint8_t& id) override;
+			void OnAttackTick() override;
 
 
 		private:
@@ -50,6 +51,7 @@ namespace nsApp
 
 			bool m_isSummoned = false;            //! ミサイルを射出したかどうかを管理するフラグ。
 			bool m_isButtonReleased = false;      //! 攻撃ボタンが離されたかどうかを管理するフラグ。
+			bool m_isReleased = false;			  //! 
 
 			Vector3 m_moveVector = Vector3::Zero; //! 前進する際の移動ベクトル。
 			Vector3 m_spawnPos = Vector3::Zero;   //! ミサイルを召喚する位置。

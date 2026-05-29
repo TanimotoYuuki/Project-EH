@@ -21,10 +21,10 @@ namespace nsApp
 			virtual ~PlayerRushEndState() = default;
 
 
-		public:
-			/* ライフサイクル。*/
-			void Enter() override;
-			void Update() override;
+		protected:
+			void PlayAttackAnimation() override;
+			void OnAttackTick() override;
+			bool OnUpdateAttack() override;
 		};
 	}
 }
