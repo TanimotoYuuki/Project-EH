@@ -40,6 +40,16 @@ namespace nsApp
 				enPosition_Num/*位置を変更する種類。*/
 			};
 
+			/*ボス。*/
+			enum EnBoss : uint8_t
+			{
+				enBoss_One,/*1体目のボス。*/
+				enBoss_Two,/*2体目のボス。*/
+				enBoss_Three,/*3体目のボス。*/
+				enBoss_Four,/*4体目のボス。*/
+				enBoss_Num/*ボスの数。*/
+			};
+
 			/*ボタンUI。*/
 			enum EnButtonUI : uint8_t
 			{
@@ -59,9 +69,15 @@ namespace nsApp
 			/*UIをスライドさせるアニメーションに適用するスプライト。*/
 			enum EnSlideUIAnimationSprite : uint8_t
 			{
-				enSlideUIAnimationSprite_TargetUI,/*ターゲットUI。*/
+				enSlideUIAnimationSprite_TargetUI_BossOne,/*ターゲットUI(ボス1体目)。*/
+				enSlideUIAnimationSprite_TargetUI_BossTwo,/*ターゲットUI(ボス2体目)。*/
+				enSlideUIAnimationSprite_TargetUI_BossThree,/*ターゲットUI(ボス3体目)。*/
+				enSlideUIAnimationSprite_TargetUI_BossFour,/*ターゲットUI(ボス4体目)。*/
 				enSlideUIAnimationSprite_TargetSelectUI,/*ターゲット選択UI。*/
-				enSlideUIAnimationSprite_TargetTextUI,/*ターゲットテキストUI。*/
+				enSlideUIAnimationSprite_TargetTextUI_BossOne,/*ターゲットテキストUI(ボス1体目)。*/
+				enSlideUIAnimationSprite_TargetTextUI_BossTwo,/*ターゲットテキストUI(ボス2体目)。*/
+				enSlideUIAnimationSprite_TargetTextUI_BossThree,/*ターゲットテキストUI(ボス3体目)。*/
+				enSlideUIAnimationSprite_TargetTextUI_BossFour,/*ターゲットテキストUI(ボス4体目)。*/
 				enSlideUIAnimationSprite_Num/*適用するスプライト数。*/
 			};
 
@@ -69,7 +85,10 @@ namespace nsApp
 			enum EnSelectDirectionUIAnimationSprite : uint8_t
 			{
 				enSelectDirectionUIAnimationSprite_TargetSelectUI,/*ターゲット選択UI。*/
-				enSelectDirectionUIAnimationSprite_TargetTextUI,/*ターゲットテキストUI。*/
+				enSelectDirectionUIAnimationSprite_TargetTextUI_BossOne,/*ターゲットテキストUI(ボス1体目)。*/
+				enSelectDirectionUIAnimationSprite_TargetTextUI_BossTwo,/*ターゲットテキストUI(ボス2体目)。*/
+				enSelectDirectionUIAnimationSprite_TargetTextUI_BossThree,/*ターゲットテキストUI(ボス3体目)。*/
+				enSelectDirectionUIAnimationSprite_TargetTextUI_BossFour,/*ターゲットテキストUI(ボス4体目)。*/
 				enSelectDirectionUIAnimationSprite_Num/*適用するスプライト数。*/
 			};
 
@@ -87,8 +106,9 @@ namespace nsApp
 
 			/**
 			* @brief ターゲットUIの初期化。
+			* @param boss ボスの種類。
 			*/
-			void InitTargetUI();
+			void InitTargetUI(EnBoss boss);
 
 			/**
 			* @brief ターゲット選択UIの初期化。
@@ -97,8 +117,10 @@ namespace nsApp
 
 			/**
 			* @brief ターゲットテキストUIの初期化。
+			* @param boss ボスの種類。
+			* @param bossIndex ボスのインデックス。
 			*/
-			void InitTargetTextUI();
+			void InitTargetTextUI(EnBoss boss,int bossIndex);
 
 			/**
 			* @brief ボタンUIの初期化。
@@ -133,6 +155,11 @@ namespace nsApp
 			void InitSelectDirectionUIAnimation();
 
 			/**
+			* @brief 選択の更新処理。
+			*/
+			void UpdateSelect();
+
+			/**
 			* @brief UIアニメーションの更新処理。
 			*/
 			void UpdateUIAnimation();
@@ -162,6 +189,15 @@ namespace nsApp
 			* @brief 選択したときの演出UIアニメーションのリセット処理。
 			*/
 			void ResetSelectDirectionUIAnimation();
+
+			/**
+			* @brief 現在選択している内容の取得。
+			* @return 現在選択している内容。
+			*/
+			inline EnBoss GetCurrentSelect() const
+			{
+				return (EnBoss)m_currentSelect;
+			}
 
 			/**
 			* @brief UIをスライドさせるアニメーション再生終了したか？
@@ -304,12 +340,13 @@ namespace nsApp
 
 		private:/*メンバ変数。*/
 			SpriteRender m_questSelectTextUI;/*クエスト選択テキストUI。*/
-			SpriteRender m_targetUI;/*ターゲットUI。*/
+			SpriteRender m_targetUI[enBoss_Num];/*ターゲットUI。*/
 			SpriteRender m_targetSelectUI;/*ターゲット選択UI。*/
-			SpriteRender m_targetTextUI;/*ターゲットテキストUI。*/
+			SpriteRender m_targetTextUI[enBoss_Num];/*ターゲットテキストUI。*/
 			SpriteRender m_buttonUI[enButtonUI_Num];/*ボタンUI。*/
 			SpriteRender m_textUI[enTextUI_Num];/*テキストUI。*/
 			int m_currentSlide = enSlide_Left;/*現在のスライドさせる方向。*/
+			int m_currentSelect = enBoss_One;/*現在選択している内容。*/
 			std::unique_ptr<nsApp::nsUI::PositionUIAnimation> m_slideUIAnimation[enSlide_Num][enSlideUIAnimationSprite_Num];/*UIをスライドさせるアニメーション。*/
 			std::unique_ptr<nsApp::nsUI::AlphaUIAnimation> m_alphaUIAnimation;/*透明度を変えるアニメーション。*/
 			std::unique_ptr<nsApp::nsUI::PositionUIAnimation> m_selectDirectionUIAnimation[enPosition_Num][enSelectDirectionUIAnimationSprite_Num];/*選択したときの演出UIアニメーション。*/
@@ -320,9 +357,19 @@ namespace nsApp
 
 		private:/*スプライトを表示するファイルパス用のメンバ変数。*/
 			std::string m_questSelectTextUIFilePath = "Assets/sprite/select/questSelect/text/redBer/questSelect.dds";/*クエスト選択テキストUIのファイルパス。*/
-			std::string m_targetUIFilePath = "Assets/sprite/select/questSelect/target/target.dds";/*ターゲットUIのファイルパス。*/
+			std::string m_targetUIFilePath[enBoss_Num] = {
+				"Assets/sprite/select/questSelect/target/bossOne.dds",
+				"Assets/sprite/select/questSelect/target/bossTwo.dds",
+				"Assets/sprite/select/questSelect/target/bossThree.dds",
+				"Assets/sprite/select/questSelect/target/bossFour.dds"
+			};/*ターゲットUIのファイルパス。*/
 			std::string m_targetSelectUIFilePath = "Assets/sprite/select/questSelect/select/targetSelect.dds";/*ターゲット選択UIのファイルパス。*/
-			std::string m_targetTextUIFilePath = "Assets/sprite/select/questSelect/text/whiteBer/target.dds";/*ターゲットテキストUIのファイルパス。*/
+			std::string m_targetTextUIFilePath[enBoss_Num] = {
+				"Assets/sprite/select/questSelect/text/whiteBer/bossOne.dds",
+				"Assets/sprite/select/questSelect/text/whiteBer/bossTwo.dds",
+				"Assets/sprite/select/questSelect/text/whiteBer/bossThree.dds",
+				"Assets/sprite/select/questSelect/text/whiteBer/bossFour.dds"
+			};/*ターゲットテキストUIのファイルパス。*/
 			std::string m_buttonUIFilePath[enButtonUI_Num] = {
 				"Assets/sprite/gamePad/button/aButton.dds",
 				"Assets/sprite/gamePad/button/bButton.dds"

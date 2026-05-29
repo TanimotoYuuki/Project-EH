@@ -31,16 +31,36 @@ namespace nsApp
 
 
 		public:
-			/* 初期化処理。*/
+			/* 
+			 * @brief 初期化処理。
+			 */
 			void Init();
-			/* BGMの再生。*/
+
+			/* 
+			 * @brief BGMの再生。
+			 * @param id BGMの種類。
+			 * @param volume BGMの大きさ。
+			 */
 			void PlayBGM(BGM_ID id, float volume);
-			/* BGMの停止。*/
+
+			/* 
+			 * @brief BGMの停止。
+			 */
 			void StopBGM();
 
+		public:
+			/**
+			* @brief 音量の割合を考慮した音量の計算処理。
+			* @param bgmRate BGMの音量の割合。
+			* @param masterRate マスター音量の割合。
+			*/
+			void CalcVolume(int bgmRate, int masterRate);
 
 		public:
-			/* ファイルパスを格納。*/
+			/* 
+			 * @brief ファイルパスを格納。
+			 * @param bgmName BGMの名前。
+			 */
 			inline const std::string GetBGMFilePath(std::string bgmName)
 			{
 				std::string filePath = "Assets/sound/BGM/" + bgmName + ".wav";
@@ -50,7 +70,7 @@ namespace nsApp
 
 		private:
 			nsK2EngineLow::SoundSource* m_bgmSource = nullptr;//! BGMのサウンドソースを管理するポインタ。
-
+			float m_baseVolume = 0.0f;/*BGMの基本音量。*/
 
 		private:
 			BGM_ID m_currentBGM = BGM_ID::None;               //! 現在流れているBGMのIDを記録する変数。

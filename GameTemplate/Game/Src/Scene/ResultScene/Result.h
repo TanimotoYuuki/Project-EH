@@ -106,6 +106,16 @@ namespace nsApp
 				enScale_Num,/*スケールの数。*/
 			};
 
+			/*ボス。*/
+			enum EnBoss : uint8_t
+			{
+				enBoss_One,/*1体目のボス。*/
+				enBoss_Two,/*2体目のボス。*/
+				enBoss_Three,/*3体目のボス。*/
+				enBoss_Four,/*4体目のボス。*/
+				enBoss_Num/*ボスの数。*/
+			};
+
 			/*UIをスライドさせるアニメーションに適用するスプライト。*/
 			enum EnSlideUIAnimationSprite : uint8_t
 			{
@@ -265,6 +275,24 @@ namespace nsApp
 		public:/*メンバ関数。*/
 
 			/**
+			* @brief ボスの種類の設定。
+			* @param bossType ボスの種類。
+			*/
+			inline void SetBossType(int bossType)
+			{
+				m_bossType = bossType;
+			}
+
+			/**
+			* @brief ボスの種類の取得。
+			* @param bossType ボスの種類。
+			*/
+			inline EnBoss GetBossType() const
+			{
+				return (EnBoss)m_bossType;
+			}
+
+			/**
 			* @brief ゲームが終了した時に選択する用のインスタンスの取得。
 			* @return ゲームが終了した時に選択する用のインスタンス。
 			*/
@@ -318,6 +346,7 @@ namespace nsApp
 			SpriteRender m_rankUI;/*ランクUI。*/
 			SpriteRender m_bonusUI[enBonus_Num];/*ボーナスUI。*/
 			SpriteRender m_noBonusUI[enBonus_Num];/*ノーボーナスUI。*/
+			int m_bossType = enBoss_One;/*ボスの種類。*/
 			int m_calcScoreData = 12345;/*スコアを表示するためのデータ。*/
 			int m_score[enScore_Num] = { 0,0,0,0,0 };/*スコア。*/
 			int m_calcClearTimeData = 180;/*クリア時間を表示するためのデータ。*/
@@ -337,7 +366,12 @@ namespace nsApp
 
 		private:/*スプライトを表示するファイルパス用のメンバ変数。*/
 			std::string m_backGroundFilePath = "Assets/sprite/result/background/background.dds";/*背景のファイルパス。*/
-			std::string m_targetUIFilePath = "Assets/sprite/result/target/target.dds";/*ターゲットUIのファイルパス。*/
+			std::string m_targetUIFilePath[enBoss_Num] = {
+				"Assets/sprite/result/target/bossOne.dds",
+				"Assets/sprite/result/target/bossTwo.dds",
+				"Assets/sprite/result/target/bossThree.dds",
+				"Assets/sprite/result/target/bossFour.dds"
+			};/*ターゲットUIのファイルパス。*/
 			std::string m_scoreFrameUIFilePath = "Assets/sprite/result/frame/scoreFrame.dds";/*スコア枠UIのファイルパス。*/
 			std::string m_scoreUIFilePath[enScoreDisplayUI_Num] = {
 				"Assets/sprite/result/score/zero.dds",/*0。*/

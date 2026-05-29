@@ -1,42 +1,45 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "PlayerAirAttackState.h"
 
 #include "Src/Actor/Character/Player/State/BasicState/PlayerIdleState.h"
 #include "Src/Actor/Character/Player/State/BasicState/PlayerJumpState.h"
-
-#include "Src/Debug/Sandbag.h"
 #include "Src/Sound/SoundLister.h"
-
 #include "Src/Actor/Magic/MagicProjectotile.h" 
+#include "Src/Actor/Gun/Register/BulletModelRegister.h"
+#include "Src/Actor/Gun/Factory/BulletFactory.h"
 
 namespace
 {
-	const auto MOVE_FRAME_TIME = 1.0f / 60.0f;     //! 1ƒtƒŒ[ƒ€‚ ‚½‚è‚ÌŒÅ’èŠÔB
-	const auto AIR_MOVE_SPEED = 120.0f;            //! ‹ó’†‚Å‚Ì‘OŒã¶‰E‚ÌƒXƒs[ƒhB
-	const auto CHARGE_TIME = 20;				   //! ‹ó’†UŒ‚‚Ìƒ`ƒƒ[ƒWŠÔB
-	const auto AIR_ATTACK_TIMER = 0.0f;			   //! ‹ó’†UŒ‚‚Ìƒ^ƒCƒ}[‚Ì‰Šú’lB
-	const auto AIR_ATTACK_DURATION = 25;		   //! ‹ó’†UŒ‚‚Ì‘±ŠÔB
-	const auto FALL_VELOCITY = -15.0f;			   //! —‰º‘¬“x‚Ì‰Šú’lB
-	const auto GRAVITY = 150.0f;				   //! d—Í‚Ì’lB
-	const auto FALL_ACCELERATION = 30.0f;		   //! —‰º‰Á‘¬“xB
-	const auto MAX_FALL_VELOCITY = -1200.0f;	   //! —‰º‘¬“x‚ÌÅ‘å’lB
+	const auto MOVE_FRAME_TIME = 1.0f / 60.0f;             //! 1ãƒ•ãƒ¬ãƒ¼ãƒ ã‚ãŸã‚Šã®å›ºå®šæ™‚é–“
+	const auto AIR_MOVE_SPEED = 120.0f;                    //! ç©ºä¸­ã§ã®å‰å¾Œå·¦å³ã®ã‚¹ãƒ”ãƒ¼ãƒ‰
+	const auto AIR_ATTACK_TIMER_INIT = 0;                  //! ç©ºä¸­æ”»æ’ƒã®ã‚¿ã‚¤ãƒãƒ¼ã®åˆæœŸå€¤
+	const auto AIR_ATTACK_DURATION = 25;                   //! é­”æ³•æ”»æ’ƒã®ç€åœ°åˆ¤å®šæ™‚é–“
+	const auto FALL_ACCELERATION = 30.0f;                  //! è½ä¸‹åŠ é€Ÿåº¦
+	const auto MAX_FALL_VELOCITY = -1200.0f;               //! è½ä¸‹é€Ÿåº¦ã®æœ€å¤§å€¤
 
-	const float ZERO_MOVE_SPEED = 0.0f;            //! ˆÚ“®‘¬“x‚Ì‰Šú’lB
+	const auto RECOIL_POWER_BACK = -80.0f;                 //! å°„æ’ƒæ™‚ã®å¾Œæ–¹ãƒãƒƒã‚¯ãƒãƒƒã‚¯åŠ›
+	const auto RECOIL_POWER_UP = 15.0f;                    //! å°„æ’ƒæ™‚ã®ä¸Šæ–¹æµ®éŠåŠ›
+	const auto RECOIL_DECAY_RATE = 0.85f;                  //! åå‹•ã®æ¸›è¡°ç‡
 
-	/* ƒ~ƒTƒCƒ‹‚ğ‚Î‚çT‚¢‚Ä•`‰æ‚·‚éÛ‚ÌŠp“x‚ÌƒŠƒXƒgB*/
-	float missileAngleList[] =
-	{
-		-45.0f,
-		-22.5f,
-		0.0f,
-		22.5f,
-		45.0f
-	};
-}	
+	const auto BULLET_SPEED = 50.0f;                       //! å¼¾ã®é€Ÿåº¦
+	const auto BULLET_LIFE_TIME = 40;                      //! å¼¾ã®ç”Ÿå­˜æ™‚é–“
+	const auto BULLET_SHOOT_DIR_DOWN_OFFSET = 0.5f;        //! å¼¾ã®ç™ºå°„æ–¹å‘ã®ä¸‹æ–¹è£œæ­£
 
-/**
- * @brief ƒLƒƒƒ‰ƒRƒ“‚ğæ“¾‚·‚éƒ}ƒNƒB
- */
+	const auto WEAPON_ANGLE_BASE_Z = -90.0f;               //! åŒéŠƒã®åŸºæœ¬Zè»¸è§’åº¦
+	const auto WEAPON_AIM_DOWN_X = 90.0f;                  //! éŠƒå£ã‚’ä¸‹ã«å‘ã‘ã‚‹Xè»¸è§’åº¦
+
+	const auto FIRE_FRAME_FIRST = 5;                       //! 1ç™ºç›®ã®ç™ºå°„ãƒ•ãƒ¬ãƒ¼ãƒ 
+	const auto FIRE_FRAME_SECOND = 15;                     //! 2ç™ºç›®ã®ç™ºå°„ãƒ•ãƒ¬ãƒ¼ãƒ 
+	const auto HOVERING_END_FRAME = 30;                    //! æ»ç©ºçµ‚äº†ãƒ•ãƒ¬ãƒ¼ãƒ 
+	const auto WAND_SPAWN_FRAME = 10;                      //! æ–ãƒŸã‚µã‚¤ãƒ«ç”Ÿæˆãƒ•ãƒ¬ãƒ¼ãƒ 
+
+	const auto SHOCKWAVE_OFFSET_X = 50.0f;                 //! è¡æ’ƒæ³¢ã®Xè»¸ã‚ªãƒ•ã‚»ãƒƒãƒˆ
+	const auto SHOCKWAVE_SCALE = 2.0f;                     //! è¡æ’ƒæ³¢ã®ã‚¹ã‚±ãƒ¼ãƒ«
+	const auto MISSILE_SPAWN_OFFSET_Y = 10.0f;             //! ãƒŸã‚µã‚¤ãƒ«ç”Ÿæˆã®Yè»¸ã‚ªãƒ•ã‚»ãƒƒãƒˆ
+
+	const float MISSILE_ANGLE_LIST[] = { -45.0f, -22.5f, 0.0f, 22.5f, 45.0f }; //! ãƒŸã‚µã‚¤ãƒ«è§’åº¦
+}
+
 #define GET_PLAYER_CHARACON m_player->GetCharacterController()
 
 namespace nsApp
@@ -45,113 +48,145 @@ namespace nsApp
 	{
 		void PlayerAirAttackState::Enter()
 		{
-			/* ƒLƒƒƒXƒgB*/
 			m_player = static_cast<nsActor::Player*>(m_owner);
-
-			/* UŒ‚‚Ìƒ^ƒCƒv‚ğİ’è‚·‚éB*/
 			m_currentAttackType = AttackType::AirAttack;
 
-			/* ƒAƒjƒ[ƒVƒ‡ƒ“‚ğÄ¶B*/
-			m_player->PlayWeaponAnimation(AttackType::AirAttack);
+			SetAttackTimer(AIR_ATTACK_TIMER_INIT);
+			m_recoilVector = Vector3::Zero;
 
-			/* UŒ‚ƒ^ƒCƒ}[‚ğ‰Šú‰»B*/
-			SetAttackTimer(AIR_ATTACK_TIMER); 
+			if (m_player->GetCurrentWeapon() == WeaponType::TwinGun)
+			{
+				m_player->LoadSubWeapon(CharacterModelType::Weapon_TwinGun);
 
-			/* “–‚½‚è”»’è‚ğ•t—^B*/
+				m_baseRot = Quaternion::Identity;
+				m_baseRot.SetRotationDegZ(WEAPON_ANGLE_BASE_Z);
+
+				m_aimDown = Quaternion::Identity;
+				m_aimDown.SetRotationDegX(WEAPON_AIM_DOWN_X);
+
+				m_player->SetWeaponRotationByQuaternion(m_baseRot * m_aimDown);
+			}
+			else
+			{
+				m_player->PlayWeaponAnimation(AttackType::AirAttack);
+			}
+
 			m_player->GetWeaponHitDetection().Enable();
 		}
 
 
 		void PlayerAirAttackState::Update()
 		{
-			/* ƒ^ƒCƒ}[‚ğ‰ÁZ‚·‚éB*/
 			m_attackTimer++;
 
-
-			/* •Ší‚ªñ‚Ìê‡A‹ó’†UŒ‚B*/
-			if (m_player->GetCurrentWeapon() == WeaponType::Wand)
+			if (m_player->GetCurrentWeapon() == WeaponType::TwinGun)
 			{
-				if (m_attackTimer == 10 && !m_isSpawningMissile)
+				if (m_attackTimer == FIRE_FRAME_FIRST || m_attackTimer == FIRE_FRAME_SECOND)
+					FireAirBullet();
+			}
+			else if (m_player->GetCurrentWeapon() == WeaponType::Wand)
+			{
+				if (m_attackTimer == WAND_SPAWN_FRAME && !m_isSpawningMissile)
 				{
-					/* ƒ~ƒTƒCƒ‹‚ğ¶¬‚·‚éB*/
 					SpawnMissile();
-					/* ƒ~ƒTƒCƒ‹‚Ì¶¬ƒtƒ‰ƒOB*/
 					m_isSpawningMissile = true;
 				}
 			}
 
-			/* –¢’…’n‚Ìê‡B*/
 			if (!m_isLanding)
 			{
-				/* ‹ó’†‚Å‚ÌˆÚ“®ˆ—B*/
-				UpdateAirMovement();
-
-				/* ’…’n”»’èB*/
+				UpdateAirMovement(MOVE_FRAME_TIME);
 				CheckLanding();
 			}
-
-			/* ’…’n‚µ‚Ä‚¢‚é‚È‚ç*/
 			else
 			{
-				/* ƒAƒjƒ[ƒVƒ‡ƒ“‚ªÄ¶‚µI‚í‚é‚Ü‚Å‘Ò‚ÂB*/
-				if (!m_player->IsPlayAnimation())
+				if (m_player->GetCurrentWeapon() == WeaponType::TwinGun)
+				{
+					m_player->SetPostureOffset(Quaternion::Identity);
 					m_stateMachine->ChangeState(new PlayerIdleState());
+					return;
+				}
+
+				else
+				{
+					if (!m_player->IsPlayAnimation())
+					{
+						m_stateMachine->ChangeState(new PlayerIdleState());
+						return;
+					}
+				}
 			}
 		}
 
 
-		void PlayerAirAttackState::UpdateAirMovement()
+		void PlayerAirAttackState::Exit()
 		{
-			/* –ˆƒtƒŒ[ƒ€ˆÚ“®‘¬“x‚ğƒŠƒZƒbƒg‚·‚éB*/
-			m_currentAirMoveSpeed = Vector3::Zero;
+			if (m_player && m_player->GetCurrentWeapon() == WeaponType::TwinGun)
+			{
+				m_baseRot = Quaternion::Identity;
+				m_baseRot.SetRotationDegZ(WEAPON_ANGLE_BASE_Z);
+				m_player->SetWeaponRotationByQuaternion(m_baseRot);
+			}
+			PlayerAttackBaseState::Exit();
+		}
 
-			/* ‹ó’†‚Å‚à¶‰E‚ÉˆÚ“®o—ˆ‚é‚æ‚¤‚É‚·‚éB*/
+
+		void PlayerAirAttackState::UpdateAirMovement(float deltaTime)
+		{
+			m_currentAirMoveSpeed = Vector3::Zero;
 			const auto& inputClass = m_player->GetInputClass();
+
 			if (inputClass.IsMove())
 			{
 				m_currentAirMoveSpeed.x = inputClass.GetMoveVector().x * AIR_MOVE_SPEED;
 				m_currentAirMoveSpeed.z = inputClass.GetMoveVector().z * AIR_MOVE_SPEED;
 			}
 
-			if (m_attackTimer >= AIR_ATTACK_DURATION)
-				m_fallVelocity -= FALL_ACCELERATION;
+			m_currentAirMoveSpeed += m_recoilVector;
+
+			m_recoilVector.x *= RECOIL_DECAY_RATE;
+			m_recoilVector.z *= RECOIL_DECAY_RATE;
+
+			m_isHovering = (m_player->GetCurrentWeapon() == WeaponType::TwinGun && m_attackTimer <= HOVERING_END_FRAME);
+
+			if (m_isHovering)
+			{
+				m_fallVelocity = m_recoilVector.y;
+				m_recoilVector.y *= RECOIL_DECAY_RATE;
+			}
 			else
-				m_fallVelocity = 0.0f;
+			{
+				m_fallVelocity -= FALL_ACCELERATION;
+			}
 
-			/* ƒXƒe[ƒW‚É‚ß‚è‚Ü‚È‚¢‚æ‚¤‚É§ŒÀB*/
 			if (m_fallVelocity < MAX_FALL_VELOCITY)
+			{
 				m_fallVelocity = MAX_FALL_VELOCITY;
+			}
 
+			m_moveSpeed.x = m_currentAirMoveSpeed.x;
+			m_moveSpeed.y = m_fallVelocity;
+			m_moveSpeed.z = m_currentAirMoveSpeed.z;
 
-			/* ˆÚ“®‘¬“x‚ğİ’èB*/
-			SetMoveSpeed(Vector3(m_currentAirMoveSpeed.x, m_fallVelocity, m_currentAirMoveSpeed.z));
+			m_player->GetCharacterController().Execute(m_moveSpeed, deltaTime);
+			m_player->SetPosition(m_player->GetCharacterController().GetPosition());
 
-			/* ˆÚ“®‘¬“x‚ğƒLƒƒƒ‰ƒRƒ“‚É”½‰fB*/
-			GET_PLAYER_CHARACON.Execute(m_moveSpeed, MOVE_FRAME_TIME);
-
-			/* À•W‚É‚à”½‰fB*/
-			m_player->SetPosition(GET_PLAYER_CHARACON.GetPosition());
-
-			/* Y²‚Ì‘¬“x‚ğ•Ï”‚É‘ã“üB*/
-			m_fallVelocity = m_moveSpeed.y;
+			if (!m_isHovering)
+			{
+				m_fallVelocity = m_moveSpeed.y;
+			}
 		}
 
 
 		bool PlayerAirAttackState::CheckLanding()
 		{
-			/* –¢’…’n‚Ìê‡‚Ífalse‚ğ•Ô‚·B*/
 			if (m_attackTimer <= AIR_ATTACK_DURATION || !GET_PLAYER_CHARACON.IsOnGround())
 				return false;
 
-			/* ’…’nƒtƒ‰ƒO‚ğƒZƒbƒgB*/
 			m_isLanding = true;
 
-			/* WandƒLƒƒƒ‰‚Ìê‡‚ÍÕŒ‚”gƒGƒtƒFƒNƒg‚ğ¶¬‚µ‚È‚¢B*/
-			if (m_player->GetCurrentWeapon() != WeaponType::Wand)
-			{
-				/* ÕŒ‚”gƒGƒtƒFƒNƒg‚ğ¶¬‚·‚éB*/
+			if (m_player->GetCurrentWeapon() != WeaponType::Wand && m_player->GetCurrentWeapon() != WeaponType::TwinGun)
 				CreateShockWaveEffect();
-			}
 
 			return true;
 		}
@@ -159,62 +194,75 @@ namespace nsApp
 
 		void PlayerAirAttackState::CreateShockWaveEffect()
 		{
-			/* •Ší‚Ì“–‚½‚è”»’èƒNƒ‰ƒX‚ÌÀ•W‚ğæ“¾‚·‚éB*/
 			m_landingPosition = m_player->GetWeaponHitDetection().GetPosition();
-
-			/* ‚»‚ê‚¼‚ê‚Ì²‚Å’l‚ğ‘ã“ü‚·‚éB*/
-			m_landingPosition.x = m_landingPosition.x + 50.0f;
+			m_landingPosition.x += SHOCKWAVE_OFFSET_X;
 			m_landingPosition.y = m_player->GetPosition().y;
-			m_landingPosition.z = m_landingPosition.z;
 
-			/* ƒGƒtƒFƒNƒg‚ğ¶¬‚·‚éB*/
-			m_player->GetEffectList().PlayEffect(nsEffect::ShockWave, m_landingPosition, Quaternion::Identity, Vector3::One * 2.0f);
+			m_player->GetEffectList().PlayEffect(nsEffect::ShockWave, m_landingPosition, Quaternion::Identity, Vector3::One * SHOCKWAVE_SCALE);
 		}
 
 
 		bool PlayerAirAttackState::CheckAnimationEndTransition()
 		{
-			/* ƒAƒjƒ[ƒVƒ‡ƒ“‚ÌI—¹”»’èB*/
 			if (m_player->IsPlayAnimation())
+			{
 				return false;
+			}
 
-			/* ƒWƒƒƒ“ƒv‚ªI‚í‚Á‚Ä‚¢‚éê‡A‘Ò‹@ó‘Ô‚É–ß‚·B*/
-			auto jumpState = new PlayerJumpState();
-			jumpState->SetJumpVelocity(m_fallVelocity);
-			m_stateMachine->ChangeState(jumpState);
+			m_jumpState = new PlayerJumpState();
+			m_jumpState->SetJumpVelocity(m_fallVelocity);
+			m_stateMachine->ChangeState(m_jumpState);
 
 			return false;
 		}
 
+
 		Vector3 PlayerAirAttackState::ComputeMissile(float angle)
 		{
-			Vector3 shootDir = m_player->GetForwardVector();
-
-			/* Šp“x‚ğİ’è‚·‚éB*/
+			m_gunShootDir = m_player->GetForwardVector();
 			m_angleY.SetRotationDegY(angle);
-			/* Šp“x‚ğ“K‰‚·‚éB*/
-			m_angleY.Apply(shootDir);
-
-			return shootDir;
+			m_angleY.Apply(m_gunShootDir);
+			return m_gunShootDir;
 		}
 
 
 		void PlayerAirAttackState::SpawnMissile()
 		{
-			/* ¶¬ˆÊ’u‚ğŒvZ‚·‚éB*/
-			Vector3 spawnPos = m_player->GetWeaponHitDetection().GetPosition();
-			spawnPos.y += 10.0f;
+			/* ç‰¹æ®Šãªè§’åº¦ã§ç”Ÿæˆã—ãŸã„å ´åˆã€æ­¦å™¨ã‚’æƒ…å ±ã‚’å–å¾—ã€‚*/
+			m_spawnPosition = m_player->GetWeaponHitDetection().GetPosition();
 
-
-			for (auto angle : missileAngleList)
+			/* è§’åº¦ã‚’å¤‰ãˆã¦è¤‡æ•°ç™ºç”Ÿæˆã€‚*/
+			for (const float& angle : MISSILE_ANGLE_LIST)
 			{
-				/* Šp“x‚ğ“n‚µ‚Ä”ò‚Î‚·•ûŒü‚ğŒvZ‚·‚éB*/
-				m_shootDir = ComputeMissile(angle);
-
-				/* “n‚³‚ê‚½Šp“x‚ğ—p‚¢‚ÄAƒ~ƒTƒCƒ‹‚ğ•`‰æ‚·‚éB*/
-				m_airMissile = NewGO<nsActor::MagicProjectotile>(0, "AirMissile");
-				m_airMissile->Initialize(nsActor::MagicType::enAirMagic, spawnPos, m_shootDir);
+				m_forwardDirection = ComputeMissile(angle);
+				ConstructAndTransmitMagicRequest(nsActor::MagicType::enAirMagic, m_spawnPosition, m_forwardDirection);
 			}
+		}
+
+
+		void PlayerAirAttackState::FireAirBullet()
+		{
+			m_spawnPosR = m_player->GetBonePosition(L"mixamorig:RightHand");
+			m_spawnPosL = m_player->GetBonePosition(L"mixamorig:LeftHand");
+
+			m_gunShootDir = m_player->GetForwardVector();
+			m_gunShootDir.y -= BULLET_SHOOT_DIR_DOWN_OFFSET;
+			m_gunShootDir.Normalize();
+			
+			m_forwardDirection = m_gunShootDir;
+
+			/* å³æ‰‹ã‹ã‚‰ç™ºå°„ã€‚*/
+			m_spawnPosition = m_player->GetBonePosition(L"mixamorig:RightHand");
+			ConstructAndTransmitBulletRequest(BulletType::enAirial);
+
+			/* å·¦æ‰‹ã‹ã‚‰ç™ºå°„ã€‚*/
+			m_spawnPosition = m_player->GetBonePosition(L"mixamorig:LeftHand");
+			ConstructAndTransmitBulletRequest(BulletType::enAirial);
+
+			/* åå‹•ã‚’è¨ˆç®—ã€‚*/
+			m_recoil = m_player->GetForwardVector() * RECOIL_POWER_BACK;
+			m_recoil.y += RECOIL_POWER_UP;
+			m_recoilVector = m_recoil;
 		}
 	}
 }

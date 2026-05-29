@@ -375,7 +375,7 @@ namespace nsApp
 		/*ターゲットUIの初期化。*/
 		void Result::InitTargetUI()
 		{
-			m_targetUI.Init(m_targetUIFilePath.c_str(), TARGET_UI_WIDTH, TARGET_UI_HEIGHT);/*初期化。*/
+			m_targetUI.Init(m_targetUIFilePath[m_bossType].c_str(), TARGET_UI_WIDTH, TARGET_UI_HEIGHT);/*初期化。*/
 			m_targetUI.SetPosition(TARGET_UI_INIT_POSITION);/*位置設定。*/
 			m_targetUI.SetScale(TARGET_UI_INIT_SCALE);/*大きさ設定。*/
 			m_targetUI.SetMulColor(TARGET_UI_MUL_COLOR);/*乗算色設定。*/

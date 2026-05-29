@@ -1,157 +1,263 @@
-#pragma once
+ï»¿#pragma once
 /**
  * @file PlayerInput.h
- * @brief ƒvƒŒƒCƒ„[‚Ì“ü—Í‚ğŠÇ—‚·‚éƒNƒ‰ƒXB
+ * @brief ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®å…¥åŠ›ã‚’ç®¡ç†ã™ã‚‹ã‚¯ãƒ©ã‚¹ã€‚
  * @author Yamaguchi Hayato
- * @date 2026/03/15
+ * @date 2026/05/12
  */
+
+ /** @def
+  *  RTãƒœã‚¿ãƒ³åˆ¤å®šã€‚
+  *  ã‚¨ãƒ³ã‚¸ãƒ³å†…ã§ã®ãƒœã‚¿ãƒ³åˆ¤å®šã¯RT2ã ãŒã€Xboxã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼ã ã¨RTã«è©²å½“ã—ã€è¦–èªæ€§ãŒæ‚ªã„ãŸã‚å®šç¾©ã™ã‚‹ã€‚
+  */
+#define BUTTON_RT enButtonRB2
+
+#include "Src/Actor/Character/Player/InputSystem/IInputDevice.h"
 
 namespace nsApp
 {
 	class PlayerInput
 	{
 	public:
-		/* “ü—Í”»’è‚ÌXVB*/
+		/* å…¥åŠ›åˆ¤å®šã®æ›´æ–°ã€‚*/
 		void Update();
 
+		/**
+		 * @brief Presså…¥åŠ›åˆ¤å®šãŒã‚ã‚‹ã‹ãƒã‚§ãƒƒã‚¯ã™ã‚‹ã€‚
+		 * @param ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼ã®åˆ—æŒ™å‹ã‚’ã‚»ãƒƒãƒˆã™ã‚‹ã€‚
+		 */
+		bool CheckButtonPress(nsK2EngineLow::EnButton inputButtonType);
 
+		/**
+		 * @brief Triggerå…¥åŠ›åˆ¤å®šãŒã‚ã‚‹ã‹ãƒã‚§ãƒƒã‚¯ã™ã‚‹ã€‚
+		 * @param ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼ã®åˆ—æŒ™å‹ã‚’ã‚»ãƒƒãƒˆã™ã‚‹ã€‚
+		 */
+		bool CheckButtonTrigger(nsK2EngineLow::EnButton inputButtonType);
+
+		/**
+         * @brief ã‚¸ãƒ£ãƒ³ãƒ—/æ–¬ã‚Šä¸Šã’åˆ¤å®šã‚’ã‚»ãƒƒãƒˆã™ã‚‹ã€‚
+         */
+		void EvaluateJumpAndSlashUp();
+
+
+	/* ã‚»ãƒƒã‚¿ãƒ¼ã€‚*/
 	public:
-		/* “ü—Í‚ÌƒIƒ“ƒIƒt‚ğØ‚è‘Ö‚¦‚éB*/
+		/** 
+		 * @brief å…¥åŠ›ã®ã‚ªãƒ³ã‚ªãƒ•ã‚’åˆ‡ã‚Šæ›¿ãˆã‚‹ã€‚
+		 * @param isEnable å…¥åŠ›ã‚’æœ‰åŠ¹ã«ã™ã‚‹ã‹ã©ã†ã‹ã€‚
+		 */
 		inline void SetInputEnable(bool isEnable)
 		{
 			m_isInputEnable = isEnable;
 		}
 
-		/* gamepad‚Ì—v‘f”‚ğæ“¾‚·‚éB*/
-		inline void SetPadIndex(int index)
+		/* 
+		 * @brief Jumpãƒ•ãƒ©ã‚°ã‚’ã‚»ãƒƒãƒˆã€‚
+		 * @param flag ã‚¸ãƒ£ãƒ³ãƒ—ãƒ•ãƒ©ã‚°ã€‚
+		 */
+		inline void SetJumpFlag(bool flag)
 		{
-			m_padInddex = index;
+			m_isJump = flag;
+		}
+
+		/* 
+		 * @brief SlashUpãƒ•ãƒ©ã‚°ã‚’ã‚»ãƒƒãƒˆã€‚
+		 * @param flag æ–¬ã‚Šä¸Šã’ãƒ•ãƒ©ã‚°ã€‚
+		 */
+		inline void SetSlashUpFlag(bool flag)
+		{
+			m_isSlashUp = flag;
+		}
+
+		/**
+		 * @brief å…¥åŠ›ãƒ‡ãƒã‚¤ã‚¹ã‚’ã‚»ãƒƒãƒˆã™ã‚‹ã€‚
+		 * @param inputDevice å…¥åŠ›ãƒ‡ãƒã‚¤ã‚¹ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã‚’ã‚»ãƒƒãƒˆã™ã‚‹ã€‚
+		 */
+		inline void SetInputDevice(IInputDevice* inputDevice)
+		{
+			m_inputDevice = inputDevice;
 		}
 
 
-	/* ƒQƒbƒ^[B*/
+	private:
+		/**
+		 *  @brief Bãƒœã‚¿ãƒ³ã®å…¥åŠ›åˆ¤å®šã‚’ã¾ã¨ã‚ã‚‹ã€‚
+		 */
+		void SummarizeButtonB()
+		{
+			m_isPressButton = CheckButtonPress(enButtonB);
+			m_isAttack = CheckButtonTrigger(enButtonB);
+			m_isAirAttack = CheckButtonTrigger(enButtonB);
+		}
+
+		/**
+		 * @brief ãã®ä»–ã®ãƒœã‚¿ãƒ³ã®å…¥æµ´åˆ¤å®šã‚’ã¾ã¨ã‚ã‚‹ã€‚
+		 */
+		void SummarizeOtherButtons()
+		{
+			/* ã‚¬ãƒ¼ãƒ‰åˆ¤å®šã€‚*/
+			m_isGuard = CheckButtonPress(enButtonLB2);
+
+			/* æ•‘å‡ºåˆ¤å®šã€‚*/
+			m_isHelp = CheckButtonTrigger(enButtonY);
+
+			/* ãƒ€ãƒ¡ãƒ¼ã‚¸åˆ¤å®šã€‚*/
+			m_isDamage = CheckButtonTrigger(enButtonLeft);
+
+			/* å¿—æœ›åˆ¤å®šã€‚*/
+			m_isDeath = CheckButtonTrigger(enButtonDown);
+
+			/* Xãƒœã‚¿ãƒ³åˆ¤å®šã€‚*/
+			m_isPressX = CheckButtonTrigger(enButtonX); 
+
+			/* RBãƒœã‚¿ãƒ³åˆ¤å®šã€‚*/
+			m_isPressRB = CheckButtonPress(enButtonRB1);
+
+			/* RTãƒœã‚¿ãƒ³åˆ¤å®šã€‚*/
+			m_isPressRT = CheckButtonPress(BUTTON_RT);
+		}
+
+
+		/**
+		 * @brief ä»®ãƒãƒ£ãƒ¼ã‚¸åˆ¤å®šã‚’æ›´æ–°ã™ã‚‹ã€‚ã€‚
+		 */
+		void UpdateChargeTranslation()
+		{
+			m_isNormalAttack = (!m_isPressButton && m_chargeButtonTimer > 0.0f && m_chargeButtonTimer < 30.0f);
+			m_isChargeStart = (m_isPressButton && m_chargeButtonTimer >= 12.0f);
+			m_isChargeAttack = (!m_isPressButton && m_chargeButtonTimer >= 30.0f);
+			m_chargeButtonTimer = m_isPressButton ? m_chargeButtonTimer + 1.0f : 0.0f;
+		}
+
+		/**
+		 * @brief å…¥åŠ›åˆ¤å®šã‚’å†åˆæœŸåŒ–ã™ã‚‹ã€‚
+		 */
+		void InitInputJudgment();
+
+
+	/* ã‚²ãƒƒã‚¿ãƒ¼ã€‚*/
 	public:
-		/* ƒAƒNƒVƒ‡ƒ“”»’èB*/
+		/* ã‚¢ã‚¯ã‚·ãƒ§ãƒ³åˆ¤å®šã€‚*/
 		inline bool IsAttack() const
 		{
 			return m_isAttack;
 		}
 
-		/* ’ÊíUŒ‚”»’èB*/
+		/* é€šå¸¸æ”»æ’ƒåˆ¤å®šã€‚*/
 		inline bool IsNormalAttack() const
 		{
 			return m_isNormalAttack;
 		}
 
-		/* ƒ`ƒƒ[ƒW’†”»’èB*/
+		/* ãƒãƒ£ãƒ¼ã‚¸ä¸­åˆ¤å®šã€‚*/
 		inline bool IsCharging() const
 		{
 			return m_isChargeStart;
 		}
 
-		/* ƒ`ƒƒ[ƒWUŒ‚”»’èB*/
+		/* ãƒãƒ£ãƒ¼ã‚¸æ”»æ’ƒåˆ¤å®šã€‚*/
 		inline bool IsChargeAttack() const
 		{
 			return m_isChargeAttack;
 		}
 
-		/* ‹ó’†UŒ‚”»’èB*/
+		/* ç©ºä¸­æ”»æ’ƒåˆ¤å®šã€‚*/
 		inline bool IsAirAttack() const
 		{
 			return m_isAirAttack;
 		}
 
-		/* ˜A‘±UŒ‚ŠJn”»’èB*/
+		/* é€£ç¶šæ”»æ’ƒé–‹å§‹åˆ¤å®šã€‚*/
 		inline bool IsRushStart() const
 		{
 			return m_isRushStart;
 		}
 
-		/* ˜A‘±UŒ‚I—¹”»’èB*/
+		/* é€£ç¶šæ”»æ’ƒçµ‚äº†åˆ¤å®šã€‚*/
 		inline bool IsRushEnd() const
 		{
 			return m_isRushEnd;
 		}
 
-		/* a‚èã‚°”»’èB*/
+		/* æ–¬ã‚Šä¸Šã’åˆ¤å®šã€‚*/
 		inline bool IsSlashUp() const
 		{
 			return m_isSlashUp;
 		}
 
-		/* ƒRƒ“ƒ{UŒ‚”»’èB*/
+		/* ã‚³ãƒ³ãƒœæ”»æ’ƒåˆ¤å®šã€‚*/
 		inline bool IsComboAttack() const
 		{
 			return m_isComboAttack;
 		}
 
-		/* ƒWƒƒƒ“ƒv”»’èB*/ 
+		/* ã‚¸ãƒ£ãƒ³ãƒ—åˆ¤å®šã€‚*/ 
 		inline bool IsJump() const
 		{
 			return m_isJump;
 		}
 
-		/* ˆÚ“®”»’èB*/
+		/* ç§»å‹•åˆ¤å®šã€‚*/
 		inline bool IsMove() const
 		{
 			return m_isMove;
 		}
 
-		/* ‘–‚è”»’èB*/
+		/* èµ°ã‚Šåˆ¤å®šã€‚*/
 		inline bool IsRun() const
 		{
 			return m_isRun;
 		}
 
-		/* ƒ_ƒ[ƒW”»’èB*/
+		/* ãƒ€ãƒ¡ãƒ¼ã‚¸åˆ¤å®šã€‚*/
 		inline bool IsDamage() const
 		{
 			return m_isDamage;	
 		}
 
-		/* €–S”»’èB*/
+		/* æ­»äº¡åˆ¤å®šã€‚*/
 		inline bool IsDeath() const
 		{
 			return m_isDeath;
 		}
 
-		/* ˆÚ“®ƒxƒNƒgƒ‹‚ğæ“¾B*/
+		/* ç§»å‹•ãƒ™ã‚¯ãƒˆãƒ«ã‚’å–å¾—ã€‚*/
 		inline Vector3 GetMoveVector() const
 		{
 			return m_moveVec;
 		}
 
-		/* ƒ`ƒƒ[ƒWŠÔ‚ğæ“¾‚·‚éB*/
+		/* ãƒãƒ£ãƒ¼ã‚¸æ™‚é–“ã‚’å–å¾—ã™ã‚‹ã€‚*/
 		inline float GetChargeTimer() const
 		{
 			return m_isChargeStart;
 		}
 
-		/* ƒK[ƒh”»’èB*/
+		/* ã‚¬ãƒ¼ãƒ‰åˆ¤å®šã€‚*/
 		inline bool IsGuard() const
 		{
 			return m_isGuard;
 		}
 
-		/* •‚¯‚é”»’èB*/
+		/* åŠ©ã‘ã‚‹åˆ¤å®šã€‚*/
 		inline bool IsHelp() const
 		{
 			return m_isHelp;
 		}
 
-		/* Xƒ{ƒ^ƒ“”»’èB*/
+		/* Xãƒœã‚¿ãƒ³åˆ¤å®šã€‚*/
 		inline bool IsPressX() const
 		{
 			return m_isPressX;
 		}
 
-		/* RBƒ{ƒ^ƒ“”»’èB*/
+		/* RBãƒœã‚¿ãƒ³åˆ¤å®šã€‚*/
 		inline bool IsPressRB() const
 		{
 			return m_isPressRB;
 		}
 
-		/* RTƒ{ƒ^ƒ“”»’èB*/
+		/* RTãƒœã‚¿ãƒ³åˆ¤å®šã€‚*/
 		inline bool IsPressRT() const 
 		{
 			return m_isPressRT;
@@ -159,35 +265,35 @@ namespace nsApp
 
 
 	private:
-		bool m_isAttack = false;             //! UŒ‚‚µ‚½‚©‚Ç‚¤‚©‚ğ”»’èB
-		bool m_isJump = false;               //! ƒWƒƒƒ“ƒv‚µ‚½‚©‚Ç‚¤‚©‚ğ”»’èB
-		bool m_isMove = false;               //! ˆÚ“®‚µ‚½‚©‚Ç‚¤‚©‚ğ”»’èB
-		bool m_isRun = false;                //! ‘–‚Á‚½‚©‚Ç‚¤‚©‚ğ”»’èB
-		bool m_isDamage = false;             //! ƒ_ƒ[ƒW‚ğó‚¯‚½‚©‚Ç‚¤‚©‚ğ”»’èB
-		bool m_isDeath = false;              //! €–S‚µ‚½‚©‚Ç‚¤‚©‚ğ”»’èB
-		bool m_isNormalAttack = false;       //! UŒ‚“ü—Í‚ğŒŸ’mB
-		bool m_isAirAttack = false;          //! ‹ó’†UŒ‚“ü—Í‚ğŒŸ’mB
-		bool m_isComboAttack = false;        //! ƒRƒ“ƒ{UŒ‚“ü—Í‚ğŒŸ’mB
-		bool m_isInputEnable = true;         //! “ü—Í‚ğŒŸ’mB
-		bool m_isPressButton = false;        //! Bƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚Ä‚¢‚é‚©‚Ç‚¤‚©‚ğ”»’èB
-		bool m_isRushStart = false;          //! ˜A‘±UŒ‚‚ªn‚Ü‚Á‚Ä‚¢‚é‚©‚ğŒŸ’mB
-		bool m_isRushEnd = false;            //! ˜A‘±UŒ‚‚ªI‚í‚Á‚Ä‚¢‚é‚©‚ğŒŸ’mB
-		bool m_isJumpRequested = false;      //! ƒWƒƒƒ“ƒv‚Ì“ü—Í‚ª‚ ‚Á‚½‚©‚Ç‚¤‚©‚ğ”»’èB
-		bool m_isSlashUp = false;            //! a‚èã‚°‚Ì“ü—Í‚ğŒŸ’mB
-		bool m_isChargeStart = false;        //! ƒ`ƒƒ[ƒWUŒ‚‚Ì“ü—Í‚ğŒŸ’mB
-		bool m_isChargeAttack = false;       //! ƒ`ƒƒ[ƒWUŒ‚‚Ì“ü—Í‚ğŒŸ’mB
-		bool m_isGuard = false;              //! ƒK[ƒh‚Ì“ü—Í‚ğŒŸ’mB
-		bool m_isHelp = false;               //! •‚¯‚é“ü—Í‚ğŒŸ’mB
-		bool m_isPressX = false;             //! Xƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚Ä‚¢‚é‚©‚Ç‚¤‚©‚ğ”»’èB
-		bool m_isPressRB = false;            //! RBƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚Ä‚¢‚é‚©‚Ç‚¤‚©‚ğ”»’èB
-		bool m_isPressRT = false;			 //! RTƒ{ƒ^ƒ“‚ª‰Ÿ‚³‚ê‚Ä‚¢‚é‚©‚Ç‚¤‚©‚ğ”»’èB
+		IInputDevice* m_inputDevice = nullptr;  //! å…¥åŠ›ãƒ‡ãƒã‚¤ã‚¹ã€‚
 
-		float m_stickX = 0.0f;               //! ƒXƒeƒBƒbƒN‚ÌX²‚Ì’lB
-		float m_stickY = 0.0f;               //! ƒXƒeƒBƒbƒN‚ÌY²‚Ì’lB
-		float m_chargeButtonTimer = 0.0f;    //! ƒ`ƒƒ[ƒWUŒ‚‚Æ”»’è‚·‚é‚½‚ß‚É•K—v‚ÈBƒ{ƒ^ƒ“‚ğ’·‰Ÿ‚µ‚µ‚È‚¯‚ê‚Î‚È‚ç‚È‚¢ŠÔB
+		bool m_isAttack = false;				//! æ”»æ’ƒã—ãŸã‹ã©ã†ã‹ã‚’åˆ¤å®šã€‚
+		bool m_isJump = false;                  //! ã‚¸ãƒ£ãƒ³ãƒ—ã—ãŸã‹ã©ã†ã‹ã‚’åˆ¤å®šã€‚
+		bool m_isMove = false;					//! ç§»å‹•ã—ãŸã‹ã©ã†ã‹ã‚’åˆ¤å®šã€‚
+		bool m_isRun = false;					//! èµ°ã£ãŸã‹ã©ã†ã‹ã‚’åˆ¤å®šã€‚
+		bool m_isDamage = false;				//! ãƒ€ãƒ¡ãƒ¼ã‚¸ã‚’å—ã‘ãŸã‹ã©ã†ã‹ã‚’åˆ¤å®šã€‚
+		bool m_isDeath = false;					//! æ­»äº¡ã—ãŸã‹ã©ã†ã‹ã‚’åˆ¤å®šã€‚
+		bool m_isNormalAttack = false;			//! æ”»æ’ƒå…¥åŠ›ã‚’æ¤œçŸ¥ã€‚
+		bool m_isAirAttack = false;				//! ç©ºä¸­æ”»æ’ƒå…¥åŠ›ã‚’æ¤œçŸ¥ã€‚
+		bool m_isComboAttack = false;			//! ã‚³ãƒ³ãƒœæ”»æ’ƒå…¥åŠ›ã‚’æ¤œçŸ¥ã€‚
+		bool m_isInputEnable = true;			//! å…¥åŠ›ã‚’æ¤œçŸ¥ã€‚
+		bool m_isPressButton = false;			//! Bãƒœã‚¿ãƒ³ãŒæŠ¼ã•ã‚Œã¦ã„ã‚‹ã‹ã©ã†ã‹ã‚’åˆ¤å®šã€‚
+		bool m_isRushStart = false;				//! é€£ç¶šæ”»æ’ƒãŒå§‹ã¾ã£ã¦ã„ã‚‹ã‹ã‚’æ¤œçŸ¥ã€‚
+		bool m_isRushEnd = false;				//! é€£ç¶šæ”»æ’ƒãŒçµ‚ã‚ã£ã¦ã„ã‚‹ã‹ã‚’æ¤œçŸ¥ã€‚
+		bool m_isJumpRequested = false;			//! ã‚¸ãƒ£ãƒ³ãƒ—ã®å…¥åŠ›ãŒã‚ã£ãŸã‹ã©ã†ã‹ã‚’åˆ¤å®šã€‚
+		bool m_isSlashUp = false;				//! æ–¬ã‚Šä¸Šã’ã®å…¥åŠ›ã‚’æ¤œçŸ¥ã€‚
+		bool m_isChargeStart = false;			//! ãƒãƒ£ãƒ¼ã‚¸æ”»æ’ƒã®å…¥åŠ›ã‚’æ¤œçŸ¥ã€‚
+		bool m_isChargeAttack = false;			//! ãƒãƒ£ãƒ¼ã‚¸æ”»æ’ƒã®å…¥åŠ›ã‚’æ¤œçŸ¥ã€‚
+		bool m_isGuard = false;					//! ã‚¬ãƒ¼ãƒ‰ã®å…¥åŠ›ã‚’æ¤œçŸ¥ã€‚
+		bool m_isHelp = false;					//! åŠ©ã‘ã‚‹å…¥åŠ›ã‚’æ¤œçŸ¥ã€‚
+		bool m_isPressX = false;				//! Xãƒœã‚¿ãƒ³ãŒæŠ¼ã•ã‚Œã¦ã„ã‚‹ã‹ã©ã†ã‹ã‚’åˆ¤å®šã€‚
+		bool m_isPressRB = false;				//! RBãƒœã‚¿ãƒ³ãŒæŠ¼ã•ã‚Œã¦ã„ã‚‹ã‹ã©ã†ã‹ã‚’åˆ¤å®šã€‚
+		bool m_isPressRT = false;				//! RTãƒœã‚¿ãƒ³ãŒæŠ¼ã•ã‚Œã¦ã„ã‚‹ã‹ã©ã†ã‹ã‚’åˆ¤å®šã€‚
 
-		int m_padInddex = 0;                 //! “ü—Í‚ğŒŸ’m‚·‚éƒpƒbƒh‚ÌƒCƒ“ƒfƒbƒNƒXB
+		float m_stickX = 0.0f;					//! ã‚¹ãƒ†ã‚£ãƒƒã‚¯ã®Xè»¸ã®å€¤ã€‚
+		float m_stickY = 0.0f;					//! ã‚¹ãƒ†ã‚£ãƒƒã‚¯ã®Yè»¸ã®å€¤ã€‚
+		float m_chargeButtonTimer = 0.0f;		//! ãƒãƒ£ãƒ¼ã‚¸æ”»æ’ƒã¨åˆ¤å®šã™ã‚‹ãŸã‚ã«å¿…è¦ãªBãƒœã‚¿ãƒ³ã‚’é•·æŠ¼ã—ã—ãªã‘ã‚Œã°ãªã‚‰ãªã„æ™‚é–“ã€‚
 
-		Vector3 m_moveVec = Vector3::Right;  //! ˆÚ“®ƒxƒNƒgƒ‹B
+		Vector3 m_moveVec = Vector3::Right;		//! ç§»å‹•ãƒ™ã‚¯ãƒˆãƒ«ã€‚
 	};
 }

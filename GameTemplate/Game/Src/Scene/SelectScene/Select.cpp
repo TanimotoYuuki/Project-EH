@@ -25,7 +25,6 @@ namespace nsApp
 			DeleteGO(m_memberSelect);
 			DeleteGO(m_roleSelect);
 			DeleteGO(m_confirmationSelect);
-			DeleteGO(m_option);
 		}
 
 		/*開始処理。*/
@@ -64,7 +63,6 @@ namespace nsApp
 			m_memberSelect = NewGO<MemberSelect>(0, "memberSelect");
 			m_roleSelect = NewGO<RoleSelect>(0, "roleSelect");
 			m_confirmationSelect = NewGO<ConfirmationSelect>(2, "confirmationSelect");
-			m_option = NewGO<nsApp::nsOption::Option>(0, "option");
 		}
 
 		/*スプライトの初期化。*/

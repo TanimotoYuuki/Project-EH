@@ -87,6 +87,7 @@ namespace nsK2Engine {
 		{
 			m_physicsGhostObject.SetPosition(position);
 		}
+
 		/// <summary>
 		/// ‰ñ“]‚ğİ’èB
 		/// </summary>

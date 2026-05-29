@@ -1,10 +1,12 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "PlayerNormalAttackState.h"
 #include "Src/Actor/Magic/MagicProjectotile.h"
+#include "Src/Actor/Gun/Factory/BulletFactory.h"
+#include "Src/Actor/Magic/Factory/MagicFactory.h"
 
 namespace
 {
-	const auto RUSH_COUNT = 2; /* ˜A‘±UŒ‚‚ÉŒq‚°‚é‚½‚ß‚Ì˜A‘Å”B*/
+	const auto RUSH_COUNT = 2; /* é€£ç¶šæ”»æ’ƒã«ç¹‹ã’ã‚‹ãŸã‚ã®é€£æ‰“æ•°ã€‚*/
 }
 
 namespace nsApp
@@ -13,16 +15,16 @@ namespace nsApp
 	{
 		void PlayerNormalAttackState::Enter()
 		{
-			/* eƒNƒ‰ƒX‚ÌEnter‚ğŒÄ‚Ño‚µ‚ÄPlayerƒNƒ‰ƒX–{‘Ì‚ÉƒZƒbƒg‚·‚éB*/
+			/* è¦ªã‚¯ãƒ©ã‚¹ã®Enterã‚’å‘¼ã³å‡ºã—ã¦Playerã‚¯ãƒ©ã‚¹æœ¬ä½“ã«ã‚»ãƒƒãƒˆã™ã‚‹ã€‚*/
 			m_player = static_cast<nsActor::Player*>(m_owner);
 
-			/* UŒ‚ƒ^ƒCƒv‚ğ•Û‘¶‚·‚éB*/
+			/* æ”»æ’ƒã‚¿ã‚¤ãƒ—ã‚’ä¿å­˜ã™ã‚‹ã€‚*/
 			m_currentAttackType = AttackType::NormalAttack;
 
-			/* UŒ‚ƒAƒjƒ[ƒVƒ‡ƒ“‚ğÄ¶‚·‚éB*/ 
+			/* æ”»æ’ƒã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’å†ç”Ÿã™ã‚‹ã€‚*/ 
 			m_player->PlayWeaponAnimation(AttackType::NormalAttack);
 
-			/* “–‚½‚è”»’è‚ğ•t—^B*/
+			/* å½“ãŸã‚Šåˆ¤å®šã‚’ä»˜ä¸ã€‚*/
 			m_player->GetWeaponHitDetection().Enable();
 		}
 
@@ -32,13 +34,17 @@ namespace nsApp
 			if (!m_player)
 				return;
 
-			if (m_attackTimer == 18)
+			if (m_attackTimer == 48)
 			{
-				/* WandCharacter‚ğ‘I‘ğA’ÊíUŒ‚‚ÌÛAƒ~ƒTƒCƒ‹‚ğ”ò‚Î‚·ˆ—B*/
-				SummonMissile();
-			}
+				/* WandCharacterã‚’é¸æŠæ™‚ã€é€šå¸¸æ”»æ’ƒã®éš›ã€ãƒŸã‚µã‚¤ãƒ«ã‚’é£›ã°ã™å‡¦ç†ã€‚*/
+				if(m_player->GetCurrentWeapon() == WeaponType::Wand)
+					SummonMissile();
 
-			/* XVì‹ÆB*/
+			    else if (m_player->GetCurrentWeapon() == WeaponType::TwinGun)
+				    FireGunBullet();
+			}
+			
+			/* æ›´æ–°ä½œæ¥­ã€‚*/
 			PlayerAttackBaseState::Update();
 		}
 
@@ -51,16 +57,22 @@ namespace nsApp
 
 		void PlayerNormalAttackState::SummonMissile()
 		{
-			if(m_player->GetCurrentWeapon() == WeaponType::Wand)
-			{
-				m_spawnPosition = m_player->GetWeaponHitDetection().GetPosition();
-				m_spawnPosition.y += 10.0f;
-				m_spawnPosition += m_player->GetForwardVector() * 10.0f;
+			/* é­”æ³•ã®ç”Ÿæˆã€‚*/
+			if (m_player->GetCurrentWeapon() == WeaponType::Wand)
+				ConstructAndTransmitMagicRequest(nsActor::MagicType::enNormalMagic);
+		}
 
-				/* ƒ~ƒTƒCƒ‹‚ğ¶¬‚·‚éB*/
-				auto* normalMagicMissile = NewGO<nsActor::MagicProjectotile>(0, "NormalMagic");
-				normalMagicMissile->Initialize(nsActor::MagicType::enNormalMagic, m_spawnPosition, m_player->GetForwardVector());
-			}
+
+		void PlayerNormalAttackState::FireGunBullet()
+		{
+			/* åº§æ¨™ã‚’å–å¾—ã€‚*/
+			m_spawnPosition = m_player->GetWeaponHitDetection().GetPosition();
+
+			/* å‰æ–¹å‘ã®ãƒ™ã‚¯ãƒˆãƒ«ã‚’å–å¾—ã™ã‚‹ã€‚*/
+			m_forwardDirection = m_player->GetForwardVector();
+
+			/* ç”Ÿæˆã™ã‚‹å¼¾ä¸¸ã®ç¨®é¡ã‚’è¨­å®šã™ã‚‹ã€‚*/
+			ConstructAndTransmitBulletRequest(BulletType::enNormal);
 		}
 	}
 }

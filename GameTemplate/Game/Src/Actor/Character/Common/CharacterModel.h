@@ -1,9 +1,9 @@
-#pragma once
+ï»¿#pragma once
 /**
 * @file   CharacterModel.h
-* @brief  ƒLƒƒƒ‰ƒNƒ^[ƒ‚ƒfƒ‹/ƒAƒjƒ[ƒVƒ‡ƒ“‚ğŠÇ—‚·‚éƒNƒ‰ƒXB
-*         BossModel/Player1p`4pƒ‚ƒfƒ‹‚ğŠÇ—B
-* @author Yamaguchi HayatoB
+* @brief  ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼ãƒ¢ãƒ‡ãƒ«/ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’ç®¡ç†ã™ã‚‹ã‚¯ãƒ©ã‚¹ã€‚
+*         BossModel/Player1pï½4pãƒ¢ãƒ‡ãƒ«ã‚’ç®¡ç†ã€‚
+* @author Yamaguchi Hayatoã€‚
 * @date   2026/03/10
 */
 
@@ -12,136 +12,172 @@ namespace nsApp
 {
 	enum class CharacterModelType
 	{
-		/* ƒfƒoƒbƒO—pƒ‚ƒfƒ‹*/
-		Sandbag,            /* ƒTƒ“ƒhƒoƒbƒOB*/
+		/* ãƒ‡ãƒãƒƒã‚°ç”¨ãƒ¢ãƒ‡ãƒ«*/
+		Sandbag,            /* ã‚µãƒ³ãƒ‰ãƒãƒƒã‚°ã€‚*/
 
-		/* ƒvƒŒƒCƒ„[ƒ‚ƒfƒ‹1P`4P‚ğ’è‹`B*/
-		Player_1P,           /* 1PB*/
-		Player_2P,           /* 2PB*/
-		Player_3P,           /* 3PB*/
-		Player_4P,           /* 4PB*/
-
-
-		/* “Gƒ‚ƒfƒ‹‚ğ’è‹`B*/
-		Enemy_Tutorial,      /* ƒ`ƒ…[ƒgƒŠƒAƒ‹—p‚Ì“GB*/
-		GrayDragon,          /* ŠDF‚Ìƒhƒ‰ƒSƒ“B*/
-		GreenDragon,         /* —ÎF‚Ìƒhƒ‰ƒSƒ“B*/
-		RedDragon,           /* ÔF‚Ìƒhƒ‰ƒSƒ“B*/
+		/* ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãƒ¢ãƒ‡ãƒ«1Pï½4Pã‚’å®šç¾©ã€‚*/
+		Player_1P,           /* 1Pã€‚*/
+		Player_2P,           /* 2Pã€‚*/
+		Player_3P,           /* 3Pã€‚*/
+		Player_4P,           /* 4Pã€‚*/
 
 
-		/* •Šíƒ‚ƒfƒ‹‚ğ’è‹`B*/
-		Weapon_GreatSword,   /* ‘åŒ•B*/
-		Weapon_TwinSword,    /* ‘oŒ•B*/
-		Weapon_Axe,          /* •€B*/
-		Weapon_Hammer,       /* ƒnƒ“ƒ}[B*/
-		Weapon_Wand,		 /* ñB @TODO 3Dƒ‚ƒfƒ‹‚ğ’T‚·B*/
+		/* æ•µãƒ¢ãƒ‡ãƒ«ã‚’å®šç¾©ã€‚*/
+		TutorialBoss,      /* ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«ç”¨ã®ãƒœã‚¹ã€‚*/
+		GrayDragon,        /* ç°è‰²ã®ãƒ‰ãƒ©ã‚´ãƒ³ã€‚*/
+		GreenDragon,       /* ç·‘è‰²ã®ãƒ‰ãƒ©ã‚´ãƒ³ã€‚*/
+		RedDragon,         /* èµ¤è‰²ã®ãƒ‰ãƒ©ã‚´ãƒ³ã€‚*/
+
+
+		/* æ­¦å™¨ãƒ¢ãƒ‡ãƒ«ã‚’å®šç¾©ã€‚*/
+		Weapon_GreatSword,   //! å¤§å‰£ã€‚
+		Weapon_TwinGun,      //! åŒéŠƒã€‚
+		Weapon_Hammer,       //! ãƒãƒ³ãƒãƒ¼ã€‚
+		Weapon_Wand,		 //! æ–ã€‚ 
 	};
 
 
-	class CharacterModel 
+	class CharacterModel
 	{
 	public:
-		/* ƒRƒ“ƒXƒgƒ‰ƒNƒ^‚ÆƒfƒXƒgƒ‰ƒNƒ^B*/
+		/* ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã¨ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã€‚*/
 		CharacterModel();
 		virtual ~CharacterModel() = default;
 
 
 	public:
-	    /* ƒ‚ƒfƒ‹‚ğ“Ç‚İ‚ŞB
-		* @param characterType ƒ‚ƒfƒ‹‚Ìí—Ş‚ğ‚µ‚Ä‚¢‚é‚·‚éB
-		* @param animationClip ƒAƒjƒ[ƒVƒ‡ƒ“ƒNƒŠƒbƒv‚Ì”z—ñB
-		* @param numClips      ƒAƒjƒ[ƒVƒ‡ƒ“ƒNƒŠƒbƒv‚Ì”B
-		*/
+		/* ãƒ¢ãƒ‡ãƒ«ã‚’èª­ã¿è¾¼ã‚€ã€‚
+		 * @param characterType ãƒ¢ãƒ‡ãƒ«ã®ç¨®é¡ã‚’ã—ã¦ã„ã‚‹ã™ã‚‹ã€‚
+		 * @param animationClip ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚¯ãƒªãƒƒãƒ—ã®é…åˆ—ã€‚
+		 * @param numClips      ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚¯ãƒªãƒƒãƒ—ã®æ•°ã€‚
+		 */
 		bool LoadCharacterModel(CharacterModelType characterType, AnimationClip* animationClip, int numClips);
 
 		/**
-		* •Ší‚ğ“Ç‚İ‚ŞB
-		*/
+		 * @brief æ­¦å™¨ã‚’èª­ã¿è¾¼ã‚€ã€‚
+		 * @param weaponType æ­¦å™¨ã®ç¨®é¡ã‚’æŒ‡å®šã™ã‚‹ã€‚
+		 */
 		bool LoadWeaponModel(CharacterModelType weaponType);
 
-		/* ƒAƒjƒ[ƒVƒ‡ƒ“‚ğÄ¶‚·‚éB
-		* @param animationNumber Ä¶‚·‚éƒAƒjƒ[ƒVƒ‡ƒ“‚Ì”z—ñ‚Ì—v‘f”‚ğw’è‚·‚éB
-		* @param interpolateTime ƒAƒjƒ[ƒVƒ‡ƒ“‚Ì•âŠÔŠÔ‚ğw’è‚·‚éBƒfƒtƒHƒ‹ƒg‚Í0.2•bB
-		*/
+		/**
+		 * @brief ã‚µãƒ–ã®æ­¦å™¨ã‚’èª­ã¿è¾¼ã‚€ã€‚
+
+		 */
+		bool LoadSubWeaponModel(CharacterModelType subWeaponType);
+
+		/*
+		 * @brief ãƒ¢ãƒ‡ãƒ«ã‚’ç ´æ£„ã™ã‚‹ã€‚
+		 * @duration ã‚µãƒ–æ­¦å™¨ãƒ¢ãƒ‡ãƒ«ã‚’ç ´æ£„æ™‚ã«æ´»ç”¨ã€‚
+		 */
+		inline void ResetSubWeaponModel()
+		{
+			m_subWeaponModelRender.reset();
+		}
+
+
+		/* ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’å†ç”Ÿã™ã‚‹ã€‚
+		 * @param animationNumber å†ç”Ÿã™ã‚‹ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®é…åˆ—ã®è¦ç´ æ•°ã‚’æŒ‡å®šã™ã‚‹ã€‚
+		 * @param interpolateTime ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®è£œé–“æ™‚é–“ã‚’æŒ‡å®šã™ã‚‹ã€‚ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã¯0.2ç§’ã€‚
+		 */
 		void PlayAnimation(int animationNumber, float interpolateTime);
 
-		/* ƒLƒƒƒ‰ƒNƒ^[‚ğ•`‰æ‚·‚éB*/
+		/* ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼ã‚’æç”»ã™ã‚‹ã€‚*/
 		void DrawCharacterModel(RenderContext& rc);
 
-		/* XVˆ—B*/
+		/* æ›´æ–°å‡¦ç†ã€‚*/
 		void Update();
 
-		/* ƒAƒjƒ[ƒVƒ‡ƒ“‚ªÄ¶I—¹‚µ‚½‚©B*/
-	    bool IsPlayAnimation()
+		/* ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ãŒå†ç”Ÿçµ‚äº†ã—ãŸã‹ã€‚*/
+		bool IsPlayAnimation()
 		{
-			/* nullƒ`ƒFƒbƒNB*/
+			/* nullãƒã‚§ãƒƒã‚¯ã€‚*/
 			if (m_characterModelRender != nullptr)
-				/* ƒAƒjƒ[ƒVƒ‡ƒ“‚ªÄ¶I—¹‚µ‚Ä‚¢‚é‚©‚ğ•Ô‚·B*/
+				/* ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ãŒå†ç”Ÿçµ‚äº†ã—ã¦ã„ã‚‹ã‹ã‚’è¿”ã™ã€‚*/
 				return m_characterModelRender->IsPlayingAnimation();
 
 			return false;
 		}
 
 
-	/* ƒZƒbƒ^[B*/
+	private:
+		/* è¡Œåˆ—ã‹ã‚‰åº§æ¨™ãƒ™ã‚¯ãƒˆãƒ«ã‚’å–ã‚Šå‡ºã™ã€‚*/
+		void ExtractCoordinatesFromMatrix();
+
+		/* è¡Œåˆ—ã‹ã‚‰å›è»¢ãƒ™ã‚¯ãƒˆãƒ«ã‚’å–ã‚Šå‡ºã™ã€‚*/
+		void ExtractRotationCoordinates();
+
+		/* å–ã‚Šå‡ºã—ãŸå›è»¢è¡Œåˆ—ãƒ‡ãƒ¼ã‚¿ã‚’æ‰‹ã®Matrixãƒ‡ãƒ¼ã‚¿ã«ä»£å…¥ã€‚*/
+		void AssignMatrixToHandData();
+
+		/* */
+
+
+	/* ã‚»ãƒƒã‚¿ãƒ¼ã€‚*/
 	public:
-		/* À•W‚ğİ’èB*/
+		/* åº§æ¨™ã‚’è¨­å®šã€‚*/
 		inline void SetPosition(const Vector3& position)
 		{
 			if (m_characterModelRender)
 				m_characterModelRender->SetPosition(position);
 		}
 
-		/* ‰ñ“]‚ğİ’èB*/
+		/* å›è»¢ã‚’è¨­å®šã€‚*/
 		inline void SettRotation(const Quaternion& rotation)
 		{
 			if (m_characterModelRender)
 				m_characterModelRender->SetRotation(rotation);
 		}
 
-		/* ƒLƒƒƒ‰ƒ‚ƒfƒ‹‚Ì‘å‚«‚³‚ğİ’èB*/
-	    inline void SetCharacterScale(const Vector3& scale)
+		/* ã‚­ãƒ£ãƒ©ãƒ¢ãƒ‡ãƒ«ã®å¤§ãã•ã‚’è¨­å®šã€‚*/
+		inline void SetCharacterScale(const Vector3& scale)
 		{
 			if (m_characterModelRender)
 				m_characterModelRender->SetScale(scale);
 		}
 
-		/* •Šíƒ‚ƒfƒ‹‚Ì‘å‚«‚³‚ğİ’èB*/
+		/* æ­¦å™¨ãƒ¢ãƒ‡ãƒ«ã®å¤§ãã•ã‚’è¨­å®šã€‚*/
 		inline void SetWeaponScale(const Vector3& scale)
 		{
 			if (m_weaponModelRender)
 				m_weaponModelRender->SetScale(scale);
 		}
 
-		/* •Ší‚Ì‚¸‚ê‚ğ’²®B*/
-		inline void SetWeaponOffset(const Vector3& offset) 
+		/* æ­¦å™¨ã®ãšã‚Œã‚’èª¿æ•´ã€‚*/
+		inline void SetWeaponOffset(const Vector3& offset)
 		{
 			m_weaponOffset = offset;
 		}
 
-		/* •Ší‚ğ‘•”õ‚·‚éƒ{[ƒ“‚Ì–¼‘O‚ğ•ÏX‚·‚éB*/
+		/* æ­¦å™¨ã‚’è£…å‚™ã™ã‚‹ãƒœãƒ¼ãƒ³ã®åå‰ã‚’å¤‰æ›´ã™ã‚‹ã€‚*/
 		inline void SetWeaponAttackBone(const std::wstring& boneName)
 		{
 			m_attackBoneName = boneName;
 		}
 
-		/* •Ší‚ÌŒX‚«‚ğİ’èB*/
+		/* æ­¦å™¨ã®å‚¾ãã‚’è¨­å®šã€‚*/
 		inline void SetWeaponAngle(const Quaternion offset)
 		{
-			m_weaponRotationOffset = offset;	
+			m_weaponRotationOffset = offset;
 		}
 
 
-	/* ƒQƒbƒ^[B*/
+
+		/* ã‚²ãƒƒã‚¿ãƒ¼ã€‚*/
 	public:
-		/* ƒLƒƒƒ‰ƒ‚ƒfƒ‹‚Ìƒtƒ@ƒCƒ‹ƒpƒX‚ğŠi”[B*/
+		/* ã‚­ãƒ£ãƒ©ãƒ¢ãƒ‡ãƒ«ã®ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã‚’æ ¼ç´ã€‚*/
 		inline const std::string GetCharacterModelFilePath(std::string filePath)
 		{
-			 std::string modelPath = m_characterModelFilePath + filePath + m_modelExtension;
-			 return modelPath;
+			std::string modelPath = m_characterModelFilePath + filePath + m_modelExtension;
+			return modelPath;
 		}
 
-		/* •Šíƒ‚ƒfƒ‹‚Ìƒtƒ@ƒCƒ‹ƒpƒX‚ğŠi”[B*/
+		/*ãƒœã‚¹ãƒ¢ãƒ‡ãƒ«ã®ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã‚’æ ¼ç´ã€‚*/
+		inline const std::string GetBossModelFilePath(const std::string& filePath)
+		{
+			return m_modelBossModelFilePath + "/" + filePath + ".tkm";
+		}
+
+		/* æ­¦å™¨ãƒ¢ãƒ‡ãƒ«ã®ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã‚’æ ¼ç´ã€‚*/
 		inline const std::string GetWeaponModelFilePath(std::string filePath)
 		{
 			std::string weaponFilePath = m_weaponModelFilePath + filePath + m_modelExtension;
@@ -149,44 +185,49 @@ namespace nsApp
 		}
 
 		/*
-		* w’è‚µ‚½ƒ{[ƒ“‚Ìƒ[ƒ‹ƒhs—ñ‚ğæ“¾‚·‚éB
-		* @param boneName æ“¾‚µ‚½‚¢ƒ{[ƒ“‚Ì–¼‘O‚ğw’è‚·‚éB
+		* æŒ‡å®šã—ãŸãƒœãƒ¼ãƒ³ã®ãƒ¯ãƒ¼ãƒ«ãƒ‰è¡Œåˆ—ã‚’å–å¾—ã™ã‚‹ã€‚
+		* @param boneName å–å¾—ã—ãŸã„ãƒœãƒ¼ãƒ³ã®åå‰ã‚’æŒ‡å®šã™ã‚‹ã€‚
 		*/
-	    Matrix GetWorldMatrix(const wchar_t* boneName);
+		Matrix GetWorldMatrix(const wchar_t* boneName);
 
-		/* •Ší‚ÌÀ•W‚ğæ“¾B*/
+		/* æ­¦å™¨ã®åº§æ¨™ã‚’å–å¾—ã€‚*/
 		inline const Vector3& GetWeaponPosition() const
 		{
 			return m_offsetPosition;
 		}
 
 
-	private:	
-		std::unordered_map<CharacterModelType, std::string> m_filePathList;		                                               //! ƒ‚ƒfƒ‹ID‚©‚çƒtƒ@ƒCƒ‹ƒpƒX‚ğ•¶š—ñ‚É•Ï‰»B
-		std::unique_ptr<ModelRender> m_characterModelRender;                                                                   //! ƒ‚ƒfƒ‹‚ğŠÇ—B
-		std::unique_ptr<ModelRender> m_weaponModelRender;                                                                      //! •Šíƒ‚ƒfƒ‹‚ğŠÇ—B
-		std::wstring m_attackBoneName = L"mixamorig:RightHand";                                                                //! ƒfƒtƒHƒ‹ƒg‚Ìƒ{[ƒ“–¼B
+	private:
+		std::unordered_map<CharacterModelType, std::string> m_filePathList;		                                               //! ãƒ¢ãƒ‡ãƒ«IDã‹ã‚‰ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã‚’æ–‡å­—åˆ—ã«å¤‰åŒ–ã€‚
+		std::unique_ptr<ModelRender> m_characterModelRender;                                                                   //! ãƒ¢ãƒ‡ãƒ«ã‚’ç®¡ç†ã€‚
+		std::unique_ptr<ModelRender> m_weaponModelRender;                                                                      //! æ­¦å™¨ãƒ¢ãƒ‡ãƒ«ã‚’ç®¡ç†ã€‚
+		std::unique_ptr<ModelRender> m_subWeaponModelRender;                                                                   //! ã‚µãƒ–æ­¦å™¨ãƒ¢ãƒ‡ãƒ«ã‚’ç®¡ç†ã€‚
 
-		/* ƒtƒ@ƒCƒ‹ƒpƒX‚ğ’è”‰»‚·‚é‚½‚ß‚Ì•Ï”ŒQB*/
-		std::string m_modelFilePath;                                                                                           //! ƒ‚ƒfƒ‹‚Ìƒtƒ@ƒCƒ‹ƒpƒX‚ğŠi”[B
-		std::string m_characterModelFilePath = "Assets/modelData/Character/CharacterModel/";                                   //! ƒvƒŒƒCƒ„[/NPCƒ‚ƒfƒ‹‚Ìƒtƒ@ƒCƒ‹ƒpƒX‚ğŠi”[B
-		std::string m_modelExtension = ".tkm";                                                                                 //! ƒvƒŒƒCƒ„[/NPCƒ‚ƒfƒ‹‚ÌŠg’£q‚ğŠi”[B
-		std::string m_weaponModelFilePath = "Assets/modelData/Character/Weapon/";                                              //! •Šíƒ‚ƒfƒ‹‚Ìƒtƒ@ƒCƒ‹ƒpƒX‚ğŠi”[B
+		std::wstring m_attackBoneName = L"mixamorig:RightHand";                                                                //! ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã®ãƒœãƒ¼ãƒ³åã€‚
+		std::wstring m_subWeaponBoneName = L"mixamorig:LeftHand";                                                              //! ã‚µãƒ–æ­¦å™¨ã‚’è£…å‚™ã™ã‚‹ãƒœãƒ¼ãƒ³åã€‚
 
-		int boneID;                                                                                                            //! ƒ{[ƒ“ID‚ğŠi”[B
+		/* ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã‚’å®šæ•°åŒ–ã™ã‚‹ãŸã‚ã®å¤‰æ•°ç¾¤ã€‚*/
+		std::string m_modelFilePath;                                                                                           /* ãƒ¢ãƒ‡ãƒ«ã®ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã‚’æ ¼ç´ã€‚*/
+		std::string m_characterModelFilePath = "Assets/modelData/Character/CharacterModel/";                                   /* ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼/NPCãƒ¢ãƒ‡ãƒ«ã®ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã‚’æ ¼ç´ã€‚*/
+		std::string m_modelExtension = ".tkm";                                                                                 /* ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼/NPCãƒ¢ãƒ‡ãƒ«ã®æ‹¡å¼µå­ã‚’æ ¼ç´ã€‚*/
+		std::string m_modelBossModelFilePath = "Assets/modelData/Boss";
+		std::string m_weaponModelFilePath = "Assets/modelData/Character/Weapon/";                                              /* æ­¦å™¨ãƒ¢ãƒ‡ãƒ«ã®ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã‚’æ ¼ç´ã€‚*/
+
+		int boneID;                                                                                                            //! ãƒœãƒ¼ãƒ³IDã‚’æ ¼ç´ã€‚
 
 		Quaternion m_matrixRotation;
-		Quaternion m_weaponRotationOffset;                                                                                     //! •Ší‚ÌŒX‚«‚ğ§ŒäB
+		Quaternion m_weaponRotationOffset;                                                                                     //! æ­¦å™¨ã®å‚¾ãã‚’åˆ¶å¾¡ã€‚
 
-		Matrix m_handMatrix; 																					               //! •Ší‚ğ‘•”õ‚³‚¹‚é‚Æ‚«‚Ì‰Eè‚Ìƒ{[ƒ“‚Ìs—ñ‚ğŠÇ—‚·‚é•Ï”B
-		Matrix m_rotationMatrix;                                                                                               //! •Ší‚ğ‘•”õ‚³‚¹‚½‚Æ‚«‚Ì•Ší‚ÌŒX‚«‚ğ§ŒäB
+		Matrix m_handMatrix; 																					               //! æ­¦å™¨ã‚’è£…å‚™ã•ã›ã‚‹ã¨ãã®å³æ‰‹ã®ãƒœãƒ¼ãƒ³ã®è¡Œåˆ—ã‚’ç®¡ç†ã™ã‚‹å¤‰æ•°ã€‚
+		Matrix m_rotationMatrix;                                                                                               //! æ­¦å™¨ã‚’è£…å‚™ã•ã›ãŸã¨ãã®æ­¦å™¨ã®å‚¾ãã‚’åˆ¶å¾¡ã€‚
+		Matrix m_subWeaponHandMatrix;
 
-
-		Vector3 m_xAxis;                                                                                                       //! •Ší‚ğ‘•”õ‚³‚¹‚é‚Æ‚«‚Ì‰Eè‚Ìƒ{[ƒ“‚Ìs—ñ‚©‚ç’Šo‚µ‚½X²‚ğŠÇ—‚·‚é•Ï”B
-		Vector3 m_yAxis;                                                                                                       //! •Ší‚ğ‘•”õ‚³‚¹‚é‚Æ‚«‚Ì‰Eè‚Ìƒ{[ƒ“‚Ìs—ñ‚©‚ç’Šo‚µ‚½Y²‚ğŠÇ—‚·‚é•Ï”B
-		Vector3 m_zAxis;                                                                                                       //! •Ší‚ğ‘•”õ‚³‚¹‚é‚Æ‚«‚Ì‰Eè‚Ìƒ{[ƒ“‚Ìs—ñ‚©‚ç’Šo‚µ‚½Z²‚ğŠÇ—‚·‚é•Ï”B
+		Vector3 m_xAxis;                                                                                                       //! æ­¦å™¨ã‚’è£…å‚™ã•ã›ã‚‹ã¨ãã®å³æ‰‹ã®ãƒœãƒ¼ãƒ³ã®è¡Œåˆ—ã‹ã‚‰æŠ½å‡ºã—ãŸXè»¸ã‚’ç®¡ç†ã™ã‚‹å¤‰æ•°ã€‚
+		Vector3 m_yAxis;                                                                                                       //! æ­¦å™¨ã‚’è£…å‚™ã•ã›ã‚‹ã¨ãã®å³æ‰‹ã®ãƒœãƒ¼ãƒ³ã®è¡Œåˆ—ã‹ã‚‰æŠ½å‡ºã—ãŸYè»¸ã‚’ç®¡ç†ã™ã‚‹å¤‰æ•°ã€‚
+		Vector3 m_zAxis;                                                                                                       //! æ­¦å™¨ã‚’è£…å‚™ã•ã›ã‚‹ã¨ãã®å³æ‰‹ã®ãƒœãƒ¼ãƒ³ã®è¡Œåˆ—ã‹ã‚‰æŠ½å‡ºã—ãŸZè»¸ã‚’ç®¡ç†ã™ã‚‹å¤‰æ•°ã€‚
 		Vector3 m_matrixPosition;
-		Vector3 m_weaponOffset;                                                                                                //! •Ší‚ÌˆÊ’u‚Ì‚¸‚ê‚ğŠÇ—‚·‚é•Ï”B
-		Vector3 m_offsetPosition;                                                                                              //! •Ší‚ÌˆÊ’u‚Ì‚¸‚ê‚ğŠÇ—‚·‚é•Ï”B
-	};	
+		Vector3 m_weaponOffset;                                                                                                //! æ­¦å™¨ã®ä½ç½®ã®ãšã‚Œã‚’ç®¡ç†ã™ã‚‹å¤‰æ•°ã€‚
+		Vector3 m_offsetPosition;                                                                                              //! æ­¦å™¨ã®ä½ç½®ã®ãšã‚Œã‚’ç®¡ç†ã™ã‚‹å¤‰æ•°ã€‚
+		Vector3 m_subWeaponOffset;                                                                                             //! ã‚µãƒ–æ­¦å™¨ã®ä½ç½®ã®ãšã‚Œã‚’ç®¡ç†ã™ã‚‹å¤‰æ•°ã€‚
+	};
 }

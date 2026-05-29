@@ -1,6 +1,7 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "PlayerHeavyAttackState.h"
 #include "Src/Actor/Character/Player/State/BasicState/PlayerIdleState.h"
+#include "Src/Actor/Gun/Factory/BulletFactory.h"
 
 namespace nsApp
 {
@@ -8,28 +9,51 @@ namespace nsApp
 	{
 		void PlayerHeavyAttackState::Enter()
 		{
-			/* ƒLƒƒƒXƒgB*/
+			/* ã‚­ãƒ£ã‚¹ãƒˆã€‚*/
 			m_player = static_cast<nsActor::Player*>(m_owner);
 
-			/* UŒ‚‚Ìí—Ş‚ğİ’èB*/
+			/* æ”»æ’ƒã®ç¨®é¡ã‚’è¨­å®šã€‚*/
 			m_currentAttackType = AttackType::HeavyAttack;
 
-			/* •ŠíƒAƒjƒ[ƒVƒ‡ƒ“‚ğÄ¶B*/
+			/* æ­¦å™¨ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’å†ç”Ÿã€‚*/
 			m_player->PlayWeaponAnimation(AttackType::HeavyAttack);
 
-			/* “–‚½‚è”»’è‚ğ•t—^B*/
+			if (m_player->GetCurrentWeapon() == WeaponType::TwinGun)
+				m_player->SetWeaponRotationAngle(Vector3::Front, -90.0f);
+
+			/* å½“ãŸã‚Šåˆ¤å®šã‚’ä»˜ä¸ã€‚*/
 			m_player->GetWeaponHitDetection().Enable();
 		}
 
 
-		void PlayerHeavyAttackState::Update()
-		{
-			/* eƒNƒ‰ƒX‚ÌXVB*/
-			PlayerAttackBaseState::Update();
+        void PlayerHeavyAttackState::Update()
+        {
+            PlayerAttackBaseState::Update();
 
-			/* ƒAƒjƒ[ƒVƒ‡ƒ“‚ÌI—¹”»’èB*/
-			if (m_attackTimer > 10 && !m_player->IsPlayAnimation())
-				m_stateMachine->ChangeState(new PlayerIdleState);
-		}
-	}
+            if (m_player->GetCurrentWeapon() == WeaponType::TwinGun)
+            {
+                if (m_attackTimer == 8) 
+                    FireHeavyBullet();
+                
+
+                if (!m_player->IsPlayAnimation()) {
+                    m_stateMachine->ChangeState(new PlayerIdleState());
+                    return;
+                }
+            }
+            else 
+                if (m_attackTimer > 10 && !m_player->IsPlayAnimation()) 
+                    m_stateMachine->ChangeState(new PlayerIdleState);
+        }
+
+
+        void PlayerHeavyAttackState::FireHeavyBullet()
+        {
+            m_spawnPosition = m_player->GetBonePosition(L"mixamorig:RightHand");
+            m_forwardDirection = m_player->GetForwardVector();
+
+            /* çˆ†ç™ºå¼¾ï¼ˆenExplosiveï¼‰ã‚’æŒ‡å®šã€‚*/
+            ConstructAndTransmitBulletRequest(BulletType::enExplosive);
+        }
+    }
 }

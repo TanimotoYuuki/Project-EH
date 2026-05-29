@@ -1,56 +1,58 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "CharacterModel.h"
 
 namespace nsApp
 {
 	CharacterModel::CharacterModel()
 	{
-		/* ƒ‚ƒfƒ‹‚Ìƒtƒ@ƒCƒ‹ƒpƒX‚ğŠi”[B*/
-		/* ƒfƒoƒbƒO—p‚ÌƒTƒ“ƒhƒoƒbƒOƒ‚ƒfƒ‹B*/
+		/* ãƒ¢ãƒ‡ãƒ«ã®ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã‚’æ ¼ç´ã€‚*/
+		/* ãƒ‡ãƒãƒƒã‚°ç”¨ã®ã‚µãƒ³ãƒ‰ãƒãƒƒã‚°ãƒ¢ãƒ‡ãƒ«ã€‚*/
 		m_filePathList[CharacterModelType::Sandbag] = "Assets/modelData/Character/Debag/PunchBagKun.tkm";
 
-		/* ƒLƒƒƒ‰ƒ‚ƒfƒ‹‚ÌŠi”[B*/
-		/* ƒvƒŒƒCƒ„[ƒ‚ƒfƒ‹B*/
-		m_filePathList[CharacterModelType::Player_2P] = GetCharacterModelFilePath("2p/player_2p");                    //! 2Pƒ‚ƒfƒ‹B
-		m_filePathList[CharacterModelType::Player_3P] = GetCharacterModelFilePath("3p/Player_3P");                    //! 3Pƒ‚ƒfƒ‹B
-		m_filePathList[CharacterModelType::Player_4P] = GetCharacterModelFilePath("4p/Player_4P");                    //! 4Pƒ‚ƒfƒ‹B
+		/* ã‚­ãƒ£ãƒ©ãƒ¢ãƒ‡ãƒ«ã®æ ¼ç´ã€‚*/
+		/* ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãƒ¢ãƒ‡ãƒ«ã€‚*/
+		m_filePathList[CharacterModelType::Player_1P] = GetCharacterModelFilePath("1p/Player_1P"); //! 1Pãƒ¢ãƒ‡ãƒ«ã€‚
+		m_filePathList[CharacterModelType::Player_2P] = GetCharacterModelFilePath("2p/player_2p"); //! 2Pãƒ¢ãƒ‡ãƒ«ã€‚
+		m_filePathList[CharacterModelType::Player_3P] = GetCharacterModelFilePath("3p/Player_3P"); //! 3Pãƒ¢ãƒ‡ãƒ«ã€‚
+		m_filePathList[CharacterModelType::Player_4P] = GetCharacterModelFilePath("4p/Player_4P"); //! 4Pãƒ¢ãƒ‡ãƒ«ã€‚
 
-		/* ƒ{ƒXƒ‚ƒfƒ‹B*/
-		m_filePathList[CharacterModelType::Enemy_Tutorial] = GetCharacterModelFilePath("TutorialBoss/TutorialBoss");
-		m_filePathList[CharacterModelType::GrayDragon] = GetCharacterModelFilePath("GrayDragon/GrayDragon");
-		m_filePathList[CharacterModelType::GreenDragon] = GetWeaponModelFilePath("GreenDragon/GreenDragon");
-		m_filePathList[CharacterModelType::RedDragon] = GetWeaponModelFilePath("RedDragon/RedDragon");
+		/* ãƒœã‚¹ãƒ¢ãƒ‡ãƒ«ã€‚*/
+		m_filePathList[CharacterModelType::TutorialBoss] = GetBossModelFilePath("TutorialBoss/Tutorial_Boss");
+		m_filePathList[CharacterModelType::GrayDragon] = GetBossModelFilePath("GrayDragon/GrayDragon");
+		m_filePathList[CharacterModelType::GreenDragon] = GetBossModelFilePath("GreenDragon/GreenDragon");
+		m_filePathList[CharacterModelType::RedDragon] = GetBossModelFilePath("RedDragon/RedDragon");
 
-
-		/* •Šíƒ‚ƒfƒ‹B*/
-		/* ‘åŒ•B*/
+		/* æ­¦å™¨ãƒ¢ãƒ‡ãƒ«ã€‚*/
+		/* å¤§å‰£ã€‚*/
 		m_filePathList[CharacterModelType::Weapon_GreatSword] = GetWeaponModelFilePath("GreatSword");
-		/* ƒnƒ“ƒ}[B*/
+		/* åŒéŠƒã€‚*/
+		m_filePathList[CharacterModelType::Weapon_TwinGun] = GetWeaponModelFilePath("TwinGun");
+		/* ãƒãƒ³ãƒãƒ¼ã€‚*/
 		m_filePathList[CharacterModelType::Weapon_Hammer] = GetWeaponModelFilePath("Hammer");
-		/* ñB*/ 
+		/* æ–ã€‚*/ 
 		m_filePathList[CharacterModelType::Weapon_Wand] = GetWeaponModelFilePath("Wand");
 	}
 
 
 	bool CharacterModel::LoadCharacterModel(CharacterModelType characterType, AnimationClip* animationClip, int numClips)
 	{
-		/* “Ç‚İ‚Şƒ‚ƒfƒ‹‚ªƒŠƒXƒg‚Ì’†‚É‚ ‚é‚©Šm”FB*/
+		/* èª­ã¿è¾¼ã‚€ãƒ¢ãƒ‡ãƒ«ãŒãƒªã‚¹ãƒˆã®ä¸­ã«ã‚ã‚‹ã‹ç¢ºèªã€‚*/
 		if (m_filePathList.count(characterType) == 0)
-			return false; /* “o˜^‚³‚ê‚Ä‚¢‚È‚¢‚È‚çƒ[ƒh¸”sB*/
+			return false; /* ç™»éŒ²ã•ã‚Œã¦ã„ãªã„ãªã‚‰ãƒ­ãƒ¼ãƒ‰å¤±æ•—ã€‚*/
 
-		/* ID‚É‘Î‰‚·‚éƒ‚ƒfƒ‹ƒpƒX‚ğæ‚èo‚·B*/
+		/* IDã«å¯¾å¿œã™ã‚‹ãƒ¢ãƒ‡ãƒ«ãƒ‘ã‚¹ã‚’å–ã‚Šå‡ºã™ã€‚*/
 		m_modelFilePath = m_filePathList[characterType];
 
-		/* ƒ‚ƒfƒ‹ƒ[ƒhƒNƒ‰ƒX‚ğ¶¬‚·‚éB*/
+		/* ãƒ¢ãƒ‡ãƒ«ãƒ­ãƒ¼ãƒ‰ã‚¯ãƒ©ã‚¹ã‚’ç”Ÿæˆã™ã‚‹ã€‚*/
 		m_characterModelRender = std::make_unique<ModelRender>();
 
-		/* ƒ‚ƒfƒ‹‚ğƒ[ƒh‚·‚éB*/
+		/* ãƒ¢ãƒ‡ãƒ«ã‚’ãƒ­ãƒ¼ãƒ‰ã™ã‚‹ã€‚*/
 		m_characterModelRender->Init
 		(
-			m_modelFilePath.c_str(), //! ƒ‚ƒfƒ‹‚Ìƒtƒ@ƒCƒ‹ƒpƒXB
-			animationClip,           //! ƒAƒjƒ[ƒVƒ‡ƒ“B
-			numClips,                //! ƒAƒjƒ[ƒVƒ‡ƒ“‚Ì•âŠ®—¦B
-			enModelUpAxisZ           //! ƒ‚ƒfƒ‹‚Ìã•ûŒü‚Æ‚È‚é²‚ğİ’èB ¡‰ñ‚ÍZ²B
+			m_modelFilePath.c_str(), //! ãƒ¢ãƒ‡ãƒ«ã®ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã€‚
+			animationClip,           //! ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã€‚
+			numClips,                //! ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®è£œå®Œç‡ã€‚
+			enModelUpAxisZ           //! ãƒ¢ãƒ‡ãƒ«ã®ä¸Šæ–¹å‘ã¨ãªã‚‹è»¸ã‚’è¨­å®šã€‚ ä»Šå›ã¯Zè»¸ã€‚
 		);
 
 		return true;
@@ -59,11 +61,11 @@ namespace nsApp
 
 	bool CharacterModel::LoadWeaponModel(CharacterModelType weaponType)
 	{
-		/* “Ç‚İ‚Ş•Ší‚ªƒŠƒXƒg‚É‚ ‚é‚Ì‚©‚ğŠm”FB*/
+		/* èª­ã¿è¾¼ã‚€æ­¦å™¨ãŒãƒªã‚¹ãƒˆã«ã‚ã‚‹ã®ã‹ã‚’ç¢ºèªã€‚*/
 		if (m_filePathList.count(weaponType) == 0)
 			return false;
 		
-		/* •Šíƒ‚ƒfƒ‹‚ğ¶¬‚µ‚Äƒ[ƒh‚·‚éB*/
+		/* æ­¦å™¨ãƒ¢ãƒ‡ãƒ«ã‚’ç”Ÿæˆã—ã¦ãƒ­ãƒ¼ãƒ‰ã™ã‚‹ã€‚*/
 		m_weaponModelRender = std::make_unique<ModelRender>();
 		m_weaponModelRender->Init(
 			m_filePathList[weaponType].c_str(),
@@ -76,6 +78,22 @@ namespace nsApp
 	}
 
 
+	bool CharacterModel::LoadSubWeaponModel(CharacterModelType subWeaponType)
+	{
+		if (m_filePathList.count(subWeaponType) == 0)
+			return false;
+
+		m_subWeaponModelRender = std::make_unique<ModelRender>();
+		m_subWeaponModelRender->Init(
+			m_filePathList[subWeaponType].c_str(),
+			nullptr,
+			0,
+			enModelUpAxisZ
+		);
+		return false;
+	}
+
+
 	void CharacterModel::PlayAnimation(int animationNumber, float interpolateTime)
 	{
 		if (m_characterModelRender != nullptr)
@@ -85,62 +103,103 @@ namespace nsApp
 
 	void CharacterModel::DrawCharacterModel(RenderContext& rc)
 	{
-		/* ’†g‚ª‚ ‚éê‡A•`‰æ‚·‚éB*/
+		/* ä¸­èº«ãŒã‚ã‚‹å ´åˆã€æç”»ã™ã‚‹ã€‚*/
 		if(m_characterModelRender != nullptr)
 			m_characterModelRender->Draw(rc);
 
-		/* •Ší‚à•`‰æ‚·‚éB*/
+		/* æ­¦å™¨ã‚‚æç”»ã™ã‚‹ã€‚*/
 		if (m_weaponModelRender != nullptr)
 			m_weaponModelRender->Draw(rc);
+
+		/* ã‚µãƒ–æ­¦å™¨ã‚‚æç”»ã™ã‚‹ã€‚*/ 
+		if (m_subWeaponModelRender != nullptr)
+			m_subWeaponModelRender->Draw(rc);
 	}
 
 
 	void CharacterModel::Update()
 	{
-		/* ƒLƒƒƒ‰ƒ‚ƒfƒ‹–{‘Ì‚ª–³‚¢‚È‚çˆ—‚ğI—¹‚³‚¹‚éB*/
+		/* ã‚­ãƒ£ãƒ©ãƒ¢ãƒ‡ãƒ«æœ¬ä½“ãŒç„¡ã„ãªã‚‰å‡¦ç†ã‚’çµ‚äº†ã•ã›ã‚‹ã€‚*/
 		if (m_characterModelRender == nullptr)
 			return;
 
-		/* ƒ‚ƒfƒ‹‚ÌXVˆ—B*/
+		/* ãƒ¢ãƒ‡ãƒ«ã®æ›´æ–°å‡¦ç†ã€‚*/
 		m_characterModelRender->Update();
 
-		/* •Ší‚ªŠm”F‚Å‚«‚È‚¢ê‡Aˆ—‚ğI—¹‚³‚¹‚éB*/
+		/* æ­¦å™¨ãŒç¢ºèªã§ããªã„å ´åˆã€å‡¦ç†ã‚’çµ‚äº†ã•ã›ã‚‹ã€‚*/
 		if (m_weaponModelRender == nullptr)
 			return;
 
+		/* å³æ‰‹ã®ãƒœãƒ¼ãƒ³ã®è¨ˆç®—ã€‚*/
+		if (m_weaponModelRender != nullptr)
+		{
+			/* å³æ‰‹ã®ãƒœãƒ¼ãƒ³ã®ä½ç½®ã¨å‚¾ãã®ãƒ‡ãƒ¼ã‚¿ã‚’å–å¾—ã€‚*/
+			m_handMatrix = GetWorldMatrix(m_attackBoneName.c_str());
 
-		/* ‰Eè‚Ìƒ{[ƒ“‚ÌˆÊ’u‚ÆŒX‚«‚Ìƒf[ƒ^‚ğæ“¾B*/
-		m_handMatrix = GetWorldMatrix(m_attackBoneName.c_str());
+			/* è¡Œåˆ—ã‹ã‚‰åº§æ¨™ã‚’æŠ½å‡ºã€‚*/
+			m_matrixPosition.x = m_handMatrix.m[3][0];
+			m_matrixPosition.y = m_handMatrix.m[3][1];
+			m_matrixPosition.z = m_handMatrix.m[3][2];
 
-		/* s—ñ‚©‚çÀ•W‚ğ’ŠoB*/
-		m_matrixPosition.x = m_handMatrix.m[3][0];
-		m_matrixPosition.y = m_handMatrix.m[3][1];
-		m_matrixPosition.z = m_handMatrix.m[3][2];
-		
-		m_xAxis = Vector3(m_handMatrix.m[0][0], m_handMatrix.m[0][1], m_handMatrix.m[0][2]);
-		m_yAxis = Vector3(m_handMatrix.m[1][0], m_handMatrix.m[1][1], m_handMatrix.m[1][2]);
-		m_zAxis = Vector3(m_handMatrix.m[2][0], m_handMatrix.m[2][1], m_handMatrix.m[2][2]);
+			m_xAxis = Vector3(m_handMatrix.m[0][0], m_handMatrix.m[0][1], m_handMatrix.m[0][2]);
+			m_yAxis = Vector3(m_handMatrix.m[1][0], m_handMatrix.m[1][1], m_handMatrix.m[1][2]);
+			m_zAxis = Vector3(m_handMatrix.m[2][0], m_handMatrix.m[2][1], m_handMatrix.m[2][2]);
 
-		/* ³‹K‰»B*/
-		m_xAxis.Normalize();
-		m_yAxis.Normalize();
-		m_zAxis.Normalize();
+			/* æ­£è¦åŒ–ã€‚*/
+			m_xAxis.Normalize();
+			m_yAxis.Normalize();
+			m_zAxis.Normalize();
 
-		m_offsetPosition = m_matrixPosition + (m_xAxis * m_weaponOffset.x) +  (m_yAxis * m_weaponOffset.y)+ (m_zAxis * m_weaponOffset.z);
-		m_weaponModelRender->SetPosition(m_offsetPosition);
-			                 
+			m_offsetPosition = m_matrixPosition + (m_xAxis * m_weaponOffset.x) + (m_yAxis * m_weaponOffset.y) + (m_zAxis * m_weaponOffset.z);
+			m_weaponModelRender->SetPosition(m_offsetPosition);
 
-		m_rotationMatrix = m_handMatrix;
-		m_rotationMatrix.m[0][0] = m_xAxis.x; m_rotationMatrix.m[0][1] = m_xAxis.y; m_rotationMatrix.m[0][2] = m_xAxis.z;
-		m_rotationMatrix.m[1][0] = m_yAxis.x; m_rotationMatrix.m[1][1] = m_yAxis.y; m_rotationMatrix.m[1][2] = m_yAxis.z;
-		m_rotationMatrix.m[2][0] = m_zAxis.x; m_rotationMatrix.m[2][1] = m_zAxis.y; m_rotationMatrix.m[2][2] = m_zAxis.z;
 
-		/* ³‹K‰»‚µ‚½s—ñ‚©‚ç‰ñ“]‚ğ’ŠoB*/
-		m_matrixRotation.SetRotation(m_rotationMatrix);
-		m_weaponModelRender->SetRotation(m_matrixRotation * m_weaponRotationOffset);
+			m_rotationMatrix = m_handMatrix;
+			m_rotationMatrix.m[0][0] = m_xAxis.x; m_rotationMatrix.m[0][1] = m_xAxis.y; m_rotationMatrix.m[0][2] = m_xAxis.z;
+			m_rotationMatrix.m[1][0] = m_yAxis.x; m_rotationMatrix.m[1][1] = m_yAxis.y; m_rotationMatrix.m[1][2] = m_yAxis.z;
+			m_rotationMatrix.m[2][0] = m_zAxis.x; m_rotationMatrix.m[2][1] = m_zAxis.y; m_rotationMatrix.m[2][2] = m_zAxis.z;
 
-		/* •Ší‚ğXVB*/
-		m_weaponModelRender->Update();
+			/* æ­£è¦åŒ–ã—ãŸè¡Œåˆ—ã‹ã‚‰å›è»¢ã‚’æŠ½å‡ºã€‚*/
+			m_matrixRotation.SetRotation(m_rotationMatrix);
+			m_weaponModelRender->SetRotation(m_matrixRotation * m_weaponRotationOffset);
+
+			/* æ­¦å™¨ã‚’æ›´æ–°ã€‚*/
+			m_weaponModelRender->Update();
+
+		}
+
+		/* ã‚µãƒ–æ­¦å™¨ã®ãƒœãƒ¼ãƒ³ã®æ›´æ–°ã€‚*/ 
+		if (m_subWeaponModelRender != nullptr) {
+			m_subWeaponHandMatrix = GetWorldMatrix(m_subWeaponBoneName.c_str());
+
+			Vector3 subMatrixPosition(m_subWeaponHandMatrix.m[3][0], m_subWeaponHandMatrix.m[3][1], m_subWeaponHandMatrix.m[3][2]);
+			Vector3 subXAxis(m_subWeaponHandMatrix.m[0][0], m_subWeaponHandMatrix.m[0][1], m_subWeaponHandMatrix.m[0][2]);
+			Vector3 subYAxis(m_subWeaponHandMatrix.m[1][0], m_subWeaponHandMatrix.m[1][1], m_subWeaponHandMatrix.m[1][2]);
+			Vector3 subZAxis(m_subWeaponHandMatrix.m[2][0], m_subWeaponHandMatrix.m[2][1], m_subWeaponHandMatrix.m[2][2]);
+
+			subXAxis.Normalize();
+			subYAxis.Normalize();
+			subZAxis.Normalize();
+
+			// ã‚ªãƒ•ã‚»ãƒƒãƒˆè¨ˆç®— (m_weaponOffset ã‚’æµç”¨ã™ã‚‹ã‹ã€å°‚ç”¨ã® m_subWeaponOffset ã‚’ä½¿ã†)
+			Vector3 subOffsetPosition = subMatrixPosition + (subXAxis * m_weaponOffset.x) + (subYAxis * m_weaponOffset.y) + (subZAxis * m_weaponOffset.z);
+			m_subWeaponModelRender->SetPosition(subOffsetPosition);
+
+			Matrix subRotationMatrix = m_subWeaponHandMatrix;
+			subRotationMatrix.m[0][0] = subXAxis.x; subRotationMatrix.m[0][1] = subXAxis.y; subRotationMatrix.m[0][2] = subXAxis.z;
+			subRotationMatrix.m[1][0] = subYAxis.x; subRotationMatrix.m[1][1] = subYAxis.y; subRotationMatrix.m[1][2] = subYAxis.z;
+			subRotationMatrix.m[2][0] = subZAxis.x; subRotationMatrix.m[2][1] = subZAxis.y; subRotationMatrix.m[2][2] = subZAxis.z;
+
+			Quaternion subMatrixRotation;
+			subMatrixRotation.SetRotation(subRotationMatrix);
+
+			Quaternion flipOffset;
+			flipOffset.SetRotationDegX(180.0f);
+			m_subWeaponModelRender->SetRotation(subMatrixRotation * m_weaponRotationOffset);
+			m_subWeaponModelRender->SetScale(Vector3::One * 2.0f); // å³æ‰‹ã¨åŒã˜ã‚¹ã‚±ãƒ¼ãƒ«ã«
+
+			m_subWeaponModelRender->Update();
+		}
 	}
 
 
@@ -148,13 +207,13 @@ namespace nsApp
 	{
 		if (m_characterModelRender)
 		{
-			/* ƒ{[ƒ“ID‚ğæ“¾B*/
+			/* ãƒœãƒ¼ãƒ³IDã‚’å–å¾—ã€‚*/
 			boneID = m_characterModelRender->FindBoneID(boneName);
 
 			if (boneID != -1)
 				return m_characterModelRender->GetBone(boneID)->GetWorldMatrix();
 		}
-		/* ƒ{[ƒ“‚ªŒ©‚Â‚©‚ç‚È‚¢ê‡B*/
+		/* ãƒœãƒ¼ãƒ³ãŒè¦‹ã¤ã‹ã‚‰ãªã„å ´åˆã€‚*/
 		return Matrix::Identity;
 	}
 }

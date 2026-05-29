@@ -41,6 +41,17 @@ namespace {
 
 	const Vector2 HP_GAUGE_UI_INIT_PIVOT = Vector2(0.0f, 0.5f); /*HPゲージUIの初期ピボット。*/
 
+	/*役割UI(1人目のキャラクターをベースに)。*/
+	const float ROLE_UI_WIDTH = 1024; /*役割UIの幅。*/
+
+	const float ROLE_UI_HEIGHT = 1024; /*役割UIの高さ。*/
+
+	const Vector3 ROLE_UI_INIT_POSITION = Vector3(-810.0f, -453.65f, 0.0f); /*役割UIの初期位置。*/
+
+	const float ROLE_UI_POSITION_INTERVAL = 425.0f; /*役割UIの位置の間隔。*/
+
+	const Vector3 ROLE_UI_INIT_SCALE = Vector3(0.065f, 0.065f, 1.0f); /*役割UIの初期大きさ。*/
+
 	/*HP。*/
 	const int HP_MAX = 100; /*HPの最大値。*/
 
@@ -107,6 +118,9 @@ namespace nsApp
 
 				/*HPゲージUIの描画。*/
 				m_hpGaugeUI[i].Draw(rc);
+
+				/*役割UIの描画。*/
+				m_roleUI[i].Draw(rc);
 			}
 		}
 
@@ -123,6 +137,9 @@ namespace nsApp
 
 				/*HPゲージUI。*/
 				InitHPGaugeUI((EnCharacter)i, i);
+
+				/*役割UI。*/
+				InitRoleUI((EnCharacter)i, i);
 			}
 		}
 
@@ -165,6 +182,18 @@ namespace nsApp
 			m_hpGaugeUI[character].Update();/*更新処理。*/
 
 			m_hpGaugeUIBaseScale[character] = m_hpGaugeUI[character].GetScale();/*基準の大きさ設定。*/
+		}
+
+		/*役割UIの初期化。*/
+		void CharacterHP::InitRoleUI(EnCharacter character, int characterIndex)
+		{
+			Vector3 initPosition = ROLE_UI_INIT_POSITION;/*初期位置。*/
+			initPosition.x += ROLE_UI_POSITION_INTERVAL * characterIndex;/*位置の間隔を加算。*/
+
+			m_roleUI[character].Init(m_roleUIFilePath[GetCharacterRole(characterIndex)].c_str(), ROLE_UI_WIDTH, ROLE_UI_HEIGHT);/*初期化。*/
+			m_roleUI[character].SetPosition(initPosition);/*位置設定。*/
+			m_roleUI[character].SetScale(ROLE_UI_INIT_SCALE);/*大きさ設定。*/
+			m_roleUI[character].Update();/*更新処理。*/
 		}
 
 		/*UIアニメーションの初期化。*/
@@ -226,6 +255,9 @@ namespace nsApp
 
 			/*HPゲージUI。*/
 			m_hpGaugeUI[character].Update();
+
+			/*役割UI。*/
+			m_roleUI[character].Update();
 		}
 	}
 }

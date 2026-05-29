@@ -24,7 +24,7 @@ namespace nsApp
 			/* ライフサイクル。*/
 			void Enter() override;
 			void Update() override;
-
+			void Exit() override;
 
 		/* ヘルパー。*/
 		private:
@@ -35,14 +35,19 @@ namespace nsApp
 			void PlayHeelMagicParticleEffect();
 
 			/* 回復エフェクトを徐々に大きくする。*/
-		     void ComputeHeelEffectScale()
+		    void ComputeHeelEffectScale()
 			{
-				if (m_heelEffect != nullptr or m_particleEffect != nullptr)
+				if (m_heelEffect != nullptr)
 				{
 					m_heelEffectScalling = static_cast<float>(m_attackTimer * 0.05f);
-					m_magicEffect = m_player->GetEffectList().PlayEffect(nsEffect::HeelMagic_Particle, m_particleEffectPosition, Quaternion::Identity, Vector3::One * m_chargeLevel * 2.0f);
+					m_heelEffect->SetScale(Vector3::One * m_chargeLevel * m_heelEffectScalling * 10.0f);
 				}
 			}
+
+			/**
+			 * @brief 回復魔法の効果を実行する関数。
+			 */
+			void ExecuteAreaHeal();
 
 
 		private:
@@ -57,6 +62,9 @@ namespace nsApp
 
 			float m_heelEffectScalling = 1.0f;  //! 回復魔法エフェクトを拡大率。
 			float m_chargeLevel = 0.0f;         //! チャージ段階。
+			float m_distance = 0.0f;            //! プレイヤーと回復対象の距離。
+
+			int m_healAmount = 0;			    //! 回復量を管理する変数。
 		};
 	}
 }

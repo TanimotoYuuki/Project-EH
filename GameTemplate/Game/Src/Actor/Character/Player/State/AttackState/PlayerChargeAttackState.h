@@ -25,6 +25,10 @@ namespace nsApp
 			void Enter() override;
 			void Update() override;
 
+
+		private:
+			/* チャージ弾を発射させる。 */
+			void FireChargeBullet();
 		};
 	}
 }

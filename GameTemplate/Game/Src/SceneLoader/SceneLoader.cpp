@@ -13,6 +13,7 @@
 #include "Option.h"
 #include "HowToPlay.h"
 #include "Game.h"
+#include "Game2.h"
 #include "Src/Direction/GameClearDirection.h"
 #include "Src/Select/GameEndSelect.h"
 #include "Src/Scene/InGame/Pause.h"
@@ -39,6 +40,11 @@ namespace nsApp
 			m_title = NewGO<Title>(0, "title");
 			m_titleSelect = NewGO<TitleSelect>(0, "titleSelect");
 			m_option = NewGO<nsApp::nsOption::Option>(0, "option");
+
+			for (int i = 0; i < nsApp::nsOption::Option::EnGaugeUI::enGaugeUI_Num; i++)
+			{
+				m_option->SetVolumeRate((nsApp::nsOption::Option::EnGaugeUI)i, GetVolumeRate(i));
+			}
 			return true;
 		}
 		
@@ -55,6 +61,17 @@ namespace nsApp
 					/*選択画面でゲームスタートを選択していたら。*/
 					if (m_titleSelect->GetCurrentSelect() == nsApp::nsTitle::TitleSelect::EnSelect::enSelect_Start)
 					{
+						/* BGNの停止処理。*/
+						if (m_title->GetBGMInstance() != nullptr)
+						{
+							m_title->StopBGM();
+						}
+
+						for (int i = 0; i < nsApp::nsOption::Option::EnGaugeUI::enGaugeUI_Num; i++)
+						{
+							SetVolumeRate(i, m_option->GetVolumeRate((nsApp::nsOption::Option::EnGaugeUI)i));
+						}
+
 						/*フェード処理が終わったら選択シーンに遷移する。*/
 						if (nsApp::nsFade::Fade::GetInstance()->IsEnd())
 						{
@@ -159,6 +176,7 @@ namespace nsApp
 		{
 			DeleteGO(m_select);
 			DeleteGO(m_howToPlay);
+			DeleteGO(m_option);
 		}
 
 		/*開始処理。*/
@@ -167,6 +185,11 @@ namespace nsApp
 			m_select = NewGO<Select>(0, "select");
 			m_howToPlay = NewGO<nsApp::nsHowToPlay::HowToPlay>(0, "howToPlay");
 			m_howToPlay->Deactivate();
+			m_option = NewGO<nsApp::nsOption::Option>(1, "option");
+			for (int i = 0; i < nsApp::nsOption::Option::EnGaugeUI::enGaugeUI_Num; i++)
+			{
+				m_option->SetVolumeRate((nsApp::nsOption::Option::EnGaugeUI)i, GetVolumeRate(i));
+			}
 			return true;
 		}
 
@@ -198,12 +221,6 @@ namespace nsApp
 				return;
 			}
 
-			if (m_option == nullptr)/*設定。*/
-			{
-				m_option = m_select->GetOptionInstance();
-				return;
-			}
-
 			/*確認選択画面でYesを選択できている状態。*/
 			if (m_confirmationSelect->GetCurrentSelect() == nsApp::nsSelect::ConfirmationSelect::EnConfirmationSelectTextUI::enConfirmationSelectTextUI_Yes &&
 				m_confirmationSelect->DidSelect())
@@ -214,6 +231,17 @@ namespace nsApp
 				/*メンバー選択画面が表示していたら。*/
 				if (m_memberSelect->IsActive())
 				{
+					SetBossType(m_questSelect->GetCurrentSelect());
+					for (int i = 0; i < nsApp::nsSelect::MemberSelect::EnCharacterFrameUI::enCharacterFrameUI_Num; i++)
+					{
+						SetPlayerControle(i, m_memberSelect->IsPlayerControle(i));
+						SetCharacterRole(i,m_memberSelect->GetCurrentRole((nsApp::nsSelect::MemberSelect::EnCharacterFrameUI)i));
+					}
+					for (int j = 0; j < nsApp::nsOption::Option::EnGaugeUI::enGaugeUI_Num; j++)
+					{
+						SetVolumeRate(j, m_option->GetVolumeRate((nsApp::nsOption::Option::EnGaugeUI)j));
+					}
+
 					/*フェード処理が終わったらインゲームシーンに遷移する。*/
 					if (nsApp::nsFade::Fade::GetInstance()->IsEnd())
 					{
@@ -234,7 +262,7 @@ namespace nsApp
 			{
 				if (m_questSelect->IsEndSelectDirectionUIAnimation(
 					nsApp::nsSelect::QuestSelect::EnPosition::enPosition_Up,
-					nsApp::nsSelect::QuestSelect::EnSelectDirectionUIAnimationSprite::enSelectDirectionUIAnimationSprite_TargetTextUI
+					(nsApp::nsSelect::QuestSelect::EnSelectDirectionUIAnimationSprite)(m_questSelect->GetCurrentSelect() + 1)
 					)
 				)
 				{
@@ -329,14 +357,29 @@ namespace nsApp
 							m_roleSelect->DisableBackSelect();
 						}
 
-						/*選択したときの演出UIアニメーションが終わっていないときは役割選択画面を表示しない。*/
-						if (!m_memberSelect->IsEndSelectDirectionUIAnimation(
-							nsApp::nsSelect::MemberSelect::EnPosition::enPosition_Up,
-							(nsApp::nsSelect::MemberSelect::EnSelectDirectionUIAnimationSprite)(m_memberSelect->GetCurrentSelect() + 1)
-							)
-						)
+						if (m_memberSelect->IsPlayerControle(m_memberSelect->GetCurrentSelect()))
 						{
-							return;
+							/*選択したときの演出UIアニメーションが終わっていないときは役割選択画面を表示しない。*/
+							if (!m_memberSelect->IsEndSelectDirectionUIAnimation(
+								nsApp::nsSelect::MemberSelect::EnPosition::enPosition_Up,
+								(nsApp::nsSelect::MemberSelect::EnSelectDirectionUIAnimationSprite)(m_memberSelect->GetCurrentSelect() + 1)
+								)
+							)
+							{
+								return;
+							}
+						}
+						else
+						{
+							/*選択したときの演出UIアニメーションが終わっていないときは役割選択画面を表示しない。*/
+							if (!m_memberSelect->IsEndSelectDirectionUIAnimation(
+								nsApp::nsSelect::MemberSelect::EnPosition::enPosition_Up,
+								(nsApp::nsSelect::MemberSelect::EnSelectDirectionUIAnimationSprite)(m_memberSelect->GetCurrentSelect() + 4)
+								)
+							)
+							{
+								return;
+							}
 						}
 
 						m_roleSelect->Activate();
@@ -400,7 +443,7 @@ namespace nsApp
 					/*クエスト選択画面で選択したときの演出UIアニメーションが終わっていたらメンバー選択画面での演出を流す。*/
 					if (m_questSelect->IsEndSelectDirectionUIAnimation(
 						nsApp::nsSelect::QuestSelect::EnPosition::enPosition_Up,
-						nsApp::nsSelect::QuestSelect::EnSelectDirectionUIAnimationSprite::enSelectDirectionUIAnimationSprite_TargetTextUI
+						(nsApp::nsSelect::QuestSelect::EnSelectDirectionUIAnimationSprite)(m_questSelect->GetCurrentSelect() + 1)
 						)
 					)
 					{
@@ -459,8 +502,9 @@ namespace nsApp
 					/*UIをスライドさせるアニメーションが終了していたら。*/
 					if (m_questSelect->IsEndSlideUIAnimation(
 						nsApp::nsSelect::QuestSelect::EnSlide::enSlide_Right,
-						nsApp::nsSelect::QuestSelect::EnSlideUIAnimationSprite::enSlideUIAnimationSprite_TargetTextUI)
+						(nsApp::nsSelect::QuestSelect::EnSlideUIAnimationSprite)(m_questSelect->GetCurrentSelect() + 5)
 						)
+					)
 					{
 						m_memberSelect->ChangeSlide(nsApp::nsSelect::MemberSelect::enSlide_Left);
 						m_memberSelect->DisableDirection();
@@ -496,13 +540,19 @@ namespace nsApp
 		/*デストラクタ。*/
 		InGameScene::~InGameScene()
 		{
-			DeleteGO(m_game);
+			DeleteGO(m_game2);
 		}
 
 		/*開始処理。*/
 		bool InGameScene::Start()
 		{
-			m_game = NewGO<Game>(0, "game");
+			m_game2 = NewGO<Game2>(0, "game");
+			m_game2->SetBossType(GetBossType());
+			for(int i = 0; i < nsApp::nsSelect::MemberSelect::EnCharacterFrameUI::enCharacterFrameUI_Num; i++)
+			{
+				m_game2->SetPlayerControle(i, GetPlayerControle(i));
+				m_game2->SetCharacterRole(i, GetCharacterRole(i));
+			}
 			m_howToPlay = NewGO<nsApp::nsHowToPlay::HowToPlay>(0, "howToPlay");
 			m_howToPlay->Deactivate();
 			return true;
@@ -511,10 +561,18 @@ namespace nsApp
 		/*更新処理。*/
 		void InGameScene::Update()
 		{
+			auto soundListers = FindGOs<nsSound::SoundLister>("SoundManager");
+			for (const auto& soundLister : soundListers)
+			{
+				soundLister->SetBGMVolumeRate(GetVolumeRate(0));
+				soundLister->SetSEVolumeRate(GetVolumeRate(1));
+				soundLister->SetMasterVolumeRate(GetVolumeRate(2));
+			}
+
 			/*ポーズ用のインスタンスがnullptrの場合は取得する。*/
 			if (m_pause == nullptr)
 			{
-				m_pause = m_game->GetPauseInstance();
+				m_pause = m_game2->GetPauseInstance();
 			}
 			else
 			{
@@ -624,12 +682,12 @@ namespace nsApp
 			}
 
 			/*インゲーム上でゲームクリア演出用のインスタンスがnullptrではないとき。*/
-			if (m_game->GetGameClearDirectionInstance() != nullptr)
+			if (m_game2->GetGameClearDirectionInstance() != nullptr)
 			{
 				/*ゲームクリア演出用のインスタンスがnullptrの場合は取得する。*/
 				if (m_gameClearDirection == nullptr)
 				{
-					m_gameClearDirection = m_game->GetGameClearDirectionInstance();
+					m_gameClearDirection = m_game2->GetGameClearDirectionInstance();
 					return;
 				}
 
@@ -646,13 +704,13 @@ namespace nsApp
 			}
 
 			/*ゲームオーバー、もしくはタイムアップのどちらかの状態になったら。*/
-			if (m_game->GetGameTimeUpDirectionInstance() != nullptr ||
-				m_game->GetGameOverDirectionInstance() != nullptr)
+			if (m_game2->GetGameTimeUpDirectionInstance() != nullptr ||
+				m_game2->GetGameOverDirectionInstance() != nullptr)
 			{
 				/*ゲーム終了選択用のインスタンスがnullptrの場合は取得する。*/
 				if (m_gameEndSelect == nullptr)
 				{
-					m_gameEndSelect = m_game->GetGameEndSelectInstance();
+					m_gameEndSelect = m_game2->GetGameEndSelectInstance();
 					return;
 				}
 
@@ -696,12 +754,21 @@ namespace nsApp
 		bool ResultScene::Start()
 		{
 			m_result = NewGO<Result>(0, "result");
+			m_result->SetBossType(GetBossType());
 			return true;
 		}
 
 		/*更新処理。*/
 		void ResultScene::Update()
 		{
+			auto soundListers = FindGOs<nsSound::SoundLister>("SoundManager");
+			for (const auto& soundLister : soundListers)
+			{
+				soundLister->SetBGMVolumeRate(GetVolumeRate(0));
+				soundLister->SetSEVolumeRate(GetVolumeRate(1));
+				soundLister->SetMasterVolumeRate(GetVolumeRate(2));
+			}
+
 			/*リザルト画面で選択できていなければ処理しない。*/
 			if (!m_result->DidSelect()) { return; }
 
@@ -745,7 +812,7 @@ namespace nsApp
 		/*開始処理。*/
 		bool SceneLoader::Start()
 		{
-			m_instance->GetInstance()->ChangeScene(IScene::EnSceneID::enSceneID_Title);/*シーンの切り替え(デフォルトはタイトルシーン)。*/
+			m_instance->GetInstance()->ChangeScene(IScene::EnSceneID::enSceneID_Select);/*シーンの切り替え(デフォルトはタイトルシーン)。*/
 			return true;
 		}
 
@@ -757,6 +824,28 @@ namespace nsApp
 			/*シーン用のインスタンスに現在進行中のシーンがあれば破棄する。*/
 			if (m_currentScene)
 			{
+				if (m_currentSceneID == IScene::enSceneID_Title || m_currentSceneID == IScene::enSceneID_Select)
+				{
+					for(int i = 0; i < nsApp::nsOption::Option::EnGaugeUI::enGaugeUI_Num; i++)
+					{
+						m_volumeRate[i] = m_currentScene->GetVolumeRate((nsApp::nsOption::Option::EnGaugeUI)i);
+					}
+				}
+
+				if (m_currentSceneID == IScene::enSceneID_Select || m_currentSceneID == IScene::enSceneID_InGame)
+				{
+					m_bossType = m_currentScene->GetBossType();
+				}
+
+				if (m_currentSceneID == IScene::enSceneID_Select)
+				{
+					for (int i = 0; i < nsApp::nsSelect::MemberSelect::EnCharacterFrameUI::enCharacterFrameUI_Num; i++)
+					{
+						m_isPlayerControle[i] = m_currentScene->GetPlayerControle(i);
+						m_characterRole[i] = m_currentScene->GetCharacterRole(i);
+					}
+				}
+
 				DeleteGO(m_currentScene);
 				m_currentScene = nullptr;
 			}
@@ -775,15 +864,52 @@ namespace nsApp
 			case IScene::enSceneID_InGame:/*インゲームシーン。*/
 				m_currentSceneID = IScene::enSceneID_InGame;
 				m_currentScene = NewGO<nsGame::InGameScene>(0, "inGameScene");
+				m_currentScene->SetBossType(m_bossType);
+				for (int i = 0; i < nsApp::nsSelect::MemberSelect::EnCharacterFrameUI::enCharacterFrameUI_Num; i++)
+				{
+					m_currentScene->SetPlayerControle(i, m_isPlayerControle[i]);
+					m_currentScene->SetCharacterRole(i, m_characterRole[i]);
+				}
 				break;
 			case IScene::enSceneID_Result:/*リザルトシーン。*/
 				m_currentSceneID = IScene::enSceneID_Result;
 				m_currentScene = NewGO<nsResult::ResultScene>(0, "resultScene");
+				m_currentScene->SetBossType(m_bossType);
 				break;
 			default:
 				break;
 			}
 
+			for (int j = 0; j < nsApp::nsOption::Option::EnGaugeUI::enGaugeUI_Num; j++)
+			{
+				/*音量の割合の設定。*/
+				m_currentScene->SetVolumeRate(j, m_volumeRate[j]);
+			}
+
+			/*ボスの種類をデフォルトに戻す。*/
+			m_bossType = 0;
+			/*キャラクターの役割をデフォルトに戻す。*/
+			for (int i = 0; i < nsApp::nsSelect::MemberSelect::EnCharacterFrameUI::enCharacterFrameUI_Num; i++)
+			{
+				m_characterRole[i] = 0;
+			}
+			/*音量の割合をデフォルトに戻す。*/
+			for (int j = 0; j < nsApp::nsOption::Option::EnGaugeUI::enGaugeUI_Num; j++)
+			{
+				m_volumeRate[j] = 100;
+			}
+			/*プレイヤーが操作するキャラクターをデフォルトに戻す。*/
+			for (int k = 0; k < nsApp::nsSelect::MemberSelect::EnCharacterFrameUI::enCharacterFrameUI_Num; k++)
+			{
+				if (k == 0) 
+				{ 
+					m_isPlayerControle[k] = true;
+				}
+				else
+				{
+					m_isPlayerControle[k] = false;
+				}
+			}
 			/*シーンを切り替えたらIDをデフォルトに戻す。*/
 			m_changeSceneID = IScene::enSceneID_None;
 		}

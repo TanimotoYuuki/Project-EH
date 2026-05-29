@@ -38,10 +38,6 @@ namespace nsApp
 
 		private:
 			nsK2EngineLow::EffectEmitter* m_laserEffect = nullptr; //! 発射する魔法の弾。
-
-
-		private:
-			Vector3 m_spawnPosition = Vector3::Zero;                //! 魔法の発生位置。
 		};
 	}
 }

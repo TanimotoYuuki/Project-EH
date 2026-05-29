@@ -1,5 +1,7 @@
 ﻿#include "stdafx.h"
 #include "Title.h"
+#include "Src/SceneLoader/SceneLoader.h"
+#include "Src/Sound/SoundLister.h"
 #include "Src/Fade/Fade.h"
 
 namespace {
@@ -55,6 +57,11 @@ namespace nsApp
 
 			/*フェードインに切り替える。*/
 			nsApp::nsFade::Fade::GetInstance()->ChangeFadeType(nsApp::nsFade::Fade::EnFadeType::enFadeType_FadeIn);/*フェードイン開始。*/
+
+			/* タイトルBGMを再生。*/
+			m_bgm = NewGO<nsSound::SoundLister>(0, "SoundManager");
+			m_bgm->GetBGMList().Init();
+			m_bgm->GetBGMList().PlayBGM(nsSound::BGM_ID::Title, 1.0f);
 
 			return true;
 		}

@@ -81,8 +81,12 @@ namespace nsApp
 		/*更新処理。*/
 		void ConfirmationSelect::Update()
 		{
-			/*選択。*/
-			UpdateSelect();
+			/*演出中ではなければ操作できる。*/
+			if (!IsDirection())
+			{
+				/*選択。*/
+				UpdateSelect();
+			}
 
 			/*UIアニメーション。*/
 			UpdateUIAnimation();

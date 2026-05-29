@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "PlayerHeelMagicState.h"
 #include "Src/Actor/Character/Player/State/BasicState/PlayerIdleState.h"
 #include "Src/Effect/EffectList.h"
@@ -9,57 +9,106 @@ namespace nsApp
 	{
 		void PlayerHeelMagicState::Enter()
 		{
-			/* ƒLƒƒƒXƒg‚µ‚ÄƒvƒŒƒCƒ„[‚ğæ“¾ */
+			/* ã‚­ãƒ£ã‚¹ãƒˆã—ã¦ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚’å–å¾— */
 			m_player = static_cast<nsActor::Player*>(m_owner);
 
-			/* UŒ‚‚Ìí—Ş‚ğƒZƒbƒg‚·‚éB*/
+			/* æ”»æ’ƒã®ç¨®é¡ã‚’ã‚»ãƒƒãƒˆã™ã‚‹ã€‚*/
 			m_currentAttackType = AttackType::HeelMagic;
 
-			/* ‰ñ•œ‚àƒ`ƒƒ[ƒW‰ğ•ú‚ÌƒAƒjƒ[ƒVƒ‡ƒ“‚ğ—¬—p */
+			/* å›å¾©ã‚‚ãƒãƒ£ãƒ¼ã‚¸è§£æ”¾ã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’æµç”¨ */
 			m_player->PlayWeaponAnimation(AttackType::HeelMagic);
 
-			/* ƒ^ƒCƒ}[‚Ì‰Šú‰»B*/
+			/* ã‚¿ã‚¤ãƒãƒ¼ã®åˆæœŸåŒ–ã€‚*/
 			SetAttackTimer(0);
+
+			/* ãƒãƒ£ãƒ¼ã‚¸ãƒ¬ãƒ™ãƒ«ã‚’å–å¾—ã€‚*/
+			m_chargeLevel = static_cast<float>(m_player->GetEffectScale());
+			if(m_chargeLevel <= 0.0f)
+				m_chargeLevel = 1.0f;
 		}
+
 
 		void PlayerHeelMagicState::Update()
 		{
-			/* ƒ^ƒCƒ}[‚ÌXVB*/
-			m_attackTimer++;
+				m_attackTimer++;
 
-			/* ™X‚ÉƒGƒtƒFƒNƒg‚ğ‘å‚«‚­‚·‚éB*/
-			ComputeHeelEffectScale();
+				ComputeHeelEffectScale();
 
-			/* ƒ^ƒCƒ}[‚²‚Æ‚ÉÄ¶‚·‚éƒGƒtƒFƒNƒg‚ğ•ªŠò‚³‚¹‚éB*/
-			if (m_attackTimer == 15)
-				PlayHeelMagicEffect();
-			else if (m_attackTimer == 25)
-				PlayHeelMagicParticleEffect();
+				/* å¤§çˆ†ç™ºï¼ˆãƒ¡ã‚¤ãƒ³ã®å›å¾©ã‚¨ãƒ•ã‚§ã‚¯ãƒˆï¼‰ã¨ã‚¨ãƒªã‚¢ãƒ’ãƒ¼ãƒ«ã®ç™ºå‹• */
+				if (m_attackTimer == 25) {
+					PlayHeelMagicEffect();
+					PlayHeelMagicParticleEffect();
+					ExecuteAreaHeal();
+				}
+
+				if (m_attackTimer > 25 && !m_player->IsPlayAnimation())
+					m_stateMachine->ChangeState(new PlayerIdleState());
+		}
 
 
-			/* ƒAƒjƒ[ƒVƒ‡ƒ“‚ªI‚í‚Á‚½‚ç‘Ò‹@ó‘Ô‚Ö–ß‚é */
-			if (m_attackTimer > 25 && !m_player->IsPlayAnimation())
-				m_stateMachine->ChangeState(new PlayerIdleState());
+		void PlayerHeelMagicState::Exit()
+		{
+			/* */
+			if (m_heelEffect != nullptr) {
+				m_heelEffect->Stop();
+				m_heelEffect = nullptr;
+			}
+
+			/* */
+			if (m_particleEffect != nullptr) {
+				m_particleEffect->Stop();
+				m_particleEffect = nullptr;
+			}
+
+			/* */
+			PlayerAttackBaseState::Exit();
 		}
 
 
 		void PlayerHeelMagicState::PlayHeelMagicEffect()
 		{
-			/* PlayerƒNƒ‰ƒX‚ÌÀ•W‚ğQÆB*/
+			/* Playerã‚¯ãƒ©ã‚¹ã®åº§æ¨™ã‚’å‚ç…§ã€‚*/
 			m_heelEffectPosition = m_player->GetPosition();
 			m_heelEffectPosition.y += 2.0f;
-			/* ƒGƒtƒFƒNƒg‚ğÄ¶B*/
+			/* ã‚¨ãƒ•ã‚§ã‚¯ãƒˆã‚’å†ç”Ÿã€‚*/
 			m_heelEffect =  m_player->GetEffectList().PlayEffect(nsEffect::HeelMagic, m_heelEffectPosition, Quaternion::Identity, Vector3::One  *20.0f);
 		}
 
 
 		void PlayerHeelMagicState::PlayHeelMagicParticleEffect()
 		{
-			/* PlayerƒNƒ‰ƒX‚ÌÀ•W‚ğQÆB*/
+			/* Playerã‚¯ãƒ©ã‚¹ã®åº§æ¨™ã‚’å‚ç…§ã€‚*/
 			m_particleEffectPosition = m_player->GetPosition();
 			m_particleEffectPosition.y += 2.0f;
-			/* ƒGƒtƒFƒNƒg‚ğÄ¶B*/
+			/* ã‚¨ãƒ•ã‚§ã‚¯ãƒˆã‚’å†ç”Ÿã€‚*/
 			m_heelEffect = m_player->GetEffectList().PlayEffect(nsEffect::HeelMagic_Particle, m_heelEffectPosition, Quaternion::Identity, Vector3::One * 20.0f);
+		}
+
+
+		void PlayerHeelMagicState::ExecuteAreaHeal()
+		{
+			if (!m_player)
+				return;
+
+			/* å›å¾©é‡ã€‚*/
+			m_healAmount = 500 * static_cast<int>(m_chargeLevel);
+
+			/* å‘¨å›²ã®å‘³æ–¹ã‚’æ¢ã—ã¦å›å¾©*/
+			const char* playerNames[] = { "player1", "player2", "player3", "player4" };
+			for (const char* name : playerNames)
+			{
+				auto otherPlayer = FindGO<nsActor::Player>(name);
+				if (otherPlayer && otherPlayer != m_player && otherPlayer->GetCharacterStatus().hp.currentHP > 0)
+				{
+					m_distance = (otherPlayer->GetPosition() - m_player->GetPosition()).Length();
+					if (m_distance <= 150.0f * m_chargeLevel) {
+						otherPlayer->ApplyDamage(-m_healAmount);
+					}
+				}
+			}
+
+			/* è‡ªåˆ†ã‚‚å›å¾©ã€‚*/
+			m_player->ApplyDamage(-m_healAmount);
 		}
 	}
 }

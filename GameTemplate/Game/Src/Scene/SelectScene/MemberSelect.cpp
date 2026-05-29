@@ -4,6 +4,8 @@
 
 #include "Src/Actor/Character/Player/CharacterByWeapon/SwordCharacter.h"
 #include "Src/Actor/Character/Player/CharacterByWeapon/HammerCharacter.h"
+#include "Src/Actor/Character/Player/CharacterByWeapon/WandCharacter.h"
+#include "Src/Actor/Character/Player/CharacterByWeapon/TwinGunCharacter.h"
 
 namespace {
 	/*メンバー選択テキストUI。*/
@@ -121,6 +123,9 @@ namespace {
 		Vector3{-715.0f + CHARACTER_FRAME_UI_POSITION_INTERVAL * 1,50.0f,0.0f},/*2人目のキャラクター枠UI。*/
 		Vector3{-715.0f + CHARACTER_FRAME_UI_POSITION_INTERVAL * 2,50.0f,0.0f},/*3人目のキャラクター枠UI。*/
 		Vector3{-715.0f + CHARACTER_FRAME_UI_POSITION_INTERVAL * 3,50.0f,0.0f},/*4人目のキャラクター枠UI。*/
+		Vector3{-715.0f + CHARACTER_FRAME_UI_POSITION_INTERVAL * 1,50.0f,0.0f},/*NPC用の2人目のキャラクター枠UI。*/
+		Vector3{-715.0f + CHARACTER_FRAME_UI_POSITION_INTERVAL * 2,50.0f,0.0f},/*NPC用の3人目のキャラクター枠UI。*/
+		Vector3{-715.0f + CHARACTER_FRAME_UI_POSITION_INTERVAL * 3,50.0f,0.0f},/*NPC用の4人目のキャラクター枠UI。*/
 		Vector3{0.0f,-350.0f,0.0f},/*出撃選択UI。*/
 		Vector3{0.0f,-350.0f,0.0f},/*出撃テキストUI。*/
 
@@ -130,6 +135,9 @@ namespace {
 		Vector3{1785.0f + CHARACTER_FRAME_UI_POSITION_INTERVAL * 1,50.0f,0.0f},/*2人目のキャラクター枠UI。*/
 		Vector3{1785.0f + CHARACTER_FRAME_UI_POSITION_INTERVAL * 2,50.0f,0.0f},/*3人目のキャラクター枠UI。*/
 		Vector3{1785.0f + CHARACTER_FRAME_UI_POSITION_INTERVAL * 3,50.0f,0.0f},/*4人目のキャラクター枠UI。*/
+		Vector3{1785.0f + CHARACTER_FRAME_UI_POSITION_INTERVAL * 1,50.0f,0.0f},/*NPC用の2人目のキャラクター枠UI。*/
+		Vector3{1785.0f + CHARACTER_FRAME_UI_POSITION_INTERVAL * 2,50.0f,0.0f},/*NPC用の3人目のキャラクター枠UI。*/
+		Vector3{1785.0f + CHARACTER_FRAME_UI_POSITION_INTERVAL * 3,50.0f,0.0f},/*NPC用の4人目のキャラクター枠UI。*/
 		Vector3{2500.0f,-350.0f,0.0f},/*出撃選択UI。*/
 		Vector3{2500.0f,-350.0f,0.0f},/*出撃テキストUI。*/
 	};/*UIをスライドさせるアニメーション後の位置。*/
@@ -148,8 +156,7 @@ namespace nsApp
 		{
 			for (int i = 0; i < enCharacterFrameUI_Num; i++)
 			{
-				//for (int j = 0; j < RoleSelect::EnRole::enRole_Num; j++)
-				for (int j = 0; j <= RoleSelect::EnRole::enRole_Hammer; j++)
+				for (int j = 0; j < RoleSelect::EnRole::enRole_Num; j++)
 				{
 					DeleteGO(m_characterModel[i][j]);
 				}
@@ -167,11 +174,10 @@ namespace nsApp
 
 			for (int i = 0; i < enCharacterFrameUI_Num; i++)
 			{
-				//for (int j = 0; j < RoleSelect::EnRole::enRole_Num; j++)
-				for (int j = 0; j <= RoleSelect::EnRole::enRole_Hammer; j++)
+				for (int j = 0; j < RoleSelect::EnRole::enRole_Num; j++)
 				{
 					/*キャラクターモデルの生成。*/
-					CreateCharacterModel((EnCharacterFrameUI)i, (RoleSelect::EnRole)j);
+					CreateCharacterModel((EnCharacterFrameUI)i, (RoleSelect::EnRole)j, i);
 				}
 			}
 
@@ -184,6 +190,25 @@ namespace nsApp
 			if (nsApp::nsFade::Fade::GetInstance()->IsFadeIn())
 			{
 				return;
+			}
+
+			GamePad gamePad;
+			for (int i = 0; i < GamePad::MAX_PAD; i++)
+			{
+				if (i == 0) 
+				{ 
+					m_isPlayerControle[i] = true;
+					continue;
+				}
+
+				if (gamePad.GetPadState(i) == GamePad::EnXInputPadState::Connect)
+				{
+					m_isPlayerControle[i] = true;/*プレイヤーが操作している。*/
+				}
+				else
+				{
+					m_isPlayerControle[i] = false;/*プレイヤーが操作していない。*/
+				}
 			}
 
 			/*演出中でないかつ
@@ -215,22 +240,46 @@ namespace nsApp
 			/*現在の選択が出撃以外のとき。*/
 			if (m_currentSelect != enSelect_Deploy)
 			{
-				/*選択したときの演出UIアニメーションが終わっていないとき描画する。*/
-				if (!IsEndSelectDirectionUIAnimation(
-					enPosition_Up,
-					(EnSelectDirectionUIAnimationSprite)(GetCurrentSelect() + 1)
-					)
-				)
+				if (m_isPlayerControle[m_currentSelect])
 				{
-					/*キャラクター選択UIの描画。*/
-					m_characterSelectUI.Draw(rc);
+					/*選択したときの演出UIアニメーションが終わっていないとき描画する。*/
+					if (!IsEndSelectDirectionUIAnimation(
+						enPosition_Up,
+						(EnSelectDirectionUIAnimationSprite)(GetCurrentSelect() + 1)
+						)
+					)
+					{
+						/*キャラクター選択UIの描画。*/
+						m_characterSelectUI.Draw(rc);
+					}
+				}
+				else
+				{
+					/*選択したときの演出UIアニメーションが終わっていないとき描画する。*/
+					if (!IsEndSelectDirectionUIAnimation(
+						enPosition_Up,
+						(EnSelectDirectionUIAnimationSprite)(GetCurrentSelect() + 4)
+						)
+					)
+					{
+						/*キャラクター選択UIの描画。*/
+						m_characterSelectUI.Draw(rc);
+					}
 				}
 			}
 
 			for (int i = 0; i < enCharacterFrameUI_Num; i++)
 			{
-				/*キャラクター枠UIの描画。*/
-				m_characterFrameUI[i].Draw(rc);
+				if (m_isPlayerControle[i])
+				{
+					/*キャラクター枠UIの描画。*/
+					m_characterFrameUI[i].Draw(rc);
+				}
+				else
+				{
+					/*NPC用のキャラクター枠UIの描画。*/
+					m_npcCharacterFrameUI[i - 1].Draw(rc);
+				}
 
 				/*役割アイコン。*/
 				m_roleIconUI[i][(RoleSelect::EnRole)m_currentRole[i]].Draw(rc);
@@ -246,15 +295,31 @@ namespace nsApp
 			/*現在の選択が出撃以外のとき。*/
 			if (m_currentSelect != enSelect_Deploy)
 			{
-				/*選択したときの演出UIアニメーションが終わっているとき描画する。*/
-				if (IsEndSelectDirectionUIAnimation(
-					enPosition_Up,
-					(EnSelectDirectionUIAnimationSprite)(GetCurrentSelect() + 1)
-					)
-				)
+				if (m_isPlayerControle[m_currentSelect])
 				{
-					/*キャラクターフェイドUIの描画。*/
-					m_characterFadeUI.Draw(rc);
+					/*選択したときの演出UIアニメーションが終わっているとき描画する。*/
+					if (IsEndSelectDirectionUIAnimation(
+						enPosition_Up,
+						(EnSelectDirectionUIAnimationSprite)(GetCurrentSelect() + 1)
+					)
+						)
+					{
+						/*キャラクターフェイドUIの描画。*/
+						m_characterFadeUI.Draw(rc);
+					}
+				}
+				else
+				{
+					/*選択したときの演出UIアニメーションが終わっているとき描画する。*/
+					if (IsEndSelectDirectionUIAnimation(
+						enPosition_Up,
+						(EnSelectDirectionUIAnimationSprite)(GetCurrentSelect() + 4)
+					)
+						)
+					{
+						/*キャラクターフェイドUIの描画。*/
+						m_characterFadeUI.Draw(rc);
+					}
 				}
 			}
 
@@ -277,7 +342,7 @@ namespace nsApp
 					)
 				)
 				{
-					if (j == enButtonUI_X) { continue; }
+					if (j == enButtonUI_X || j == enButtonUI_Y) { continue; }
 				}
 
 				/*ボタンUIの描画。*/
@@ -294,7 +359,7 @@ namespace nsApp
 					)
 				)
 				{
-					if (k == enTextUI_GameOption) { continue; }
+					if (k == enTextUI_GameOption || k == enTextUI_HowToPlay) { continue; }
 				}
 
 				/*テキストUIの描画。*/
@@ -321,6 +386,12 @@ namespace nsApp
 					/*役割アイコンUI。*/
 					InitRoleIconUI((EnCharacterFrameUI)i, (RoleSelect::EnRole)j);
 				}
+			}
+
+			for (int k = 0; k < enNpcCharacterFrameUI_Num; k++)
+			{
+				/*NPC用のキャラクター枠UI。*/
+				InitNpcCharacterFrameUI((EnNpcCharacterFrameUI)k);
 			}
 
 			/*キャラクターフェイドUI。*/
@@ -376,6 +447,16 @@ namespace nsApp
 			m_characterFrameUI[characterFrameUI].Update();/*更新処理。*/
 		}
 
+		/*NPC用のキャラクター枠UIの初期化。*/
+		void MemberSelect::InitNpcCharacterFrameUI(EnNpcCharacterFrameUI npcCharacterFrameUI)
+		{
+			m_npcCharacterFrameUI[npcCharacterFrameUI].Init(m_npcCharacterFrameUIFilePath[npcCharacterFrameUI].c_str(), CHARACTER_FRAME_UI_WIDTH, CHARACTER_FRAME_UI_HEIGHT, true);/*初期化。*/
+			m_npcCharacterFrameUI[npcCharacterFrameUI].SetPosition(m_characterFrameUI[npcCharacterFrameUI + 1].GetPosition());/*位置設定。*/
+			m_npcCharacterFrameUI[npcCharacterFrameUI].SetScale(CHARACTER_FRAME_UI_INIT_SCALE);/*大きさ設定。*/
+			m_npcCharacterFrameUI[npcCharacterFrameUI].Update();/*更新処理。*/
+		}
+
+		/*役割アイコンUIの初期化。*/
 		void MemberSelect::InitRoleIconUI(EnCharacterFrameUI characterFrameUI, RoleSelect::EnRole role)
 		{
 			m_roleIconUI[characterFrameUI][role].Init(m_roleIconUIFilePath[characterFrameUI][role].c_str(), ROLE_ICON_UI_WIDTH, ROLE_ICON_UI_HEIGHT, true);/*初期化。*/
@@ -514,12 +595,60 @@ namespace nsApp
 			);
 
 			/*UIをスライドさせるアニメーションの値の設定。*/
-			basePosition = m_characterFrameUI[enCharacterFrameUI_Three].GetPosition();/*元の位置。*/
+			basePosition = m_characterFrameUI[enCharacterFrameUI_Four].GetPosition();/*元の位置。*/
 			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_FourCharacterFrameUI];/*ターゲット位置。*/
 
 			/*初期化。*/
 			m_slideUIAnimation[enSlide_Left][enSlideUIAnimationSprite_FourCharacterFrameUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
 				&m_characterFrameUI[enCharacterFrameUI_Four],/*アニメーションをさせるスプライト。*/
+				1.0f,/*ターゲットの割合。*/
+				SLIDE_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
+				false,/*ループするか？*/
+				0.0f,/*アニメーションを開始する前の遅延時間。*/
+				0.0f,/*アニメーションを終了した後の遅延時間。*/
+				basePosition,/*元の位置。*/
+				targetPosition/*ターゲットの位置。*/
+			);
+
+			/*UIをスライドさせるアニメーションの値の設定。*/
+			basePosition = m_characterFrameUI[enNpcCharacterFrameUI_Two].GetPosition();/*元の位置。*/
+			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_TwoNpcCharacterFrameUI];/*ターゲット位置。*/
+
+			/*初期化。*/
+			m_slideUIAnimation[enSlide_Left][enSlideUIAnimationSprite_TwoNpcCharacterFrameUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
+				&m_npcCharacterFrameUI[enNpcCharacterFrameUI_Two],/*アニメーションをさせるスプライト。*/
+				1.0f,/*ターゲットの割合。*/
+				SLIDE_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
+				false,/*ループするか？*/
+				0.0f,/*アニメーションを開始する前の遅延時間。*/
+				0.0f,/*アニメーションを終了した後の遅延時間。*/
+				basePosition,/*元の位置。*/
+				targetPosition/*ターゲットの位置。*/
+			);
+
+			/*UIをスライドさせるアニメーションの値の設定。*/
+			basePosition = m_characterFrameUI[enNpcCharacterFrameUI_Three].GetPosition();/*元の位置。*/
+			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_ThreeNpcCharacterFrameUI];/*ターゲット位置。*/
+
+			/*初期化。*/
+			m_slideUIAnimation[enSlide_Left][enSlideUIAnimationSprite_ThreeNpcCharacterFrameUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
+				&m_npcCharacterFrameUI[enNpcCharacterFrameUI_Three],/*アニメーションをさせるスプライト。*/
+				1.0f,/*ターゲットの割合。*/
+				SLIDE_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
+				false,/*ループするか？*/
+				0.0f,/*アニメーションを開始する前の遅延時間。*/
+				0.0f,/*アニメーションを終了した後の遅延時間。*/
+				basePosition,/*元の位置。*/
+				targetPosition/*ターゲットの位置。*/
+			);
+
+			/*UIをスライドさせるアニメーションの値の設定。*/
+			basePosition = m_characterFrameUI[enNpcCharacterFrameUI_Four].GetPosition();/*元の位置。*/
+			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_FourNpcCharacterFrameUI];/*ターゲット位置。*/
+
+			/*初期化。*/
+			m_slideUIAnimation[enSlide_Left][enSlideUIAnimationSprite_FourNpcCharacterFrameUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
+				&m_npcCharacterFrameUI[enNpcCharacterFrameUI_Four],/*アニメーションをさせるスプライト。*/
 				1.0f,/*ターゲットの割合。*/
 				SLIDE_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
 				false,/*ループするか？*/
@@ -633,6 +762,54 @@ namespace nsApp
 			/*初期化。*/
 			m_slideUIAnimation[enSlide_Right][enSlideUIAnimationSprite_FourCharacterFrameUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
 				&m_characterFrameUI[enCharacterFrameUI_Four],/*アニメーションをさせるスプライト。*/
+				1.0f,/*ターゲットの割合。*/
+				SLIDE_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
+				false,/*ループするか？*/
+				0.0f,/*アニメーションを開始する前の遅延時間。*/
+				0.0f,/*アニメーションを終了した後の遅延時間。*/
+				basePosition,/*元の位置。*/
+				targetPosition/*ターゲットの位置。*/
+			);
+
+			/*UIをスライドさせるアニメーションの値の設定。*/
+			basePosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_TwoNpcCharacterFrameUI];/*元の位置。*/
+			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Right][enSlideUIAnimationSprite_TwoNpcCharacterFrameUI];/*ターゲット位置。*/
+
+			/*初期化。*/
+			m_slideUIAnimation[enSlide_Right][enSlideUIAnimationSprite_TwoNpcCharacterFrameUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
+				&m_npcCharacterFrameUI[enNpcCharacterFrameUI_Two],/*アニメーションをさせるスプライト。*/
+				1.0f,/*ターゲットの割合。*/
+				SLIDE_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
+				false,/*ループするか？*/
+				0.0f,/*アニメーションを開始する前の遅延時間。*/
+				0.0f,/*アニメーションを終了した後の遅延時間。*/
+				basePosition,/*元の位置。*/
+				targetPosition/*ターゲットの位置。*/
+			);
+
+			/*UIをスライドさせるアニメーションの値の設定。*/
+			basePosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_ThreeNpcCharacterFrameUI];/*元の位置。*/
+			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Right][enSlideUIAnimationSprite_ThreeNpcCharacterFrameUI];/*ターゲット位置。*/
+
+			/*初期化。*/
+			m_slideUIAnimation[enSlide_Right][enSlideUIAnimationSprite_ThreeNpcCharacterFrameUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
+				&m_npcCharacterFrameUI[enNpcCharacterFrameUI_Three],/*アニメーションをさせるスプライト。*/
+				1.0f,/*ターゲットの割合。*/
+				SLIDE_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
+				false,/*ループするか？*/
+				0.0f,/*アニメーションを開始する前の遅延時間。*/
+				0.0f,/*アニメーションを終了した後の遅延時間。*/
+				basePosition,/*元の位置。*/
+				targetPosition/*ターゲットの位置。*/
+			);
+
+			/*UIをスライドさせるアニメーションの値の設定。*/
+			basePosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_FourNpcCharacterFrameUI];/*元の位置。*/
+			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Right][enSlideUIAnimationSprite_FourNpcCharacterFrameUI];/*ターゲット位置。*/
+
+			/*初期化。*/
+			m_slideUIAnimation[enSlide_Right][enSlideUIAnimationSprite_FourNpcCharacterFrameUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
+				&m_npcCharacterFrameUI[enNpcCharacterFrameUI_Four],/*アニメーションをさせるスプライト。*/
 				1.0f,/*ターゲットの割合。*/
 				SLIDE_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
 				false,/*ループするか？*/
@@ -800,6 +977,57 @@ namespace nsApp
 			);
 
 			/*選択したときの演出UIアニメーションの値の設定。*/
+			basePosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_TwoNpcCharacterFrameUI];/*元の位置。*/
+			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_TwoNpcCharacterFrameUI];/*ターゲットの位置。*/
+			targetPosition.y -= DOWN_POSITION_OFFSET;
+
+			/*初期化。*/
+			m_selectDirectionUIAnimation[enPosition_Down][enSelectDirectionUIAnimationSprite_TwoNpcCharacterFrameUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
+				&m_npcCharacterFrameUI[enNpcCharacterFrameUI_Two],/*アニメーションをさせるスプライト。*/
+				1.0f,/*ターゲットの割合。*/
+				SELECT_DIRECTION_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
+				false,/*ループするか？*/
+				0.0f,/*アニメーションを開始する前の遅延時間。*/
+				0.0f,/*アニメーションを終了した後の遅延時間。*/
+				basePosition,/*元の位置。*/
+				targetPosition/*ターゲットの位置。*/
+			);
+
+			/*選択したときの演出UIアニメーションの値の設定。*/
+			basePosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_ThreeNpcCharacterFrameUI];/*元の位置。*/
+			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_ThreeNpcCharacterFrameUI];/*ターゲットの位置。*/
+			targetPosition.y -= DOWN_POSITION_OFFSET;
+
+			/*初期化。*/
+			m_selectDirectionUIAnimation[enPosition_Down][enSelectDirectionUIAnimationSprite_ThreeNpcCharacterFrameUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
+				&m_npcCharacterFrameUI[enNpcCharacterFrameUI_Three],/*アニメーションをさせるスプライト。*/
+				1.0f,/*ターゲットの割合。*/
+				SELECT_DIRECTION_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
+				false,/*ループするか？*/
+				0.0f,/*アニメーションを開始する前の遅延時間。*/
+				0.0f,/*アニメーションを終了した後の遅延時間。*/
+				basePosition,/*元の位置。*/
+				targetPosition/*ターゲットの位置。*/
+			);
+
+			/*選択したときの演出UIアニメーションの値の設定。*/
+			basePosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_FourNpcCharacterFrameUI];/*元の位置。*/
+			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_FourNpcCharacterFrameUI];/*ターゲットの位置。*/
+			targetPosition.y -= DOWN_POSITION_OFFSET;
+
+			/*初期化。*/
+			m_selectDirectionUIAnimation[enPosition_Down][enSelectDirectionUIAnimationSprite_FourNpcCharacterFrameUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
+				&m_npcCharacterFrameUI[enNpcCharacterFrameUI_Four],/*アニメーションをさせるスプライト。*/
+				1.0f,/*ターゲットの割合。*/
+				SELECT_DIRECTION_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
+				false,/*ループするか？*/
+				0.0f,/*アニメーションを開始する前の遅延時間。*/
+				0.0f,/*アニメーションを終了した後の遅延時間。*/
+				basePosition,/*元の位置。*/
+				targetPosition/*ターゲットの位置。*/
+			);
+
+			/*選択したときの演出UIアニメーションの値の設定。*/
 			basePosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_DeploySelectUI];/*元の位置。*/
 			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_DeploySelectUI];/*ターゲットの位置。*/
 			targetPosition.y -= DOWN_POSITION_OFFSET;
@@ -920,6 +1148,57 @@ namespace nsApp
 			);
 
 			/*選択したときの演出UIアニメーションの値の設定。*/
+			basePosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_TwoNpcCharacterFrameUI];/*元の位置。*/
+			basePosition.y -= DOWN_POSITION_OFFSET;
+			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_TwoNpcCharacterFrameUI];/*ターゲットの位置。*/
+
+			/*初期化。*/
+			m_selectDirectionUIAnimation[enPosition_Up][enSelectDirectionUIAnimationSprite_TwoNpcCharacterFrameUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
+				&m_npcCharacterFrameUI[enNpcCharacterFrameUI_Two],/*アニメーションをさせるスプライト。*/
+				1.0f,/*ターゲットの割合。*/
+				SELECT_DIRECTION_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
+				false,/*ループするか？*/
+				0.0f,/*アニメーションを開始する前の遅延時間。*/
+				0.0f,/*アニメーションを終了した後の遅延時間。*/
+				basePosition,/*元の位置。*/
+				targetPosition/*ターゲットの位置。*/
+			);
+
+			/*選択したときの演出UIアニメーションの値の設定。*/
+			basePosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_ThreeNpcCharacterFrameUI];/*元の位置。*/
+			basePosition.y -= DOWN_POSITION_OFFSET;
+			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_ThreeNpcCharacterFrameUI];/*ターゲットの位置。*/
+
+			/*初期化。*/
+			m_selectDirectionUIAnimation[enPosition_Up][enSelectDirectionUIAnimationSprite_ThreeNpcCharacterFrameUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
+				&m_npcCharacterFrameUI[enNpcCharacterFrameUI_Three],/*アニメーションをさせるスプライト。*/
+				1.0f,/*ターゲットの割合。*/
+				SELECT_DIRECTION_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
+				false,/*ループするか？*/
+				0.0f,/*アニメーションを開始する前の遅延時間。*/
+				0.0f,/*アニメーションを終了した後の遅延時間。*/
+				basePosition,/*元の位置。*/
+				targetPosition/*ターゲットの位置。*/
+			);
+
+			/*選択したときの演出UIアニメーションの値の設定。*/
+			basePosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_FourNpcCharacterFrameUI];/*元の位置。*/
+			basePosition.y -= DOWN_POSITION_OFFSET;
+			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_FourNpcCharacterFrameUI];/*ターゲットの位置。*/
+
+			/*初期化。*/
+			m_selectDirectionUIAnimation[enPosition_Up][enSelectDirectionUIAnimationSprite_FourNpcCharacterFrameUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
+				&m_npcCharacterFrameUI[enNpcCharacterFrameUI_Four],/*アニメーションをさせるスプライト。*/
+				1.0f,/*ターゲットの割合。*/
+				SELECT_DIRECTION_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
+				false,/*ループするか？*/
+				0.0f,/*アニメーションを開始する前の遅延時間。*/
+				0.0f,/*アニメーションを終了した後の遅延時間。*/
+				basePosition,/*元の位置。*/
+				targetPosition/*ターゲットの位置。*/
+			);
+
+			/*選択したときの演出UIアニメーションの値の設定。*/
 			basePosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_DeploySelectUI];/*元の位置。*/
 			basePosition.y -= DOWN_POSITION_OFFSET;
 			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_DeploySelectUI];/*ターゲットの位置。*/
@@ -955,32 +1234,35 @@ namespace nsApp
 		}
 
 		/*キャラクターモデルの生成。*/
-		void MemberSelect::CreateCharacterModel(EnCharacterFrameUI characterFrameUI, RoleSelect::EnRole role)
+		void MemberSelect::CreateCharacterModel(EnCharacterFrameUI characterFrameUI, RoleSelect::EnRole role, int characterIndex)
 		{
 			Vector3 initPosition = m_characterFrameUI[characterFrameUI].GetPosition();
 			initPosition.z += 1000.0f;
+
+			std::string playerNo = std::to_string(characterIndex);
+
 			switch (role)
 			{
 			case RoleSelect::EnRole::enRole_Sword:
-				m_characterModel[characterFrameUI][role] = NewGO<nsActor::SwordCharacter>(0, "player4");
+				m_characterModel[characterFrameUI][role] = NewGO<nsActor::SwordCharacter>(0, ("player" + playerNo).c_str());
 				m_characterModel[characterFrameUI][role]->SetPosition(initPosition);
-				m_characterModel[characterFrameUI][role]->SetAngle(180.0f);
+				m_characterModel[characterFrameUI][role]->SetAngle(145.0f);
 				break;
 			case RoleSelect::EnRole::enRole_Hammer:
-				m_characterModel[characterFrameUI][role] = NewGO<nsActor::HammerCharacter>(0, "player4");
+				m_characterModel[characterFrameUI][role] = NewGO<nsActor::HammerCharacter>(0, ("player" + playerNo).c_str());
 				m_characterModel[characterFrameUI][role]->SetPosition(initPosition);
-				m_characterModel[characterFrameUI][role]->SetAngle(180.0f);
+				m_characterModel[characterFrameUI][role]->SetAngle(155.0f);
 				break;
-			//case RoleSelect::EnRole::enRole_Mage:
-			//	m_characterModel[characterFrameUI][role] = NewGO<nsActor::MageCharacter>(0, "player4");
-			//	m_characterModel[characterFrameUI][role]->SetPosition(initPosition);
-			//	m_characterModel[characterFrameUI][role]->SetAngle(180.0f);
-			//	break;
-			//case RoleSelect::EnRole::enRole_Gunner:
-			//	m_characterModel[characterFrameUI][role] = NewGO<nsActor::GunnerCharacter>(0, "player4");
-			//	m_characterModel[characterFrameUI][role]->SetPosition(initPosition);
-			//	m_characterModel[characterFrameUI][role]->SetAngle(180.0f);
-			//	break;
+			case RoleSelect::EnRole::enRole_Mage:
+				m_characterModel[characterFrameUI][role] = NewGO<nsActor::WandCharacter>(0, ("player" + playerNo).c_str());
+				m_characterModel[characterFrameUI][role]->SetPosition(initPosition);
+				m_characterModel[characterFrameUI][role]->SetAngle(165.0f);
+				break;
+			case RoleSelect::EnRole::enRole_Gunner:
+				m_characterModel[characterFrameUI][role] = NewGO<nsActor::TwinGunCharacter>(0, ("player" + playerNo).c_str());
+				m_characterModel[characterFrameUI][role]->SetPosition(initPosition);
+				m_characterModel[characterFrameUI][role]->SetAngle(175.0f);
+				break;
 			default:
 				break;
 			}
@@ -1021,8 +1303,7 @@ namespace nsApp
 		{
 			for (int i = 0; i < enCharacterFrameUI_Num; i++)
 			{
-				//for (int j = 0; j < RoleSelect::EnRole::enRole_Num; j++)
-				for (int j = 0; j <= RoleSelect::EnRole::enRole_Hammer; j++)
+				for (int j = 0; j < RoleSelect::EnRole::enRole_Num; j++)
 				{
 					/*キャラクターモデルの生成。*/
 					m_characterModel[i][j]->Deactivate();
@@ -1150,6 +1431,16 @@ namespace nsApp
 						currentTargetUIFeature =  currentCharacterFrameUI:/*キャラクター。*/
 						currentTargetUIFeature = enSelectDirectionUIAnimationSprite_DeployTextUI;/*出撃。*/
 
+					/*プレイヤーとNPCの区別。*/
+					int player = m_currentSelect + 1;
+					int npc = m_currentSelect + 4;
+					if (m_currentSelect != enSelect_Deploy)
+					{
+						m_isPlayerControle[m_currentSelect] == true ?
+							currentTargetUIFeature = player :/*プレイヤー。*/
+							currentTargetUIFeature = npc;/*NPC。*/
+					}
+
 					if (!m_selectDirectionUIAnimation[enPosition_Down][currentTargetUIFeature]->IsEnd())
 					{
 						m_selectDirectionUIAnimation[enPosition_Down][currentTargetUIFeature]->Update();
@@ -1204,14 +1495,28 @@ namespace nsApp
 			/*キャラクター選択UI。*/
 			if (m_currentSelect != enSelect_Deploy)
 			{
-				m_characterSelectUI.SetPosition(m_characterFrameUI[m_currentSelect].GetPosition());
+				if (m_isPlayerControle[m_currentSelect])
+				{
+					m_characterSelectUI.SetPosition(m_characterFrameUI[m_currentSelect].GetPosition());
+				}
+				else
+				{
+					m_characterSelectUI.SetPosition(m_npcCharacterFrameUI[m_currentSelect - 1].GetPosition());
+				}
 			}
 			m_characterSelectUI.Update();
 
 			/*キャラクター枠UI。*/
 			for(int i = 0; i < enCharacterFrameUI_Num; i++)
 			{
-				m_characterFrameUI[i].Update();
+				if (m_isPlayerControle[i])
+				{
+					m_characterFrameUI[i].Update();
+				}
+				else
+				{
+					m_npcCharacterFrameUI[i].Update();
+				}
 
 				Vector3 currentPosition = m_characterFrameUI[i].GetPosition();
 				currentPosition.x += ROLE_ICON_UI_POSITION_X_OFFSET;
@@ -1252,8 +1557,7 @@ namespace nsApp
 				currentPosition.x += offsetX - intervalPositon * i;
 				currentPosition.y = positionY;
 
-				//for (int j = 0; j < RoleSelect::EnRole::enRole_Num; j++)
-				for (int j = 0; j <= RoleSelect::EnRole::enRole_Hammer; j++)
+				for (int j = 0; j < RoleSelect::EnRole::enRole_Num; j++)
 				{
 					m_characterModel[i][j]->GetCharacterController().SetPosition(currentPosition);
 					m_characterModel[i][j]->SetPosition(currentPosition);

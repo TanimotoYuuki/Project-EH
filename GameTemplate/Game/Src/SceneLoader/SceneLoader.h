@@ -29,8 +29,87 @@ namespace nsApp
 			enSceneID_Num,/*シーンの最大数。*/
 		};
 
+	public:/*メンバ関数。*/
+
+		/**
+		* @brief ボスの種類の設定。
+		*/
+		void SetBossType(int boss)
+		{
+			m_bossType = boss;
+		}
+
+		/**
+		* @brief ボスの種類の取得。
+		* @return ボスの種類。
+		*/
+		int GetBossType() const
+		{
+			return m_bossType;
+		}
+
+		/**
+		* @brief 各キャラクターの役割の設定。
+		* @param playerIndex プレイヤーのインデックス。
+		*/
+		inline void SetCharacterRole(int playerIndex, int role)
+		{
+			m_characterRole[playerIndex] = role;
+		}
+
+		/**
+		* @brief 各キャラクターの役割の取得。
+		* @param playerIndex プレイヤーのインデックス。
+		* @return キャラクターの役割。
+		*/
+		inline int GetCharacterRole(int playerIndex) const
+		{
+			return m_characterRole[playerIndex];
+		}
+
+		/**
+		* @brief プレイヤーがキャラクターを操作するかの設定。
+		* @param playerIndex プレイヤーのインデックス。
+		* @param isControl プレイヤーがキャラクターを操作するか？
+		*/
+		inline void SetPlayerControle(int playerIndex, bool isControl)
+		{
+			m_isPlayerControle[playerIndex] = isControl;
+		}
+
+		/**
+		* @brief プレイヤーがキャラクターを操作するかの取得。
+		* @param playerIndex プレイヤーのインデックス。
+		*/
+		inline bool GetPlayerControle(int playerIndex) const
+		{
+			return m_isPlayerControle[playerIndex];
+		}
+
+		/**
+		* @brief 音量の割合の設定。
+		* @param index 音量のインデックス。
+		* @param rate 音量の割合。
+		*/
+		inline void SetVolumeRate(int index, int rate)
+		{
+			m_volumeRate[index] = rate;
+		}
+
+		/**
+		* @brief 音量の割合の取得。
+		*/
+		inline int GetVolumeRate(int index) const
+		{
+			return m_volumeRate[index];
+		}
+
 	public:/*メンバ変数。*/
 		EnSceneID m_sceneID = enSceneID_Num;/*シーンID。*/
+		int m_bossType = 0;/*ボスの種類。*/
+		int m_characterRole[4] = { 0 };/*キャラクターごとの役割。*/
+		bool m_isPlayerControle[4] = { true };/*プレイヤーがキャラクターを操作するか？*/
+		int m_volumeRate[3] = { 100,100,100 };/*各音量の割合。*/
 	};
 
 	namespace nsOption
@@ -110,6 +189,7 @@ namespace nsApp
 		*  @brief インゲーム選択シーンクラス。
 		*/
 		class Game;
+		class Game2;
 		class GameClearDirection;
 		class Pause;
 		class InGameScene : public IScene
@@ -123,7 +203,8 @@ namespace nsApp
 			void Update() override;/*更新処理。*/
 
 		private:/*メンバ変数。*/
-			Game* m_game = nullptr;/*インゲーム用のインスタンス。*/
+//			Game* m_game = nullptr;/*インゲーム用のインスタンス。*/
+			Game2* m_game2 = nullptr;/*インゲーム用のインスタンス。*/
 			GameClearDirection* m_gameClearDirection = nullptr;/*ゲームクリア演出用のインスタンス。*/
 			GameEndSelect* m_gameEndSelect = nullptr;/*ゲーム終了選択用のインスタンス。*/
 			Pause* m_pause = nullptr;/*ポーズ用のインスタンス。*/
@@ -226,6 +307,10 @@ namespace nsApp
 			IScene::EnSceneID m_changeSceneID = IScene::enSceneID_None;/*切り替えるシーンID。*/
 			IScene::EnSceneID m_previousSceneID = IScene::enSceneID_None;/*前のシーンID。*/
 			IScene::EnSceneID m_currentSceneID = IScene::enSceneID_None;/*現在のシーンID。*/
+			int m_bossType = 0;/*ボスの種類。*/
+			int m_characterRole[4] = { 0 };/*キャラクターごとの役割。*/
+			bool m_isPlayerControle[4] = { true };/*プレイヤーがキャラクターを操作するか？*/
+			int m_volumeRate[3] = { 100,100,100 };/*各音量の割合。*/
 			static SceneLoader* m_instance;/*シングルトンインスタンス。*/
 		};
 	}

@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Option.h"
+#include "Src/Sound/SoundLister.h"
 
 namespace {
 	/*背景。*/
@@ -145,15 +146,25 @@ namespace nsApp
 			for (int i = 0; i < enGaugeUI_Num; i++)
 			{
 				/*音量の割合を設定。*/
-				m_volumeRate[i] = VOLUME_MAX;
 				m_volumeMaxRate[i] = VOLUME_MAX;
-
-				m_volumeNumverDisplayManager[i].push_back(enVolumeNumberDisplayUI_One);
-				m_volumeNumverDisplayManager[i].push_back(enVolumeNumberDisplayUI_Zero);
-				m_volumeNumverDisplayManager[i].push_back(enVolumeNumberDisplayUI_Zero);
-
 				m_volumeNumverDisplayManager[i].reserve(6);
+
+				/*ゲージUI。*/
+				float volumeRate = (float)m_volumeRate[i] / (float)m_volumeMaxRate[i];/*音量の割合を計算。*/
+				Vector3 gaugeScale = m_gaugeUIBaseScale[i];/*ゲージUIの大きさを取得。*/
+				gaugeScale.x *= volumeRate;/*音量の割合を乗算。*/
+				m_gaugeUI[i].SetScale(gaugeScale);/*ゲージUIの大きさを設定。*/
+				CalcVolumeNumverDisplayData((EnGaugeUI)i, volumeRate);/*音量の数字UIに表示するためのデータの計算。*/
+
+				/*円UI。*/
+				float maxLength = CIRCLE_UI_INIT_POSITION[i].x - CIRCLE_UI_POSITION_MIN[i].x;/*円UIの移動できる距離の最大値。*/
+				float moveLength = maxLength * (1.0f - volumeRate);/*円UIの移動距離。*/
+				Vector3 circlePosition = m_circleUIBasePosition[i];/*円UIの位置を取得。*/
+				circlePosition.x = CIRCLE_UI_INIT_POSITION[i].x - moveLength;/*円UIの位置を設定。*/
+				m_circleUI[i].SetPosition(circlePosition);/*円UIの位置を設定。*/
 			}
+
+			m_soundListerInstance = FindGO<nsApp::nsSound::SoundLister>("SoundManager");
 
 			return true;
 		}
@@ -175,6 +186,12 @@ namespace nsApp
 
 			/*スプライト。*/
 			UpdateSprite();
+
+			if (!m_soundListerInstance) { return; }
+			/*割合を考慮した計算ができるように各割合を設定。。*/
+			m_soundListerInstance->SetBGMVolumeRate(m_volumeRate[enGaugeUI_BGM]);
+			m_soundListerInstance->SetSEVolumeRate(m_volumeRate[enGaugeUI_SE]);
+			m_soundListerInstance->SetMasterVolumeRate(m_volumeRate[enGaugeUI_MasterVolume]);
 		}
 
 		/*描画処理。*/

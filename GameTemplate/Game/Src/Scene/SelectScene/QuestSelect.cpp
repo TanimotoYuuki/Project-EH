@@ -39,6 +39,8 @@ namespace {
 
 	const Vector3 TARGET_TEXT_UI_INIT_POSITION = { -550.0f,200.0f,0.0f };/*ターゲットテキストUIの初期位置。*/
 
+	const float TARGET_TEXT_UI_POSITION_INTERVAL = 150.0f;/*ターゲットテキストUIの位置の間隔。*/
+
 	const Vector3 TARGET_TEXT_UI_INIT_SCALE = { 1.0f,1.0f,1.0f };/*ターゲットテキストUIの初期大きさ。*/
 
 	/*ボタンUI。*/
@@ -74,14 +76,26 @@ namespace {
 
 	const Vector3 AFTER_UI_ANIMATION_POSITION[nsApp::nsSelect::QuestSelect::EnSlide::enSlide_Num][nsApp::nsSelect::QuestSelect::EnSlideUIAnimationSprite::enSlideUIAnimationSprite_Num] = {
 		/*左側にスライドした時の位置。*/
-		Vector3{-2050.0f,-50.0f,0.0f},/*ターゲットUI。*/
+		Vector3{-2050.0f,-50.0f,0.0f},/*ターゲットUI(ボス1体目)。*/
+		Vector3{-2050.0f,-50.0f,0.0f},/*ターゲットUI(ボス2体目)。*/
+		Vector3{-2050.0f,-50.0f,0.0f},/*ターゲットUI(ボス3体目)。*/
+		Vector3{-2050.0f,-50.0f,0.0f},/*ターゲットUI(ボス4体目)。*/
 		Vector3{-3050.0f,200.0f,0.0f},/*ターゲット選択UI。*/
-		Vector3{-3050.0f,200.0f,0.0f},/*ターゲットテキストUI。*/
+		Vector3{-3050.0f,200.0f,0.0f},/*ターゲットテキストUI(ボス1体目)。*/
+		Vector3{-3050.0f,200.0f - TARGET_TEXT_UI_POSITION_INTERVAL * 1,0.0f},/*ターゲットテキストUI(ボス2体目)。*/
+		Vector3{-3050.0f,200.0f - TARGET_TEXT_UI_POSITION_INTERVAL * 2,0.0f},/*ターゲットテキストUI(ボス3体目)。*/
+		Vector3{-3050.0f,200.0f - TARGET_TEXT_UI_POSITION_INTERVAL * 3,0.0f},/*ターゲットテキストUI(ボス4体目)。*/
 
 		/*右側にスライドした時の位置。*/
-		Vector3{450.0f,-50.0f,0.0f},/*ターゲットUI。*/
+		Vector3{450.0f,-50.0f,0.0f},/*ターゲットUI(ボス1体目)。*/
+		Vector3{450.0f,-50.0f,0.0f},/*ターゲットUI(ボス2体目)。*/
+		Vector3{450.0f,-50.0f,0.0f},/*ターゲットUI(ボス3体目)。*/
+		Vector3{450.0f,-50.0f,0.0f},/*ターゲットUI(ボス4体目)。*/
 		Vector3{-550.0f,200.0f,0.0f},/*ターゲット選択UI。*/
-		Vector3{-550.0f,200.0f,0.0f},/*ターゲットテキストUI。*/
+		Vector3{-550.0f,200.0f,0.0f},/*ターゲットテキストUI(ボス1体目)。*/
+		Vector3{-550.0f,200.0f - TARGET_TEXT_UI_POSITION_INTERVAL * 1,0.0f},/*ターゲットテキストUI(ボス2体目)。*/
+		Vector3{-550.0f,200.0f - TARGET_TEXT_UI_POSITION_INTERVAL * 2,0.0f},/*ターゲットテキストUI(ボス3体目)。*/
+		Vector3{-550.0f,200.0f - TARGET_TEXT_UI_POSITION_INTERVAL * 3,0.0f},/*ターゲットテキストUI(ボス4体目)。*/
 	};/*UIをスライドさせるアニメーション後の位置。*/
 
 	const float AFTER_UI_ANIMATION_ALPHA = 0.2f;/*UIの透明度を変えるアニメーション後の透明度。*/
@@ -119,18 +133,8 @@ namespace nsApp
 			*/
 			if (!IsDirection() && !DidSelect() && !IsPushGameEndButton())
 			{
-				/*Aボタンを押したら選択完了。*/
-				if (g_pad[0]->IsTrigger(enButtonA))
-				{
-					EnableSelect();
-					EnableDirection();
-				}
-				/*Bボタンを押したらゲームを終了するかを確認する画面を表示する。*/
-				else if (g_pad[0]->IsTrigger(enButtonB))
-				{
-					nsApp::nsFade::Fade::GetInstance()->ChangeFadeType(nsApp::nsFade::Fade::enFadeType_HalfFadeOut);
-					EnablePushGameEndButton();
-				}
+				/*選択。*/
+				UpdateSelect();
 			}
 
 			/*UIアニメーション。*/
@@ -147,13 +151,16 @@ namespace nsApp
 			m_questSelectTextUI.Draw(rc);
 
 			/*ターゲットUIの描画。*/
-			m_targetUI.Draw(rc);
+			m_targetUI[m_currentSelect].Draw(rc);
 
 			/*ターゲット選択UIの描画。*/
 			m_targetSelectUI.Draw(rc);
 			
-			/*ターゲットテキストUIの描画。*/
-			m_targetTextUI.Draw(rc);
+			for (int i = 0; i < enBoss_Num; i++)
+			{
+				/*ターゲットテキストUIの描画。*/
+				m_targetTextUI[i].Draw(rc);
+			}
 
 			if (!IsDrawingButtonAndTextUI())
 			{
@@ -179,25 +186,28 @@ namespace nsApp
 			/*クエスト選択テキストUI。*/
 			InitQuestSelectTextUI();
 
-			/*ターゲットUI。*/
-			InitTargetUI();
+			for (int i = 0; i < enBoss_Num; i++)
+			{
+				/*ターゲットUI。*/
+				InitTargetUI((EnBoss)i);
+
+				/*ターゲットテキストUI。*/
+				InitTargetTextUI((EnBoss)i,i);
+			}
 
 			/*ターゲット選択UI。*/
 			InitTargetSelectUI();
 
-			/*ターゲットテキストUI。*/
-			InitTargetTextUI();
-
-			for (int i = 0; i < enButtonUI_Num; i++)
+			for (int j = 0; j < enButtonUI_Num; j++)
 			{
 				/*ボタンUI。*/
-				InitButtonUI((EnButtonUI)i);
+				InitButtonUI((EnButtonUI)j);
 			}
 
-			for (int j = 0; j < enTextUI_Num; j++)
+			for (int k = 0; k < enTextUI_Num; k++)
 			{
 				/*テキストUI。*/
-				InitTextUI((EnTextUI)j);
+				InitTextUI((EnTextUI)k);
 			}
 		}
 
@@ -211,12 +221,12 @@ namespace nsApp
 		}
 
 		/*ターゲットUIの初期化。*/
-		void QuestSelect::InitTargetUI()
+		void QuestSelect::InitTargetUI(EnBoss boss)
 		{
-			m_targetUI.Init(m_targetUIFilePath.c_str(), TARGET_UI_WIDTH, TARGET_UI_HEIGHT);/*初期化。*/
-			m_targetUI.SetPosition(TARGET_UI_INIT_POSITION);/*位置設定。*/
-			m_targetUI.SetScale(TARGET_UI_INIT_SCALE);/*大きさ設定。*/
-			m_targetUI.Update();/*更新処理。*/
+			m_targetUI[boss].Init(m_targetUIFilePath[boss].c_str(), TARGET_UI_WIDTH, TARGET_UI_HEIGHT);/*初期化。*/
+			m_targetUI[boss].SetPosition(TARGET_UI_INIT_POSITION);/*位置設定。*/
+			m_targetUI[boss].SetScale(TARGET_UI_INIT_SCALE);/*大きさ設定。*/
+			m_targetUI[boss].Update();/*更新処理。*/
 		}
 
 		/*ターゲット選択UIの初期化。*/
@@ -230,12 +240,15 @@ namespace nsApp
 		}
 		
 		/*ターゲットテキストUIの初期化。*/
-		void QuestSelect::InitTargetTextUI()
+		void QuestSelect::InitTargetTextUI(EnBoss boss, int bossIndex)
 		{
-			m_targetTextUI.Init(m_targetTextUIFilePath.c_str(), TARGET_TEXT_UI_WIDTH, TARGET_TEXT_UI_HEIGHT);/*初期化。*/
-			m_targetTextUI.SetPosition(TARGET_TEXT_UI_INIT_POSITION);/*位置設定。*/
-			m_targetTextUI.SetScale(TARGET_TEXT_UI_INIT_SCALE);/*大きさ設定。*/
-			m_targetTextUI.Update();/*更新処理。*/
+			Vector3 initPosition = TARGET_TEXT_UI_INIT_POSITION;/*初期位置。*/
+			initPosition.y -= TARGET_TEXT_UI_POSITION_INTERVAL * bossIndex;/*位置の間隔を減算。*/
+
+			m_targetTextUI[boss].Init(m_targetTextUIFilePath[boss].c_str(), TARGET_TEXT_UI_WIDTH, TARGET_TEXT_UI_HEIGHT);/*初期化。*/
+			m_targetTextUI[boss].SetPosition(initPosition);/*位置設定。*/
+			m_targetTextUI[boss].SetScale(TARGET_TEXT_UI_INIT_SCALE);/*大きさ設定。*/
+			m_targetTextUI[boss].Update();/*更新処理。*/
 		}
 
 		/*ボタンUIの初期化。*/
@@ -273,12 +286,60 @@ namespace nsApp
 		void QuestSelect::InitSlideUIAnimation()
 		{
 			/*UIをスライドさせるアニメーションの値の設定。*/
-			Vector3 basePosition = m_targetUI.GetPosition();/*元の位置。*/
-			Vector3 targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_TargetUI];/*ターゲットの位置。*/
+			Vector3 basePosition = m_targetUI[enBoss_One].GetPosition();/*元の位置。*/
+			Vector3 targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_TargetUI_BossOne];/*ターゲットの位置。*/
 
 			/*初期化。*/
-			m_slideUIAnimation[enSlide_Left][enSlideUIAnimationSprite_TargetUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				&m_targetUI,/*アニメーションをさせるスプライト。*/
+			m_slideUIAnimation[enSlide_Left][enSlideUIAnimationSprite_TargetUI_BossOne] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
+				&m_targetUI[enBoss_One],/*アニメーションをさせるスプライト。*/
+				1.0f,/*ターゲットの割合。*/
+				SLIDE_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
+				false,/*ループするか？*/
+				0.0f,/*アニメーションを開始する前の遅延時間。*/
+				0.0f,/*アニメーションを終了した後の遅延時間。*/
+				basePosition,/*元の位置。*/
+				targetPosition/*ターゲットの位置。*/
+			);
+
+			/*UIをスライドさせるアニメーションの値の設定。*/
+			basePosition = m_targetUI[enBoss_Two].GetPosition();/*元の位置。*/
+			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_TargetUI_BossTwo];/*ターゲットの位置。*/
+
+			/*初期化。*/
+			m_slideUIAnimation[enSlide_Left][enSlideUIAnimationSprite_TargetUI_BossTwo] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
+				&m_targetUI[enBoss_Two],/*アニメーションをさせるスプライト。*/
+				1.0f,/*ターゲットの割合。*/
+				SLIDE_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
+				false,/*ループするか？*/
+				0.0f,/*アニメーションを開始する前の遅延時間。*/
+				0.0f,/*アニメーションを終了した後の遅延時間。*/
+				basePosition,/*元の位置。*/
+				targetPosition/*ターゲットの位置。*/
+			);
+
+			/*UIをスライドさせるアニメーションの値の設定。*/
+			basePosition = m_targetUI[enBoss_Three].GetPosition();/*元の位置。*/
+			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_TargetUI_BossThree];/*ターゲットの位置。*/
+
+			/*初期化。*/
+			m_slideUIAnimation[enSlide_Left][enSlideUIAnimationSprite_TargetUI_BossThree] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
+				&m_targetUI[enBoss_Three],/*アニメーションをさせるスプライト。*/
+				1.0f,/*ターゲットの割合。*/
+				SLIDE_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
+				false,/*ループするか？*/
+				0.0f,/*アニメーションを開始する前の遅延時間。*/
+				0.0f,/*アニメーションを終了した後の遅延時間。*/
+				basePosition,/*元の位置。*/
+				targetPosition/*ターゲットの位置。*/
+			);
+
+			/*UIをスライドさせるアニメーションの値の設定。*/
+			basePosition = m_targetUI[enBoss_Four].GetPosition();/*元の位置。*/
+			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_TargetUI_BossFour];/*ターゲットの位置。*/
+
+			/*初期化。*/
+			m_slideUIAnimation[enSlide_Left][enSlideUIAnimationSprite_TargetUI_BossFour] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
+				&m_targetUI[enBoss_Four],/*アニメーションをさせるスプライト。*/
 				1.0f,/*ターゲットの割合。*/
 				SLIDE_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
 				false,/*ループするか？*/
@@ -305,12 +366,12 @@ namespace nsApp
 			);
 
 			/*UIをスライドさせるアニメーションの値の設定。*/
-			basePosition = m_targetTextUI.GetPosition();/*元の位置。*/
-			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_TargetTextUI];/*ターゲット位置。*/
+			basePosition = m_targetTextUI[enBoss_One].GetPosition();/*元の位置。*/
+			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_TargetTextUI_BossOne];/*ターゲット位置。*/
 
 			/*初期化。*/
-			m_slideUIAnimation[enSlide_Left][enSlideUIAnimationSprite_TargetTextUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				&m_targetTextUI,/*アニメーションをさせるスプライト。*/
+			m_slideUIAnimation[enSlide_Left][enSlideUIAnimationSprite_TargetTextUI_BossOne] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
+				&m_targetTextUI[enBoss_One],/*アニメーションをさせるスプライト。*/
 				1.0f,/*ターゲットの割合。*/
 				SLIDE_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
 				false,/*ループするか？*/
@@ -321,12 +382,108 @@ namespace nsApp
 			);
 
 			/*UIをスライドさせるアニメーションの値の設定。*/
-			basePosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_TargetUI];/*元の位置。*/
-			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Right][enSlideUIAnimationSprite_TargetUI];/*ターゲットの位置。*/
+			basePosition = m_targetTextUI[enBoss_Two].GetPosition();/*元の位置。*/
+			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_TargetTextUI_BossTwo];/*ターゲット位置。*/
 
 			/*初期化。*/
-			m_slideUIAnimation[enSlide_Right][enSlideUIAnimationSprite_TargetUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				&m_targetUI,/*アニメーションをさせるスプライト。*/
+			m_slideUIAnimation[enSlide_Left][enSlideUIAnimationSprite_TargetTextUI_BossTwo] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
+				&m_targetTextUI[enBoss_Two],/*アニメーションをさせるスプライト。*/
+				1.0f,/*ターゲットの割合。*/
+				SLIDE_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
+				false,/*ループするか？*/
+				0.0f,/*アニメーションを開始する前の遅延時間。*/
+				0.0f,/*アニメーションを終了した後の遅延時間。*/
+				basePosition,/*元の位置。*/
+				targetPosition/*ターゲットの位置。*/
+			);
+
+			/*UIをスライドさせるアニメーションの値の設定。*/
+			basePosition = m_targetTextUI[enBoss_Three].GetPosition();/*元の位置。*/
+			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_TargetTextUI_BossThree];/*ターゲット位置。*/
+
+			/*初期化。*/
+			m_slideUIAnimation[enSlide_Left][enSlideUIAnimationSprite_TargetTextUI_BossThree] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
+				&m_targetTextUI[enBoss_Three],/*アニメーションをさせるスプライト。*/
+				1.0f,/*ターゲットの割合。*/
+				SLIDE_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
+				false,/*ループするか？*/
+				0.0f,/*アニメーションを開始する前の遅延時間。*/
+				0.0f,/*アニメーションを終了した後の遅延時間。*/
+				basePosition,/*元の位置。*/
+				targetPosition/*ターゲットの位置。*/
+			);
+
+			/*UIをスライドさせるアニメーションの値の設定。*/
+			basePosition = m_targetTextUI[enBoss_Four].GetPosition();/*元の位置。*/
+			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_TargetTextUI_BossFour];/*ターゲット位置。*/
+
+			/*初期化。*/
+			m_slideUIAnimation[enSlide_Left][enSlideUIAnimationSprite_TargetTextUI_BossFour] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
+				&m_targetTextUI[enBoss_Four],/*アニメーションをさせるスプライト。*/
+				1.0f,/*ターゲットの割合。*/
+				SLIDE_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
+				false,/*ループするか？*/
+				0.0f,/*アニメーションを開始する前の遅延時間。*/
+				0.0f,/*アニメーションを終了した後の遅延時間。*/
+				basePosition,/*元の位置。*/
+				targetPosition/*ターゲットの位置。*/
+			);
+
+			/*UIをスライドさせるアニメーションの値の設定。*/
+			basePosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_TargetUI_BossOne];/*元の位置。*/
+			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Right][enSlideUIAnimationSprite_TargetUI_BossOne];/*ターゲットの位置。*/
+
+			/*初期化。*/
+			m_slideUIAnimation[enSlide_Right][enSlideUIAnimationSprite_TargetUI_BossOne] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
+				&m_targetUI[enBoss_One],/*アニメーションをさせるスプライト。*/
+				1.0f,/*ターゲットの割合。*/
+				SLIDE_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
+				false,/*ループするか？*/
+				0.0f,/*アニメーションを開始する前の遅延時間。*/
+				0.0f,/*アニメーションを終了した後の遅延時間。*/
+				basePosition,/*元の位置。*/
+				targetPosition/*ターゲットの位置。*/
+			);
+
+			/*UIをスライドさせるアニメーションの値の設定。*/
+			basePosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_TargetUI_BossTwo];/*元の位置。*/
+			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Right][enSlideUIAnimationSprite_TargetUI_BossTwo];/*ターゲットの位置。*/
+
+			/*初期化。*/
+			m_slideUIAnimation[enSlide_Right][enSlideUIAnimationSprite_TargetUI_BossTwo] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
+				&m_targetUI[enBoss_Two],/*アニメーションをさせるスプライト。*/
+				1.0f,/*ターゲットの割合。*/
+				SLIDE_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
+				false,/*ループするか？*/
+				0.0f,/*アニメーションを開始する前の遅延時間。*/
+				0.0f,/*アニメーションを終了した後の遅延時間。*/
+				basePosition,/*元の位置。*/
+				targetPosition/*ターゲットの位置。*/
+			);
+
+			/*UIをスライドさせるアニメーションの値の設定。*/
+			basePosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_TargetUI_BossThree];/*元の位置。*/
+			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Right][enSlideUIAnimationSprite_TargetUI_BossThree];/*ターゲットの位置。*/
+
+			/*初期化。*/
+			m_slideUIAnimation[enSlide_Right][enSlideUIAnimationSprite_TargetUI_BossThree] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
+				&m_targetUI[enBoss_Three],/*アニメーションをさせるスプライト。*/
+				1.0f,/*ターゲットの割合。*/
+				SLIDE_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
+				false,/*ループするか？*/
+				0.0f,/*アニメーションを開始する前の遅延時間。*/
+				0.0f,/*アニメーションを終了した後の遅延時間。*/
+				basePosition,/*元の位置。*/
+				targetPosition/*ターゲットの位置。*/
+			);
+
+			/*UIをスライドさせるアニメーションの値の設定。*/
+			basePosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_TargetUI_BossFour];/*元の位置。*/
+			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Right][enSlideUIAnimationSprite_TargetUI_BossFour];/*ターゲットの位置。*/
+
+			/*初期化。*/
+			m_slideUIAnimation[enSlide_Right][enSlideUIAnimationSprite_TargetUI_BossFour] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
+				&m_targetUI[enBoss_Four],/*アニメーションをさせるスプライト。*/
 				1.0f,/*ターゲットの割合。*/
 				SLIDE_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
 				false,/*ループするか？*/
@@ -353,12 +510,60 @@ namespace nsApp
 			);
 
 			/*UIをスライドさせるアニメーションの値の設定。*/
-			basePosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_TargetTextUI];/*元の位置。*/
-			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Right][enSlideUIAnimationSprite_TargetTextUI];/*ターゲット位置。*/
+			basePosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_TargetTextUI_BossOne];/*元の位置。*/
+			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Right][enSlideUIAnimationSprite_TargetTextUI_BossOne];/*ターゲット位置。*/
 
 			/*初期化。*/
-			m_slideUIAnimation[enSlide_Right][enSlideUIAnimationSprite_TargetTextUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				&m_targetTextUI,/*アニメーションをさせるスプライト。*/
+			m_slideUIAnimation[enSlide_Right][enSlideUIAnimationSprite_TargetTextUI_BossOne] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
+				&m_targetTextUI[enBoss_One],/*アニメーションをさせるスプライト。*/
+				1.0f,/*ターゲットの割合。*/
+				SLIDE_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
+				false,/*ループするか？*/
+				0.0f,/*アニメーションを開始する前の遅延時間。*/
+				0.0f,/*アニメーションを終了した後の遅延時間。*/
+				basePosition,/*元の位置。*/
+				targetPosition/*ターゲットの位置。*/
+			);
+
+			/*UIをスライドさせるアニメーションの値の設定。*/
+			basePosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_TargetTextUI_BossTwo];/*元の位置。*/
+			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Right][enSlideUIAnimationSprite_TargetTextUI_BossTwo];/*ターゲット位置。*/
+
+			/*初期化。*/
+			m_slideUIAnimation[enSlide_Right][enSlideUIAnimationSprite_TargetTextUI_BossTwo] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
+				&m_targetTextUI[enBoss_Two],/*アニメーションをさせるスプライト。*/
+				1.0f,/*ターゲットの割合。*/
+				SLIDE_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
+				false,/*ループするか？*/
+				0.0f,/*アニメーションを開始する前の遅延時間。*/
+				0.0f,/*アニメーションを終了した後の遅延時間。*/
+				basePosition,/*元の位置。*/
+				targetPosition/*ターゲットの位置。*/
+			);
+
+			/*UIをスライドさせるアニメーションの値の設定。*/
+			basePosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_TargetTextUI_BossThree];/*元の位置。*/
+			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Right][enSlideUIAnimationSprite_TargetTextUI_BossThree];/*ターゲット位置。*/
+
+			/*初期化。*/
+			m_slideUIAnimation[enSlide_Right][enSlideUIAnimationSprite_TargetTextUI_BossThree] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
+				&m_targetTextUI[enBoss_Three],/*アニメーションをさせるスプライト。*/
+				1.0f,/*ターゲットの割合。*/
+				SLIDE_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
+				false,/*ループするか？*/
+				0.0f,/*アニメーションを開始する前の遅延時間。*/
+				0.0f,/*アニメーションを終了した後の遅延時間。*/
+				basePosition,/*元の位置。*/
+				targetPosition/*ターゲットの位置。*/
+			);
+
+			/*UIをスライドさせるアニメーションの値の設定。*/
+			basePosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_TargetTextUI_BossFour];/*元の位置。*/
+			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Right][enSlideUIAnimationSprite_TargetTextUI_BossFour];/*ターゲット位置。*/
+
+			/*初期化。*/
+			m_slideUIAnimation[enSlide_Right][enSlideUIAnimationSprite_TargetTextUI_BossFour] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
+				&m_targetTextUI[enBoss_Four],/*アニメーションをさせるスプライト。*/
 				1.0f,/*ターゲットの割合。*/
 				SLIDE_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
 				false,/*ループするか？*/
@@ -410,13 +615,64 @@ namespace nsApp
 			);
 
 			/*選択したときの演出UIアニメーションの値の設定。*/
-			basePosition = m_targetTextUI.GetPosition();/*元の位置。*/
-			targetPosition = m_targetTextUI.GetPosition();/*ターゲットの位置。*/
+			basePosition = m_targetTextUI[enBoss_One].GetPosition();/*元の位置。*/
+			targetPosition = m_targetTextUI[enBoss_One].GetPosition();/*ターゲットの位置。*/
 			targetPosition.y -= DOWN_POSITION_OFFSET;
 
 			/*初期化。*/
-			m_selectDirectionUIAnimation[enPosition_Down][enSelectDirectionUIAnimationSprite_TargetTextUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				&m_targetTextUI,/*アニメーションをさせるスプライト。*/
+			m_selectDirectionUIAnimation[enPosition_Down][enSelectDirectionUIAnimationSprite_TargetTextUI_BossOne] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
+				&m_targetTextUI[enBoss_One],/*アニメーションをさせるスプライト。*/
+				1.0f,/*ターゲットの割合。*/
+				SELECT_DIRECTION_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
+				false,/*ループするか？*/
+				0.0f,/*アニメーションを開始する前の遅延時間。*/
+				0.0f,/*アニメーションを終了した後の遅延時間。*/
+				basePosition,/*元の位置。*/
+				targetPosition/*ターゲットの位置。*/
+			);
+
+			/*選択したときの演出UIアニメーションの値の設定。*/
+			basePosition = m_targetTextUI[enBoss_Two].GetPosition();/*元の位置。*/
+			targetPosition = m_targetTextUI[enBoss_Two].GetPosition();/*ターゲットの位置。*/
+			targetPosition.y -= DOWN_POSITION_OFFSET;
+
+			/*初期化。*/
+			m_selectDirectionUIAnimation[enPosition_Down][enSelectDirectionUIAnimationSprite_TargetTextUI_BossTwo] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
+				&m_targetTextUI[enBoss_Two],/*アニメーションをさせるスプライト。*/
+				1.0f,/*ターゲットの割合。*/
+				SELECT_DIRECTION_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
+				false,/*ループするか？*/
+				0.0f,/*アニメーションを開始する前の遅延時間。*/
+				0.0f,/*アニメーションを終了した後の遅延時間。*/
+				basePosition,/*元の位置。*/
+				targetPosition/*ターゲットの位置。*/
+			);
+
+			/*選択したときの演出UIアニメーションの値の設定。*/
+			basePosition = m_targetTextUI[enBoss_Three].GetPosition();/*元の位置。*/
+			targetPosition = m_targetTextUI[enBoss_Three].GetPosition();/*ターゲットの位置。*/
+			targetPosition.y -= DOWN_POSITION_OFFSET;
+
+			/*初期化。*/
+			m_selectDirectionUIAnimation[enPosition_Down][enSelectDirectionUIAnimationSprite_TargetTextUI_BossThree] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
+				&m_targetTextUI[enBoss_Three],/*アニメーションをさせるスプライト。*/
+				1.0f,/*ターゲットの割合。*/
+				SELECT_DIRECTION_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
+				false,/*ループするか？*/
+				0.0f,/*アニメーションを開始する前の遅延時間。*/
+				0.0f,/*アニメーションを終了した後の遅延時間。*/
+				basePosition,/*元の位置。*/
+				targetPosition/*ターゲットの位置。*/
+			);
+
+			/*選択したときの演出UIアニメーションの値の設定。*/
+			basePosition = m_targetTextUI[enBoss_Four].GetPosition();/*元の位置。*/
+			targetPosition = m_targetTextUI[enBoss_Four].GetPosition();/*ターゲットの位置。*/
+			targetPosition.y -= DOWN_POSITION_OFFSET;
+
+			/*初期化。*/
+			m_selectDirectionUIAnimation[enPosition_Down][enSelectDirectionUIAnimationSprite_TargetTextUI_BossFour] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
+				&m_targetTextUI[enBoss_Four],/*アニメーションをさせるスプライト。*/
 				1.0f,/*ターゲットの割合。*/
 				SELECT_DIRECTION_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
 				false,/*ループするか？*/
@@ -444,13 +700,64 @@ namespace nsApp
 			);
 
 			/*選択したときの演出UIアニメーションの値の設定。*/
-			basePosition = m_targetTextUI.GetPosition();/*元の位置。*/
+			basePosition = m_targetTextUI[enBoss_One].GetPosition();/*元の位置。*/
 			basePosition.y -= DOWN_POSITION_OFFSET;
-			targetPosition = m_targetTextUI.GetPosition();/*ターゲットの位置。*/
+			targetPosition = m_targetTextUI[enBoss_One].GetPosition();/*ターゲットの位置。*/
 
 			/*初期化。*/
-			m_selectDirectionUIAnimation[enPosition_Up][enSelectDirectionUIAnimationSprite_TargetTextUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				&m_targetTextUI,/*アニメーションをさせるスプライト。*/
+			m_selectDirectionUIAnimation[enPosition_Up][enSelectDirectionUIAnimationSprite_TargetTextUI_BossOne] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
+				&m_targetTextUI[enBoss_One],/*アニメーションをさせるスプライト。*/
+				1.0f,/*ターゲットの割合。*/
+				SELECT_DIRECTION_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
+				false,/*ループするか？*/
+				0.0f,/*アニメーションを開始する前の遅延時間。*/
+				0.0f,/*アニメーションを終了した後の遅延時間。*/
+				basePosition,/*元の位置。*/
+				targetPosition/*ターゲットの位置。*/
+			);
+
+			/*選択したときの演出UIアニメーションの値の設定。*/
+			basePosition = m_targetTextUI[enBoss_Two].GetPosition();/*元の位置。*/
+			basePosition.y -= DOWN_POSITION_OFFSET;
+			targetPosition = m_targetTextUI[enBoss_Two].GetPosition();/*ターゲットの位置。*/
+
+			/*初期化。*/
+			m_selectDirectionUIAnimation[enPosition_Up][enSelectDirectionUIAnimationSprite_TargetTextUI_BossTwo] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
+				&m_targetTextUI[enBoss_Two],/*アニメーションをさせるスプライト。*/
+				1.0f,/*ターゲットの割合。*/
+				SELECT_DIRECTION_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
+				false,/*ループするか？*/
+				0.0f,/*アニメーションを開始する前の遅延時間。*/
+				0.0f,/*アニメーションを終了した後の遅延時間。*/
+				basePosition,/*元の位置。*/
+				targetPosition/*ターゲットの位置。*/
+			);
+
+			/*選択したときの演出UIアニメーションの値の設定。*/
+			basePosition = m_targetTextUI[enBoss_Three].GetPosition();/*元の位置。*/
+			basePosition.y -= DOWN_POSITION_OFFSET;
+			targetPosition = m_targetTextUI[enBoss_Three].GetPosition();/*ターゲットの位置。*/
+
+			/*初期化。*/
+			m_selectDirectionUIAnimation[enPosition_Up][enSelectDirectionUIAnimationSprite_TargetTextUI_BossThree] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
+				&m_targetTextUI[enBoss_Three],/*アニメーションをさせるスプライト。*/
+				1.0f,/*ターゲットの割合。*/
+				SELECT_DIRECTION_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
+				false,/*ループするか？*/
+				0.0f,/*アニメーションを開始する前の遅延時間。*/
+				0.0f,/*アニメーションを終了した後の遅延時間。*/
+				basePosition,/*元の位置。*/
+				targetPosition/*ターゲットの位置。*/
+			);
+
+			/*選択したときの演出UIアニメーションの値の設定。*/
+			basePosition = m_targetTextUI[enBoss_Four].GetPosition();/*元の位置。*/
+			basePosition.y -= DOWN_POSITION_OFFSET;
+			targetPosition = m_targetTextUI[enBoss_Four].GetPosition();/*ターゲットの位置。*/
+
+			/*初期化。*/
+			m_selectDirectionUIAnimation[enPosition_Up][enSelectDirectionUIAnimationSprite_TargetTextUI_BossFour] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
+				&m_targetTextUI[enBoss_Four],/*アニメーションをさせるスプライト。*/
 				1.0f,/*ターゲットの割合。*/
 				SELECT_DIRECTION_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
 				false,/*ループするか？*/
@@ -482,6 +789,47 @@ namespace nsApp
 			}
 		}
 
+		/*選択の更新処理。*/
+		void QuestSelect::UpdateSelect()
+		{
+			/*上を入力したら。*/
+			if (g_pad[0]->IsTrigger(enButtonUp))
+			{
+				ResetAlphaUIAnimation();
+				/*現在の選択が「1体目のボス」を選択していたら。*/
+				if (m_currentSelect == enBoss_One) { m_currentSelect = enBoss_Four; return; }
+
+				/*上を選択する。*/
+				m_currentSelect--;
+				return;
+			}
+
+			/*下を入力したら。*/
+			if (g_pad[0]->IsTrigger(enButtonDown))
+			{
+				ResetAlphaUIAnimation();
+				/*現在の選択が「4体目のボス」を選択していたら。*/
+				if (m_currentSelect == enBoss_Four) { m_currentSelect = enBoss_One; return; }
+
+				/*下を選択する。*/
+				m_currentSelect++;
+				return;
+			}
+
+			/*Aボタンを押したら選択完了。*/
+			if (g_pad[0]->IsTrigger(enButtonA))
+			{
+				EnableSelect();
+				EnableDirection();
+			}
+			/*Bボタンを押したらゲームを終了するかを確認する画面を表示する。*/
+			else if (g_pad[0]->IsTrigger(enButtonB))
+			{
+				nsApp::nsFade::Fade::GetInstance()->ChangeFadeType(nsApp::nsFade::Fade::enFadeType_HalfFadeOut);
+				EnablePushGameEndButton();
+			}
+		}
+
 		/*UIアニメーションの更新処理。*/
 		void QuestSelect::UpdateUIAnimation()
 		{
@@ -495,14 +843,14 @@ namespace nsApp
 					if (!m_selectDirectionUIAnimation[enPosition_Down][enSelectDirectionUIAnimationSprite_TargetSelectUI]->IsEnd())
 					{
 						m_selectDirectionUIAnimation[enPosition_Down][enSelectDirectionUIAnimationSprite_TargetSelectUI]->Update();
-						m_selectDirectionUIAnimation[enPosition_Down][enSelectDirectionUIAnimationSprite_TargetTextUI]->Update();
+						m_selectDirectionUIAnimation[enPosition_Down][m_currentSelect + 1]->Update();
 						return;
 					}
 					/*選択したときの演出UIアニメーション(位置を上昇する)が終わっていなければ再生し続ける。*/
 					else if (!m_selectDirectionUIAnimation[enPosition_Up][enSelectDirectionUIAnimationSprite_TargetSelectUI]->IsEnd())
 					{
 						m_selectDirectionUIAnimation[enPosition_Up][enSelectDirectionUIAnimationSprite_TargetSelectUI]->Update();
-						m_selectDirectionUIAnimation[enPosition_Up][enSelectDirectionUIAnimationSprite_TargetTextUI]->Update();
+						m_selectDirectionUIAnimation[enPosition_Up][m_currentSelect + 1]->Update();
 						return;
 					}
 				}
@@ -522,26 +870,31 @@ namespace nsApp
 		{
 			/*クエスト選択テキストUI。*/
 			m_questSelectTextUI.Update();
-
-			/*ターゲットUI。*/
-			m_targetUI.Update();
-
-			/*ターゲット選択UI。*/
-			m_targetSelectUI.Update();
-
-			/*ターゲットテキストUI。*/
-			m_targetTextUI.Update();
-
-			for (int i = 0; i < enButtonUI_Num; i++)
+			
+			for (int i = 0; i < enBoss_Num; i++)
 			{
-				/*ボタンUI。*/
-				m_buttonUI[i].Update();
+				/*ターゲットUI。*/
+				m_targetUI[i].Update();
+
+				/*ターゲットテキストUI。*/
+				m_targetTextUI[i].Update();
 			}
 
-			for (int j = 0; j < enTextUI_Num; j++)
+			/*ターゲット選択UI。*/
+			m_targetSelectUI.SetPosition(m_targetTextUI[m_currentSelect].GetPosition());
+			m_targetSelectUI.Update();
+
+
+			for (int j = 0; j < enButtonUI_Num; j++)
+			{
+				/*ボタンUI。*/
+				m_buttonUI[j].Update();
+			}
+
+			for (int k = 0; k < enTextUI_Num; k++)
 			{
 				/*テキストUI。*/
-				m_textUI[j].Update();
+				m_textUI[k].Update();
 			}
 		}
 	}

@@ -2,10 +2,16 @@
 #include "StateMachine.h"
 #include "NullState.h"
 #include "Src/Actor/Actor.h"
+#include "Src/Actor/Character/NPC/NPCBrain.h"
 
-/* テンプレートのマクロ。*/
+/* @def
+ * @brief テンプレートのマクロ。
+ */
 #define CLASS_T template<class CharacterTemplete>
-/* テンプレート名のマクロ。*/
+
+/* @def
+ * @brief テンプレート名のマクロ。
+ */
 #define T_NAME CharacterTemplete
 
 namespace nsApp
@@ -61,8 +67,10 @@ namespace nsApp
 			m_currentState->Update();
 		}
 
-
 		/* Actorクラスに対してテンプレートの使用可能にする。*/
 		template class StateMachine<nsApp::nsActor::Actor>;
+
+		/* NPC用ステートマシーンテンプレートを作成する。*/
+		template class StateMachine<NPCBrain>;
 	}
 }

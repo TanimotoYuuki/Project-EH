@@ -1,12 +1,16 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "PlayerPushState.h"
+#include "Src/Actor/Character/Player/State/BasicState/PlayerIdleState.h"
+#include "Src/Actor/Character/Player/State/BasicState/PlayerRunState.h"
+#include "Src/Actor/Character/Player/State/BasicState/PlayerWalkState.h"
+#include "Src/Actor/Gun/Factory/BulletFactory.h"
 
 namespace
 {
-	const auto MOVE_SPEED_FRAME = 1.0f /40.0f; //! “Ë‚«i‚ŞUŒ‚‚ÌˆÚ“®‘¬“xB
-	const auto MOVE_SPEED = 40.0f;             //! “Ë‚«i‚ŞUŒ‚‚ÌˆÚ“®‘¬“xB
-	const auto START_WEAPON_ANGLE = -90.0f;    //! ƒXƒe[ƒgŠJn‚Ì•Ší‚ÌŠp“xB
-	const auto END_WEAPON_ANGLE = 0.0f;        //! ƒXƒe[ƒgI—¹‚Ì•Ší‚ÌŠp“xB
+	const auto MOVE_SPEED_FRAME = 1.0f /40.0f; //! çªãé€²ã‚€æ”»æ’ƒã®ç§»å‹•é€Ÿåº¦ã€‚
+	const auto MOVE_SPEED = 40.0f;             //! çªãé€²ã‚€æ”»æ’ƒã®ç§»å‹•é€Ÿåº¦ã€‚
+	const auto START_WEAPON_ANGLE = -90.0f;    //! ã‚¹ãƒ†ãƒ¼ãƒˆé–‹å§‹æ™‚ã®æ­¦å™¨ã®è§’åº¦ã€‚
+	const auto END_WEAPON_ANGLE = 0.0f;        //! ã‚¹ãƒ†ãƒ¼ãƒˆçµ‚äº†æ™‚ã®æ­¦å™¨ã®è§’åº¦ã€‚
 }
 
 namespace nsApp
@@ -15,53 +19,117 @@ namespace nsApp
 	{
 		void PlayerPushState::Enter()
 		{
-			/* ƒLƒƒƒXƒgB*/
+			/* ã‚­ãƒ£ã‚¹ãƒˆã€‚*/
 			m_player = static_cast<nsActor::Player*>(m_owner);
 
-			/* UŒ‚‚Ìƒ^ƒCƒv‚ğİ’è‚·‚éB*/
+			/* æ”»æ’ƒã®ã‚¿ã‚¤ãƒ—ã‚’è¨­å®šã™ã‚‹ã€‚*/
 			m_currentAttackType = AttackType::PushForward;
 
-			/* ƒLƒƒƒXƒgB*/
-			m_player->PlayWeaponAnimation(AttackType::PushForward);
-
-			/* •Ší‚ÌŠp“x‚ğ’²®B*/
-			m_player->SetWeaponRotationAngle(Vector3::Front, START_WEAPON_ANGLE);
+			if (m_player->GetCurrentWeapon() == WeaponType::TwinGun)
+			{
+			}
+			else
+			{
+				/* ä»–ã®æ­¦å™¨ï¼ˆå‰£ã‚„ãƒãƒ³ãƒãƒ¼ï¼‰ã®æ™‚ã¯æ—¢å­˜ã®å‡¦ç†ã‚’è¡Œã† */
+				m_player->PlayWeaponAnimation(AttackType::PushForward);
+				m_player->SetWeaponRotationAngle(Vector3::Front, START_WEAPON_ANGLE);
+			}
+			/* å½“ãŸã‚Šåˆ¤å®šã‚’ä»˜ä¸ã€‚*/
 			m_player->GetWeaponHitDetection().Enable();
 		}
 
 
 		void PlayerPushState::Update()
 		{
-			/* ‘Oi‚·‚éB*/
+			if (!m_player)
+				return;
+
+			/* å‰é€²ã™ã‚‹ã€‚*/
 			MoveForward();
 
-			/* eƒNƒ‰ƒX‚ÌXVB*/
+			/* æ­¦å™¨ãŒéŠƒã®å ´åˆã€‚*/
+			if (m_player->GetCurrentWeapon() == WeaponType::TwinGun)
+			{
+				/* å¼¾ã‚’ç™ºå°„ã€‚*/
+				if (m_attackTimer == 10)
+					FireDashBullet();
+
+				/* æ¸›è¡°ç‡ã«å¿œã˜ã¦ã‚¹ãƒ†ãƒ¼ãƒˆã‚’é·ç§»ã—åˆ†ã‘ã‚‹ã€‚*/
+				if (TransitionMultiState())
+					return;
+			}
+
+			/* è¦ªã‚¯ãƒ©ã‚¹ã®æ›´æ–°ã€‚*/
 			PlayerAttackBaseState::Update();
 		}
 
 
 		void PlayerPushState::Exit()
 		{
-			/* ƒXƒe[ƒgI—¹‚Ì•Ší‚ÌŠp“x‚ğİ’è‚·‚éB*/
-			m_player->SetWeaponRotationAngle(Vector3::Right, END_WEAPON_ANGLE);
-			/* ƒXƒe[ƒg‚ğI—¹‚·‚éB*/
+			if (m_player->GetCurrentWeapon() == WeaponType::TwinGun) {}
+
+			else
+			{
+				/* ä»–ã®æ­¦å™¨ï¼ˆå‰£ã‚„ãƒãƒ³ãƒãƒ¼ï¼‰ã®æ™‚ã¯æ—¢å­˜ã®å‡¦ç†ã‚’è¡Œã† */
+				m_player->PlayWeaponAnimation(AttackType::PushForward);
+				m_player->SetWeaponRotationAngle(Vector3::Front, START_WEAPON_ANGLE);
+			}
+			/* ã‚¹ãƒ†ãƒ¼ãƒˆã‚’çµ‚äº†ã™ã‚‹ã€‚*/
 			PlayerAttackBaseState::Exit();
 		}
 
 
 		void PlayerPushState::MoveForward()
 		{
-			/* ‘Oi‚·‚é‘¬“x‚ğİ’èB*/
-			SetForwardSpeed(MOVE_SPEED);
+			if (m_attackTimer <= 12)
+				/* å‰é€²ã™ã‚‹é€Ÿåº¦ã‚’è¨­å®šã€‚*/
+				SetForwardSpeed(MOVE_SPEED);
 
-			/* ‘O•ûŒü‚ÌƒxƒNƒgƒ‹‚ğæ“¾B*/
+			else
+			{
+				/* æ¸›è¡°å‡¦ç†ã€‚*/
+				m_forwardSpeed *= 0.8f;
+
+				if (m_forwardSpeed < 0.1f)
+					m_forwardSpeed = 0.0f;
+			}
+
+			/* å‰æ–¹å‘ã®ãƒ™ã‚¯ãƒˆãƒ«ã‚’å–å¾—ã€‚*/
 			m_moveVector = m_player->GetForwardVector() * m_forwardSpeed;
-
-			/* “–‚½‚è”»’è‚ÌˆÚ“®B*/
-			/* ƒLƒƒƒ‰ƒRƒ“‚ÌˆÚ“®B*/
+			/* å½“ãŸã‚Šåˆ¤å®šã®ç§»å‹•ã€‚*/
+			/* ã‚­ãƒ£ãƒ©ã‚³ãƒ³ã®ç§»å‹•ã€‚*/
 			m_player->GetCharacterController().Execute(m_moveVector, MOVE_SPEED_FRAME);
-			/* À•W‚ÌˆÚ“®B*/
+			/* åº§æ¨™ã®ç§»å‹•ã€‚*/
 			m_player->SetPosition(m_player->GetCharacterController().GetPosition());
+		}
+
+
+		void PlayerPushState::FireDashBullet()
+		{
+			m_spawnPosition = m_player->GetBonePosition(L"mixamorig:RightHand");
+			BulletFactory::CreateBullet(BulletType::enDash, m_spawnPosition, m_player->GetForwardVector());
+		}
+
+
+
+		bool PlayerPushState::TransitionMultiState()
+		{
+			if (m_attackTimer > 20)
+			{
+				auto& inputClass = m_player->GetInputClass();
+				if (inputClass.IsRun())
+					m_stateMachine->ChangeState(new nsState::PlayerRunState());
+
+				else if (inputClass.IsMove())
+					m_stateMachine->ChangeState(new nsState::PlayerWalkState());
+
+				else
+					m_stateMachine->ChangeState(new nsState::PlayerIdleState());
+
+				return true;
+			}
+
+			return false;
 		}
 
 

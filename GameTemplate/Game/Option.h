@@ -8,6 +8,11 @@
  */
 namespace nsApp
 {
+	namespace nsSound
+	{
+		class SoundLister;
+	}
+
 	namespace nsOption
 	{
 		/*ゲームの設定クラス。*/
@@ -259,6 +264,26 @@ namespace nsApp
 			};
 
 			/**
+			* @brief 音量の割合の設定。
+			* @param gaugeUI ゲージUIの種類。
+			* @param rate 音量の割合。
+			*/
+			inline void SetVolumeRate(EnGaugeUI gaugeUI, int rate)
+			{
+				m_volumeRate[gaugeUI] = rate;
+			}
+
+			/**
+			* @brief 音量の割合の取得。
+			* @param gaugeUI ゲージUIの種類。
+			* @return 音量の割合。
+			*/
+			inline int GetVolumeRate(EnGaugeUI gaugeUI)
+			{
+				return m_volumeRate[gaugeUI];
+			}
+
+			/**
 			* @brief UIを描画する状態にする。
 			*/
 			inline void EnableDrawingUI()
@@ -348,8 +373,8 @@ namespace nsApp
 			std::unique_ptr<nsApp::nsUI::PositionUIAnimation> m_selectDirectionUIAnimation[enPosition_Num][enSelectDirectionUIAnimationSprite_Num];/*選択したときの演出UIアニメーション。*/
 			int m_currentSelect = enSelect_MasterVolume;/*現在の選択している内容。*/
 			int m_volumeChangeValue = 0;/*音量変化量。*/
-			int m_volumeRate[enGaugeUI_Num] = { 0,0 };/*音量の割合。*/
-			int m_volumeMaxRate[enGaugeUI_Num] = { 0,0 };/*最大音量の割合。*/
+			int m_volumeRate[enGaugeUI_Num] = { 0,0,0 };/*音量の割合。*/
+			int m_volumeMaxRate[enGaugeUI_Num] = { 0,0,0 };/*最大音量の割合。*/
 			int m_volumeNumber[enGaugeUI_Num][enVolume_Num] = { 0,0,0,0,0,0 };/*音量の数字。*/
 			bool m_isGaugeUp = false;/*ゲージを上げるか？*/
 			bool m_isGaugeDown = false;/*ゲージを下げるか？*/
@@ -357,6 +382,7 @@ namespace nsApp
 			bool m_isDirection = false;/*演出中？*/
 			bool m_didSelect = false;/*選択できたか？*/
 			std::vector<EnVolumeNumberDisplayUI> m_volumeNumverDisplayManager[enGaugeUI_Num];/*音量の数字UIを管理する変数。*/
+			nsApp::nsSound::SoundLister* m_soundListerInstance = nullptr;/*BGM/SEを管理するクラスのインスタンス。*/
 
 		private:/*スプライトを表示するファイルパス用のメンバ変数。*/
 			std::string m_backGroundFilePath = "Assets/sprite/option/background/backGround.dds";/*背景のファイルパス。*/

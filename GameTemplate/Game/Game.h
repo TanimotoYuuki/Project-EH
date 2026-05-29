@@ -1,20 +1,18 @@
-#pragma once
+ï»¿#pragma once
+
 /**
 * @file Game.h
-* @brief ƒf[ƒ^‚Ì“‡ƒNƒ‰ƒXB
+* @brief ãƒ‡ãƒ¼ã‚¿ã®çµ±åˆã‚¯ãƒ©ã‚¹ã€‚
 * @author All
-* @date 2026/03/23
+* @date 2026/05/08
 */
-
-#include "Level3DRender/LevelRender.h"
-
-class Player;
 
 
 namespace nsApp
 {
 	class Camera;
 	class GameEndSelect;
+	class PlayerGenerator;
 
 	namespace nsSound {
 		class SoundLister;
@@ -26,7 +24,7 @@ namespace nsApp
 
 	namespace nsActor {
 		class Player;
-		class Sandbag;
+		class Boss;
 	}
 
 	namespace nsGame
@@ -41,22 +39,28 @@ namespace nsApp
 		class Game : public IGameObject
 		{
 		public:
-			/* ƒRƒ“ƒXƒgƒ‰ƒNƒ^‚ÆƒfƒXƒgƒ‰ƒNƒ^B*/
+			/* ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã¨ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã€‚*/
 			Game() = default;
 			~Game();
-
+			
 
 		public:
-			/* ƒTƒCƒNƒ‹B*/
+			/* ã‚µã‚¤ã‚¯ãƒ«ã€‚*/
 			bool Start();
 			void Update();
-			void Render(RenderContext& rc)override;
+			void Render(RenderContext& rc);
+
+
+		private:
+			/* ãƒ—ãƒ¬ã‚¤ã‚¢ãƒ–ãƒ«ã‚­ãƒ£ãƒ©ã‚’ç”Ÿæˆã™ã‚‹ã€‚*/
+			void SpawnPlayCharacter();
+
 
 		public:
-			
+
 			/**
-			* @brief ƒQ[ƒ€ƒNƒŠƒA‰‰o‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚Ìæ“¾B
-			* @return ƒQ[ƒ€ƒNƒŠƒA‰‰o‚ÌƒCƒ“ƒXƒ^ƒ“ƒXB
+			* @brief ã‚²ãƒ¼ãƒ ã‚¯ãƒªã‚¢æ¼”å‡ºã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã®å–å¾—ã€‚
+			* @return ã‚²ãƒ¼ãƒ ã‚¯ãƒªã‚¢æ¼”å‡ºã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã€‚
 			*/
 			inline GameClearDirection* GetGameClearDirectionInstance() const
 			{
@@ -64,8 +68,8 @@ namespace nsApp
 			}
 
 			/**
-			* @brief ŠÔØ‚ê‰‰o‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚Ìæ“¾B
-			* @return ŠÔØ‚ê‰‰o‚ÌƒCƒ“ƒXƒ^ƒ“ƒXB
+			* @brief æ™‚é–“åˆ‡ã‚Œæ¼”å‡ºã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã®å–å¾—ã€‚
+			* @return æ™‚é–“åˆ‡ã‚Œæ¼”å‡ºã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã€‚
 			*/
 			inline GameTimeUpDirection* GetGameTimeUpDirectionInstance() const
 			{
@@ -73,8 +77,8 @@ namespace nsApp
 			}
 
 			/**
-			* @brief ƒQ[ƒ€ƒI[ƒo[‰‰o‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚Ìæ“¾B
-			* @return ƒQ[ƒ€ƒI[ƒo[‰‰o‚ÌƒCƒ“ƒXƒ^ƒ“ƒXB
+			* @brief ã‚²ãƒ¼ãƒ ã‚ªãƒ¼ãƒãƒ¼æ¼”å‡ºã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã®å–å¾—ã€‚
+			* @return ã‚²ãƒ¼ãƒ ã‚ªãƒ¼ãƒãƒ¼æ¼”å‡ºã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã€‚
 			*/
 			inline GameOverDirection* GetGameOverDirectionInstance() const
 			{
@@ -82,8 +86,8 @@ namespace nsApp
 			}
 
 			/**
-			* @brief ƒQ[ƒ€‚ªI—¹‚µ‚½‚É‘I‘ğ‚·‚é‰æ–Ê‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚Ìæ“¾B
-			* @return ƒQ[ƒ€‚ªI—¹‚µ‚½‚É‘I‘ğ‚·‚é‰æ–Ê‚ÌƒCƒ“ƒXƒ^ƒ“ƒXB
+			* @brief ã‚²ãƒ¼ãƒ ãŒçµ‚äº†ã—ãŸæ™‚ã«é¸æŠã™ã‚‹ç”»é¢ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã®å–å¾—ã€‚
+			* @return ã‚²ãƒ¼ãƒ ãŒçµ‚äº†ã—ãŸæ™‚ã«é¸æŠã™ã‚‹ç”»é¢ã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã€‚
 			*/
 			inline GameEndSelect* GetGameEndSelectInstance() const
 			{
@@ -91,18 +95,57 @@ namespace nsApp
 			}
 
 			/**
-			* @brief ƒ|[ƒY‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚Ìæ“¾B
-			* @return ƒ|[ƒY‚ÌƒCƒ“ƒXƒ^ƒ“ƒXB
+			* @brief ãƒãƒ¼ã‚ºã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã®å–å¾—ã€‚
+			* @return ãƒãƒ¼ã‚ºã®ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ã€‚
 			*/
 			inline Pause* GetPauseInstance() const
 			{
 				return m_pause;
 			}
 
+			/**
+			* @brief ãƒœã‚¹ã®ç¨®é¡ã®è¨­å®šã€‚
+			* @param bossType ãƒœã‚¹ã®ç¨®é¡ã€‚
+			*/
+			inline void SetBossType(int bossType)
+			{
+				m_bossType = bossType;
+			}
+
+			/**
+			* @brief ãƒœã‚¹ã®ç¨®é¡ã®å–å¾—ã€‚
+			* @param bossType ãƒœã‚¹ã®ç¨®é¡ã€‚
+			*/
+			inline int GetBossType() const
+			{
+				return m_bossType;
+			}
+
+			/**
+			* @brief å„ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼ã®å½¹å‰²ã®è¨­å®šã€‚
+			* @param playerIndex ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã€‚
+			*/
+			inline void SetCharacterRole(int playerIndex,int role)
+			{
+				m_characterRole[playerIndex] = role;
+			}
+
+			/**
+			* @brief å„ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼ã®å½¹å‰²ã®å–å¾—ã€‚
+			* @param playerIndex ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã€‚
+			* @return ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼ã®å½¹å‰²ã€‚
+			*/
+			inline int GetCharacterRole(int playerIndex)const
+			{
+				return m_characterRole[playerIndex];
+			}
+
 		private:
-			nsApp::nsSound::SoundLister* m_soundLister = nullptr; //! ƒTƒEƒ“ƒhƒŠƒXƒ^[B
-			nsApp::nsStage::BackGround* m_backGround = nullptr; //! ”wŒiB
+			nsApp::nsSound::SoundLister* m_soundLister = nullptr; //! ã‚µã‚¦ãƒ³ãƒ‰ãƒªã‚¹ã‚¿ãƒ¼ã€‚
+			nsApp::nsStage::BackGround* m_backGround = nullptr; //! èƒŒæ™¯ã€‚
 			nsApp::Camera* m_camera = nullptr;
+			nsActor::Player* m_player = nullptr;
+			nsActor::Boss* m_boss = nullptr;
 			CharacterHP* m_characterHP = nullptr;
 			GameTimeLimit* m_gameTimeLimit = nullptr;
 			GameStartDirection* m_gameStartDirection = nullptr;
@@ -111,9 +154,9 @@ namespace nsApp
 			GameOverDirection* m_gameOverDirection = nullptr;
 			GameEndSelect* m_gameEndSelect = nullptr;
 			Pause* m_pause = nullptr;
-			nsActor::Player* m_player = nullptr;   //! ƒvƒŒƒCƒ„[B
-			nsActor::Player* m_player2 = nullptr;  //! ƒvƒŒƒCƒ„[2B
-			nsActor::Sandbag* m_sandbag = nullptr; //! ƒTƒ“ƒhƒoƒbƒOB
+			PlayerGenerator* m_generator = nullptr;
+			int m_bossType = 0;
+			int m_characterRole[4] = { 0 }; //! ã‚­ãƒ£ãƒ©ã‚¯ã‚¿ãƒ¼ã”ã¨ã®å½¹å‰²ã€‚
 		};
 	}
 }

@@ -1,4 +1,5 @@
 #pragma once
+#include "Src/Sound/SoundLister.h"
 #include "Src/UIAnimation/UIAnimation.h"
 /**
  * @file Title.h。
@@ -8,6 +9,11 @@
  */
 namespace nsApp
 {
+	namespace nsSound {
+		class SoundLister;
+	}
+
+
 	namespace nsTitle
 	{
 		/**
@@ -193,6 +199,25 @@ namespace nsApp
 				return m_didSelect;
 			}
 
+			/**
+			* @brief BGMの再生。 
+			*/
+		    void StopBGM()
+			{
+				m_bgm->GetBGMList().StopBGM(); //! BGMを停止する。
+				DeleteGO(m_bgm);			   //! BGMクラスを削除する。
+				m_bgm = nullptr;			   //! 再初期化する。
+			}
+
+			/**
+			* @brief BGM用のインスタンスを取得する。
+			* @return BGM用のインスタンス。
+			*/
+			nsSound::SoundLister* GetBGMInstance() const
+			{
+				return m_bgm;
+			}
+
 		private:/*メンバ変数。*/
 			SpriteRender m_titleNameUI;/*タイトル名UI。*/
 			SpriteRender m_pressAButtonUI;/*Aボタンを押してくださいを促すUI。*/
@@ -204,6 +229,7 @@ namespace nsApp
 			bool m_isSlideUpDirection = false;/*スライド演出中(上)？*/
 			bool m_isSlideDownDirection = false;/*スライド演出中(下)？*/
 			bool m_didSelect;/*選択できたか？*/
+			nsSound::SoundLister* m_bgm = nullptr; /*BGM。*/
 
 		private:/*スプライトを表示するファイルパス用のメンバ変数。*/
 			std::string m_titleNameUIFilePath = "Assets/sprite/title/text/titleName.dds";/*タイトル名UIのファイルパス。*/

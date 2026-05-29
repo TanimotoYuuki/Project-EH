@@ -40,6 +40,15 @@ namespace nsApp
 				enCharacterFrameUI_Num/*キャラクター枠数。*/
 			};
 
+			/*NPC用のキャラクター枠UI。*/
+			enum EnNpcCharacterFrameUI : uint8_t
+			{
+				enNpcCharacterFrameUI_Two,/*2人目のキャラクター枠。*/
+				enNpcCharacterFrameUI_Three,/*3人目のキャラクター枠。*/
+				enNpcCharacterFrameUI_Four,/*4人目のキャラクター枠。*/
+				enNpcCharacterFrameUI_Num/*NPC用のキャラクター枠数。*/
+			};
+
 			/*ボタンUI。*/
 			enum EnButtonUI : uint8_t
 			{
@@ -83,6 +92,7 @@ namespace nsApp
 			enum EnSelectFauture : uint8_t
 			{
 				enSelectFauture_Character,/*キャラクター。*/
+				enSelectFauture_NpcCharacter,/*NPCキャラクター。*/
 				enSelectFauture_Deploy,/*出撃。*/
 				enSelectFauture_Num/*選択している内容の特徴数。*/
 			};
@@ -103,6 +113,9 @@ namespace nsApp
 				enSlideUIAnimationSprite_TwoCharacterFrameUI,/*2人目のキャラクター枠UI。*/
 				enSlideUIAnimationSprite_ThreeCharacterFrameUI,/*3人目のキャラクター枠UI。*/
 				enSlideUIAnimationSprite_FourCharacterFrameUI,/*4人目のキャラクター枠UI。*/
+				enSlideUIAnimationSprite_TwoNpcCharacterFrameUI,/*NPC用の2人目のキャラクタ枠UI。*/
+				enSlideUIAnimationSprite_ThreeNpcCharacterFrameUI,/*NPC用の3人目のキャラクタ枠UI。*/
+				enSlideUIAnimationSprite_FourNpcCharacterFrameUI,/*NPC用の4人目のキャラクタ枠UI。*/
 				enSlideUIAnimationSprite_DeploySelectUI,/*出撃選択UI。*/
 				enSlideUIAnimationSprite_DeployTextUI,/*出撃テキストUI。*/
 				enSlideUIAnimationSprite_Num/*UIアニメーションさせるスプライト数。*/
@@ -124,6 +137,9 @@ namespace nsApp
 				enSelectDirectionUIAnimationSprite_TwoCharacterFrameUI,/*2人目のキャラクター枠UI。*/
 				enSelectDirectionUIAnimationSprite_ThreeCharacterFrameUI,/*3人目のキャラクター枠UI。*/
 				enSelectDirectionUIAnimationSprite_FourCharacterFrameUI,/*4人目のキャラクター枠UI。*/
+				enSelectDirectionUIAnimationSprite_TwoNpcCharacterFrameUI,/*NPC用の2人目のキャラクタ枠UI。*/
+				enSelectDirectionUIAnimationSprite_ThreeNpcCharacterFrameUI,/*NPC用の3人目のキャラクタ枠UI。*/
+				enSelectDirectionUIAnimationSprite_FourNpcCharacterFrameUI,/*NPC用の4人目のキャラクタ枠UI。*/
 				enSelectDirectionUIAnimationSprite_DeploySelectUI,/*出撃選択UI。*/
 				enSelectDirectionUIAnimationSprite_DeployTextUI,/*出撃テキストUI。*/
 				enSelectDirectionUIAnimationSprite_Num/*適用するスプライト数。*/
@@ -152,6 +168,12 @@ namespace nsApp
 			* @param characterIndex キャラクターのインデックス。0なら1人目のキャラクター枠、1なら2人目のキャラクター枠、2なら3人目のキャラクター枠、3なら4人目のキャラクター枠。
 			*/
 			void InitCharacterFrameUI(EnCharacterFrameUI characterFrameUI,int characterIndex);
+
+			/**
+			* @brief NPC用のキャラクター枠UIの初期化。
+			* @param npcCharacterFrameUI NPC用のキャラクター枠UIの種類。
+			*/
+			void InitNpcCharacterFrameUI(EnNpcCharacterFrameUI npcCharacterFrameUI);
 
 			/**
 			* @brief 役職アイコンUIの初期化。
@@ -211,8 +233,9 @@ namespace nsApp
 			* @brief キャラクターモデルの生成。
 			* @param characterFrameUI キャラクター枠UIの種類。
 			* @param role 役職の種類。
+			* @param characterIndex キャラクターのインデックス。
 			*/
-			void CreateCharacterModel(EnCharacterFrameUI characterFrameUI, RoleSelect::EnRole role);
+			void CreateCharacterModel(EnCharacterFrameUI characterFrameUI, RoleSelect::EnRole role, int characterIndex);
 
 			/**
 			* @brief 選択の更新処理。
@@ -255,10 +278,17 @@ namespace nsApp
 			/**
 			* @brief 選択のリセット処理。
 			*/
-			inline void ResetSelect()
+			void ResetSelect()
 			{
 				m_currentSelect = enSelect_OneCharacter;
-				m_characterSelectUI.SetPosition(m_characterFrameUI[m_currentSelect].GetPosition());
+				if (m_isPlayerControle[m_currentSelect])
+				{
+					m_characterSelectUI.SetPosition(m_characterFrameUI[m_currentSelect].GetPosition());
+				}
+				else
+				{
+					m_characterSelectUI.SetPosition(m_npcCharacterFrameUI[m_currentSelect - 1].GetPosition());
+				}
 				m_characterSelectUI.Update();
 			}
 
@@ -335,6 +365,15 @@ namespace nsApp
 			inline const Vector3& GetCurrentSelectCharacterFrameUIPosition() const
 			{
 				return m_characterFrameUI[m_currentSelect].GetPosition();
+			}
+
+			/**
+			* @brief プレイヤーがキャラクターを操作する状態かどうかを取得。
+			* @return trueならプレイヤーがキャラクターを操作する状態。
+			*/
+			inline bool IsPlayerControle(int playerIndex) const
+			{
+				return m_isPlayerControle[playerIndex];
 			}
 
 			/**
@@ -499,6 +538,7 @@ namespace nsApp
 			SpriteRender m_memberSelectTextUI;/*メンバー選択テキストUI。*/
 			SpriteRender m_characterSelectUI;/*キャラクター選択UI。*/
 			SpriteRender m_characterFrameUI[enCharacterFrameUI_Num];/*キャラクター枠UI。*/
+			SpriteRender m_npcCharacterFrameUI[enNpcCharacterFrameUI_Num];/*NPC用のキャラクター枠UI。*/
 			SpriteRender m_roleIconUI[enCharacterFrameUI_Num][RoleSelect::EnRole::enRole_Num];/*役割アイコンUI。*/
 			SpriteRender m_characterFadeUI;/*キャラクターフェイドUI。*/
 			SpriteRender m_deploySelectUI;/*出撃選択UI。*/
@@ -513,6 +553,7 @@ namespace nsApp
 			std::unique_ptr<nsApp::nsUI::AlphaUIAnimation> m_alphaUIAnimation[enAlphaUIAnimationSprite_Num];/*透明度を変えるアニメーション。*/
 			std::unique_ptr<nsApp::nsUI::PositionUIAnimation> m_selectDirectionUIAnimation[enPosition_Num][enSelectDirectionUIAnimationSprite_Num];/*選択したときの演出UIアニメーション。*/
 			nsActor::IWeaponCharacter* m_characterModel[enCharacterFrameUI_Num][RoleSelect::EnRole::enRole_Num];/*キャラクターモデル。*/
+			bool m_isPlayerControle[enCharacterFrameUI_Num] = { true,true,true,true };/*プレイヤーがキャラクターを操作するか？*/
 			bool m_isDirection = false;/*演出中？*/
 			bool m_didSelect = false;/*選択できたか？*/
 			bool m_isBackSelect = false;/*前の選択に戻るか？*/
@@ -525,10 +566,15 @@ namespace nsApp
 			std::string m_characterSelectUIFilePath = "Assets/sprite/select/memberSelect/select/characterSelect.dds";/*キャラクター選択UIのファイルパス。*/
 			std::string m_characterFrameUIFilePath[enCharacterFrameUI_Num] = {
 				"Assets/sprite/select/memberSelect/characterFrame/onePlayer.dds",
+				"Assets/sprite/select/memberSelect/characterFrame/twoPlayer.dds",
+				"Assets/sprite/select/memberSelect/characterFrame/threePlayer.dds",
+				"Assets/sprite/select/memberSelect/characterFrame/fourPlayer.dds"
+			};/*キャラクター枠UIのファイルパス。*/
+			std::string m_npcCharacterFrameUIFilePath[enNpcCharacterFrameUI_Num] = {
 				"Assets/sprite/select/memberSelect/characterFrame/twoNpc.dds",
 				"Assets/sprite/select/memberSelect/characterFrame/threeNpc.dds",
 				"Assets/sprite/select/memberSelect/characterFrame/fourNpc.dds"
-			};/*キャラクター枠UIのファイルパス。*/
+			};/*NPC用のキャラクター枠UIのファイルパス。*/
 			std::string m_roleIconUIFilePath[enCharacterFrameUI_Num][RoleSelect::EnRole::enRole_Num] = {
 				"Assets/sprite/role/sword.dds", "Assets/sprite/role/hammer.dds", "Assets/sprite/role/mage.dds", "Assets/sprite/role/gunner.dds",
 				"Assets/sprite/role/sword.dds", "Assets/sprite/role/hammer.dds", "Assets/sprite/role/mage.dds", "Assets/sprite/role/gunner.dds",

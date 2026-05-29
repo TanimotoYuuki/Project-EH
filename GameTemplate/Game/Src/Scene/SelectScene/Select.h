@@ -7,11 +7,6 @@
  */
 namespace nsApp
 {
-	namespace nsOption
-	{
-		class Option;
-	}
-
 	namespace nsSelect
 	{
 		/*選択クラス。*/
@@ -90,22 +85,12 @@ namespace nsApp
 				return m_confirmationSelect;
 			}
 
-			/**
-			* @brief 設定用のインスタンスの取得。
-			* @return 設定用のインスタンス。
-			*/
-			nsApp::nsOption::Option* GetOptionInstance()
-			{
-				return m_option;
-			}
-
 		private:/*メンバ変数。*/
 			SpriteRender m_backGround;/*背景。*/
 			QuestSelect* m_questSelect = nullptr;/*クエスト選択用のインスタンス。*/
 			MemberSelect* m_memberSelect = nullptr;/*メンバー選択用のインスタンス。*/
 			RoleSelect* m_roleSelect = nullptr;/*役職選択用のインスタンス。*/
 			ConfirmationSelect* m_confirmationSelect = nullptr;/*確認選択用のインスタンス。*/
-			nsApp::nsOption::Option* m_option = nullptr;/*設定用のインスタンス。*/
 
 		private:/*スプライトを表示するファイルパス用のメンバ変数。*/
 			std::string m_backGroundFilePath = "Assets/sprite/select/background/background.dds";

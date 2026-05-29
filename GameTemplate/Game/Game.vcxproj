@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -223,6 +223,27 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BiteAttackStrategy.cpp" />
+    <ClCompile Include="Boss.cpp" />
+    <ClCompile Include="BossAnimation.cpp" />
+    <ClCompile Include="BossAttackState.cpp" />
+    <ClCompile Include="BossDamageState.cpp" />
+    <ClCompile Include="BossDethState.cpp" />
+    <ClCompile Include="BossIdleState.cpp" />
+    <ClCompile Include="BossMoveState.cpp" />
+    <ClCompile Include="BossRoarState.cpp" />
+    <ClCompile Include="FireAttackStrategy.cpp" />
+    <ClCompile Include="Game2.cpp" />
+    <ClCompile Include="PlayerControlerHub.cpp" />
+    <ClCompile Include="Src\Actor\Character\NPC\State\AttackState\NPCTwinGunAttackState.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\InputSystem\VirtualInputAdapter.cpp" />
+    <ClCompile Include="Src\Actor\Magic\Factory\MagicFactory.cpp" />
+    <ClCompile Include="Src\Actor\Magic\Parameter\MagicParameterTable.cpp" />
+    <ClCompile Include="Src\Actor\Magic\Parameter\MagicParameter.cpp" />
+    <ClCompile Include="Src\Actor\Character\NPC\State\AttackState\NPCAttackBaseState.cpp" />
+    <ClCompile Include="Src\Actor\Gun\Bullet\IGunBullet.cpp" />
+    <ClCompile Include="Src\Effect\EffectListener.cpp" />
+    <ClCompile Include="Src\Actor\Gun\Factory\BulletFactory.cpp" />
     <ClCompile Include="CharacterHP.cpp" />
     <ClCompile Include="Src\Select\ConfirmationSelect.cpp" />
     <ClCompile Include="Src\Direction\GameClearDirection.cpp" />
@@ -233,17 +254,28 @@
     <ClCompile Include="Option.cpp" />
     <ClCompile Include="Src\Scene\InGame\Pause.cpp" />
     <ClCompile Include="Src\Scene\ResultScene\Result.cpp" />
+    <ClCompile Include="Src\Actor\Character\NPC\NPCBrain.cpp" />
+    <ClCompile Include="Src\Actor\Character\NPC\State\AttackState\NPCHammerAttackState.cpp" />
+    <ClCompile Include="Src\Actor\Character\NPC\State\AttackState\NPCSwordAttackState.cpp" />
+    <ClCompile Include="Src\Actor\Character\NPC\State\AttackState\NPCWandAttackState.cpp" />
+    <ClCompile Include="Src\Actor\Character\NPC\State\BasicState\NPCChaseState.cpp" />
+    <ClCompile Include="Src\Actor\Character\NPC\State\BasicState\NPCIdleState.cpp" />
     <ClCompile Include="Src\Actor\Character\Player\CharacterByWeapon\HammerCharacter.cpp" />
     <ClCompile Include="Src\Actor\Character\Player\CharacterByWeapon\IWeaponCharacter.cpp" />
     <ClCompile Include="Src\Actor\Character\Player\CharacterByWeapon\SwordCharacter.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\CharacterByWeapon\TwinGunCharacter.cpp" />
     <ClCompile Include="Src\Actor\Character\Player\CharacterByWeapon\WandCharacter.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\Component\PlayerGenerator.cpp" />
     <ClCompile Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerHeavyAttackState.cpp" />
     <ClCompile Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerHeelMagicState.cpp" />
     <ClCompile Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerMagicAttackState.cpp" />
+    <ClCompile Include="Src\Actor\Gun\Register\BulletModelRegister.cpp" />
+    <ClCompile Include="Src\Actor\Gun\Parameter\BulletParameterTable.cpp" />
+    <ClCompile Include="Src\Actor\Gun\Shooter\GunShooter.cpp" />
     <ClCompile Include="Src\Actor\Magic\MagicProjectotile.cpp" />
     <ClCompile Include="Src\Scene\SelectScene\RoleSelect.cpp" />
     <ClCompile Include="Src\Fade\Fade.cpp" />
-    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="IBossAttackStrategy.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Src\Scene\SelectScene\MemberSelect.cpp" />
     <ClCompile Include="Src\Scene\SelectScene\QuestSelect.cpp" />
@@ -279,7 +311,6 @@
     <ClCompile Include="Src\Actor\Character\Player\State\BasicState\PlayerWalkState.cpp" />
     <ClCompile Include="Src\Actor\Stage\LoadStageData.cpp" />
     <ClCompile Include="Src\Actor\Stage\Stage.cpp" />
-    <ClCompile Include="Src\Debug\Sandbag.cpp" />
     <ClCompile Include="Src\Effect\EffectList.cpp" />
     <ClCompile Include="Src\SceneLoader\SceneLoader.cpp" />
     <ClCompile Include="Src\Sound\BGMList.cpp" />
@@ -292,6 +323,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Preview|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="system\system.cpp" />
+    <ClCompile Include="TailAttackStrategy.cpp" />
     <ClCompile Include="GameTimeLimit.cpp" />
     <ClCompile Include="Src\Direction\GameTimeUpDirection.cpp" />
     <ClCompile Include="Src\Scene\TitleScene\Title.cpp" />
@@ -299,8 +331,35 @@
     <ClCompile Include="Src\UIAnimation\UIAnimation.cpp" />
     <ClCompile Include="Src\Scene\TitleScene\TitleBackGround.cpp" />
     <ClCompile Include="Src\Scene\TitleScene\TitleSelect.cpp" />
+    <ClCompile Include="Src\Debug\Sandbag.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BiteAttackStrategy.h" />
+    <ClInclude Include="Boss.h" />
+    <ClInclude Include="BossAnimation.h" />
+    <ClInclude Include="BossAttackState.h" />
+    <ClInclude Include="BossDamageState.h" />
+    <ClInclude Include="BossDethState.h" />
+    <ClInclude Include="BossIdleState.h" />
+    <ClInclude Include="BossMoveState.h" />
+    <ClInclude Include="BossRoarState.h" />
+    <ClInclude Include="FireAttackStrategy.h" />
+    <ClInclude Include="Game2.h" />
+    <ClInclude Include="PlayerControlerHub.h" />
+    <ClInclude Include="Src\Actor\Character\Player\InputSystem\GamePadInputAdapter.h" />
+    <ClInclude Include="IBossAttackStrategy.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\State\AttackState\NPCTwinGunAttackState.h" />
+    <ClInclude Include="Src\Actor\Character\Player\InputSystem\IInputDevice.h" />
+    <ClInclude Include="Src\Actor\Character\Player\InputSystem\VirtualInputAdapter.h" />
+    <ClInclude Include="Src\Actor\Magic\Factory\MagicFactory.h" />
+    <ClInclude Include="Src\Actor\Magic\Parameter\MagicParameterTable.h" />
+    <ClInclude Include="Src\Actor\Magic\Parameter\MagicParameter.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\State\AttackState\NPCAttackBaseState.h" />
+    <ClInclude Include="Src\Effect\EffectListener.h" />
+    <ClInclude Include="Src\Actor\Gun\Shooter\BulletFireRequest.h" />
+    <ClInclude Include="Src\Actor\Gun\Shooter\IBulletFireListener.h" />
+    <ClInclude Include="Src\Actor\Gun\Parameter\BulletParameter.h" />
+    <ClInclude Include="Src\Actor\Gun\Factory\BulletFactory.h" />
     <ClInclude Include="CharacterHP.h" />
     <ClInclude Include="Src\Select\ConfirmationSelect.h" />
     <ClInclude Include="Src\Direction\GameClearDirection.h" />
@@ -311,13 +370,25 @@
     <ClInclude Include="Option.h" />
     <ClInclude Include="Src\Scene\InGame\Pause.h" />
     <ClInclude Include="Src\Scene\ResultScene\Result.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\NPCBrain.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\State\AttackState\NPCHammerAttackState.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\State\AttackState\NPCSwordAttackState.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\State\AttackState\NPCWandAttackState.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\State\BasicState\NPCChaseState.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\State\BasicState\NPCIdleState.h" />
     <ClInclude Include="Src\Actor\Character\Player\CharacterByWeapon\HammerCharacter.h" />
     <ClInclude Include="Src\Actor\Character\Player\CharacterByWeapon\IWeaponCharacter.h" />
     <ClInclude Include="Src\Actor\Character\Player\CharacterByWeapon\SwordCharacter.h" />
+    <ClInclude Include="Src\Actor\Character\Player\CharacterByWeapon\TwinGunCharacter.h" />
     <ClInclude Include="Src\Actor\Character\Player\CharacterByWeapon\WandCharacter.h" />
+    <ClInclude Include="Src\Actor\Character\Player\Component\PlayerGenerator.h" />
+    <ClInclude Include="Src\Actor\Character\Player\Component\PlayerSpawnData.h" />
     <ClInclude Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerHeavyAttackState.h" />
     <ClInclude Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerHeelMagicState.h" />
     <ClInclude Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerMagicAttackState.h" />
+    <ClInclude Include="Src\Actor\Gun\Register\BulletModelRegister.h" />
+    <ClInclude Include="Src\Actor\Gun\Bullet\IGunBullet.h" />
+    <ClInclude Include="Src\Actor\Gun\Parameter\BulletParameterTable.h" />
     <ClInclude Include="Src\Actor\Magic\MagicProjectotile.h" />
     <ClInclude Include="Src\Scene\SelectScene\RoleSelect.h" />
     <ClInclude Include="Src\Fade\Fade.h" />
@@ -359,7 +430,6 @@
     <ClInclude Include="Src\Actor\Stage\LoadStageData.h" />
     <ClInclude Include="Src\Actor\Stage\Stage.h" />
     <ClInclude Include="Src\Actor\Stage\StageData.h" />
-    <ClInclude Include="Src\Debug\Sandbag.h" />
     <ClInclude Include="Src\Effect\EffectList.h" />
     <ClInclude Include="Src\SceneLoader\SceneLoader.h" />
     <ClInclude Include="Src\Sound\BGMList.h" />
@@ -369,6 +439,7 @@
     <ClInclude Include="Src\StateMachine\StateMachine.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="system\system.h" />
+    <ClInclude Include="TailAttackStrategy.h" />
     <ClInclude Include="GameTimeLimit.h" />
     <ClInclude Include="Src\Direction\GameTimeUpDirection.h" />
     <ClInclude Include="Src\Scene\TitleScene\Title.h" />
@@ -376,6 +447,7 @@
     <ClInclude Include="Src\Actor\Character\Common\WeaponHitDetection.h" />
     <ClInclude Include="Src\Scene\TitleScene\TitleBackGround.h" />
     <ClInclude Include="Src\Scene\TitleScene\TitleSelect.h" />
+    <ClInclude Include="Src\Debug\Sandbag.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
