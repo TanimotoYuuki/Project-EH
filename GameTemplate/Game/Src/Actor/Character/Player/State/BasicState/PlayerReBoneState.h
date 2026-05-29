@@ -27,7 +27,7 @@ namespace nsApp
 			void Update() override;
 			void Exit() override;
 			bool RequestID(uint8_t& id) override { return false; };
-			 
+
 
 		public:
 			/**

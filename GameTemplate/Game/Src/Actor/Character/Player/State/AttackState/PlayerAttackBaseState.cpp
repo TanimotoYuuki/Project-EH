@@ -4,18 +4,45 @@
 #include "Src/Actor/Character/Player/State/BasicState/PlayerWalkState.h"
 #include "Src/Actor/Character/Player/State/BasicState/PlayerRunState.h"
 #include "Src/Actor/Character/Common/Damage/DamageProcessor.h"
+#include "Src/UI/Commentary/CommentaryUIManager.h"
 
 #include "Src/Actor/Character/Status/AttackParameterTable.h"
 #include "Src/Actor/Magic/Factory/MagicFactory.h"
 #include "Boss.h"
 
+#include <algorithm>
+#include <cstdlib>
+
+
 namespace
 {
+	const int CRITICAL_PERCENTAGE = 100;
 	const auto ATTACK_END_FRAME = 5;			//! 攻撃終了フレーム。
 	const auto RUSH_COMBO_THRESHOLD = 2;		//! 連続攻撃の閾値。
 	const auto HIT_STOP_FRAME = 8;              //! ヒットストップのフレーム数。
 	const auto DAMAGE_TEXT_OFFSET_Y = 120.0f;   //! ダメージテキストのY軸オフセット。
-	const auto CRITICAL_PERCENTAGE = 100.0f;    //! クリティカル発生確立。
+
+	/**
+	 * @brief 値を指定範囲内に収める。
+	 * @param value 値。
+	 * @param minValue 最小値。
+	 * @param maxValue 最大値。
+	 * @return 範囲内に収めた値。
+	 */
+	float ClampFloat(float value, float minValue, float maxValue)
+	{
+		/* 最小値を補正。*/
+		if (value < minValue)
+			return minValue;
+
+		/* 最大値を補正。*/
+		if (value > maxValue)
+			return maxValue;
+
+		/* 補正値を返す。*/
+		return value;
+	}
+
 }
 
 namespace nsApp
@@ -34,7 +61,11 @@ namespace nsApp
 			OnCommonInitializeToEnter();
 
 			/* アニメーションの再生と固有の初期化は派生クラスに譲渡。*/
-			PlayAttackAnimation(); 
+			PlayAttackAnimation();
+
+			/* 攻撃内容を実況UIへ通知する。*/
+			NotifyAttackCommentary();
+
 			OnEnterAttack();
 		}
 
@@ -46,10 +77,6 @@ namespace nsApp
 
 			/* 入力クラスを取得する。*/
 			const auto& inputClass = m_player->GetInputClass();
-
-
-			// @TODO: リファ。
-/////////////////////////////////////////////////////////////////////////////////////////////////
 
 			/* Bボタンアクション。*/
 			if (inputClass.IsAttack())
@@ -111,7 +138,6 @@ namespace nsApp
 					return;
 				}
 			}
-			///////////////////////////////////////////////////////////////////////////////////////////////////
 		}
 
 
@@ -133,13 +159,70 @@ namespace nsApp
 		}
 
 
+		void PlayerAttackBaseState::NotifyAttackCommentary()
+		{
+			if (m_player == nullptr)
+				return;
+
+			const auto actionName = GetCommentaryActionName();
+			if (actionName.empty())
+				return;
+
+			auto* commentary = FindGO<nsUI::CommentaryUIManager>("CommentaryUIManager");
+			if (commentary == nullptr)
+				return;
+
+			commentary->AddActionMessage(m_player->GetCurrentWeapon(), actionName);
+		}
+
+
+		std::wstring PlayerAttackBaseState::GetCommentaryActionName() const
+		{
+			switch (m_currentAttackType)
+			{
+			case AttackType::NormalAttack:
+				return L"こうげき！";
+
+			case AttackType::HeavyAttack:
+				return L"いちげき！";
+
+			case AttackType::ChargeAttack:
+				return L"ためこうげき！";
+
+			case AttackType::HeelMagic:
+				return L"かいふく！";
+
+			case AttackType::MagicAttack:
+				return L"まほう！";
+
+			case AttackType::AirAttack:
+				return L"くうちゅう！";
+
+			case AttackType::RushAttack_Start:
+				return L"れんぞく！";
+
+			case AttackType::RushAttack_End:
+				return L"フィニッシュ！";
+
+			case AttackType::SlashUp:
+				return L"コンボ！";
+
+			case AttackType::PushForward:
+				return L"とっしん！";
+
+			default:
+				return L"";
+			}
+		}
+
+
 		bool PlayerAttackBaseState::CheckCombo(PLAYER_STATE_ID currentStateID, uint8_t& id)
 		{
 			/* playerクラスが存在するか検知。*/
 			if (!m_player)
 				return false;
 
-			/* 地上にいるかどうかを確認。*/ 
+			/* 地上にいるかどうかを確認。*/
 			m_isGrounded = m_player->GetCharacterController().IsOnGround();
 
 			/* ステートIDと地上にいるかどうかを検知させる。*/
@@ -181,18 +264,28 @@ namespace nsApp
 
 		int PlayerAttackBaseState::CalculateFinalDamage() const
 		{
-			/* 攻撃力を取得。*/
-			const auto& playerStatus = m_player->GetCharacterStatus().attack;
-			/* 現在の攻撃パラメーターの情報を取得する。*/
-			const auto& attackParameter = AttackParameterTable::GetAttackParameter(m_currentAttackType);
-			
-			/* ダメージ計算。*/
-		    auto finalDamage = static_cast<int>(playerStatus.normalDamage * attackParameter.damageMultiplier);
-			const auto criticalRate = playerStatus.criticalRate + attackParameter.criticalRatel;
+			if (m_player == nullptr)
+				return 0;
 
-			/* クリティカル判定。*/
-			if ((rand() % static_cast<int>(CRITICAL_PERCENTAGE)) < (criticalRate + CRITICAL_PERCENTAGE))
+			const auto& playerStatus = m_player->GetCharacterStatus().attack;
+			const auto& attackParameter = AttackParameterTable::GetAttackParameter(m_currentAttackType);
+
+			int finalDamage = static_cast<int>(playerStatus.normalDamage * attackParameter.damageMultiplier);
+
+			float criticalRate = playerStatus.criticalRate + attackParameter.criticalRatel;
+			criticalRate = ClampFloat(criticalRate, 0.0f, 1.0f);
+
+			const int criticalThreshold = static_cast<int>(
+				criticalRate * static_cast<float>(CRITICAL_PERCENTAGE)
+				);
+
+			if ((rand() % CRITICAL_PERCENTAGE) < criticalThreshold)
 				finalDamage = static_cast<int>(finalDamage * playerStatus.criticalDamage);
+
+			finalDamage = static_cast<int>(finalDamage * m_player->GetAttackDamageRate());
+
+			if (finalDamage <= 0 && attackParameter.damageMultiplier > 0.0f)
+				finalDamage = 1;
 
 			return finalDamage;
 		}

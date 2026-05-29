@@ -204,13 +204,13 @@ namespace nsApp
 		void Player::InitAttackStatus()
 		{
 			/* 基本ダメージ数の初期化。*/
-			m_characterStatus.attack.normalDamage = 50.0f;
+			m_characterStatus.attack.normalDamage = 40.0f;
 
 			/* クリティカル率の初期化。*/
-			m_characterStatus.attack.criticalRate = 0.1f;
+			m_characterStatus.attack.criticalRate = 0.05f;
 
 			/* クリティカルダメージの初期化。*/
-			m_characterStatus.attack.criticalDamage = 2.0f;
+			m_characterStatus.attack.criticalDamage = 1.5f;
 
 			/* 最大HPを初期化する。*/
 			m_characterStatus.hp.maxHP = 1000;

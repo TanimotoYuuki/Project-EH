@@ -196,6 +196,18 @@ namespace nsApp
 				m_playerInput.SetInputEnable(isEnable);
 			}
 
+			/**
+			 * @brief 攻撃ダメージ補正率を設定する。
+			 * @param damageRate 攻撃ダメージ補正率。
+			 */
+			inline void SetAttackDamageRate(float damageRate)
+			{
+				if (damageRate < 0.0f)
+					damageRate = 0.0f;
+
+				m_attackDamageRate = damageRate;
+			}
+
 			/*
 			 * @brief 入力時間を設定。
 			 * @param timer 入力時間。
@@ -331,6 +343,15 @@ namespace nsApp
 				return m_currentWeapon;
 			}
 
+			/**
+			 * @brief 攻撃ダメージ補正率を取得する。
+			 * @return 攻撃ダメージ補正率。
+			 */
+			inline float GetAttackDamageRate() const
+			{
+				return m_attackDamageRate;
+			}
+
 			/* エフェクトの大きさを取得する。*/
 			inline int GetEffectScale()
 			{
@@ -403,6 +424,7 @@ namespace nsApp
 			CharacterModelType m_modelType;                                                                        //! プレイヤーのモデルの種類。
 			WeaponHitDetection m_weaponHitDetection;                                                               //! 武器の当たり判定を管理するクラス。
 			WeaponType m_currentWeapon = WeaponType::None;                                                         //! 現在の武器。@TODO 武器の種類を増やす際に要調整。
+			float m_attackDamageRate = 1.0f;                                                              //! 攻撃ダメージ補正率。
 			RescueStatusLister m_rescueStatusManager;															   //! 救助状態管理クラス
 
 

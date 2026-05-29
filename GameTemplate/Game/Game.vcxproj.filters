@@ -228,7 +228,6 @@
     <ClCompile Include="Src\Actor\Character\NPC\State\AttackState\NPCTwinGunAttackState.cpp" />
     <ClCompile Include="Src\Actor\Character\Player\InputSystem\VirtualInputAdapter.cpp" />
     <ClCompile Include="Src\Actor\Character\Player\InputSystem\PlayerControlerHub.cpp" />
-    <ClCompile Include="Src\Debug\Sandbag.cpp" />
     <ClCompile Include="BossRoarState.cpp" />
     <ClCompile Include="Src\Actor\Character\Common\Damage\DamageProcessor.cpp" />
     <ClCompile Include="Src\Actor\Character\Common\Damage\DamageIndicatorPool.cpp" />
@@ -240,6 +239,8 @@
     <ClCompile Include="Src\UI\ReboneGage\ReboneGaugeUI.cpp" />
     <ClCompile Include="Src\UI\ReboneGage\ReboneGageManager.cpp" />
     <ClCompile Include="Src\Actor\Character\NPC\Component\RescueStatusLister.cpp" />
+    <ClCompile Include="Src\UI\Commentary\CommentaryUI.cpp" />
+    <ClCompile Include="Src\UI\Commentary\CommentaryUIManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -431,7 +432,6 @@
     <ClInclude Include="Src\Actor\Character\Player\InputSystem\GamePadInputAdapter.h" />
     <ClInclude Include="Src\Actor\Character\Player\InputSystem\VirtualInputAdapter.h" />
     <ClInclude Include="Src\Actor\Character\Player\InputSystem\PlayerControlerHub.h" />
-    <ClInclude Include="Src\Debug\Sandbag.h" />
     <ClInclude Include="BossRoarState.h" />
     <ClInclude Include="Src\Actor\Character\Common\Damage\DamageRequest.h" />
     <ClInclude Include="Src\Actor\Character\Common\Damage\DamageProcessor.h" />
@@ -446,6 +446,9 @@
     <ClInclude Include="Src\UI\ReboneGage\ReboneGaugeUI.h" />
     <ClInclude Include="Src\UI\ReboneGage\ReboneGageManager.h" />
     <ClInclude Include="Src\Actor\Character\NPC\Component\RescueStatusLister.h" />
+    <ClInclude Include="Src\UI\Commentary\CommentaryMessage.h" />
+    <ClInclude Include="Src\UI\Commentary\CommentaryUI.h" />
+    <ClInclude Include="Src\UI\Commentary\CommentaryUIManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Src\Actor\Character\Common\Pool\GameObjectPool.inl" />

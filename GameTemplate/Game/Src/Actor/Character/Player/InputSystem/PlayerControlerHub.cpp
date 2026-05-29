@@ -4,6 +4,12 @@
 #include "Src/Actor/Character/Player/InputSystem/GamePadInputAdapter.h"
 #include "Src/Actor/Character/Player/InputSystem/VirtualInputAdapter.h"
 
+namespace
+{
+	const auto PLAYER_ATTACK_DAMAGE_RATE = 1.0f; //! 操作中キャラクターの攻撃補正。
+	const auto NPC_ATTACK_DAMAGE_RATE = 0.4f;    //! NPC操作キャラクターの攻撃補正。
+}
+
 namespace nsApp
 {
 	void PlayerControlerHub::Initialize(const vector<nsActor::Player*>& players, const vector<PlayerSpawnData>& spawnDataList)
@@ -49,7 +55,7 @@ namespace nsApp
 		{
 			m_nextPadIndex = (m_activePlayerIndex + 1) % m_players.size();
 			SwitchActivePlayers(m_nextPadIndex);
-		}			
+		}
 	}
 
 
@@ -60,7 +66,7 @@ namespace nsApp
 			return;
 
 		/* リセット。*/
-		if(m_gamePad)
+		if (m_gamePad)
 			m_gamePad->Reset();
 		for (auto& adapter : m_adapters)
 			adapter->Reset();
@@ -68,13 +74,18 @@ namespace nsApp
 
 		for (int i = 0; i < m_players.size(); ++i)
 		{
-			if(i == targetIndex)
-				/* 接続先を切り替える。*/
-				m_players[i]->GetInputClass().SetInputDevice(m_gamePad.get());
+			const bool isActivePlayer = (i == targetIndex);
 
+			if (isActivePlayer)
+			{
+				m_players[i]->GetInputClass().SetInputDevice(m_gamePad.get());
+				m_players[i]->SetAttackDamageRate(PLAYER_ATTACK_DAMAGE_RATE);
+			}
 			else
-				/* 新しい操作キャラを物理パッドに切り替え。*/
+			{
 				m_players[i]->GetInputClass().SetInputDevice(m_adapters[i].get());
+				m_players[i]->SetAttackDamageRate(NPC_ATTACK_DAMAGE_RATE);
+			}
 		}
 
 		/* インデックスを更新。*/

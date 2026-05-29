@@ -14,9 +14,10 @@
 
 namespace
 {
-	const auto HELP_RANGE = 80.0f;           //! 味方を救助可能な距離
-	const auto ATTACK_RANGE_MELEE = 150.0f;   //! 近接職（剣・ハンマー）が攻撃を開始する距離
-	const auto ATTACK_RANGE_MAGIC = 250.0f;  //! 遠距離職（杖）が攻撃を開始する距離
+	const auto HELP_RANGE = 80.0f;             //! 味方を救助可能な距離。
+	const auto ATTACK_RANGE_MELEE = 150.0f;    //! 近接職の基準攻撃距離。
+	const auto ATTACK_RANGE_MAGIC = 250.0f;    //! 遠距離職の基準攻撃距離。
+	const auto MOVE_DEAD_ZONE = 0.001f;        //! 正規化前の安全判定。
 }
 
 namespace nsApp
@@ -25,13 +26,19 @@ namespace nsApp
 	{
 		void NPCChaseState::Enter()
 		{
-			/* キャスト。*/
 			m_brain = static_cast<NPCBrain*>(m_owner);
-			m_body = m_brain->GetBody();
-			if(m_body)
-				m_vInput = m_brain->GetVirtualInputAdapter();
-		}
+			if (m_brain == nullptr)
+			{
+				m_body = nullptr;
+				m_vInput = nullptr;
+				return;
+			}
 
+			m_body = m_brain->GetBody();
+			m_vInput = m_brain->GetVirtualInputAdapter();
+
+			ClearMoveInput();
+		}
 
 		void NPCChaseState::Update()
 		{
@@ -45,7 +52,7 @@ namespace nsApp
 				if (helpTarget != m_body &&
 					(helpTarget->IsDeath() || helpTarget->GetCharacterStatus().hp.currentHP <= 0))
 				{
-					m_vInput->Reset();
+					ClearMoveInput();
 
 					if (m_stateMachine != nullptr)
 						m_stateMachine->ChangeState(new NPCHelpState(helpTarget));
@@ -54,103 +61,117 @@ namespace nsApp
 				}
 			}
 
-			auto target = m_brain->SearchTarget();
+			auto* target = m_brain->SearchTarget();
 			ExecuteChaseAction(target);
+		}
+
+		void NPCChaseState::Exit()
+		{
+			ClearMoveInput();
+
+			m_brain = nullptr;
+			m_body = nullptr;
+			m_vInput = nullptr;
 		}
 
 		bool NPCChaseState::ExecuteHelpAction(nsActor::Player* helpTarget)
 		{
-			if (helpTarget == nullptr)
+			if (helpTarget == nullptr || m_body == nullptr || m_vInput == nullptr)
 				return false;
 
 			ComputeDistance(helpTarget);
 
-			m_difference = helpTarget->GetPosition() - m_body->GetPosition();
-			if (m_difference.Length() > 80.0f)
+			if (m_distance > HELP_RANGE)
 			{
-				/* 距離が遠ければ近づく。*/
-				m_difference.Normalize();
-				m_vInput->SetLStick(m_difference.x, m_difference.z);
+				MoveTowardTarget();
 			}
-
 			else
 			{
-				/* 近づくとYボタンで救助。*/
-				m_vInput->SetLStick(0.0f, 0.0f);
-				m_vInput->RequestButton(enButtonY,3);
+				ClearMoveInput();
+				m_vInput->RequestButton(enButtonY, 3);
 			}
+
 			return true;
 		}
-
 
 		void NPCChaseState::ExecuteChaseAction(nsActor::ICharacter* target)
 		{
 			if (target == nullptr)
 			{
-				/* 敵がいないなら待機ステートへ */
-				m_stateMachine->ChangeState(new NPCIdleState());
+				ClearMoveInput();
+
+				if (m_stateMachine != nullptr)
+					m_stateMachine->ChangeState(new NPCIdleState());
+
 				return;
 			}
 
-			/* 武器に応じて攻撃開始距離を変える */
 			m_myWeapon = m_body->GetCurrentWeapon();
 			m_attackRange = CharacterToBeChosen(m_myWeapon);
 
-			/* 距離を計算する。*/
 			ComputeDistance(target);
 
-			/* 距離を検知。*/
 			if (m_distance > m_attackRange)
 			{
-				/* 距離が遠ければ近づく */
-				m_difference.Normalize();
-				m_vInput->SetLStick(m_difference.x, m_difference.z);
+				MoveTowardTarget();
+				return;
 			}
-			else
-			{
-				/* 近づいたら立ち止まって攻撃ステートへ遷移 */
-				m_vInput->SetLStick(0.0f, 0.0f);
 
-				/* 攻撃ができるかチェックする。*/
-				if (!m_brain->CanAttack())
-				{
-					m_sideMove = Vector3(-m_difference.x, 0.0f, m_difference.z);
-					if (m_sideMove.LengthSq() > 0.001f)
-					{
-						/* 正規化。*/
-						m_sideMove.Normalize();
-						m_vInput->SetLStick(m_sideMove.x * 0.4f, m_sideMove.z * 0.4f);
-					}
-					return;
-				}
+			/* 攻撃範囲内では必ず止まる。
+			 * 以前の横移動処理は、攻撃待機中に毎フレーム入力が入り続けるため、
+			 * NPCが高速で左右にうろうろする原因になりやすい。
+			 */
+			ClearMoveInput();
 
-				/* 攻撃ステートへ遷移する。*/
-				TransitionToAttackState();
-			}
+			if (!m_brain->CanAttack())
+				return;
+
+			TransitionToAttackState();
 		}
-
 
 		void NPCChaseState::TransitionToAttackState()
 		{
-			/* 現在の武器を取得する。*/
+			if (m_stateMachine == nullptr || m_body == nullptr)
+				return;
+
+			ClearMoveInput();
+
 			m_myWeapon = m_body->GetCurrentWeapon();
 
-			/* 杖の場合。*/
 			if (m_myWeapon == WeaponType::Wand)
 				m_stateMachine->ChangeState(new NPCWandAttackState());
-
-			/* ハンマーの場合。*/
 			else if (m_myWeapon == WeaponType::Hammer)
 				m_stateMachine->ChangeState(new NPCHammerAttackState());
-
-			/* それ以外の場合。*/
 			else if (m_myWeapon == WeaponType::TwinGun)
 				m_stateMachine->ChangeState(new NPCTwinGunAttackState());
-
 			else
 				m_stateMachine->ChangeState(new NPCSwordAttackState());
 		}
 
+		void NPCChaseState::ClearMoveInput()
+		{
+			if (m_vInput == nullptr)
+				return;
+
+			m_vInput->SetLStick(0.0f, 0.0f);
+			m_vInput->SetButton(enButtonLB1, false);
+		}
+
+		void NPCChaseState::MoveTowardTarget()
+		{
+			if (m_vInput == nullptr)
+				return;
+
+			if (m_distance <= MOVE_DEAD_ZONE || m_difference.LengthSq() <= MOVE_DEAD_ZONE)
+			{
+				ClearMoveInput();
+				return;
+			}
+
+			m_difference.Normalize();
+			m_vInput->SetLStick(m_difference.x, m_difference.z);
+			m_vInput->SetButton(enButtonLB1, false);
+		}
 
 		float NPCChaseState::CharacterToBeChosen(WeaponType type) const
 		{

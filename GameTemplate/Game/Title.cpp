@@ -59,9 +59,13 @@ namespace nsApp
 			/*フェードインに切り替える。*/
 			nsApp::nsFade::Fade::GetInstance()->ChangeFadeType(nsApp::nsFade::Fade::EnFadeType::enFadeType_FadeIn);/*フェードイン開始。*/
 
-			/* タイトルBGMを再生。*/
-			m_bgm = NewGO<nsSound::SoundLister>(0, "SoundManager");
-			m_bgm->GetBGMList().Init();
+			/* 音源クラスを生成する。*/ 
+			m_bgm = FindGO<nsSound::SoundLister>("SoundManager");
+
+			if (m_bgm == nullptr)
+				m_bgm = NewGO<nsSound::SoundLister>(0, "SoundManager");
+
+			m_bgm->InitSound();
 			m_bgm->GetBGMList().PlayBGM(nsSound::BGM_ID::Title, 1.0f);
 
 			return true;
@@ -85,13 +89,11 @@ namespace nsApp
 				/*Aボタンを押したら選択シーンに遷移する処理をかける。*/
 				if (g_pad[0]->IsTrigger(enButtonA))
 				{
+					StopBGM();
+
 					/*フェードアウトに切り替え。*/
 					nsApp::nsFade::Fade::GetInstance()->ChangeFadeType(nsApp::nsFade::Fade::EnFadeType::enFadeType_FadeOut);
 					m_didSelect = true;
-
-					/* BGNの停止処理。*/
-					if (m_bgm != nullptr)
-						StopBGM();
 				}
 			}
 
