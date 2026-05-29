@@ -58,6 +58,13 @@ namespace nsApp
 		{
 			return m_stickY;
 		}
+		
+		void RequestButton(nsK2EngineLow::EnButton button, int holdFrame)
+		{
+			m_buttonIndex = static_cast<int>(button);
+			m_buttonHoldFrames[m_buttonIndex] = holdFrame;
+			m_currentButtons[m_buttonIndex] = true;
+		}
 
 
 	public:
@@ -87,8 +94,11 @@ namespace nsApp
 	private:
 		std::unordered_map<int, bool> m_currentButtons;		//! 現在のボタンの状態を保存するマップ。
 		std::unordered_map<int, bool> m_previousButtons;	//! 前フレームのボタンの状態を保存するマップ。
+		std::unordered_map<int, int> m_buttonHoldFrames;    //! ボタンのホールドフレーム数を管理するマップ。
 
 		float m_stickX = 0.0f;								//! 現在の左スティックのX軸の値。
 		float m_stickY = 0.0f;								//! 現在の左スティックのY軸の値。
+
+		int m_buttonIndex = 0;								//! ボタンのインデックスを管理する変数。
 	};
 }

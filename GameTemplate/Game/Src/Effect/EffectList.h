@@ -29,18 +29,19 @@ namespace nsApp
 		*/
 		enum Effect_ID : uint8_t
 		{
-			Attack,         //! 攻撃エフェクト。
-			Charge,         //! チャージエフェクト。
-			Fire,           //! 炎エフェクト。
-			ShockWave,      //! 衝撃波エフェクト。
+			Attack,				//! 攻撃エフェクト。
+			Charge,				//! チャージエフェクト。
+			Fire,				//! 炎エフェクト。
+			ShockWave,			//! 衝撃波エフェクト。
+			Hit,				//! 着弾エフェクト。
 
-			NormalMagic,    //! 通常魔法エフェクト。
-			RushMagic,      //! 連打魔法エフェクト。
-			AirMagic,       //! 空中魔法エフェクト。
-			HeelMagic,      //! 回復エフェクト。
-			HeelMagic_Particle,
-			MagicAttack,    //! 魔法攻撃エフェクト。
-			Shot,			//! 銃撃エフェクト。
+			NormalMagic,		//! 通常魔法エフェクト。
+			RushMagic,			//! 連打魔法エフェクト。
+			AirMagic,			//! 空中魔法エフェクト。
+			HeelMagic,			//! 回復エフェクト。
+			HeelMagic_Particle, //! 回復エフェクトのパーティクル。
+			MagicAttack,		//! 魔法攻撃エフェクト。
+			Shot,				//! 銃撃エフェクト。
 		};
 
 		class EffectList

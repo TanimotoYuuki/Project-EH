@@ -29,10 +29,13 @@ namespace nsApp
 			virtual ~PlayerAirAttackState() = default;
 
 
-		public:
-			void Enter() override;
-			void Update() override;
-			void Exit() override;
+		protected:
+			// --- Template Method  ---
+			void PlayAttackAnimation() override;
+			void OnEnterAttack() override;
+			bool OnUpdateAttack() override;
+			void OnAttackTick() override;
+			void OnExitAttack() override;
 
 
 		private:
@@ -77,26 +80,37 @@ namespace nsApp
 
 
 		public:
-			inline void SetAttackTimer(int timer)
-			{
-				m_attackTimer = timer;
-			}
-
+			/**
+			 * @brief 落下速度を設定。
+			 * @param velocity 落下速度の値。
+			 */
 			inline void SetFallVelocity(float velocity)
 			{
 				m_fallVelocity = velocity;
 			}
 
+			/**
+			 * @brief 重力の強さを設定。
+			 * @param gravity 重力の強さ。
+			 */
 			inline void SetGravity(float gravity)
 			{
 				m_gravity -= gravity;
 			}
 
+			/**
+			 * @brief 空中での移動速度を設定。
+			 * @param moveSpeed 空中での移動速度のベクトル。
+			 */
 			inline void SetMoveSpeed(const Vector3 moveSpeed)
 			{
 				m_moveSpeed = moveSpeed;
 			}
 
+			/**
+			 * @brief 空中での移動速度を設定。
+			 * @param speed 速度。
+			 */
 			inline void SetAirMoveSpeed(float speed)
 			{
 				m_airMoveSpeed = speed;
@@ -111,8 +125,6 @@ namespace nsApp
 
 
 		private:
-			int m_attackTimer = 0;                               //! 攻撃のタイマー
-
 			float m_airMoveSpeed = 0.0f;                         //! 空中移動速度
 			float m_fallVelocity = 0.0f;                         //! 落下速度
 			float m_gravity = 0.0f;                              //! 重力の強さ

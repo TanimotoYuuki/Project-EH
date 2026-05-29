@@ -54,6 +54,10 @@ namespace nsApp
 
 			/* 現在実行中のステートポインタ。*/
 			IState<CharacterTemplete>* m_currentState = nullptr;
+
+			IState<CharacterTemplete>* m_nextState = nullptr;
+
+			bool m_isUpdating = false;
 		};
 	}
 }

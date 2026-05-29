@@ -7,48 +7,46 @@ namespace nsApp
 {
 	namespace nsState
 	{
-		void PlayerHeavyAttackState::Enter()
-		{
-			/* キャスト。*/
-			m_player = static_cast<nsActor::Player*>(m_owner);
-
-			/* 攻撃の種類を設定。*/
-			m_currentAttackType = AttackType::HeavyAttack;
-
-			/* 武器アニメーションを再生。*/
-			m_player->PlayWeaponAnimation(AttackType::HeavyAttack);
-
-			if (m_player->GetCurrentWeapon() == WeaponType::TwinGun)
-				m_player->SetWeaponRotationAngle(Vector3::Front, -90.0f);
-
-			/* 当たり判定を付与。*/
-			m_player->GetWeaponHitDetection().Enable();
-		}
-
-
-        void PlayerHeavyAttackState::Update()
+        void PlayerHeavyAttackState::PlayAttackAnimation()
         {
-            nsActor::Player* pPlayer = m_player;
-            PlayerAttackBaseState::Update();
+            /* 攻撃の種類をセットする。*/
+            m_currentAttackType = AttackType::HeavyAttack;
 
-            if (pPlayer->GetCurrentWeapon() == WeaponType::TwinGun)
+            /* 再生するアニメーションを設定する。*/
+            m_player->PlayWeaponAnimation(AttackType::HeavyAttack);
+        }
+
+
+        void PlayerHeavyAttackState::OnEnterAttack()
+        {
+            /* 銃の場合。*/
+            if (m_player->GetCurrentWeapon() == WeaponType::TwinGun)
+                m_player->SetWeaponRotationAngle(Vector3::Front, -90.0f);
+
+            /* 当たり判定を付与。*/
+            m_player->GetWeaponHitDetection().Enable();
+        }
+
+
+        bool PlayerHeavyAttackState::OnUpdateAttack()
+        {
+            /* アニメーション終了時の安全な待機状態遷移（銃は少し早いタイミング） */
+            if (m_player->GetCurrentWeapon() == WeaponType::TwinGun)
             {
-                if (m_attackTimer == 8) 
-                    FireHeavyBullet();
-                
-
-                if (!pPlayer->IsPlayAnimation()) {
+                if (!m_player->IsPlayAnimation()) {
                     m_stateMachine->ChangeState(new PlayerIdleState());
-                    return;
+                    return true;
                 }
             }
-            else 
+            else
             {
-                if (m_attackTimer > 10 && !pPlayer->IsPlayAnimation())
-                {
-                    m_stateMachine->ChangeState(new PlayerIdleState()); 
-                } 
+                if (m_attackTimer > 10 && !m_player->IsPlayAnimation()) {
+                    m_stateMachine->ChangeState(new PlayerIdleState());
+					return true;
+                }
             }
+
+            return false;
         }
 
 

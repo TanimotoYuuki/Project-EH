@@ -15,6 +15,7 @@ namespace nsApp
 {
 	namespace nsActor {
 		class Player;
+		class Boss;
 	}
 
 	class VirtualInputAdapter;
@@ -23,7 +24,7 @@ namespace nsApp
 	public:
 		/* コンストラクタとデストラクタ。*/
 		NPCBrain() = default;
-		virtual ~NPCBrain() = default;
+		virtual ~NPCBrain();
 
 
 	public:
@@ -31,7 +32,6 @@ namespace nsApp
          * @brief 更新処理。
          */
 		void Update();
-
 
 		/**
 		 * @brief 思考を切り替える処理。
@@ -43,12 +43,30 @@ namespace nsApp
 				m_npcStateMachine->ChangeState(nextState);
 		}
 
-
 		/**
          * @brief ターゲットを探索する処理。
-         * @TODO: 現在のターゲットはテスト。
          */
 		nsActor::ICharacter* SearchTarget();
+
+		/**
+		 * @brief 攻撃できるかどうかを判定する処理。
+		 * @return 攻撃できる場合はtrue、そうでない場合はfalse。
+		 */
+		inline bool CanAttack() const
+		{
+			return m_attackIntervalTimer <= 0;
+		}
+
+		/**
+		 * @brief 攻撃インターバルを更新する処理。
+		 */
+		void UpdateAttackInterval();
+
+		/**
+		 * @brief 
+		 * @return 
+		 */
+		nsActor::Player* SearchHelpTarget() const;
 
 
 	/* セッター。*/
@@ -68,6 +86,28 @@ namespace nsApp
 			m_virtualInputAdapter = virtualInput;
 		}
 
+		/**
+		 * @brief 攻撃のインターバルをセットする処理。
+		 * @param intervalFrame 攻撃インターバルのフレーム数。
+		 */
+		inline void SetAttackInterval(int intervalFrame)
+		{
+			/* フレーム数が0を超えないように補正。*/
+			if (intervalFrame < 0)
+				intervalFrame = 0;
+
+			/* インターバルフレームをセット。*/
+			m_attackIntervalFrame = intervalFrame;
+		}
+
+		/**
+		 * @brief 攻撃インターバルを開始する処理。
+		 */
+		inline void StartAttackInterval()
+		{
+			m_attackIntervalTimer = m_attackIntervalFrame;
+		}
+
 
 	/* ゲッター。*/
 	public:
@@ -77,28 +117,34 @@ namespace nsApp
 			return m_outer;
 		}
 
-		/* 助ける対象を取得。*/
-		inline nsActor::Player* GetHelpTarget() const
-		{
-			return m_helpTarget;
-		}
-
 		/* 仮想コントローラーを取得する。*/
 		inline VirtualInputAdapter* GetVirtualInputAdapter() const
 		{
 			return m_virtualInputAdapter;
 		}
 
+		/**
+		 * @brief 助ける対象を取得する処理。
+		 */
+		inline nsActor::Player* GetHelpTarget() const
+		{
+			return m_helpTarget;
+		}
+
+
 
 	private:
 		nsActor::Player* m_outer = nullptr;                           //! ポインタを持つ対象。
 		nsActor::Player* m_helpTarget = nullptr;                      //! 助ける対象。
+		nsActor::Boss* m_bossTarget = nullptr;                        //! 攻撃対象。
 		nsState::StateMachine<NPCBrain>* m_npcStateMachine = nullptr; //! NPCの状態を管理するステートマシン。
 		VirtualInputAdapter* m_virtualInputAdapter = nullptr;         //! VirtualInputAdapterのポインタ。
 
 
 	private:
-		int m_attackIntervalTimer = 0;						          //! 攻撃のインターバルタイマー。
+		int m_attackIntervalTimer = 0;						          //! インターバルタイマー。
+		int m_attackIntervalFrame = 60;						          //! インターバルフレーム。
+		float m_helpSearchRange = 800.0f;							  //! 助ける対象を検索する範囲。
 	};
 }
 

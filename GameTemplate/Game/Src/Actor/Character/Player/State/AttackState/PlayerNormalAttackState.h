@@ -20,12 +20,12 @@ namespace nsApp
 			virtual ~PlayerNormalAttackState() = default;
 
 
-		public:
-			/* ライフサイクル。*/
-			void Enter() override;
-			void Update() override;
-			void Exit() override {};
-			bool RequestID(uint8_t& id);
+		protected:
+			/* 親クラスから呼ばれる処理。*/
+			void PlayAttackAnimation() override;
+			void OnAttackTick() override;
+			bool OnUpdateAttack() override;
+			bool OnRequestAttackID(uint8_t& id) override;
 
 
 		private:
@@ -35,8 +35,8 @@ namespace nsApp
 			void SummonMissile();
 
 			/*
-			* @brief 銃弾を発射させる処理。
-			*/
+			 * @brief 銃弾を発射させる処理。
+			 */
 			void FireGunBullet();
 		};
 	}

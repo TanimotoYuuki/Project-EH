@@ -35,7 +35,7 @@ namespace nsApp
 
     namespace nsState
     {
-        class PlayerChargingState :public PlayerAttackBaseState
+        class PlayerChargingState :public IState<nsActor::Actor>
         {
         public:
             /* コンストラクタとデストラクタ。*/
@@ -51,7 +51,7 @@ namespace nsApp
             /* ステートの終了処理。*/
 			void Exit() override;
             /* 遷移。*/
-            bool RequestID(uint8_t& id) override;
+            bool RequestID(uint8_t& id) override { return false; };
 
 
         /* ヘルパー。*/
@@ -110,8 +110,9 @@ namespace nsApp
             
 
         private:
-            nsK2EngineLow::EffectEmitter* m_chargeEffect = nullptr;
-            nsK2EngineLow::EffectEmitter* m_hammerEffect = nullptr;
+			nsK2EngineLow::EffectEmitter* m_chargeEffect = nullptr;     //! チャージエフェクトのポインタ。
+			nsK2EngineLow::EffectEmitter* m_hammerEffect = nullptr;     //! ハンマーの炎エフェクトのポインタ。
+			nsActor::Player* m_player = nullptr;                        //! プレイヤーのポインタ。
 
 
         private:
@@ -120,6 +121,7 @@ namespace nsApp
 			Vector3 m_spawnEffectPosition;                              //! エフェクトの生成座標。
 			Vector3 m_currentEffectPosition;                            //! エフェクトの現在座標。
 			Vector3 m_weaponPosition;                                   //! 武器の座標。
+            Vector3 m_getPlayerPosition;                                //! プレイヤーの座標を取得するための変数。
 
 			Quaternion m_fireEffectAngle = Quaternion::Identity;        //! 炎エフェクトの角度。
 

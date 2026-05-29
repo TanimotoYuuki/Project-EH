@@ -9,6 +9,8 @@
 #include "Src/Actor/Character/NPC/State/AttackState/NPCWandAttackState.h"
 #include "Src/Actor/Character/NPC/State/AttackState/NPCTwinGunAttackState.h"
 #include "Src/Actor/Character/Player/InputSystem/VirtualInputAdapter.h"
+#include "Src/Actor/Character/NPC/State/BasicState/NPCHelpState.h"
+#include "Src/Actor/Character/NPC/Component/NPCCombatHelper.h"
 
 namespace
 {
@@ -32,23 +34,29 @@ namespace nsApp
 
 
 		void NPCChaseState::Update()
-		{		
+		{
+			if (!m_body || !m_vInput || !m_brain)
+				return;
+
+			auto* helpTarget = m_brain->GetHelpTarget();
+
+			if (helpTarget != nullptr)
+			{
+				if (helpTarget != m_body &&
+					(helpTarget->IsDeath() || helpTarget->GetCharacterStatus().hp.currentHP <= 0))
+				{
+					m_vInput->Reset();
+
+					if (m_stateMachine != nullptr)
+						m_stateMachine->ChangeState(new NPCHelpState(helpTarget));
+
+					return;
+				}
+			}
+
 			auto target = m_brain->SearchTarget();
-			auto helpTarget = m_brain->GetHelpTarget();
-
-
-			/* Playerクラスを参照できているかチェック。*/
-			if (!m_body || !m_vInput)
-				return;
-
-			/* 救出対象がいれば救出行動を優先する。*/
-			if (ExecuteHelpAction(helpTarget))
-				return;
-
-			/* 救出対象が居なければ敵を追いかける。*/
 			ExecuteChaseAction(target);
 		}
-
 
 		bool NPCChaseState::ExecuteHelpAction(nsActor::Player* helpTarget)
 		{
@@ -69,7 +77,7 @@ namespace nsApp
 			{
 				/* 近づくとYボタンで救助。*/
 				m_vInput->SetLStick(0.0f, 0.0f);
-				m_vInput->SetButton(enButtonY,true);
+				m_vInput->RequestButton(enButtonY,3);
 			}
 			return true;
 		}
@@ -86,8 +94,9 @@ namespace nsApp
 
 			/* 武器に応じて攻撃開始距離を変える */
 			m_myWeapon = m_body->GetCurrentWeapon();
-			m_attackRange = (m_myWeapon == WeaponType::Wand || m_myWeapon == WeaponType::TwinGun) ? ATTACK_RANGE_MAGIC : ATTACK_RANGE_MELEE;
+			m_attackRange = CharacterToBeChosen(m_myWeapon);
 
+			/* 距離を計算する。*/
 			ComputeDistance(target);
 
 			/* 距離を検知。*/
@@ -101,6 +110,21 @@ namespace nsApp
 			{
 				/* 近づいたら立ち止まって攻撃ステートへ遷移 */
 				m_vInput->SetLStick(0.0f, 0.0f);
+
+				/* 攻撃ができるかチェックする。*/
+				if (!m_brain->CanAttack())
+				{
+					m_sideMove = Vector3(-m_difference.x, 0.0f, m_difference.z);
+					if (m_sideMove.LengthSq() > 0.001f)
+					{
+						/* 正規化。*/
+						m_sideMove.Normalize();
+						m_vInput->SetLStick(m_sideMove.x * 0.4f, m_sideMove.z * 0.4f);
+					}
+					return;
+				}
+
+				/* 攻撃ステートへ遷移する。*/
 				TransitionToAttackState();
 			}
 		}
@@ -125,6 +149,28 @@ namespace nsApp
 
 			else
 				m_stateMachine->ChangeState(new NPCSwordAttackState());
+		}
+
+
+		float NPCChaseState::CharacterToBeChosen(WeaponType type) const
+		{
+			switch (type)
+			{
+			case WeaponType::GreatSword:
+				return 130.0f;
+
+			case WeaponType::Hammer:
+				return 110.0f;
+
+			case WeaponType::Wand:
+				return 230.0f;
+
+			case WeaponType::TwinGun:
+				return 280.0f;
+
+			default:
+				return 150.0f;
+			}
 		}
 	}
 }

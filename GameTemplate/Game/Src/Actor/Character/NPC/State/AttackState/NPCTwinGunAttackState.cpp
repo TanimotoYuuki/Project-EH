@@ -9,7 +9,7 @@ namespace
 	const auto NUM_TWINGUN_PATTERNS = 3;           //! 双銃NPCが持つ攻撃パターンの総数
 
 	/* 距離・間合い関連 */
-	const auto CHASE_TRANSITION_DISTANCE = 150.0f; //! 敵がこの距離より離れたら追跡ステートへ戻る
+	const auto CHASE_TRANSITION_DISTANCE = 300.0f; //! 敵がこの距離より離れたら追跡ステートへ戻る
 	const auto RETREAT_DISTANCE = 80.0f;           //! 攻撃後のクールタイム中に、近ければ後ろに下がる
 	const auto CLIPPING_LIMIT_DISTANCE = 40.0f;    //! めり込みを防止する限界距離
 
@@ -40,12 +40,20 @@ namespace nsApp
 				NPCTwinGunPattern::enAir;
 		}
 
+
 		void NPCTwinGunAttackState::Update()
 		{
-			auto target = m_npcBrain->SearchTarget();
-
-			if (!target || !m_getBody)
+			if (CheckHelpTransition())
 				return;
+
+			nsActor::ICharacter* target = m_npcBrain->SearchTarget();
+
+			if (target == nullptr || m_getBody == nullptr)
+			{
+				m_stateMachine->ChangeState(new NPCChaseState());
+				return;
+			}
+				
 
 			ComputeDistance(target);
 
@@ -67,6 +75,7 @@ namespace nsApp
 				Enter();
 		}
 
+
 		void NPCTwinGunAttackState::ExecuteCurrentCombo()
 		{
 			if (m_currentPattern == NPCTwinGunPattern::enNone)
@@ -80,29 +89,33 @@ namespace nsApp
 			(this->*actions[static_cast<int>(m_currentPattern)])();
 		}
 
+
 		void NPCTwinGunAttackState::ExecuteShootRush()
 		{
 			/* Bボタンを複数回押して乱射（RushAttack）を誘発 */
 			if (m_attackTimer == COMBO_FIRST_INPUT || m_attackTimer == COMBO_SECOND_INPUT || m_attackTimer == COMBO_THIRD_INPUT)
-				m_virtualInput->SetButton(enButtonB,true);
+				m_virtualInput->RequestButton(enButtonB,3);
 		}
+
 
 		void NPCTwinGunAttackState::ExecuteShootHeavy()
 		{
 			/* Xボタンで重攻撃（爆発弾）を撃つ */
 			if (m_attackTimer == COMBO_FIRST_INPUT)
-				m_virtualInput->SetButton(enButtonX, true);
+				m_virtualInput->RequestButton(enButtonX, 3);
 		}
+
 
 		void NPCTwinGunAttackState::ExecuteShootAir()
 		{
 			/* Aボタンでジャンプし、空中でBを押して射撃 */
 			if (m_attackTimer == COMBO_FIRST_INPUT)
-				m_virtualInput->SetButton(enButtonA,true);
+				m_virtualInput->RequestButton(enButtonA,3);
 
 			if (m_attackTimer == COMBO_AIR_INPUT)
-				m_virtualInput->SetButton(enButtonB, true);
+				m_virtualInput->RequestButton(enButtonB, 3);
 		}
+
 
 		void NPCTwinGunAttackState::UpdateMovement()
 		{
@@ -112,6 +125,7 @@ namespace nsApp
 
 			m_virtualInput->SetLStick(m_stickX, m_stickZ);
 		}
+
 
 		void NPCTwinGunAttackState::ExecutionFlow()
 		{

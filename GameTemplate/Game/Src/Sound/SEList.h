@@ -42,6 +42,7 @@ namespace nsApp
 
 			/* その他。*/
 			Charge,              //! チャージ中のSE。
+			Rescue,				 //! 救助中のSE。
 
 		};
 

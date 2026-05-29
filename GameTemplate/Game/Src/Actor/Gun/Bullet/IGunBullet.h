@@ -7,17 +7,22 @@
 
 #include "Src/Actor/Actor.h"
 #include "Src/Actor/Gun/Parameter/BulletParameter.h"
+#include "Src/Actor/Character/Common/Damage/DamageRequest.h"
 
 namespace nsApp
 {
 	namespace nsActor
 	{
+		class Boss;
+
 		class IGunBullet : public Actor
 		{
 		public:
 			IGunBullet() = default;
 			virtual ~IGunBullet();
 
+
+		public:
 			/**
 			 * @brief 弾丸の初期化。パラメータを丸ごと受け取る。
 			 * @param param 弾丸のパラメータ。BulletParameter構造体でまとめて管理。
@@ -36,6 +41,17 @@ namespace nsApp
 			void Render(RenderContext& rc) override;
 
 
+		public:
+			/**
+			 * @brief プール内で使用中かを取得する。
+			 * @return 使用中ならtrue。
+			 */
+			inline bool IsInUse() const
+			{
+				return m_isInUse;
+			}
+
+
 		private:
 			/**
 			 * @brief　弾丸がボスにヒットしたかを判定する関数。直接の球体判定と、すり抜け防止の線分判定の両方を行う。
@@ -43,14 +59,17 @@ namespace nsApp
 			 */
 			bool CheckHitBoss();
 
-
-			void TargetMoving() {};
+			/**
+			 * @brief 弾丸の非アクティブ化。
+			 */
+			void Deactivate();
 
 
 		private:
 			BulletParameter m_param;									//! 弾丸のパラメータ。 
 			nsK2Engine::CollisionObject* m_bulletCollider = nullptr;    //! 弾丸の当たり判定オブジェクト。
 			std::unique_ptr<ModelRender> m_modelRender;					//! 弾丸のモデルレンダラー。
+			Boss* m_boss = nullptr;										//! ボスのポインタ。ヒット判定や軌道計算に使用。
 
 
 		private:
@@ -61,9 +80,12 @@ namespace nsApp
 			Vector3 m_bulletTrajectory = Vector3::Zero;					//! 弾丸の軌道ベクトル。前フレームからの移動量。
 			Vector3 m_vectorToBossTarget = Vector3::Zero;				//! ボスへのベクトル。前フレームからボスへの距離を表す。
 			Vector3 m_closestPointOnTrajectory = Vector3::Zero;			//! 弾丸の軌道上の最も近い点。ボスへの距離計算に使用。
+			Vector3 m_hitPosition = Vector3::Zero;						//! ボスにヒットした位置。ダメージテキストの表示位置などに使用。
 
 			Quaternion m_angle = Quaternion::Identity;					//! 弾丸の回転角。モデルの向きに合わせて設定。
 			Quaternion m_direction = Quaternion::Identity;				//! 弾丸の向き。前方向ベクトルから計算される。
+
+			DamageRequest m_request;
 
 			float m_currentLifeTime = 0.0f;								//! 弾丸の現在の寿命。初期化時にパラメータから設定され、時間経過で減少する。
 			float m_speedPerSecond = 0.0f;								//! 弾丸の速度。初期化時にパラメータから設定され、前方向ベクトルに乗算される。
@@ -71,6 +93,8 @@ namespace nsApp
 			float m_trajectoryLengthSquared = 0.0f;						//! 弾丸の軌道の長さの二乗。軌道上の最も近い点を計算するために使用。
 			float m_closestPointRatio = 0.0f;							//! 弾丸の軌道上の最も近い点の位置を表す比率。0.0fは前フレームの位置、1.0fは現在の位置を表す。
 			float m_deltaTime = 0.0f;									//! フレームごとの時間差。Update関数内で計算され、軌道計算や寿命減少に使用される。
+
+			bool m_isInUse = false;									    //! 弾丸が現在使用中かどうかを示すフラグ。初期化されるとtrueになり、寿命が尽きるかヒットするとfalseになる。
 		};
 	}
 }

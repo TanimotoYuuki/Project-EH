@@ -20,31 +20,42 @@ namespace nsApp
 			virtual ~PlayerSlashUpState() = default; 
 
 
-		public:
-			/* ライフサイクル。*/
-			void Enter() override;
-			void Update() override;
-			void Exit() override;
-			bool RequestID(uint8_t& id) override;
+		protected:
+			void PlayAttackAnimation() override;
+			void OnEnterAttack() override;
+			bool OnUpdateAttack() override;
+			void OnExitAttack() override;
+			bool OnRequestAttackID(uint8_t& id) override;
+
 
 
 		private:
-			/* 空中攻撃に遷移。*/
-			void TransitionAirAttack();
+			/* 
+			 * @brief 空中攻撃に遷移。
+			 */
+			inline void TransitionAirAttack();
 
 
-			/* ジャンプ状態に遷移。*/
-			void TransitionJumpState();
+			/* 
+			 * @brief ジャンプ状態に遷移。
+			 */
+			inline void TransitionJumpState();
 
 
 		public:
-			/* 斬り上げ時の初速を設定。*/
+			/*
+			 * @brief 斬り上げ時の初速を設定。
+			 * @param 初速の大きさ。
+			 */
 			inline void SetJumpVelocity(float velocity) 
 			{
 				m_jumpVelocity = velocity;
 			}
 
-			/* */
+			/**
+			 * @brief 斬り進む速度を設定。
+			 * @param speed 斬り上げ速度。
+			 */
 			inline void SetSlashUpSpeed(Vector3 speed)
 			{
 				m_slashUpSpeed = speed;
@@ -58,6 +69,7 @@ namespace nsApp
 
 			Vector3 m_slashUpSpeed;    //! 斬り上げ攻撃中の移動速度。
 			Vector3 m_effectPosition;  //! エフェクトの位置。
+			Vector3 m_moveSpeed;	   //! 移動速度。
 		};
 	}
 }

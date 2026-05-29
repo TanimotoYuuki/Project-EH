@@ -36,10 +36,10 @@ namespace nsApp
 				/* 状態遷移図。*/
 				Transition transitionDiagram[] =
 				{
-					/* 死亡状態。*/
-					{ inputClass.IsDeath(), nsActor::PlayerStateID::enDeath },
 					/* ダメージ状態。*/
 					{ inputClass.IsDamage(), nsActor::PlayerStateID::enHit },
+					/* 助ける状態。*/
+					{ inputClass.IsHelp(), nsActor::PlayerStateID::enHelp},
 					/* 走り状態。*/
 					{ inputClass.IsRun(), nsActor::PlayerStateID::enRun },
 					/* ジャンプ状態。*/
@@ -60,12 +60,6 @@ namespace nsApp
 					{ inputClass.IsRushEnd(), nsActor::PlayerStateID::enRushEnd},
 					/* ガード状態。*/
 					{ inputClass.IsGuard(), nsActor::PlayerStateID::enGuard},
-					/* 助ける状態。*/
-					{ inputClass.IsHelp(), nsActor::PlayerStateID::enHelp},
-					/* 魔法攻撃状態。*/
-					{ inputClass.IsPressRB(), nsActor::PlayerStateID::enMagicAttack},
-					/* 回復魔法状態。*/
-					{ inputClass.IsPressRT(), nsActor::PlayerStateID::enHeelMagic},
 				};
 
 

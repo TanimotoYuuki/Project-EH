@@ -2,66 +2,98 @@
 #include "PlayerHeelMagicState.h"
 #include "Src/Actor/Character/Player/State/BasicState/PlayerIdleState.h"
 #include "Src/Effect/EffectList.h"
+#include "Src/Actor/Heel/HeelArea.h"
+
+namespace
+{
+	
+			
+}
 
 namespace nsApp
 {
 	namespace nsState
 	{
-		void PlayerHeelMagicState::Enter()
+		void PlayerHeelMagicState::PlayAttackAnimation()
 		{
-			/* キャストしてプレイヤーを取得 */
-			m_player = static_cast<nsActor::Player*>(m_owner);
-
-			/* 攻撃の種類をセットする。*/
+			/* 攻撃の種類をセット。*/
 			m_currentAttackType = AttackType::HeelMagic;
 
-			/* 回復もチャージ解放のアニメーションを流用 */
+			/* 再生するアニメーションをセット。*/
 			m_player->PlayWeaponAnimation(AttackType::HeelMagic);
+		}
 
-			/* タイマーの初期化。*/
-			SetAttackTimer(0);
 
+		void PlayerHeelMagicState::OnEnterAttack()
+		{
 			/* チャージレベルを取得。*/
 			m_chargeLevel = static_cast<float>(m_player->GetEffectScale());
-			if(m_chargeLevel <= 0.0f)
-				m_chargeLevel = 1.0f;
+
+			/* チャージしていない場合は発動不可。*/
+			if (m_chargeLevel <= 0.0f)
+			{
+				m_canExecuteHeelMagic = false;
+				m_hasExecutedHeelMagic = true;
+				return;
+			}
+
+			m_canExecuteHeelMagic = true;
+			m_hasExecutedHeelMagic = false;
 		}
 
 
-		void PlayerHeelMagicState::Update()
+		bool PlayerHeelMagicState::OnUpdateAttack()
 		{
-				m_attackTimer++;
+			/* 未チャージ状態なら即終了。*/
+			if (!m_canExecuteHeelMagic)
+			{
+				m_stateMachine->ChangeState(new PlayerIdleState());
+				return true;
+			}
 
-				ComputeHeelEffectScale();
 
-				/* 大爆発（メインの回復エフェクト）とエリアヒールの発動 */
-				if (m_attackTimer == 25) {
-					PlayHeelMagicEffect();
-					PlayHeelMagicParticleEffect();
-					ExecuteAreaHeal();
-				}
+			/* エフェクトの拡大。*/
+			ComputeHeelEffectScale();
 
-				if (m_attackTimer > 25 && !m_player->IsPlayAnimation())
-					m_stateMachine->ChangeState(new PlayerIdleState());
+			/* 25フレーム目以降で回復魔法を1回だけ発動。*/
+			if (!m_hasExecutedHeelMagic && m_attackTimer >= 25)
+			{
+				/* エリアヒール。*/
+				ExecuteAreaHeal();
+
+				m_hasExecutedHeelMagic = true;
+			}
+
+			/* 通常終了。*/
+			if (m_attackTimer > 35 && !m_player->IsPlayAnimation())
+			{
+				m_stateMachine->ChangeState(new PlayerIdleState());
+				return true;
+			}
+
+			/* 保険。アニメーション終了判定が戻らない場合でも抜ける。*/
+			if (m_attackTimer > 90)
+			{
+				m_stateMachine->ChangeState(new PlayerIdleState());
+				return true;
+			}
+
+			/* この魔法ステートでは親の共通終了判定に行かせない。*/
+			return true;
 		}
 
 
-		void PlayerHeelMagicState::Exit()
+		void PlayerHeelMagicState::OnExitAttack()
 		{
-			/* */
+			/* 2種類のエフェクトの再生を止める。*/
 			if (m_heelEffect != nullptr) {
 				m_heelEffect->Stop();
 				m_heelEffect = nullptr;
 			}
-
-			/* */
 			if (m_particleEffect != nullptr) {
 				m_particleEffect->Stop();
 				m_particleEffect = nullptr;
 			}
-
-			/* */
-			PlayerAttackBaseState::Exit();
 		}
 
 
@@ -81,34 +113,52 @@ namespace nsApp
 			m_particleEffectPosition = m_player->GetPosition();
 			m_particleEffectPosition.y += 2.0f;
 			/* エフェクトを再生。*/
-			m_heelEffect = m_player->GetEffectList().PlayEffect(nsEffect::HeelMagic_Particle, m_heelEffectPosition, Quaternion::Identity, Vector3::One * 20.0f);
+			m_particleEffect = m_player->GetEffectList().PlayEffect(nsEffect::HeelMagic_Particle, m_particleEffectPosition, Quaternion::Identity, Vector3::One * 20.0f);		
 		}
 
 
 		void PlayerHeelMagicState::ExecuteAreaHeal()
 		{
-			if (!m_player)
+			if (m_player == nullptr)
 				return;
 
-			/* 回復量。*/
-			m_healAmount = 500 * static_cast<int>(m_chargeLevel);
+			// 回復量。
+			m_healAmount = 100 * static_cast<int>(m_chargeLevel);
 
-			/* 周囲の味方を探して回復*/
-			const char* playerNames[] = { "player1", "player2", "player3", "player4" };
-			for (const char* name : playerNames)
-			{
-				auto otherPlayer = FindGO<nsActor::Player>(name);
-				if (otherPlayer && otherPlayer != m_player && otherPlayer->GetCharacterStatus().hp.currentHP > 0)
-				{
-					m_distance = (otherPlayer->GetPosition() - m_player->GetPosition()).Length();
-					if (m_distance <= 150.0f * m_chargeLevel) {
-						otherPlayer->ApplyDamage(-m_healAmount);
-					}
-				}
-			}
+			// プレイヤーの向いている方向の少し前に回復エリアを出す。
+			m_areaPosition = m_player->GetPosition();
 
-			/* 自分も回復。*/
-			m_player->ApplyDamage(-m_healAmount);
+			m_getForward = m_player->GetForwardVector();
+			m_getForward.y = 0.0f;
+			m_getForward.Normalize();
+
+			const float spawnDistance = 120.0f;
+			m_areaPosition += m_getForward * spawnDistance;
+
+			// エフェクトを地面付近に出したいので、Yは少しだけ上げる。
+			m_areaPosition.y += 2.0f;
+
+			// 回復エリアクラスを生成。
+			m_healArea = NewGO<HeelArea>(0, "HeelArea");
+			if (m_healArea == nullptr)
+				return;
+
+			m_healArea->SetPosition(m_areaPosition);
+
+			// 範囲が広すぎるならここを小さくする。
+			m_healArea->SetRadius(45.0f);
+
+			// 回復量を設定。
+			m_healArea->SetHealAmount(m_healAmount);
+
+			// 回復エリアが残る時間。
+			m_healArea->SetLifeTime(5.0f);
+
+			// 0.5秒ごとに回復。
+			m_healArea->SetInterval(0.5f);
+
+			// エフェクト再生。
+			m_healArea->SpawnArea();
 		}
 	}
 }

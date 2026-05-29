@@ -75,6 +75,9 @@ namespace nsApp
 		{
 			/* チャージ中の効果音。*/
 			g_soundEngine->ResistWaveFileBank(SE_ID::Charge, GetSEFilePath("Charge").c_str());
+
+			/* 復活中の効果音。*/
+			g_soundEngine->ResistWaveFileBank(SE_ID::Rescue, GetSEFilePath("rebone").c_str());
 		}
 
 
@@ -186,9 +189,7 @@ namespace nsApp
 		void SEList::StopSE(nsK2EngineLow::SoundSource*& soundSource)
 		{
 			if (soundSource == nullptr)
-			{
 				return;
-			}
 
 			for (auto it = m_playingSEs.begin(); it != m_playingSEs.end(); ++it)
 			{
@@ -209,6 +210,7 @@ namespace nsApp
 			DeleteGO(soundSource);
 			soundSource = nullptr;
 		}
+
 
 		void SEList::RegisterSwordSEBank()
 		{

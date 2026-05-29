@@ -17,65 +17,76 @@ namespace nsApp
 {
 	namespace nsState
 	{
-		void PlayerPushState::Enter()
+		void PlayerPushState::PlayAttackAnimation()
 		{
-			/* キャスト。*/
-			m_player = static_cast<nsActor::Player*>(m_owner);
-
-			/* 攻撃のタイプを設定する。*/
+			/* 攻撃の種類を設定。*/
 			m_currentAttackType = AttackType::PushForward;
-
-			if (m_player->GetCurrentWeapon() == WeaponType::TwinGun)
-			{
-			}
-			else
-			{
-				/* 他の武器（剣やハンマー）の時は既存の処理を行う */
+			if (m_player->GetCurrentWeapon() != WeaponType::TwinGun)
 				m_player->PlayWeaponAnimation(AttackType::PushForward);
-				m_player->SetWeaponRotationAngle(Vector3::Front, START_WEAPON_ANGLE);
-			}
+		}
+
+
+		void PlayerPushState::OnEnterAttack()
+		{
+			/* 武器の角度を設定。*/
+			if (m_player->GetCurrentWeapon() != WeaponType::TwinGun)
+				m_player->SetWeaponRotationAngle(Vector3::Front, -90.0f);
+
 			/* 当たり判定を付与。*/
 			m_player->GetWeaponHitDetection().Enable();
 		}
 
 
-		void PlayerPushState::Update()
+		bool PlayerPushState::OnUpdateAttack()
 		{
-			if (!m_player)
-				return;
-
-			/* 前進する。*/
+			/* 前進処理。*/
 			MoveForward();
 
-			/* 武器が銃の場合。*/
-			if (m_player->GetCurrentWeapon() == WeaponType::TwinGun)
+			/* 銃の発射タイミング。*/
+			if (m_player->GetCurrentWeapon() == WeaponType::TwinGun && m_attackTimer == 10)
 			{
-				/* 弾を発射。*/
-				if (m_attackTimer == 10)
-					FireDashBullet();
-
-				/* 減衰率に応じてステートを遷移し分ける。*/
-				if (TransitionMultiState())
-					return;
+				m_spawnPosition = m_player->GetBonePosition(L"mixamorig:RightHand");
+				m_forwardDirection = m_player->GetForwardVector();
+				ConstructAndTransmitBulletRequest(BulletType::enDash);
 			}
 
-			/* 親クラスの更新。*/
-			PlayerAttackBaseState::Update();
+			return false;
 		}
 
 
-		void PlayerPushState::Exit()
+		void PlayerPushState::OnExitAttack()
 		{
-			if (m_player->GetCurrentWeapon() == WeaponType::TwinGun) {}
+			if (m_player->GetCurrentWeapon() != WeaponType::TwinGun)
+				m_player->SetWeaponRotationAngle(Vector3::Front, -90.0f);
+		}
 
-			else
+
+		bool PlayerPushState::OnRequestAttackID(uint8_t& id)
+		{
+			/* コンボテーブル判定。*/
+			if (CheckCombo(nsActor::PlayerStateID::enPushForward, id))
+				return true;
+
+			/* 銃の場合。*/
+			if (m_player->GetCurrentWeapon() == WeaponType::TwinGun && m_attackTimer > 20)
 			{
-				/* 他の武器（剣やハンマー）の時は既存の処理を行う */
-				m_player->PlayWeaponAnimation(AttackType::PushForward);
-				m_player->SetWeaponRotationAngle(Vector3::Front, START_WEAPON_ANGLE);
+				/* 入力システムクラスを取得。*/
+				auto& inputClass = m_player->GetInputClass();
+
+				/* 走り判定。*/
+				if (inputClass.IsRun())
+					m_stateMachine->ChangeState(new PlayerRunState());
+
+				/* 移動判定。*/
+				else if (inputClass.IsMove())
+					m_stateMachine->ChangeState(new PlayerWalkState());
+
+				else
+					m_stateMachine->ChangeState(new PlayerIdleState());
+				return true;
 			}
-			/* ステートを終了する。*/
-			PlayerAttackBaseState::Exit();
+
+			return false;
 		}
 
 
@@ -111,7 +122,6 @@ namespace nsApp
 		}
 
 
-
 		bool PlayerPushState::TransitionMultiState()
 		{
 			if (m_attackTimer > 20)
@@ -130,12 +140,6 @@ namespace nsApp
 			}
 
 			return false;
-		}
-
-
-		bool PlayerPushState::RequestID(uint8_t& id)
-		{
-			return CheckCombo(nsActor::PlayerStateID::enPushForward, id);
 		}
 	}
 }
