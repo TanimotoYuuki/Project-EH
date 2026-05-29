@@ -64,7 +64,7 @@ namespace nsApp
 		bool PlayerWalkState::RequestID(uint8_t& id)
 		{
 			/* 状態遷移全体を確認。*/
-			if (StateTransitionDiagram::CheckCommonTransition(m_player->GetInputClass(), id))
+			if (StateTransitionDiagram::CheckCommonTransition(m_player->GetInputClass(), id, static_cast<uint8_t>(nsActor::PlayerStateID::enWalk)))
 				return true;
 
 			if (!m_player->GetInputClass().IsMove())

@@ -133,10 +133,34 @@ namespace nsApp
 			ICharacter::Update();
 
 			if (IsHitStop())
+			{
 				return;
+			}
 
 			/*Roarのクールダウンを更新。*/
 			UpdateRoarCooldown(g_gameTime->GetFrameDeltaTime());
+
+			/*怯み制御用のタイマー更新。*/
+			if (m_damageResetTimer > 0.0f)
+			{
+				m_damageResetTimer -= g_gameTime->GetFrameDeltaTime();
+				if (m_damageResetTimer <= 0.0f)
+				{
+					/*一定時間ダメージを受けなければリセット。*/
+					m_accumulatedDamage = 0;
+				}
+			}
+
+			if (m_flinchCooldownTimer > 0.0f)
+			{
+				m_flinchCooldownTimer -= g_gameTime->GetFrameDeltaTime();
+			}
+
+			if (m_characterStatus.hp.currentHP < m_prevHP)
+			{
+				int damage = m_prevHP - m_characterStatus.hp.currentHP;
+				OnDamageEvent(damage);
+			}
 
 			/*ステートマシンを更新する。*/
 			m_stateMachine->Update();
@@ -144,17 +168,11 @@ namespace nsApp
 			/*次のステートを決定する。*/
 			uint8_t nextID = m_currentStateID;
 
-			/*強制遷移刑を優先。*/
 			if (m_characterStatus.hp.currentHP <= 0)
 			{
 				nextID = BossStateID::enDeath;
 			}
-			/*攻撃状態中はダメージ遷移を防ぐ。*/
-			else if (IsDamage() && m_currentStateID != BossStateID::enAttack)
-			{
-				nextID = BossStateID::enDamage;
-			}
-			/*ステートからの遷移リクエストを確認。*/
+			/*ステートから遷移リクエストを確認。*/
 			else
 			{
 				uint8_t reqID = 0;
@@ -209,6 +227,43 @@ namespace nsApp
 
 			/*モデル更新。*/
 			m_model.Update();
+
+			/*現在のフレームのHPを過去のログとして保存。*/
+			m_prevHP = m_characterStatus.hp.currentHP;
+		}
+
+		void Boss::OnDamageEvent(int damage)
+		{
+			if (m_characterStatus.hp.currentHP <= 0)
+				return;
+
+			if (m_currentStateID == BossStateID::enDamage || m_currentStateID == BossStateID::enDeath)
+			{
+				/*すでにダメージ状態か死亡状態なら追加の処理はなし。*/
+				return;
+			}
+
+			if (m_currentStateID == BossStateID::enAttack)
+			{
+				return;
+			}
+
+			if (damage > 0)
+			{
+				m_accumulatedDamage += damage;
+				m_damageResetTimer = nsAI::BossAIConfig::DAMAGE_RESET_TIME;
+			}
+
+			/*累計ダメージが閾値を超えた場合かつ怯みが回復しているなら。*/
+			if (m_accumulatedDamage >= nsAI::BossAIConfig::FLINCH_DAMAGE_THRESHOLD && m_flinchCooldownTimer <= 0.0f)
+			{
+				/*次のフレームのUpdateを待たずに遷移予約もしくは即時にステートを変える。*/
+				m_currentStateID = BossStateID::enDamage;
+				m_stateMachine->ChangeState(m_stateFactory[BossStateID::enDamage]());
+
+				m_accumulatedDamage = 0;
+				m_flinchCooldownTimer = nsAI::BossAIConfig::FLINCH_COOLDOWN;
+			}
 		}
 
 		/*プレイヤーの方向を向く処理。*/

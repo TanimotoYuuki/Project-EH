@@ -5,7 +5,6 @@
 #include "Src/Actor/Character/Common/WeaponHitDetection.h"
 #include "Src/Actor/Character/Common/CharacterAnimation.h"
 #include "Src/StateMachine/StateMachine.h"
-#include "Src/Effect/EffectList.h"
 #include "BossAnimation.h"
 #include "BossAIConfig.h"
 
@@ -228,12 +227,6 @@ namespace nsApp
 				return m_FireHit;
 			}
 
-			/*エフェクトリストへのアクセッサ。*/
-			nsApp::nsEffect::EffectList &GetEffectList()
-			{
-				return m_effectList;
-			}
-
 		private:
 			/*ステートの登録。*/
 			void RegisterState();
@@ -243,6 +236,8 @@ namespace nsApp
 
 			/*回転の更新。*/
 			void UpdateRotation(float deltaTime);
+
+			void OnDamageEvent(int damage);
 
 			std::unique_ptr<BossAnimation> m_BossAnimation;
 			CharacterController m_BossController;
@@ -276,8 +271,9 @@ namespace nsApp
 			uint8_t m_roarUsageCount = 0;		/*Roar使用回数*/
 			float m_lastRoarHPThreshold = 1.0f; /*最後にRoarを使った時のHP率*/
 
-			/*エフェクトリスト。*/
-			nsApp::nsEffect::EffectList m_effectList;
+			int m_accumulatedDamage = 0;		/*累積ダメージ。*/
+			float m_damageResetTimer = 0.0f;	/*累計ダメージリセット用タイマー。*/
+			float m_flinchCooldownTimer = 0.0f; /*連続怯み防止用のクールダウンタイマー。*/
 
 			/*ステート。*/
 			std::unordered_map<BossStateID, std::function<StateType *()>> m_stateFactory;

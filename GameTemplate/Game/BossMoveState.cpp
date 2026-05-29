@@ -5,7 +5,7 @@
 
 namespace
 {
-	const float MOVE_TIME = 3.0f;
+	const float MOVE_TIME = 1.5f;
 	const float MOVE_SPEED = 10.0f;
 }
 
@@ -49,6 +49,13 @@ namespace nsApp
 			moveStep.z = 0.0f;
 
 			m_boss->GetController().Execute(moveStep, dt);
+
+			/*移動中でもプレイヤーに近づいたら攻撃。*/
+			uint8_t nextID = 0;
+			if (RequestID(nextID))
+			{
+				m_timer = 0.0f;
+			}
 		}
 
 		void BossMoveState::Exit()
@@ -59,7 +66,16 @@ namespace nsApp
 		{
 			/*ボスタイプに応じた移動停止距離を取得。*/
 			const auto &params = nsApp::nsAI::BossTypeManager::GetBossTypeParameters(m_boss->GetBossType());
-			if (m_boss->GetDistanceToTarget() < params.m_moveStopDistance)
+			float distance = m_boss->GetDistanceToTarget();
+
+			/*現在の距離が設定された距離未満なら即攻撃。*/
+			if (distance < params.m_moveStopDistance)
+			{
+				id = static_cast<uint8_t>(nsActor::BossStateID::enAttack);
+				return true;
+			}
+
+			if (distance >= 55.0f && m_timer <= 0.5f)
 			{
 				id = static_cast<uint8_t>(nsActor::BossStateID::enAttack);
 				return true;

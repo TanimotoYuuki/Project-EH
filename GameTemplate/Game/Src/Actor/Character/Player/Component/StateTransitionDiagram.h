@@ -30,16 +30,17 @@ namespace nsApp
 			 * 状態遷移図を確認する。
 			 * @param inputClass:   playerの入力を検知するクラス。
 			 * @param transitionID: 遷移ID。
+			 * @param currentStateID: 現在のステートID。
 			 */
-			static bool CheckCommonTransition(const PlayerInput& inputClass, uint8_t& transitionID)
+			static bool CheckCommonTransition(const PlayerInput& inputClass, uint8_t& transitionID, uint8_t currentStateID = 0xFF)
 			{
 				/* 状態遷移図。*/
 				Transition transitionDiagram[] =
 				{
 					/* 死亡状態。*/
 					{ inputClass.IsDeath(), nsActor::PlayerStateID::enDeath },
-					/* ダメージ状態。*/
-					{ inputClass.IsDamage(), nsActor::PlayerStateID::enHit },
+					/* ダメージ状態。(Hit状態中は再度ダメージ遷移を発生させない)。*/
+					{ inputClass.IsDamage() && currentStateID != static_cast<uint8_t>(nsActor::PlayerStateID::enHit), nsActor::PlayerStateID::enHit },
 					/* 走り状態。*/
 					{ inputClass.IsRun(), nsActor::PlayerStateID::enRun },
 					/* ジャンプ状態。*/

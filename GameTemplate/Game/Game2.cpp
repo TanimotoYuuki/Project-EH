@@ -73,7 +73,7 @@ namespace nsApp
 			/*ボスを作成。*/
 			m_boss = NewGO<nsActor::Boss>(0, "boss");
 			/*ボスの種類を設定。*/
-			m_boss->SetBossType(CharacterModelType::RedDragon);
+			m_boss->SetBossType(CharacterModelType::GrayDragon);
 			/*ボスにプレイヤーをターゲットとして教える。*/
 			m_boss->SetTarget(m_player);
 
