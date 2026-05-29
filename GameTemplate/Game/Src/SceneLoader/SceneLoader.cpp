@@ -812,7 +812,7 @@ namespace nsApp
 		/*開始処理。*/
 		bool SceneLoader::Start()
 		{
-			m_instance->GetInstance()->ChangeScene(IScene::EnSceneID::enSceneID_Select);/*シーンの切り替え(デフォルトはタイトルシーン)。*/
+			m_instance->GetInstance()->ChangeScene(IScene::EnSceneID::enSceneID_Title);/*シーンの切り替え(デフォルトはタイトルシーン)。*/
 			return true;
 		}
 
