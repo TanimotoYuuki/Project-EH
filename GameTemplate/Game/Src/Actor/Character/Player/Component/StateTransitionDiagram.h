@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 /**
 * @file   StateTransitionDiagram.h
 * @brief  状態遷移図を管理するクラス。

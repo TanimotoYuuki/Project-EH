@@ -18,7 +18,7 @@ namespace nsApp
 	public:
 		/* コンストラクタとデストラクタ。*/
 		DamageProcessor() = delete;
-		~DamageProcessor() = delete;
+		virtual ~DamageProcessor() = delete;
 
 
 	public:

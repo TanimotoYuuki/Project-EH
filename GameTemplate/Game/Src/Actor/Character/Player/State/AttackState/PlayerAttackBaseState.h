@@ -15,9 +15,9 @@
 #include "Src/Actor/Character/Player/Component/ComboRouteTable.h"
 #include "Src/Actor/Character/NPC/Component/NPCCombatHelper.h"
 
-/** @def
- * プレイヤーの遷移状態を PLAYER_STATE_IDという名前で定義するマクロ。
- */
+ /** @def
+  * プレイヤーの遷移状態を PLAYER_STATE_IDという名前で定義するマクロ。
+  */
 #define PLAYER_STATE_ID nsActor::PlayerStateID
 
 
@@ -25,7 +25,7 @@ namespace nsApp
 {
 	namespace nsState
 	{
-		class PlayerAttackBaseState : public IState<nsActor::Actor>
+		class PlayerAttackBaseState : public IState<nsActor::Actor> 
 		{
 		public:
 			/* コンストラクタとデストラクタ。*/
@@ -48,7 +48,7 @@ namespace nsApp
 			}
 
 
-		/* TemplateMethod。*/
+			/* TemplateMethod。*/
 		protected:
 			/*
 			 * @brief 攻撃アニメーションの再生や攻撃タイプの設定。
@@ -102,8 +102,7 @@ namespace nsApp
 			}
 
 
-
-		/* セッター。*/
+			/* セッター。*/
 		public:
 			/**
 			 * @brief 攻撃の時間をセット。
@@ -182,6 +181,7 @@ namespace nsApp
 				);
 			}
 
+
 		protected:
 			/**
 			 *  コンボが有効か確認する処理。
@@ -215,6 +215,19 @@ namespace nsApp
 			{
 				return true;
 			}
+
+
+		protected:
+			/**
+			 * @brief CommentaryUIに攻撃内容を通知する。
+			 */
+			void NotifyAttackCommentary();
+
+			/**
+			 * @brief 現在の攻撃タイプを実況用テキストに変換する。
+			 * @return 実況用の攻撃名。
+			 */
+			std::wstring GetCommentaryActionName() const;
 
 
 		protected:

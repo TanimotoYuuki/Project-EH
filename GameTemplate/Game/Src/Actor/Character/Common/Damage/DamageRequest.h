@@ -20,6 +20,6 @@ namespace nsApp
 	{
 		nsActor::ICharacter* target = nullptr;			//! ダメージを受けるキャラクター。
 		int damageAmount = 0;                           //! ダメージ量。
-		Vector3 hitPosition = Vector3::Zero;         //! ダメージフォントを生成する座標。
+		Vector3 hitPosition = Vector3::Zero;            //! ダメージフォントを生成する座標。
 	};
 }

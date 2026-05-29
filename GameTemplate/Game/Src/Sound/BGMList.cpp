@@ -5,10 +5,12 @@ namespace nsApp
 {
 	namespace nsSound
 	{
+		nsK2EngineLow::SoundSource* BGMList::m_bgmSource = nullptr;
+		BGM_ID BGMList::m_currentBGM = BGM_ID::None;
+
+
 		BGMList::~BGMList()
 		{
-			/* 画面が切り替わる時などに、確実に音を止めてスピーカーを消す */
-			StopBGM();
 		}
 
 		void BGMList::Init()

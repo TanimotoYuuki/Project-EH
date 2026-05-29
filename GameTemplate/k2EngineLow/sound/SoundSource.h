@@ -48,8 +48,14 @@ namespace nsK2EngineLow {
 		/// </summary>
 		void Stop()
 		{
-			m_sourceVoice->Stop();
+			if (m_sourceVoice == nullptr)
+				return;
+
+			m_sourceVoice->Stop(0);
+			m_sourceVoice->FlushSourceBuffers();
+
 			m_isPlaying = false;
+			m_isLoop = false;
 		}
 		/// <summary>
 		/// ˆê’â~BSoundSource::Play‚Å’ñ¦‚µ‚½‰ÓŠ‚©‚çÄ¶‚³‚ê‚Ü‚·B

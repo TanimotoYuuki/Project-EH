@@ -31,6 +31,7 @@ namespace nsApp
 
 	namespace nsUI {
 		class ReboneGaugeUIManager;
+		class CommentaryUIManager;
 	}
 
 	namespace nsGame
@@ -61,9 +62,18 @@ namespace nsApp
 			/* プレイアブルキャラを生成する。*/
 			void SpawnPlayCharacter();
 
+			/**
+			 * @brief 音源クラスの初期設定に関する関数群を呼び出す。
+			 */
+			void SettingSound();
+
+			/**
+			 * @brief 実況UIの初期設定に関する関数群を呼び出す。
+			 */
+			void SettingCommentaryUI();
+
 
 		public:
-
 			/**
 			* @brief ゲームクリア演出のインスタンスの取得。
 			* @return ゲームクリア演出のインスタンス。
@@ -104,6 +114,7 @@ namespace nsApp
 			nsApp::nsSound::SoundLister* m_soundLister = nullptr; //! サウンドリスター。
 			nsApp::nsStage::BackGround* m_backGround = nullptr; //! 背景。
 			nsUI::ReboneGaugeUIManager* m_reboneGaugeUIManager = nullptr;
+			nsUI::CommentaryUIManager* m_commentaryUIManager = nullptr;
 			nsApp::Camera* m_camera = nullptr;
 			nsActor::Player* m_player = nullptr;
 			nsActor::Boss* m_boss = nullptr;

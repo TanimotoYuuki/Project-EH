@@ -72,12 +72,19 @@ namespace nsK2EngineLow {
 
 	void SoundSource::Release()
 	{
-		if (m_sourceVoice != nullptr) {
+		if (m_sourceVoice != nullptr) 
+		{
+			m_sourceVoice->Stop(0);
+			m_sourceVoice->FlushSourceBuffers();
 			m_sourceVoice->DestroyVoice();
 			m_sourceVoice = nullptr;
 		}
 		Remove3DSound();
-		DeleteGO(this);
+
+		m_waveFile.reset();
+		m_isPlaying = false;
+		m_isLoop = false;
+		m_isAvailable = false;
 	}
 	void SoundSource::Play(char* buff, unsigned int bufferSize)
 	{
