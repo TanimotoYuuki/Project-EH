@@ -19,6 +19,10 @@ namespace nsApp
 			static constexpr float HIGH_HP_RATIO = 0.7f;
 			static constexpr float LOW_HP_RATIO = 0.3f;
 
+			static constexpr int FLINCH_DAMAGE_THRESHOLD = 500; // 怯むのに必要なダメージ。
+			static constexpr float DAMAGE_RESET_TIME = 5.0f;	// 累計値がリセットされる時間。
+			static constexpr float FLINCH_COOLDOWN = 2.0f;		// 一度怯んだら次怯むまでの猶予。
+
 			struct AttackDistanceTable
 			{
 				float minDistance;
@@ -29,53 +33,53 @@ namespace nsApp
 			};
 
 			static inline AttackDistanceTable GetAttackProbability(
-				float distance, 
-				float hpRatio, 
+				float distance,
+				float hpRatio,
 				bool lastAttackWasBite)
 			{
 				if (distance < 25.0f)
 				{
 					if (hpRatio > HIGH_HP_RATIO)
 					{
-						return { 0.0f, 25.0f, lastAttackWasBite ? 50 : 70, 20, 10 };
+						return {0.0f, 25.0f, lastAttackWasBite ? 50 : 70, 20, 10};
 					}
 					else if (hpRatio < LOW_HP_RATIO)
 					{
-						return { 0.0f, 25.0f, lastAttackWasBite ? 40 : 50, 30, 20 };
+						return {0.0f, 25.0f, lastAttackWasBite ? 40 : 50, 30, 20};
 					}
 					else
 					{
-						return { 0.0f, 25.0f, lastAttackWasBite ? 50 : 65, 25, 10 };
+						return {0.0f, 25.0f, lastAttackWasBite ? 50 : 65, 25, 10};
 					}
 				}
 				else if (distance < 55.0f)
 				{
 					if (hpRatio > HIGH_HP_RATIO)
 					{
-						return { 25.0f, 55.0f, 25, lastAttackWasBite ? 40 : 60, 15 };
+						return {25.0f, 55.0f, 25, lastAttackWasBite ? 40 : 60, 15};
 					}
 					else if (hpRatio < LOW_HP_RATIO)
 					{
-						return { 25.0f, 55.0f, 20, lastAttackWasBite ? 35 : 50, 30 };
+						return {25.0f, 55.0f, 20, lastAttackWasBite ? 35 : 50, 30};
 					}
 					else
 					{
-						return { 25.0f, 55.0f, 20, lastAttackWasBite ? 40 : 55, 25 };
+						return {25.0f, 55.0f, 20, lastAttackWasBite ? 40 : 55, 25};
 					}
 				}
 				else
 				{
 					if (hpRatio > HIGH_HP_RATIO)
 					{
-						return { 55.0f, 1000.0f, 10, 15, lastAttackWasBite ? 70 : 75 };
+						return {55.0f, 1000.0f, 10, 15, lastAttackWasBite ? 70 : 75};
 					}
 					else if (hpRatio < LOW_HP_RATIO)
 					{
-						return { 55.0f, 1000.0f, 20, 30, lastAttackWasBite ? 45 : 50 };
+						return {55.0f, 1000.0f, 20, 30, lastAttackWasBite ? 45 : 50};
 					}
 					else
 					{
-						return { 55.0f, 1000.0f, 15, 20, lastAttackWasBite ? 65 : 70 };
+						return {55.0f, 1000.0f, 15, 20, lastAttackWasBite ? 65 : 70};
 					}
 				}
 			}
@@ -89,4 +93,3 @@ namespace nsApp
 		};
 	}
 }
-

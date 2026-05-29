@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "FireAttackStrategy.h"
 #include "Boss.h"
-#include "Src/Effect/EffectList.h"
 
 namespace
 {
@@ -30,17 +29,6 @@ namespace nsApp
 			if (!m_isShot && m_timer <= FIRE_TIME)
 			{
 				boss->ShotFireBall();
-				
-				/*ファイアエフェクトを再生。*/
-				Vector3 effectPos = boss->GetPosition();
-				boss->GetEffectList().PlayEffect(
-					nsApp::nsEffect::Effect_ID::Fire,
-					effectPos,
-					Quaternion::Identity,
-					Vector3::One,
-					2.0f
-				);
-				
 				m_isShot = true;
 			}
 		}
