@@ -9,13 +9,23 @@ namespace nsApp
 		bool SoundLister::Start()
 		{
 			/* BGMとSEの音源データをロード。 */
-			/* BGM。*/
-			m_bgmList.Init();
-
-			/* SE。*/
-			m_seList.Init();
+			InitSound();
 
 			return true;
+		}
+
+
+		void SoundLister::InitSound()
+		{
+			if (m_isInitialized)
+				return;
+
+			/* BGMとSEを初期化。*/
+			m_bgmList.Init();
+			m_seList.Init();
+
+			/* フラグをセット。*/
+			m_isInitialized = true;
 		}
 	}
 }

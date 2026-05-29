@@ -62,11 +62,10 @@ namespace nsApp
 
 
 		private:
-			nsK2EngineLow::SoundSource* m_bgmSource = nullptr;//! BGMのサウンドソースを管理するポインタ。
-
+			static nsK2EngineLow::SoundSource* m_bgmSource; //! BGMを鳴らすスピーカー。
 
 		private:
-			BGM_ID m_currentBGM = BGM_ID::None;               //! 現在流れているBGMのIDを記録する変数。
+			static BGM_ID m_currentBGM	;                   //! 現在流れているBGMのIDを記録する変数。
 		};
 	}
 }

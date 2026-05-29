@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "PlayerReBoneState.h"
 #include "Src/Actor/Character/Player/State/BasicState/PlayerIdleState.h"
+#include "Src/UI/Commentary/CommentaryUIManager.h"
 
 namespace nsApp
 {
@@ -34,6 +35,11 @@ namespace nsApp
 
 			/* 救助アニメーションを再生。*/
 			m_player->PlayBasicAnimation(CharacterBasicAnimationList::Help);
+
+			/* 救助行動を実況UIへ通知する。*/
+			auto* commentary = FindGO<nsUI::CommentaryUIManager>("CommentaryUIManager");
+			if (commentary != nullptr)
+				commentary->AddActionMessage(m_player->GetCurrentWeapon(), L"Help");
 		}
 
 
@@ -138,7 +144,6 @@ namespace nsApp
 
 				/* 救助対象を復活させる。*/
 				m_targetPlayer->ReceiveHelp();
-
 				m_targetPlayer->GetRescueStatusManager().ResetRescueStatus();
 			}
 

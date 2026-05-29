@@ -23,6 +23,7 @@
 #include "Src/Actor/Character/Common/Damage/DamageIndicatorPool.h"
 #include "Src/Actor/Character/Common/Damage/DamageProcessor.h"
 #include "Src/UI/ReboneGage/ReboneGageManager.h"
+#include "Src/UI/Commentary/CommentaryUIManager.h"
 #include <Windows.h>
 
 
@@ -60,14 +61,14 @@ namespace nsApp
 
 		void Game2::DebugUpdateHealTest()
 		{
-			/* 1ã‚­ãƒ¼ã§å‘³æ–¹å…¨å“¡ã«ãƒ‡ãƒãƒƒã‚°ãƒ€ãƒ¡ãƒ¼ã‚¸ã‚’ä¸ãˆã‚‹ã€‚*/
+			/* 1ƒL[‚Å–¡•û‘Sˆõ‚ÉƒfƒoƒbƒOƒ_ƒ[ƒW‚ğ—^‚¦‚éB*/
 			if (IsTriggerKey('1'))
 			{
 				OutputDebugStringA("[DEBUG] 1 DamageParty\n");
 				DebugDamageParty();
 			}
 
-			/* 2ã‚­ãƒ¼ã§å‘³æ–¹å…¨å“¡ã®HPã‚’è¡¨ç¤ºã™ã‚‹ã€‚*/
+			/* 2ƒL[‚Å–¡•û‘Sˆõ‚ÌHP‚ğ•\¦‚·‚éB*/
 			if (IsTriggerKey('2'))
 			{
 				OutputDebugStringA("[DEBUG] 2 PrintPartyHP\n");
@@ -173,9 +174,13 @@ namespace nsApp
 				m_reboneGaugeUIManager = nullptr;
 			}
 
+			if (m_soundLister != nullptr)
+			{
+				m_soundLister->GetBGMList().StopBGM();
+				m_soundLister = nullptr;
+			}
 
 			nsApp::nsStage::LoadStageData::GetInstance().ChangeStage(nsApp::nsStage::StageID::Invalid);
-			DeleteGO(m_soundLister);
 			DeleteGO(m_backGround);
 			DeleteGO(m_camera);
 
@@ -183,46 +188,55 @@ namespace nsApp
 			DeleteGO(m_gameTimeUpDirection);
 			DeleteGO(m_gameOverDirection);
 			DeleteGO(m_gameEndSelect);
+			DeleteGO(m_commentaryUIManager);
 
+			m_commentaryUIManager = nullptr;
 			m_player = nullptr;
 
 			DamageProcessor::SetDamageIndicatorPool(nullptr);
 			DeleteGO(m_damageIndicatorPool);
 			m_damageIndicatorPool = nullptr;
 
+		
 			delete m_generator;
 			delete m_playerHub;
 		}
 
+
 		bool Game2::Start()
 		{
-			/* ä¹±æ•°ã®åˆæœŸåŒ–ã€‚*/
+			/* —”‚Ì‰Šú‰»B*/
 			srand(static_cast<unsigned int>(time(nullptr)));
 
-			/* éŸ³æºã®ç”Ÿæˆã€‚*/
-			m_soundLister = NewGO<nsSound::SoundLister>(0, "SoundManager");
-			m_soundLister->GetBGMList().Init();
-			m_soundLister->GetSEList().Init();
+			/* ‰¹Œ¹ƒNƒ‰ƒX‚Ìİ’è€–ÚB*/
+			SettingSound();
 
-			/* åˆæœŸã‚¹ãƒ†ãƒ¼ã‚¸ã®ã‚»ãƒƒãƒˆã€‚*/
-			/* @TODO ã‚¹ãƒ†ãƒ¼ã‚¸é¸æŠç”»é¢ã‹ã‚‰ã“ã®å‡¦ç†ã‚’å‘¼ã¶ã‚ˆã†ã«ã™ã‚‹ã€‚*/
+			/* ‰ŠúƒXƒe[ƒW‚ÌƒZƒbƒgB*/
+			/* @TODO ƒXƒe[ƒW‘I‘ğ‰æ–Ê‚©‚ç‚±‚Ìˆ—‚ğŒÄ‚Ô‚æ‚¤‚É‚·‚éB*/
 			nsApp::nsStage::LoadStageData::GetInstance().ChangeStage(nsApp::nsStage::StageID::stage1);
 
 			m_backGround = NewGO<nsStage::BackGround>(0, "BackGround");
-			/* ã‚«ãƒ¡ãƒ©ã‚’ç”Ÿæˆã€‚*/
+			/* ƒJƒƒ‰‚ğ¶¬B*/
 			m_camera = NewGO<Camera>(0, "camera");
 
 
-			/* ãƒ€ãƒ¡ãƒ¼ã‚¸ãƒ—ãƒ¼ãƒ«ã‚’ç”Ÿæˆã€‚*/
+			/* ƒ_ƒ[ƒWƒv[ƒ‹‚ğ¶¬B*/
 			m_damageIndicatorPool = NewGO<DamageIndicatorPool>(0, "damagePool");
 			DamageProcessor::SetDamageIndicatorPool(m_damageIndicatorPool);
 
-			///*ãƒœã‚¹ã‚’ä½œæˆã€‚*/
-			//m_boss = NewGO<nsActor::Boss>(0, "boss");
-			///*ãƒœã‚¹ã®ç¨®é¡ã‚’è¨­å®šã€‚*/
-			//m_boss->SetBossType(CharacterModelType::RedDragon);
-			///*ãƒœã‚¹ã«ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚’ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã¨ã—ã¦æ•™ãˆã‚‹ã€‚*/
-			//m_boss->SetTarget(m_player);
+			/* Player’B‚ğ¶¬B*/
+			SpawnPlayCharacter();
+
+			///*ƒ{ƒX‚ğì¬B*/
+			m_boss = NewGO<nsActor::Boss>(0, "boss");
+			/*ƒ{ƒX‚Ìí—Ş‚ğİ’èB*/
+			m_boss->SetBossType(CharacterModelType::GreenDragon);
+
+			if(m_boss != nullptr)
+				/*ƒ{ƒX‚ÉƒvƒŒƒCƒ„[‚ğƒ^[ƒQƒbƒg‚Æ‚µ‚Ä‹³‚¦‚éB*/
+				m_boss->SetTarget(m_player);
+
+
 
 			m_characterHP = NewGO<CharacterHP>(0, "characterHP");
 			m_characterHP->Deactivate();
@@ -234,17 +248,14 @@ namespace nsApp
 			m_gameStartDirection = NewGO<GameStartDirection>(2, "gameStartDirection");
 			m_gameStartDirection->Deactivate();
 
-			/*ãƒ•ã‚§ãƒ¼ãƒ‰ã‚¤ãƒ³ã«åˆ‡ã‚Šæ›¿ãˆã‚‹ã€‚*/
+			/*ƒtƒF[ƒhƒCƒ“‚ÉØ‚è‘Ö‚¦‚éB*/
 			nsApp::nsFade::Fade::GetInstance()->ChangeFadeType(nsApp::nsFade::Fade::EnFadeType::enFadeType_FadeIn);
 
-			/* UIã‚’ç”Ÿæˆã€‚*/
-			m_reboneGaugeUIManager = new nsUI::ReboneGaugeUIManager();
-			m_reboneGaugeUIManager->Init();
-
-			SpawnPlayCharacter();
-
+			/* ƒRƒƒ“ƒg‚Ì¶¬B*/
+			SettingCommentaryUI();
 			return true;
 		}
+
 
 		void Game2::Update()
 		{
@@ -270,9 +281,9 @@ namespace nsApp
 				}
 			}
 
-			/*ã‚²ãƒ¼ãƒ ã‚¯ãƒªã‚¢æ¼”å‡ºã€‚*/
-			/*ç¾åœ¨ã¯å·¦ã‚’å…¥åŠ›ã™ã‚‹ã“ã¨ã§æ¼”å‡ºã‚’æµã™ã‚ˆã†ã«ã—ã¦ã„ã‚‹ã€‚*/
-			/*TODO:ä»Šå¾Œã¯ãƒœã‚¹ã®HPãŒ0ã«ãªã£ãŸã‚‰æ¼”å‡ºã‚’æµã™ã‚ˆã†ã«ã™ã‚‹ã€‚*/
+			/*ƒQ[ƒ€ƒNƒŠƒA‰‰oB*/
+			/*Œ»İ‚Í¶‚ğ“ü—Í‚·‚é‚±‚Æ‚Å‰‰o‚ğ—¬‚·‚æ‚¤‚É‚µ‚Ä‚¢‚éB*/
+			/*TODO:¡Œã‚Íƒ{ƒX‚ÌHP‚ª0‚É‚È‚Á‚½‚ç‰‰o‚ğ—¬‚·‚æ‚¤‚É‚·‚éB*/
 			if (m_gameClearDirection == nullptr)
 			{
 				if (g_pad[0]->IsTrigger(enButtonLeft))
@@ -283,7 +294,7 @@ namespace nsApp
 				}
 			}
 
-			/*æ™‚é–“åˆ‡ã‚Œæ¼”å‡ºã€‚*/
+			/*ŠÔØ‚ê‰‰oB*/
 			if (m_gameTimeUpDirection == nullptr)
 			{
 				if (m_gameTimeLimit->IsTimeUp())
@@ -306,7 +317,7 @@ namespace nsApp
 			}
 
 
-			/* ç¾åœ¨ã®ã‚¹ãƒ†ãƒ¼ã‚¸ã®æ›´æ–°ã‚’è¡Œã†ã€‚*/
+			/* Œ»İ‚ÌƒXƒe[ƒW‚ÌXV‚ğs‚¤B*/
 			nsApp::nsStage::LoadStageData::GetInstance().Update();
 
 			if(m_reboneGaugeUIManager != nullptr)
@@ -316,7 +327,7 @@ namespace nsApp
 
 		void Game2::Render(RenderContext &rc)
 		{
-			/* ç¾åœ¨ã®ã‚¹ãƒ†ãƒ¼ã‚¸ã‚’æç”»ã™ã‚‹ã€‚*/
+			/* Œ»İ‚ÌƒXƒe[ƒW‚ğ•`‰æ‚·‚éB*/
 			nsApp::nsStage::LoadStageData::GetInstance().Draw(rc);
 
 			if(m_reboneGaugeUIManager != nullptr)
@@ -326,33 +337,63 @@ namespace nsApp
 
 		void Game2::SpawnPlayCharacter()
 		{
-			/* ç”Ÿæˆã‚·ã‚¹ãƒ†ãƒ ã‚¯ãƒ©ã‚¹ã‚’ç”Ÿæˆã™ã‚‹ã€‚*/
+			/* ¶¬ƒVƒXƒeƒ€ƒNƒ‰ƒX‚ğ¶¬‚·‚éB*/
 			m_generator = new PlayerGenerator();
 
-			/* PlayerGeneratorã‚’ç”¨ã„ã€ãƒ—ãƒ¬ã‚¤ã‚¢ãƒ–ãƒ«ã‚­ãƒ£ãƒ©ã‚’ä½œæˆã™ã‚‹ã€‚*/
+			/* PlayerGenerator‚ğ—p‚¢AƒvƒŒƒCƒAƒuƒ‹ƒLƒƒƒ‰‚ğì¬‚·‚éB*/
 			std::vector<PlayerSpawnData> partyData =
-			{
+			{			
 				{"player1", WeaponType::GreatSword, ControllerType::NPC ,INIT_CHARACTER_POSITION_PLAYER1},
 				{"player2", WeaponType::Hammer, ControllerType::NPC,INIT_CHARACTER_POSITION_PLAYER2},
-				{"player3", WeaponType::Wand, ControllerType::Player_1P, INIT_CHARACTER_POSITION_PLAYER3},
-				{"player4", WeaponType::TwinGun, ControllerType::NPC, INIT_CHARACTER_POSITION_PLAYER4}
+				{"player3", WeaponType::Wand, ControllerType::NPC, INIT_CHARACTER_POSITION_PLAYER3},
+				{"player4", WeaponType::TwinGun, ControllerType::Player_1P, INIT_CHARACTER_POSITION_PLAYER4}
 			};
 
-			/* ä½œæˆã—ãŸãƒªã‚¹ãƒˆã‚’ã‚»ãƒƒãƒˆã™ã‚‹ã€‚*/
+			/* ì¬‚µ‚½ƒŠƒXƒg‚ğƒZƒbƒg‚·‚éB*/
 			auto players = m_generator->SpawnPlayers(partyData);
 			if (!players.empty())
 				m_player = players[0];
 
-			/* ReboneUIã‚’ç™»éŒ²ã€‚*/
+			/* ReboneUI‚ğ“o˜^B*/
 			if (m_reboneGaugeUIManager != nullptr)
 			{
 				for (auto* player : players)
 					m_reboneGaugeUIManager->RegisterPlayer(player);
 			}
 
-			/* Hubã‚’ç”Ÿæˆã™ã‚‹ã€‚*/
+			/* Hub‚ğ¶¬‚·‚éB*/
 			m_playerHub = new PlayerControlerHub();
 			m_playerHub->Initialize(players, partyData);
+		}
+
+
+		void Game2::SettingSound()
+		{
+			/* ‰¹Œ¹ƒNƒ‰ƒX‚ğ¶¬‚·‚éB*/
+			m_soundLister = FindGO<nsSound::SoundLister>("SoundManager");
+
+			if (m_soundLister == nullptr)
+				m_soundLister = NewGO<nsSound::SoundLister>(0, "SoundManager");
+
+			/* ‰Šú‰»B*/
+			m_soundLister->InitSound();
+
+			/* BGM‚ğÄ¶B*/ 
+			m_soundLister->GetBGMList().StopBGM();
+
+			/* ƒXƒe[ƒWBGM‚ğÄ¶‚·‚éB*/
+			m_soundLister->GetBGMList().PlayBGM(nsSound::BGM_ID::Stage1, 1.0f);
+		}
+
+
+		void Game2::SettingCommentaryUI()
+		{
+			/* UI‚ğ¶¬B*/
+			m_reboneGaugeUIManager = new nsUI::ReboneGaugeUIManager();
+			m_reboneGaugeUIManager->Init();
+
+			/* À‹µUI‚ğ¶¬B*/
+			m_commentaryUIManager = NewGO<nsUI::CommentaryUIManager>(0, "CommentaryUIManager");
 		}
 	}
 }

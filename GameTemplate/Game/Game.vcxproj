@@ -232,6 +232,8 @@
     <ClCompile Include="BossIdleState.cpp" />
     <ClCompile Include="BossMoveState.cpp" />
     <ClCompile Include="BossRoarState.cpp" />
+    <ClCompile Include="Src\UI\Commentary\CommentaryUIManager.cpp" />
+    <ClCompile Include="Src\UI\Commentary\CommentaryUI.cpp" />
     <ClCompile Include="Src\Actor\Character\NPC\Component\RescueStatusLister.cpp" />
     <ClCompile Include="Src\UI\ReboneGage\ReboneGageManager.cpp" />
     <ClCompile Include="Src\UI\ReboneGage\ReboneGaugeUI.cpp" />
@@ -335,7 +337,6 @@
     <ClCompile Include="Title.cpp" />
     <ClCompile Include="Src\Actor\Character\Common\WeaponHitDetection.cpp" />
     <ClCompile Include="Src\UIAnimation\UIAnimation.cpp" />
-    <ClCompile Include="Src\Debug\Sandbag.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BiteAttackStrategy.h" />
@@ -347,6 +348,9 @@
     <ClInclude Include="BossIdleState.h" />
     <ClInclude Include="BossMoveState.h" />
     <ClInclude Include="BossRoarState.h" />
+    <ClInclude Include="Src\UI\Commentary\CommentaryUIManager.h" />
+    <ClInclude Include="Src\UI\Commentary\CommentaryUI.h" />
+    <ClInclude Include="Src\UI\Commentary\CommentaryMessage.h" />
     <ClInclude Include="Src\Actor\Character\NPC\Component\RescueStatusLister.h" />
     <ClInclude Include="Src\UI\ReboneGage\ReboneGageManager.h" />
     <ClInclude Include="Src\UI\ReboneGage\ReboneGaugeUI.h" />
@@ -457,7 +461,6 @@
     <ClInclude Include="Title.h" />
     <ClInclude Include="Src\UIAnimation\UIAnimation.h" />
     <ClInclude Include="Src\Actor\Character\Common\WeaponHitDetection.h" />
-    <ClInclude Include="Src\Debug\Sandbag.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Src\Actor\Character\Common\Pool\GameObjectPool.inl" />

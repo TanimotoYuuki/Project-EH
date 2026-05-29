@@ -29,7 +29,10 @@ namespace nsApp
 		public:
 			bool Start();
 
-
+			/**
+			 * @brief BGMとSEの初期化。
+			 */
+			void InitSound();
 
 
 		/* ゲッター。*/
@@ -50,6 +53,10 @@ namespace nsApp
 		private:
 			nsSound::BGMList m_bgmList; //! BGM担当。
 			nsSound::SEList m_seList;   //! SE担当。
+
+
+		private:
+			bool m_isInitialized = false;
 		};
 	}
 }
