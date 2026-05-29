@@ -20,14 +20,16 @@ namespace nsApp
 			virtual ~PlayerChargeAttackState() = default;
 
 
-		public:
-			/* ライフサイクル。*/
-			void Enter() override;
-			void Update() override;
+		protected:
+			/* 親クラスから呼ばれる処理。*/
+			void PlayAttackAnimation() override;
+			void OnAttackTick() override;
 
 
 		private:
-			/* チャージ弾を発射させる。 */
+			/* 
+			 * @broef チャージ弾を発射させる。
+			 */
 			void FireChargeBullet();
 		};
 	}

@@ -232,9 +232,19 @@
     <ClCompile Include="BossIdleState.cpp" />
     <ClCompile Include="BossMoveState.cpp" />
     <ClCompile Include="BossRoarState.cpp" />
+    <ClCompile Include="Src\Actor\Character\NPC\Component\RescueStatusLister.cpp" />
+    <ClCompile Include="Src\UI\ReboneGage\ReboneGageManager.cpp" />
+    <ClCompile Include="Src\UI\ReboneGage\ReboneGaugeUI.cpp" />
+    <ClCompile Include="Src\Actor\Character\NPC\Component\NPCCombatHelper.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\Component\RescueStatusManager.cpp" />
+    <ClCompile Include="ResourceUtility.cpp" />
+    <ClCompile Include="Src\Actor\Character\NPC\State\BasicState\NPCHelpState.cpp" />
+    <ClCompile Include="Src\Actor\Heel\HeelArea.cpp" />
+    <ClCompile Include="Src\Actor\Character\Common\Damage\DamageIndicatorPool.cpp" />
+    <ClCompile Include="Src\Actor\Character\Common\Damage\DamageProcessor.cpp" />
     <ClCompile Include="FireAttackStrategy.cpp" />
     <ClCompile Include="Game2.cpp" />
-    <ClCompile Include="PlayerControlerHub.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\InputSystem\PlayerControlerHub.cpp" />
     <ClCompile Include="Src\Actor\Character\NPC\State\AttackState\NPCTwinGunAttackState.cpp" />
     <ClCompile Include="Src\Actor\Character\Player\InputSystem\VirtualInputAdapter.cpp" />
     <ClCompile Include="Src\Actor\Magic\Factory\MagicFactory.cpp" />
@@ -276,7 +286,7 @@
     <ClCompile Include="MemberSelect.cpp" />
     <ClCompile Include="QuestSelect.cpp" />
     <ClCompile Include="Select.cpp" />
-    <ClCompile Include="PresentDamageIndicator.cpp" />
+    <ClCompile Include="Src\Actor\Character\Common\Damage\PresentDamageIndicator.cpp" />
     <ClCompile Include="Src\Actor\Actor.cpp" />
     <ClCompile Include="Src\Actor\Character\Player\State\AttackState\PlayerChargingState.cpp" />
     <ClCompile Include="Src\Actor\Character\Player\State\BasicState\PlayerGetUpState.cpp" />
@@ -337,9 +347,22 @@
     <ClInclude Include="BossIdleState.h" />
     <ClInclude Include="BossMoveState.h" />
     <ClInclude Include="BossRoarState.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\Component\RescueStatusLister.h" />
+    <ClInclude Include="Src\UI\ReboneGage\ReboneGageManager.h" />
+    <ClInclude Include="Src\UI\ReboneGage\ReboneGaugeUI.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\Component\NPCCombatHelper.h" />
+    <ClInclude Include="Src\Actor\Character\Player\Component\RescueStatusManager.h" />
+    <ClInclude Include="ResourceUtility.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\State\BasicState\NPCHelpState.h" />
+    <ClInclude Include="Src\Actor\Heel\HeelArea.h" />
+    <ClInclude Include="Src\Actor\Character\Common\Damage\DamageIndicatorPool.h" />
+    <ClInclude Include="Src\Actor\Character\Common\Damage\DamageProcessor.h" />
+    <ClInclude Include="Src\Actor\Character\Common\Damage\DamageRequest.h" />
     <ClInclude Include="FireAttackStrategy.h" />
     <ClInclude Include="Game2.h" />
-    <ClInclude Include="PlayerControlerHub.h" />
+    <ClInclude Include="Src\Actor\Character\Common\Pool\GameObjectPool.h" />
+    <ClInclude Include="Src\Actor\Character\Common\Pool\IPoolable.h" />
+    <ClInclude Include="Src\Actor\Character\Player\InputSystem\PlayerControlerHub.h" />
     <ClInclude Include="Src\Actor\Character\Player\InputSystem\GamePadInputAdapter.h" />
     <ClInclude Include="IBossAttackStrategy.h" />
     <ClInclude Include="Src\Actor\Character\NPC\State\AttackState\NPCTwinGunAttackState.h" />
@@ -385,7 +408,7 @@
     <ClInclude Include="MemberSelect.h" />
     <ClInclude Include="QuestSelect.h" />
     <ClInclude Include="Select.h" />
-    <ClInclude Include="PresentDamageIndicator.h" />
+    <ClInclude Include="Src\Actor\Character\Common\Damage\PresentDamageIndicator.h" />
     <ClInclude Include="Src\Actor\Actor.h" />
     <ClInclude Include="Src\Actor\Character\Player\State\AttackState\PlayerChargingState.h" />
     <ClInclude Include="Src\Actor\Character\Player\State\BasicState\PlayerGetUpState.h" />
@@ -435,6 +458,9 @@
     <ClInclude Include="Src\UIAnimation\UIAnimation.h" />
     <ClInclude Include="Src\Actor\Character\Common\WeaponHitDetection.h" />
     <ClInclude Include="Src\Debug\Sandbag.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Src\Actor\Character\Common\Pool\GameObjectPool.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

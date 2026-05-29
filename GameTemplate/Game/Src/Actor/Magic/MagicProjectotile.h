@@ -8,9 +8,15 @@
 
 #include "Src/Actor/Character/Common/WeaponHitDetection.h"
 #include "Src/Actor/Magic/Parameter/MagicParameter.h"
+#include "Src/Actor/Character/Common/Damage/DamageRequest.h"
+#include "Src/Actor/Gun/Parameter/BulletParameter.h"
 
 namespace nsApp
 {
+	namespace nsEffect {
+		class EffectList;
+	}
+
 	namespace nsActor
 	{
 		enum class MagicType : uint8_t
@@ -65,6 +71,17 @@ namespace nsApp
 			 */
 			bool CheckHitBoss();
 
+			/**
+			 * @brief 魔法弾を非アクティブ化する。
+			 */
+			void Deactivate();
+
+			/**
+			 * @brief 魔法がヒットした際のエフェクトを再生する。
+			 * @param position エフェクトを再生する位置。
+			 */
+			void PlayHitEffect(const Vector3& position);
+
 
 		/* セッター。*/
 		public:
@@ -86,16 +103,31 @@ namespace nsApp
 				m_target = target;
 			}
 
+			/**
+			 * @brief 魔法の当たり判定を管理するクラスを設定する。
+			 * @param effectList エフェクト管理クラスのポインタ。
+			 */
+			inline void SetEffectList(nsEffect::EffectList* effectList)
+			{
+				m_effectList = effectList;
+			}
 
+			
 		/* ゲッター。*/
 		public:
-			/* 魔法の種類を取得。*/
+			/* 
+			 * @brief 魔法の種類を取得。
+			 */
 			inline MagicType GetMagicType() const
 			{
 				return m_magicType;
 			}
 
-			/* モデル名を取得。*/
+			/* 
+			 * @brief モデル名を取得。
+			 * @param modelName モデル名。
+			 * @return モデルのパス。
+			 */
 			inline const std::string SearchMissileModelPath(const std::string& modelName)
 			{
 				return "Assets/modelData/Character/Weapon/" + modelName + ".tkm";
@@ -115,45 +147,57 @@ namespace nsApp
 				return m_angleZ * m_angleY * m_angleZ;
 			}
 
+			/**
+			 * @brief プール内で使用中かを取得する。
+			 * @return 使用中ならtrue。
+			 */
+			inline bool IsInUse() const
+			{
+				return m_isInUse;
+			}
+
 
 		private:
-			nsActor::ICharacter* m_target = nullptr;			 //! 目標。
-			nsK2Engine::CollisionObject* m_magicCollider;        //! 魔法の当たり判定を管理するクラス。
+			nsActor::ICharacter* m_target = nullptr;					   //! 目標。
+			nsK2Engine::CollisionObject* m_magicCollider = nullptr;        //! 魔法の当たり判定を管理するクラス。
+			nsEffect::EffectList* m_effectList = nullptr;				   //! エフェクト管理クラスのポインタ。
 
-			
 		private:
-			MagicType m_magicType = MagicType::enNone;           //! 魔法の種類。
+			std::unique_ptr<ModelRender> m_missileModel = nullptr;		   //! ミサイルを描画するレンダー。
+			MagicType m_magicType = MagicType::enNone;					   //! 魔法の種類。
 
 
-			Vector3 m_position = Vector3::Zero;                  //! 魔法の位置。
-			Vector3 m_velocity = Vector3::Zero;					 //! 魔法の速度。
-			Vector3 m_forwardDirection = Vector3::Zero;			 //! 魔法の前方向ベクトル。
-			Vector3 m_scale = Vector3::One;						 //! 魔法のスケール。
-			Vector3 m_targetPosition = Vector3::Zero;		  	 //! 目標位置。
-			Vector3 m_toTargetVector = Vector3::Zero;			 //! 目標と自身の距離ベクトル。
-			Vector3 m_currentDirection = Vector3::Zero;			 //! 現在の移動方向。
-			Vector3 m_newPosition = Vector3::Zero;               //! 新しい位置。
-			Vector3 m_previousPosition = Vector3::Zero;          //! 前フレームの位置。
-			Vector3 m_bossPosition = Vector3::Zero;				 //! ボスの位置。
-			Vector3 m_missileTrajectory = Vector3::Zero;	     //! ミサイルの軌道。
-			Vector3 m_vectorToBossTarget = Vector3::Zero;		 //! ボスの目標位置へのベクトル。
-			Vector3 m_closestPointOnTrajectory = Vector3::Zero;  //! 軌道上の最も近い点。
-
-			Quaternion m_angle = Quaternion::Identity;			 //! 魔法の回転角。
-			Quaternion m_direction = Quaternion::Identity;       //! 角度。
-			Quaternion m_angleX = Quaternion::Identity;			 //! X軸の回転角。
-			Quaternion m_angleY = Quaternion::Identity;          //! Y軸の回転角。
-			Quaternion m_angleZ = Quaternion::Identity;          //! Z軸の回転角。
+			Vector3 m_position = Vector3::Zero;							   //! 魔法の位置。
+			Vector3 m_velocity = Vector3::Zero;							   //! 魔法の速度。
+			Vector3 m_forwardDirection = Vector3::Zero;					   //! 魔法の前方向ベクトル。
+			Vector3 m_scale = Vector3::One;								   //! 魔法のスケール。
+			Vector3 m_targetPosition = Vector3::Zero;		  			   //! 目標位置。
+			Vector3 m_toTargetVector = Vector3::Zero;					   //! 目標と自身の距離ベクトル。
+			Vector3 m_currentDirection = Vector3::Zero;					   //! 現在の移動方向。
+			Vector3 m_newPosition = Vector3::Zero;						   //! 新しい位置。
+			Vector3 m_previousPosition = Vector3::Zero;					   //! 前フレームの位置。
+			Vector3 m_bossPosition = Vector3::Zero;						   //! ボスの位置。
+			Vector3 m_missileTrajectory = Vector3::Zero;				   //! ミサイルの軌道。
+			Vector3 m_vectorToBossTarget = Vector3::Zero;			       //! ボスの目標位置へのベクトル。
+			Vector3 m_closestPointOnTrajectory = Vector3::Zero;			   //! 軌道上の最も近い点。
+			Vector3 m_effectPosition = Vector3::Zero;					   //! エフェクト再生位置。
 
 
-			ModelRender m_missileMddel;							 //! ミサイルを描画するレンダー。
-
-			float m_currentLifeTime = 0.0f;                      //! 秒数管理用の寿命			
-			float m_damage = 0.0f;                               //! 魔法のダメージ量。
-			float m_moveSpeed = 0.0f;                            //! 移動速度。
-			float m_trajectoryLengthSquared = 0.0f;              //! 軌道の長さの二乗。
-			float m_closestPointRatio = 0.0f;                    //! 最も近い点の比率。
-			float m_distanceToBoss = 0.0f;						 //! ボスまでの距離。
+			Quaternion m_angle = Quaternion::Identity;					   //! 魔法の回転角。
+			Quaternion m_direction = Quaternion::Identity;				   //! 角度。
+			Quaternion m_angleX = Quaternion::Identity;					   //! X軸の回転角。
+			Quaternion m_angleY = Quaternion::Identity;					   //! Y軸の回転角。
+			Quaternion m_angleZ = Quaternion::Identity;					   //! Z軸の回転角。
+																		   
+			float m_currentLifeTime = 0.0f;								   //! 秒数管理用の寿命			
+			float m_damage = 0.0f;										   //! 魔法のダメージ量。
+			float m_moveSpeed = 0.0f;									   //! 移動速度。
+			float m_trajectoryLengthSquared = 0.0f;						   //! 軌道の長さの二乗。
+			float m_closestPointRatio = 0.0f;							   //! 最も近い点の比率。
+			float m_distanceToBoss = 0.0f;								   //! ボスまでの距離。
+																		   
+			bool m_isInUse = false;										   //! 魔法弾が現在使用中か。
+			bool m_isModelInitialized = false;							   //! モデルが初期化されているか。
 		};
 	}
 }

@@ -94,7 +94,6 @@ namespace nsApp
 		m_isJump = false;            //! ジャンプフラグ。
 		m_isRun = false;             //! 走りフラグ。
 		m_isDamage = false;          //! ダメージフラグ。
-		m_isDeath = false;           //! 死亡フラグ。
 		m_isNormalAttack = false;    //! 通常攻撃フラグ。
 		m_isChargeAttack = false;    //! チャージ攻撃フラグ。
 		m_isAirAttack = false;       //! 空中攻撃フラグ。

@@ -3,10 +3,10 @@
 #include "Src/Actor/Character/Player/State/BasicState/PlayerIdleState.h"
 #include "Src/Actor/Character/Player/State/BasicState/PlayerWalkState.h"
 #include "Src/Actor/Character/Player/State/BasicState/PlayerRunState.h"
+#include "Src/Actor/Character/Common/Damage/DamageProcessor.h"
 
 #include "Src/Actor/Character/Status/AttackParameterTable.h"
 #include "Src/Actor/Magic/Factory/MagicFactory.h"
-#include "PresentDamageIndicator.h"
 #include "Boss.h"
 
 namespace
@@ -17,6 +17,7 @@ namespace
 	const auto DAMAGE_TEXT_OFFSET_Y = 120.0f;   //! ダメージテキストのY軸オフセット。
 	const auto CRITICAL_PERCENTAGE = 100.0f;    //! クリティカル発生確立。
 }
+
 namespace nsApp
 {
 	namespace nsState
@@ -26,12 +27,15 @@ namespace nsApp
 			/* 攻撃の種類ごとにキャストを行う。*/
 			m_player = static_cast<nsActor::Player*>(m_owner);
 
-			/* ヒットフラグ。*/
-			m_isHit = false;
+			/* ボスクラスを探索。*/
+			m_boss = FindGO<nsActor::Boss>("boss");
 
-			m_inputRequests.clear();
+			/* 共通の初期化。*/
+			OnCommonInitializeToEnter();
 
-			m_attackTimer = 0;
+			/* アニメーションの再生と固有の初期化は派生クラスに譲渡。*/
+			PlayAttackAnimation(); 
+			OnEnterAttack();
 		}
 
 
@@ -50,12 +54,12 @@ namespace nsApp
 			/* Bボタンアクション。*/
 			if (inputClass.IsAttack())
 			{
-				/* 
-				 *タイマーを加算する。
+				/*
+				 * タイマーを加算する。
 				 * Bボタンを押すごとにタイマーを加算し、当てはまるなら連続攻撃に繋げる。
 				 */
 				m_rushCount++;
-				
+
 				/* Bボタンが押されていたら予約を入れる。*/
 				m_inputRequests[ComboInputType::PressB] = true;
 			}
@@ -66,39 +70,48 @@ namespace nsApp
 			/* Aボタンアクション。*/
 			if (inputClass.IsSlashUp())
 				m_inputRequests[ComboInputType::PressLB2] = true;
-			else if(inputClass.IsJump())
+			else if (inputClass.IsJump())
 				m_inputRequests[ComboInputType::PressA] = true;
-
 
 			if (m_rushCount >= 2)
 				m_inputRequests[ComboInputType::RushB] = true;
 
-			if (m_attackTimer > 5 && !m_player->IsPlayAnimation())
+			/* 毎フレームの処理とタイミングがある処理を派生クラスに譲渡。*/
+			if (OnUpdateAttack())
+				return;
+
+			OnAttackTick();
+
+			/* 終了判定。*/
+			if (UseCommonEndTransition() && m_attackTimer > ATTACK_END_FRAME && !m_player->IsPlayAnimation())
 			{
 				/* Idle状態へ遷移。*/
 				m_stateMachine->ChangeState(new PlayerIdleState());
 				return;
 			}
 
-			if (!m_isHit)
+			/* 衝突判定。*/
+			if (m_boss != nullptr)
 			{
-				auto boss = FindGO<nsActor::Boss>("boss");
-				if (boss != nullptr && reinterpret_cast<uint8_t>(boss) != 0xFFFFFFFFFFFFFFFF)
-				{
-					/* ダメージフォントの描画。*/
-					OnHitDamageText(boss);
+				auto& hitDetection = m_player->GetWeaponHitDetection();
 
-					/* ボスにダメージを与える。*/
-					boss->ApplyDamage(m_finalDamage);
-					/* ヒットストップを行う時間を設定。*/
-					m_player->SetHitStop(HIT_STOP_FRAME);
-					/* 対象にヒットストップをさせる時間を設定。*/
-					boss->SetHitStop(HIT_STOP_FRAME);
-					/* ヒットフラグを設定。*/
+				if (!m_isHit && hitDetection.IsHit(m_boss))
+				{
 					m_isHit = true;
+					ApplyDamageToText(m_boss);
+
+					m_player->SetHitStop(HIT_STOP_FRAME);
+					m_boss->SetHitStop(HIT_STOP_FRAME);
+				}
+
+				/* 終了判定。*/
+				if (UseCommonEndTransition() && m_attackTimer > ATTACK_END_FRAME && !m_player->IsPlayAnimation())
+				{
+					m_stateMachine->ChangeState(new PlayerIdleState());
+					return;
 				}
 			}
-///////////////////////////////////////////////////////////////////////////////////////////////////
+			///////////////////////////////////////////////////////////////////////////////////////////////////
 		}
 
 
@@ -114,34 +127,9 @@ namespace nsApp
 				/* SEの再生を止める。*/
 				m_player->StopWeaponSE();
 			}
-		}
 
-
-		void PlayerAttackBaseState::OnHitDamageText(nsActor::ICharacter* target)
-		{
-			// m_player や target が無い時は何もしない
-			if (!m_player || !target)
-				return;
-
-			/* --- ダメージ計算はそのまま --- */
-			m_getPlayerPosition = m_player->GetPosition();
-			m_forwardDirection = m_player->GetForwardVector();
-			const auto& playerStatus = m_player->GetCharacterStatus().attack;
-			const auto& attackParameter = AttackParameterTable::GetAttackParameter(m_currentAttackType);
-
-			m_finalDamage = static_cast<int>(playerStatus.normalDamage * attackParameter.damageMultiplier);
-
-			m_criticalRate = playerStatus.criticalRate + attackParameter.criticalRatel;
-			if ((rand() % 100) < (m_criticalRate * 100.0f))
-				m_finalDamage = static_cast<int>(m_finalDamage * playerStatus.criticalDamage);
-
-
-			m_screenPosition = target->GetPosition();
-			m_screenPosition.y += 120.0f;
-
-			/* ダメージテキストを表示する。*/
-			m_damageIndicator = NewGO<PresentDamageIndicator>(0, "DamageUI");
-			m_damageIndicator->Init(m_finalDamage, m_screenPosition);
+			/* 子クラスの終了処理。*/
+			OnExitAttack();
 		}
 
 
@@ -171,6 +159,54 @@ namespace nsApp
 				}
 			}
 			return false;
+		}
+
+
+		void PlayerAttackBaseState::ApplyDamageToText(nsActor::ICharacter* target)
+		{
+			/* playerクラスとtargetが存在するか検知。*/
+			if (!m_player || !target)
+				return;
+
+			/* 最終的なダメージ。*/
+			const int damageAmount = CalculateFinalDamage();
+
+			/* ダメージテキストの表示位置。*/
+			m_damageRequest = BuildDamageRequest(target, damageAmount);
+
+			/* ダメージテキストを表示する。*/
+			DamageProcessor::ApplyDamage(m_damageRequest);
+		}
+
+
+		int PlayerAttackBaseState::CalculateFinalDamage() const
+		{
+			/* 攻撃力を取得。*/
+			const auto& playerStatus = m_player->GetCharacterStatus().attack;
+			/* 現在の攻撃パラメーターの情報を取得する。*/
+			const auto& attackParameter = AttackParameterTable::GetAttackParameter(m_currentAttackType);
+			
+			/* ダメージ計算。*/
+		    auto finalDamage = static_cast<int>(playerStatus.normalDamage * attackParameter.damageMultiplier);
+			const auto criticalRate = playerStatus.criticalRate + attackParameter.criticalRatel;
+
+			/* クリティカル判定。*/
+			if ((rand() % static_cast<int>(CRITICAL_PERCENTAGE)) < (criticalRate + CRITICAL_PERCENTAGE))
+				finalDamage = static_cast<int>(finalDamage * playerStatus.criticalDamage);
+
+			return finalDamage;
+		}
+
+
+		DamageRequest PlayerAttackBaseState::BuildDamageRequest(nsActor::ICharacter* target, int damageAmount) const
+		{
+			DamageRequest request;
+			request.target = target;
+			request.damageAmount = damageAmount;
+			request.hitPosition = target->GetPosition();
+			request.hitPosition.y += DAMAGE_TEXT_OFFSET_Y;
+
+			return request;
 		}
 	}
 }

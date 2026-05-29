@@ -61,19 +61,23 @@ namespace nsApp
 			virtual void Render(RenderContext& rc) override;
 
 
+		protected:
+			/**
+			 * @brief ヒットストップのタイマーを更新する処理。
+			 */
+			inline void UpdateHitStioTImer()
+			{
+				if (m_hitStopFlame > 0)
+					m_hitStopFlame--;
+			}
+
+
 		public:
 			/* 
 			 * @brief ダメージを受け取る処理。
 			 * @param damage 受けるダメージ量。
 			 */
-			virtual void ApplyDamage(int damage)
-			{
-				m_characterStatus.hp.currentHP -= damage;
-
-				/* 値がマイナスにならないように補正。*/
-				if (m_characterStatus.hp.currentHP < 0)
-					m_characterStatus.hp.currentHP = 0;
-			}
+			virtual void ApplyDamage(int damage);
 
 
 		/* セッター。*/

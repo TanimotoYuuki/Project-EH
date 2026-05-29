@@ -1,5 +1,6 @@
 ﻿#include "stdafx.h"
 #include "NPCWandAttackState.h"
+#include "Src/Actor/Character/NPC/State/BasicState/NPCIdleState.h"
 #include "Src/Actor/Character/NPC/State/BasicState/NPCChaseState.h"
 #include "Src/Actor/Character/NPC/State/AttackState/NPCAttackBaseState.h"
 #include "Src/Actor/Character/Player/InputSystem/VirtualInputAdapter.h"
@@ -13,7 +14,8 @@ namespace
 
 	/* 時間（フレーム）関連 */
 	const auto ATTACK_DURATION = 40;               //! 攻撃モーションが継続し、敵の方を向き続ける時間
-	const auto ATTACK_RESET_TIME = 70;             //! 次の行動（再抽選）に移るまでの総時間
+	const auto ATTACK_RESET_TIME = 70;             //! 通常の終了判定時間
+	const auto ATTACK_FORCE_RESET_TIME = 120;      //! アニメーションが終わらない場合の保険
 
 	/* コンボ入力のタイミング（フレーム） */
 	const auto COMBO_FIRST_INPUT = 1;              //! 1段目のボタン入力タイミング
@@ -48,10 +50,13 @@ namespace nsApp
 
 		void NPCWandAttackState::Update()
 		{
-			auto target = m_npcBrain->SearchTarget();
+			if (CheckHelpTransition())
+				return;
+
+			nsActor::ICharacter* target = m_npcBrain->SearchTarget();
 
 			/* 早期リターン。*/
-			if (!target || !m_getBody)
+			if (target == nullptr || m_getBody == nullptr)
 				return;
 
 			/* 距離を計算。*/
@@ -75,9 +80,25 @@ namespace nsApp
 			/* めり込み防止。*/
 			PreventClipping(target);
 
-			/* ステートの再抽選。*/
-			if (m_attackTimer > ATTACK_RESET_TIME)
-				Enter();
+			/* 通常終了。アニメーションが終わっていれば安全に待機へ戻る。*/
+			if (m_attackTimer > ATTACK_RESET_TIME && !m_getBody->IsPlayAnimation())
+			{
+				if (m_virtualInput != nullptr)
+					m_virtualInput->Reset();
+
+				m_stateMachine->ChangeState(new NPCIdleState());
+				return;
+			}
+
+			/* 保険。アニメーション終了判定が戻らない場合でも永久停止しないようにする。*/
+			if (m_attackTimer > ATTACK_FORCE_RESET_TIME)
+			{
+				if (m_virtualInput != nullptr)
+					m_virtualInput->Reset();
+
+				m_stateMachine->ChangeState(new NPCIdleState());
+				return;
+			}
 		}
 
 
@@ -96,28 +117,30 @@ namespace nsApp
 			(this->*actions[static_cast<int>(m_currentPattern)])();
 		}
 
+
 		void NPCWandAttackState::ExecuteMagicAttack()
 		{
 			if (m_attackTimer == COMBO_FIRST_INPUT)
-				m_virtualInput->SetButton(enButtonRB1,true);
+				m_virtualInput->RequestButton(enButtonRB1,3);
 		}
 
 
 		void NPCWandAttackState::ExecuteMagicHeal()
 		{
 			if (m_attackTimer == COMBO_FIRST_INPUT)
-				m_virtualInput->SetButton(enButtonRB2,true);
+				m_virtualInput->RequestButton(enButtonRB2,3);
 		}
 
 
 		void NPCWandAttackState::ExecuteMeleeAir()
 		{
 			if (m_attackTimer == COMBO_FIRST_INPUT)
-				m_virtualInput->SetButton(enButtonA,true);
+				m_virtualInput->RequestButton(enButtonA,3);
 
 			if (m_attackTimer == COMBO_AIR_INPUT)
-				m_virtualInput->SetButton(enButtonB,true);
+				m_virtualInput->RequestButton(enButtonB,3);
 		}
+
 
 		void NPCWandAttackState::UpdateMovement()
 		{

@@ -20,19 +20,21 @@ namespace nsApp
 			virtual ~PlayerPushState() = default;
 
 
-		public:
-		    /* ライフサイクル。*/
-			void Enter() override;
-			void Update() override;
-			void Exit() override;
-
-			/* テーブルから判定を呼び出す。*/
-			bool RequestID(uint8_t& id) override;
+		protected:
+			/* TemplateMethod。*/
+			void PlayAttackAnimation() override;
+			void OnEnterAttack() override;
+			bool OnUpdateAttack() override;
+			void OnExitAttack() override;
+			bool OnRequestAttackID(uint8_t& id) override;
 
 
 		/* セッター。*/
 		public:
-			/* 前進する際の速度を設定。*/
+			/* 
+			 * @brief 前進する際の速度を設定。
+			 * @param 前進する速度。
+			 */
 			inline void SetForwardSpeed(float speed)
 			{
 				m_forwardSpeed = speed;

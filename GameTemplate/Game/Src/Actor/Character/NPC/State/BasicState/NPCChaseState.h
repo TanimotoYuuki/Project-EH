@@ -68,6 +68,12 @@ namespace nsApp
 				m_distance = m_difference.Length();
 			}
 
+			/**
+			 * @brief 武器の種類に応じて攻撃開始距離を変える処理。
+			 * @param type 武器の種類。
+			 */
+			float CharacterToBeChosen(WeaponType type) const;
+
 
 		private:
 			NPCBrain* m_brain = nullptr;			  //! NPCの親クラスのポインタ。
@@ -79,6 +85,7 @@ namespace nsApp
 			Vector3 m_myPosition = Vector3::Zero;     //! NPCの現在位置。
 			Vector3 m_targetPosition = Vector3::Zero; //! ターゲットの現在位置。
 			Vector3 m_difference = Vector3::Zero;     //! NPCとターゲットの位置の差分。
+			Vector3 m_sideMove = Vector3::Zero;       //! NPCの横移動方向。
 
 			WeaponType m_myWeapon = WeaponType::None; //! NPCの武器の種類。
 

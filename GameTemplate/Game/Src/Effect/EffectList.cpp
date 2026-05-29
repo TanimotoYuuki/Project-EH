@@ -173,6 +173,9 @@ namespace nsApp
 			/* 魔法攻撃を登録。*/
 			m_effectPathList[Effect_ID::MagicAttack] = GetEffectFilePath(u"magicAttack");
 
+			/* ヒットエフェクトを登録。*/
+			m_effectPathList[Effect_ID::Hit] = GetEffectFilePath(u"Hit");
+
 			/* エフェクトを登録。*/
 			/* 回復エフェクト。*/
 			EffectEngine::GetInstance()->ResistEffect(Effect_ID::HeelMagic, m_effectPathList[Effect_ID::HeelMagic].c_str());
@@ -182,6 +185,9 @@ namespace nsApp
 
 			/* 魔法攻撃エフェクト。*/
 			EffectEngine::GetInstance()->ResistEffect(Effect_ID::MagicAttack, m_effectPathList[Effect_ID::MagicAttack].c_str());
+
+			/* ヒットエフェクト。*/ 
+			EffectEngine::GetInstance()->ResistEffect(Effect_ID::Hit, m_effectPathList[Effect_ID::Hit].c_str());
 		}
 
 

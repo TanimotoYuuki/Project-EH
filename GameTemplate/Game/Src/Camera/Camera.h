@@ -7,7 +7,6 @@
 */
 
 
-
 namespace nsApp
 {
 	class Camera : public IGameObject

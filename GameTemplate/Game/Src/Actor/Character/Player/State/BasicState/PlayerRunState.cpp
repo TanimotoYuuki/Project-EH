@@ -56,6 +56,12 @@ namespace nsApp
 		{
 			const auto& inputClass = m_player->GetInputClass();
 
+			if (inputClass.IsHelp())
+			{
+				id = static_cast<uint8_t>(nsActor::PlayerStateID::enHelp);
+				return true;
+			}
+
 			if (inputClass.IsAttack())
 			{
 				/* a‚èi‚Şó‘Ô‚ÉB*/

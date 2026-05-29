@@ -12,82 +12,75 @@ namespace
 namespace nsApp
 {
 	namespace nsState
-	{
-		void PlayerSlashUpState::Enter()
+	{ 
+		void PlayerSlashUpState::PlayAttackAnimation()
 		{
-			/* キャスト。*/
-			m_player = static_cast<nsActor::Player*>(m_owner);
-
-			/* 攻撃のタイプを設定する。*/
+			/* 攻撃の種類を設定。*/
 			m_currentAttackType = AttackType::SlashUp;
 
-			/* アニメーションを再生。*/
+			/* 攻撃アニメーションを再生する。*/
 			m_player->PlayWeaponAnimation(AttackType::SlashUp);
+		}
 
-			/**/
+
+		void PlayerSlashUpState::OnEnterAttack()
+		{
+			/* 武器の角度を設定。*/
 			m_player->SetWeaponRotationAngle(Vector3::Right, 0.0f);
-
 			/* 初速を設定。*/
 			SetJumpVelocity(200.0f);
+			/* 当たり判定を付与。*/
 			m_player->GetWeaponHitDetection().Enable();
 		}
 
 
-		void PlayerSlashUpState::Update()
+		bool PlayerSlashUpState::OnUpdateAttack()
 		{
-			m_attackTimer++;
-			const auto& inputClass = m_player->GetInputClass();
-
-			/* Bボタンが押されたことを知らせる。*/
-			if(inputClass.IsAirAttack() || inputClass.IsAttack())
-				m_inputRequests[ComboInputType::PressB] = true;
-
-			/* 杖の場合はエフェクトを発生させる。*/
-			if (m_player->GetCurrentWeapon() == WeaponType::Wand)
+			/* 杖のエフェクト。*/
+			if (m_player->GetCurrentWeapon() == WeaponType::Wand && m_attackTimer == 10 && !m_isSummoned)
 			{
-				if (m_attackTimer == 10 && !m_isSummoned)
-				{
-					m_effectPosition = m_player->GetPosition();
-					m_effectPosition.y += 10.0f;
-					m_player->GetEffectList().PlayEffect(nsEffect::ShockWave, m_effectPosition, Quaternion::Identity, Vector3::One * 2.0f);
-				}
+				/* Playerクラスの座標を取得。*/
+				m_effectPosition = m_player->GetPosition();
+				m_effectPosition.y += 10.0f;
+				/* 再生するエフェクトを設定。*/
+				m_player->GetEffectList().PlayEffect(nsEffect::ShockWave, m_effectPosition, Quaternion::Identity, Vector3::One * 2.0f);
+				m_isSummoned = true;
 			}
 
-			/* 斬り上げ時の上昇と落下処理。*/
-			m_jumpVelocity -= 30.0f; /* 重力を設定。*/
-			/* ステージにめり込まないように制限。*/
+			/* 上昇/重力処理。*/
+			m_jumpVelocity -= 30.0f;
 			if (m_jumpVelocity < -1200.0f)
 				m_jumpVelocity = -1200.0f;
 
-			m_slashUpSpeed = Vector3(0.0f, m_jumpVelocity, 0.0f);
-			m_player->GetCharacterController().Execute(m_slashUpSpeed, MOVE_FRAME_TIME);
+			/* 移動速度を設定。*/
+			m_moveSpeed = Vector3(0.0f, m_jumpVelocity, 0.0f);
+			m_player->GetCharacterController().Execute(m_moveSpeed, MOVE_FRAME_TIME);
 			m_player->SetPosition(m_player->GetCharacterController().GetPosition());
-			m_jumpVelocity = m_slashUpSpeed.y;
+			m_jumpVelocity = m_moveSpeed.y;
 
-
-			/* 空中攻撃状態に遷移。*/
-			if (m_inputRequests[ComboInputType::PressB])
-			{
-				TransitionAirAttack();
-				return;
-			}
-
-			/* ジャンプ状態に遷移。*/
+			/* アニメーション終了後にジャンプステートへ遷移。*/
 			if (m_attackTimer > 5 && !m_player->IsPlayAnimation())
 			{
 				TransitionJumpState();
-				return;
+				return true;
 			}
+
+			return false;
 		}
 
 
-		void PlayerSlashUpState::Exit()
+		void PlayerSlashUpState::OnExitAttack()
 		{
 			m_player->SetWeaponRotationAngle(Vector3::Right, 0.0f);
 		}
 
-		bool PlayerSlashUpState::RequestID(uint8_t& id)
+
+		bool PlayerSlashUpState::OnRequestAttackID(uint8_t& id)
 		{
+			/* Bボタン入力で空中攻撃に遷移。*/
+			if (m_inputRequests[ComboInputType::PressB])
+				TransitionAirAttack();
+
 			return false;
 		}
 

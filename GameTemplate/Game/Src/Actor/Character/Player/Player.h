@@ -17,15 +17,19 @@
 #include "Src/Effect/EffectList.h"
 #include "Src/Effect/EffectListener.h"
 
+#include "Src/Actor/Character/NPC/Component/RescueStatusLister.h"
+
+
 namespace nsApp
 {
+
 	namespace nsEffect {
 		class EffectList;
 	}
 
 	namespace nsActor
 	{
-		/* 
+		/*
 		 * @enum PlayerStateID。
 		 *プレイヤーの状態を管理する列挙型。
 		 */
@@ -61,13 +65,13 @@ namespace nsApp
 		class Player : public ICharacter
 		{
 		public:
-		    /* コンストラクタとデストラクタ。*/
+			/* コンストラクタとデストラクタ。*/
 			Player() = default;
 			virtual ~Player();
 
 
 		public:
-			/*  
+			/*
 			 * @def PlayerGeneratorにてコールする。
 			 * @brief PlayerGeneratorクラスからデータを受け取る処理。
 			 * @param data: 生成時に必要な構造体のデータを取得する。
@@ -106,15 +110,17 @@ namespace nsApp
 			/* すり抜け計算。*/
 			void ComputeSlipThrough();
 
+			/* クランプ制限。*/
+			Vector3 ClampBattleAreaMoveVector(const Vector3& moveVector, float frameTime) const;
 
 		public:
-			/* 
+			/*
 			 * @brief 基本動作用アニメーションを再生。
 			 * @param state 再生する基本動作の列挙型。
 			 */
 			void PlayBasicAnimation(CharacterBasicAnimationList state);
 
-			/* 
+			/*
 			 * @brief 攻撃用アニメーションを再生。
 			 * @param attack 再生する攻撃の列挙型。
 			 */
@@ -127,7 +133,7 @@ namespace nsApp
 			nsActor::Player* SearchCharacter();
 
 			/* 現在扱う武器のSEを止める処理。*/
-		    void StopWeaponSE()
+			void StopWeaponSE()
 			{
 				if (m_currentWeaponSE != nullptr)
 				{
@@ -135,14 +141,14 @@ namespace nsApp
 					m_currentWeaponSE->Stop();
 
 					/* 破棄。*/
-					DeleteGO(m_currentWeaponSE);
+//					DeleteGO(m_currentWeaponSE);
 
-					/* リモコンを破棄する。*/ 
+					/* リモコンを破棄する。*/
 					m_currentWeaponSE = nullptr;
 				}
 			}
 
-			/* 
+			/*
 			 * @brief サブウェポンの表示。
 			 * @param type 表示するサブウェポンの種類。
 			 */
@@ -158,10 +164,21 @@ namespace nsApp
 				m_model.ResetSubWeaponModel();
 			}
 
+			/**
+			 * @brief 戦闘エリア制限を考慮してプレイヤーを移動させる。
+			 * @param moveDelta 今回フレームで移動したい量。
+			 */
+			void MoveWithBattleClamp(const Vector3& moveDelta, float deltaTime);
 
-		/* セッター。*/
+			/**
+			 * @brief 死亡判定。
+			 */
+			void CheckDeth();
+
+
+			/* セッター。*/
 		public:
-			/* 
+			/*
 			 * @brief 座標を設定。
 			 * @param position 設定する座標。
 			 */
@@ -170,7 +187,7 @@ namespace nsApp
 				m_currentPosition = position;
 			}
 
-			/* 
+			/*
 			 * @brief 入力判定の切り替えを設定。
 			 * @param isEnable 入力を有効にするかどうか。
 			 */
@@ -179,7 +196,7 @@ namespace nsApp
 				m_playerInput.SetInputEnable(isEnable);
 			}
 
-			/* 
+			/*
 			 * @brief 入力時間を設定。
 			 * @param timer 入力時間。
 			 */
@@ -188,7 +205,7 @@ namespace nsApp
 				m_inputWaitTimer = timer;
 			}
 
-			/* 
+			/*
 			 * @brief 角度を設定。
 			 * @param angle 設定する角度。
 			 */
@@ -208,7 +225,7 @@ namespace nsApp
 				m_forwardVector = forward;
 			}
 
-			/* 
+			/*
 			 * @brief ステートから武器の角度をいじれるように設定。
 			 * @param rotDeg 回転軸の角度。
 			 */
@@ -219,7 +236,7 @@ namespace nsApp
 				m_model.SetWeaponAngle(m_weaponAngle);
 			}
 
-			/* 
+			/*
 			 * @brief 下速度を設定。
 			 * @param velocity 設定する下速度。
 			 */
@@ -228,7 +245,7 @@ namespace nsApp
 				m_fallVelocity = velocity;
 			}
 
-			/* 
+			/*
 			 * @brief チャージレベルを設定する。
 			 * @param chargeLevel 設定するチャージレベル。
 			 */
@@ -267,7 +284,7 @@ namespace nsApp
 			}
 
 			/* 入力判定クラスを取得。*/
-			inline  PlayerInput& GetInputClass() 
+			inline  PlayerInput& GetInputClass()
 			{
 				return m_playerInput;
 			}
@@ -319,7 +336,7 @@ namespace nsApp
 			{
 				return m_chargeLevel;
 			}
-			
+
 			/*
 			 * @broef 指定したボーンの位置を取得。
 			 * @param boneName 取得したいボーンの名前。
@@ -346,6 +363,33 @@ namespace nsApp
 				return m_brain;
 			}
 
+			/**
+			 * @brief 死亡判定。HPが0以下、もしくは死亡フラグが立っている場合はtrueを返す。
+			 * @return 死亡している場合はtrue、そうでない場合はfalse。
+			 */
+			inline bool IsDeath() const
+			{
+				return m_isDown;
+			}
+
+			/**
+			 * @brief 救助状態管理クラスを取得する。
+			 * @return 救助状態管理クラスの参照。
+			 */
+			inline RescueStatusLister& GetRescueStatusManager()
+			{
+				return m_rescueStatusManager;
+			}
+
+			/**
+			 * @brief 救助状態管理クラスを取得する。
+			 * @return 救助状態管理クラス。
+			 */
+			inline const RescueStatusLister& GetRescueStatusManager() const
+			{
+				return m_rescueStatusManager;
+			}
+
 
 		private:
 			nsK2EngineLow::EffectEmitter* m_chargeEffect = nullptr;                                                //! チャージエフェクトのリモコン       
@@ -359,9 +403,10 @@ namespace nsApp
 			CharacterModelType m_modelType;                                                                        //! プレイヤーのモデルの種類。
 			WeaponHitDetection m_weaponHitDetection;                                                               //! 武器の当たり判定を管理するクラス。
 			WeaponType m_currentWeapon = WeaponType::None;                                                         //! 現在の武器。@TODO 武器の種類を増やす際に要調整。
+			RescueStatusLister m_rescueStatusManager;															   //! 救助状態管理クラス
 
 
-		/* ステート生成。*/
+			/* ステート生成。*/
 		protected:
 			std::unordered_map<PlayerStateID, std::function<nsState::IState<nsActor::Actor>* ()>> m_stateFactory;  //! ステートの種類を格納。
 			uint8_t m_currentStateID = 0;                                                                          //! 現在のステートID。
@@ -375,29 +420,31 @@ namespace nsApp
 			nsApp::nsEffect::EffectList m_effectList;                                                              //! エフェクト管理クラス
 			PlayerStateID m_playerStateID;                                                                         //! プレイヤーの状態ID。
 			GunShooter m_gunShooter;                                                                               //! 銃の発射処理を管理するクラス。
-			EffectListener m_effectListener;
+			EffectListener m_effectListener;																	   //! エフェクトの再生に合わせてSEを鳴らすために使用するクラス
 
 
 		private:
 			CharacterController m_characterController;                                                             //! プレイヤーのキャラコン。
 
-			Quaternion m_angle = Quaternion::Identity ;                                                            //! プレイヤーの回転角。
+			Quaternion m_angle = Quaternion::Identity;                                                             //! プレイヤーの回転角。
 			Quaternion m_weaponAngle = Quaternion::Identity;                                                       //! 武器の回転角。
 			Quaternion m_postureOffset = Quaternion::Identity;
 
 			Vector3 m_currentPosition = Vector3::Zero;                                                             //! プレイヤーの現在位置。
 			Vector3 m_forwardVector = Vector3::Zero;                                                               //! プレイヤーの前方向ベクトル。
+			Vector3 m_getPosition = Vector3::Zero;                                                                 //! プレイヤーの座標を取得。。
 
 			Matrix m_subWeaponHandMatrix;                                                                          //! サブ武器を装備させるときの左手のボーンの行列を管理する変数。
 
 
-			int animIndex = 0;
-			int m_inputWaitTimer;
+			int animIndex = 0;																				       //! アニメーションのインデックスを管理する変数。
+			int m_inputWaitTimer = 0;																			   //! 入力を受け付けるまでの時間。															   
 			int m_chargeLevel = 1;                                                                                 //! チャージレベル。
 
 			float m_fallVelocity = 0.0f;                                                                           //! 落下速度。
 
 			bool m_isIgnorePlayerSet = false;
+			bool m_isDown = false;                                                                                 //! プレイヤー専用のダウン状態。IGameObject側の死亡/削除フラグとは分ける。
 		};
 	}
 }
