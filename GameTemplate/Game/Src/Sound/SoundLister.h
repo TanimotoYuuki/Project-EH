@@ -30,8 +30,12 @@ namespace nsApp
 			bool Start();
 			void Update();
 
+			/**
+			 * @brief BGMとSEの初期化。
+			 */
+			void InitSound();
 
-		/* ゲッター。*/
+		/*音量の割合関連の関数。*/
 		public:
 			
 			/**
@@ -110,6 +114,9 @@ namespace nsApp
 			int m_bgmVolumeRate = 100;    //! BGMの音量の割合。
 			int m_seVolumeRate = 100;     //! SEの音量の割合。
 			int m_masterVolumeRate = 100; //! マスターボリュームの割合。
+
+		private:
+			bool m_isInitialized = false;
 		};
 	}
 }

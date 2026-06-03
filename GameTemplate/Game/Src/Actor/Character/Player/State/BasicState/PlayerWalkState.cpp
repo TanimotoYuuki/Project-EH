@@ -42,8 +42,7 @@ namespace nsApp
 
 				/* 現在の座標にスティックの入力量と速度を加算。*/
 				m_moveVector = m_moveDirection * m_walkSpeed;
-				m_player->GetCharacterController().Execute(m_moveVector, MOVE_FRAME_TIME);
-				m_player->SetPosition(m_player->GetCharacterController().GetPosition());
+				m_player->MoveWithBattleClamp(m_moveVector, MOVE_FRAME_TIME);
 
 				/* 回転軸を制御。*/
 				if (m_moveDirection.x > 0.01f)
@@ -64,7 +63,7 @@ namespace nsApp
 		bool PlayerWalkState::RequestID(uint8_t& id)
 		{
 			/* 状態遷移全体を確認。*/
-			if (StateTransitionDiagram::CheckCommonTransition(m_player->GetInputClass(), id))
+			if (StateTransitionDiagram::CheckCommonTransition(m_player->GetInputClass(), id, static_cast<uint8_t>(nsActor::PlayerStateID::enWalk)))
 				return true;
 
 			if (!m_player->GetInputClass().IsMove())

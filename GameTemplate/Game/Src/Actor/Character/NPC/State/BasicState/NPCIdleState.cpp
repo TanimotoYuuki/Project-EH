@@ -1,5 +1,6 @@
 ﻿#include "stdafx.h"
 #include "NPCIdleState.h"
+#include "Src/Actor/Character/NPC/State/BasicState/NPCHelpState.h"
 #include "Src/Actor/Character/NPC/State/BasicState/NPCChaseState.h"
 #include "Src/Actor/Character/Player/InputSystem/VirtualInputAdapter.h"
 #include "Src/Actor/Character/Player/Player.h"
@@ -12,9 +13,10 @@ namespace nsApp
 		{
 			/* キャスト。*/
 			m_brain = static_cast<NPCBrain*>(m_owner);
-			m_body = m_brain->GetBody();
 
+			m_body = m_brain->GetBody();
 			m_vInput = m_brain->GetVirtualInputAdapter();
+
 			if (m_vInput)
 				m_vInput->Reset();
 		}
@@ -22,14 +24,32 @@ namespace nsApp
 
 		void NPCIdleState::Update()
 		{
-			/* 早期リターン。*/
-			if (!m_body)
+			if (m_body == nullptr || m_brain == nullptr)
 				return;
 
-			/* ターゲットを見つけたら、追従ステートに遷移。*/
+			m_helpTarget = m_brain->GetHelpTarget();
+
+			if (m_helpTarget != nullptr &&
+				m_helpTarget != m_body &&
+				(m_helpTarget->IsDeath() || m_helpTarget->GetCharacterStatus().hp.currentHP <= 0))
+			{
+				if (m_vInput != nullptr)
+					m_vInput->Reset();
+
+				if (m_stateMachine != nullptr)
+					m_stateMachine->ChangeState(new NPCHelpState(m_helpTarget));
+
+				return;
+			}
+
 			auto target = m_brain->SearchTarget();
 			if (target)
-				m_stateMachine->ChangeState(new NPCChaseState());
+			{
+				if (m_stateMachine != nullptr)
+					m_stateMachine->ChangeState(new NPCChaseState());
+
+				return;
+			}
 		}
 	}
 }

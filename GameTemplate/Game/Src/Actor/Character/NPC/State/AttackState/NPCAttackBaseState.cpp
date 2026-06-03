@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "NPCAttackBaseState.h"
 #include "Src/Actor/Character/Player/InputSystem/VirtualInputAdapter.h"
+#include "Src/Actor/Character/NPC/State/BasicState/NPCHelpState.h"
+#include "Src/Actor/Character/NPC/Component/NPCCombatHelper.h"
 
 namespace
 {
@@ -16,6 +18,14 @@ namespace nsApp
 			/* キャスト。*/
 			m_npcBrain = static_cast<NPCBrain*>(m_owner);
 
+			/* キャストに失敗した場合は、以降の処理を行わない。*/	
+			if (m_npcBrain == nullptr)
+			{
+				m_getBody = nullptr;
+				m_virtualInput = nullptr;
+				return;
+			}
+
 			/* NPCの体を取得。*/
 			m_getBody = m_npcBrain->GetBody();
 
@@ -29,35 +39,52 @@ namespace nsApp
 
 		void NPCAttackBaseState::Exit()
 		{
-			if (m_virtualInput)
-				m_virtualInput->Reset();
+			if (m_npcBrain != nullptr)
+			{
+				m_npcBrain->StartAttackInterval();
+
+				auto* virtualInput = m_npcBrain->GetVirtualInputAdapter();
+				if (virtualInput != nullptr)
+					virtualInput->Reset();
+			}
+
+			m_virtualInput = nullptr;
+			m_getBody = nullptr;
+			m_npcBrain = nullptr;
+		}
+
+
+		void NPCAttackBaseState::ComputeDistance(nsActor::ICharacter* targetObject)
+		{
+			if (m_getBody == nullptr || targetObject == nullptr)
+			{
+				m_distance = 0.0f;
+				m_diff = Vector3::Zero;
+				return;
+			}
+
+			/* ヘルパークラスから距離計算処理を呼び出す。*/
+			m_distance =  NPCCombatHelper::ComputeDistance(m_getBody->GetPosition(), targetObject->GetPosition(), m_diff);
 		}
 
 
 		void NPCAttackBaseState::PreventClipping(nsActor::ICharacter* target)
 		{
-			if (m_distance >= CLIPPING_LIMIT_DISTANCE || m_distance <= 0.0f)
+			if (m_getBody == nullptr || target == nullptr)
 				return;
 
-			m_pushBakeDirection = m_getBody->GetPosition() - target->GetPosition();
-			m_pushBakeDirection.y = 0.0f;
-			m_pushBakeDirection.Normalize();
-
-			m_currentPosition = m_getBody->GetPosition();
-			m_currentPosition.x += m_pushBakeDirection.x * (CLIPPING_LIMIT_DISTANCE - m_distance);
-			m_currentPosition.z += m_pushBakeDirection.z * (CLIPPING_LIMIT_DISTANCE - m_distance);
-
-			m_getBody->GetCharacterController().SetPosition(m_currentPosition);
-			m_getBody->SetPosition(m_currentPosition);
+			/* ヘルパークラスからクリッピング防止処理を呼び出す。*/
+			NPCCombatHelper::PreventClipping(m_getBody, target, m_distance, 40.0f);
 		}
 
 
 		void NPCAttackBaseState::UpdateFacingDirection()
 		{
-			if (m_isAttacking) {
-				m_getBody->SetAngle(m_diff.x > 0.0f ? 90.0f : -90.0f);
-				m_getBody->SetForwardVector(m_diff.x > 0.0f ? Vector3::Right : Vector3::Left);
-			}
+			if (m_getBody == nullptr)
+				return;
+
+			/* ヘルパークラスから向き更新処理を呼び出す。*/
+			NPCCombatHelper::UpdateFacing(m_getBody, m_diff, m_isAttacking);
 		}
 
 
@@ -66,8 +93,28 @@ namespace nsApp
 			if (!m_virtualInput)
 				return;
 
-			/* 入力情報のリセット。*/
 			m_virtualInput->Reset();
+		}
+
+
+		bool NPCAttackBaseState::CheckHelpTransition()
+		{
+			if (m_npcBrain == nullptr || m_stateMachine == nullptr)
+				return false;
+
+			auto* helpTarget = m_npcBrain->GetHelpTarget();
+			if (helpTarget == nullptr)
+				return false;
+
+			if (helpTarget == m_getBody)
+				return false;
+
+			if (!helpTarget->IsDeath() && helpTarget->GetCharacterStatus().hp.currentHP > 0)
+				return false;
+
+			m_stateMachine->ChangeState(new NPCHelpState(helpTarget));
+
+			return true;
 		}
 	}
 }

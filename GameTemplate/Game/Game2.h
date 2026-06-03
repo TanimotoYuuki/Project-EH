@@ -15,6 +15,7 @@ namespace nsApp
 	class GameEndSelect;
 	class PlayerGenerator;
 	class PlayerControlerHub;
+	class DamageIndicatorPool;
 
 	namespace nsSound {
 		class SoundLister;
@@ -27,6 +28,11 @@ namespace nsApp
 	namespace nsActor {
 		class Player;
 		class Boss;
+	}
+
+	namespace nsUI {
+		class ReboneGaugeUIManager;
+		class CommentaryUIManager;
 	}
 
 	namespace nsGame
@@ -58,9 +64,18 @@ namespace nsApp
 			/* プレイアブルキャラを生成する。*/
 			void SpawnPlayCharacter();
 
+			/**
+			 * @brief 音源クラスの初期設定に関する関数群を呼び出す。
+			 */
+			void SettingSound();
+
+			/**
+			 * @brief 実況UIの初期設定に関する関数群を呼び出す。
+			 */
+			void SettingCommentaryUI();
+
 
 		public:
-
 			/**
 			* @brief ゲームクリア演出のインスタンスの取得。
 			* @return ゲームクリア演出のインスタンス。
@@ -121,7 +136,7 @@ namespace nsApp
 			*/
 			inline int GetBossType() const
 			{
-				return m_bossType;
+				return m_bossType + 5;
 			}
 
 			/**
@@ -165,9 +180,12 @@ namespace nsApp
 		private:
 			nsApp::nsSound::SoundLister* m_soundLister = nullptr; //! サウンドリスター。
 			nsApp::nsStage::BackGround* m_backGround = nullptr; //! 背景。
+			nsUI::ReboneGaugeUIManager* m_reboneGaugeUIManager = nullptr;
+			nsUI::CommentaryUIManager* m_commentaryUIManager = nullptr;
 			nsApp::Camera* m_camera = nullptr;
 			nsActor::Player* m_player = nullptr;
 			nsActor::Boss* m_boss = nullptr;
+			DamageIndicatorPool* m_damageIndicatorPool = nullptr;
 			CharacterHP* m_characterHP = nullptr;
 			GameTimeLimit* m_gameTimeLimit = nullptr;
 			GameStartDirection* m_gameStartDirection = nullptr;
@@ -187,6 +205,22 @@ namespace nsApp
 			int m_characterRole[4] = { 0 }; //! キャラクターごとの役割。
 			ControllerType m_controllerType[4] = { ControllerType::Player_1P }; //! キャラクターごとのコントローラーの種類。
 			bool m_isPlayerControle[4] = { true }; //! プレイヤーが操作しているかどうか。
+
+			/**
+			 * @brief デバッグ用の回復テスト関数。
+			 */
+			void DebugUpdateHealTest();
+
+			/**
+			 * @brief デバッグ用のダメージテスト関数。
+			 */
+			void DebugDamageParty();
+
+			/**
+		     * @brief デバッグ用のHP表示関数。
+			 */
+			void DebugPrintPartyHP();
+
 		};
 	}
 }

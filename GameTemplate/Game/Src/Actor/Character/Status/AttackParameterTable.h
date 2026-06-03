@@ -24,8 +24,8 @@ namespace nsApp
 	{
 	public:
 		/*
-		* @brief AttackTypeを受け取り、その技のパラメーターを返す処理。
-		*/
+		 * @brief AttackTypeを受け取り、その技のパラメーターを返す処理。
+		 */
 		static const AttackParameter& GetAttackParameter(AttackType type);
 
 

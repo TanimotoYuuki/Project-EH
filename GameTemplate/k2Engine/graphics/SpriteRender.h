@@ -128,6 +128,26 @@ namespace nsK2Engine {
 		/// <param name="rc">レンダーコンテキスト。</param>
 		void Draw(RenderContext& rc);
 
+
+		/*
+		 *@brief クリップ矩形を設定する。
+		 * @param rect クリップ矩形。
+		 */
+		void SetClipRect(const D3D12_RECT& clipRect)
+		{
+			m_clipRect = clipRect;
+			m_isClipEnabled = true;
+		}
+
+		/**
+		 * @brief クリップ矩形を解除する。
+		 */
+		void ClearClipRect()
+		{
+			m_isClipEnabled = false;
+		}
+
+
 	private:
 		/// <summary>
 		/// 2D描画パスから呼ばれる処理。
@@ -136,6 +156,26 @@ namespace nsK2Engine {
 		void OnRender2D(RenderContext& rc) override
 		{
 			if (m_sprite.IsInited()) {
+				if (m_isClipEnabled)
+				{
+					/* 現在のビューポートを取得して、描画後に元へ戻す。*/
+					D3D12_VIEWPORT viewport = rc.GetViewport();
+
+					D3D12_RECT defaultRect;
+					defaultRect.left = 0;
+					defaultRect.top = 0;
+					defaultRect.right = static_cast<LONG>(viewport.Width);
+					defaultRect.bottom = static_cast<LONG>(viewport.Height);
+
+					/* クリップ範囲を設定して描画。*/
+					rc.SetScissorRect(m_clipRect);
+					m_sprite.Draw(rc);
+
+					/* 次のSprite描画に影響しないように戻す。*/
+					rc.SetScissorRect(defaultRect);
+					return;
+				}
+
 				m_sprite.Draw(rc);
 			}
 		}
@@ -149,6 +189,7 @@ namespace nsK2Engine {
 				m_backGroundSprite.Draw(rc);
 			}
 		}
+
 	private:
 		Sprite			m_sprite;								//スプライト。
 		Sprite          m_backGroundSprite;						//背景スプライト。
@@ -156,6 +197,8 @@ namespace nsK2Engine {
 		Quaternion		m_rotation = Quaternion::Identity;		//回転。
 		Vector3			m_scale = Vector3::One;					//大きさ。
 		Vector2			m_pivot = Sprite::DEFAULT_PIVOT;		//ピボット。
+		bool m_isClipEnabled = false;   //! クリップ矩形が有効かどうか。
+		D3D12_RECT m_clipRect{};        //! クリップ矩形。
 
 	};
 }

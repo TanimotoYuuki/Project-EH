@@ -19,12 +19,11 @@ namespace nsApp
 			PlayerHeavyAttackState() = default;
 			virtual ~PlayerHeavyAttackState() = default;
 
-
-		public:
-			/* ライフサイクル。*/
-			void Enter() override;
-			void Update() override;
-			bool RequestID(uint8_t& id) override { return false; };
+		protected:
+			/* TemplateMethod。*/
+			void PlayAttackAnimation() override;
+			void OnEnterAttack() override;
+			bool OnUpdateAttack() override;
 
 
 		private:
@@ -33,7 +32,7 @@ namespace nsApp
 
 
 		private:
-			Quaternion m_baseRot;					 //! 攻撃開始時の武器の角度を管理。
+			Quaternion m_baseRot = Quaternion::Identity; //! 攻撃開始時の武器の角度を管理。
 		};
 	}
 }

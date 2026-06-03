@@ -10,44 +10,48 @@ namespace nsApp
 {
 	namespace nsState
 	{
-		void PlayerRushEndState::Enter()
+		void PlayerRushEndState::PlayAttackAnimation()
 		{
-			/* キャスト。*/
-			m_player = static_cast<nsActor::Player*>(m_owner);
-
-			/* 攻撃のタイプを設定する。*/
+			/* 攻撃の種類をセット。*/
 			m_currentAttackType = AttackType::RushAttack_End;
 
-			/* アニメーションの再生。*/
+			/* 再生するアニメーションをセット。*/
 			m_player->PlayWeaponAnimation(AttackType::RushAttack_End);
-
-			m_attackTimer = 0;
 		}
 
-		void PlayerRushEndState::Update()
-		{
-			/* タイマーを加算。*/
-			m_attackTimer++;
 
+		void PlayerRushEndState::OnAttackTick()
+		{
+			/* 15フレーム目に処理。*/
 			if (m_attackTimer == 15)
 			{
 				m_spawnPosition = m_player->GetWeaponHitDetection().GetPosition();
 				m_forwardDirection = m_player->GetForwardVector();
-
-				/* 乱射弾（enRush）を指定。*/
 				ConstructAndTransmitBulletRequest(BulletType::enRush);
 			}
+		}
 
-			/* アニメーションの再生が終わったらタメ攻撃状態に遷移。*/ 
+
+		bool PlayerRushEndState::OnUpdateAttack()
+		{
+			/* アニメーションの再生終了を待つ。*/
 			if (!m_player->IsPlayAnimation())
 			{
+				/* 銃の場合。*/
 				if (m_player->GetCurrentWeapon() == WeaponType::TwinGun)
 				{
+					/* サブウェポンをリセットする。*/
 					m_player->ResetSubWeapon();
+					/* 武器の角度をリセットする。*/
 					m_player->SetWeaponRotationAngle(Vector3::Front, -90.0f);
 				}
+
+				/* 乱射攻撃のフィニッシュとしてチャージ攻撃を放つ。*/
 				m_stateMachine->ChangeState(new PlayerChargeAttackState());
+				return true;
 			}
+
+			return false;
 		}
 	}
 }

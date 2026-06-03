@@ -30,8 +30,8 @@ namespace nsApp
 		enum SE_ID : uint8_t
 		{
 			/* Sword。*/
-			NormalAttack_Sword,  //! 通常攻撃のSE。
-			RushAttack_Sword,    //! 連続攻撃のSE。
+			NormalAttack_Sword = 64,  //! 通常攻撃のSE。
+			RushAttack_Sword,		  //! 連続攻撃のSE。
 
 
 			/* Hammer*/
@@ -43,6 +43,7 @@ namespace nsApp
 
 			/* その他。*/
 			Charge,              //! チャージ中のSE。
+			Rescue,				 //! 救助中のSE。
 
 		};
 

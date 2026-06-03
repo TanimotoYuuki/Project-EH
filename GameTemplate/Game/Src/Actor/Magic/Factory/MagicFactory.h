@@ -13,6 +13,14 @@
 
 namespace nsApp
 {
+	namespace nsEffect {
+		class EffectList;
+	}
+
+	using EFFECT = nsEffect::EffectList;
+	using MAGICTYPE = nsActor::MagicType;
+	using CHARACTER = nsActor::ICharacter;
+
 	class MagicFactory
 	{
 	public:
@@ -23,12 +31,11 @@ namespace nsApp
 		 * @param forward 魔法の前方向ベクトル。
 		 * @param target 魔法のターゲット(デフォルト値で初期化済み)。
 		 */
-		static void CreateMagicObject(nsActor::MagicType type, const Vector3& basePosition, const Vector3& forward, nsActor::ICharacter* target = nullptr);
+		static void CreateMagicObject(MAGICTYPE type, const Vector3& basePosition, const Vector3& forward, CHARACTER* target = nullptr, EFFECT* effectList = nullptr);
 
 
 	private:
 		Vector3 m_forwardDirection = Vector3::Zero; //! 魔法の前方向ベクトル。
-
 
 	};
 }

@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "Boss.h"
 
 #include "BossIdleState.h"
@@ -7,10 +7,11 @@
 #include "BossDamageState.h"
 #include "BossRoarState.h"
 #include "BossDethState.h"
+#include "BossTypeManager.h"
 
 namespace
 {
-	const Vector3 START_POSITION{ 200.0,100.0f,0.0f };
+	const Vector3 START_POSITION{200.0, 50.0f, 0.0f};
 	const int BOSS_MAX_HP = 5000;
 	const float ROT_SPEED = 5.0f;
 }
@@ -19,42 +20,49 @@ namespace nsApp
 {
 	namespace nsActor
 	{
-		/*ƒ{ƒX‚²‚Æ‚Ìƒx[ƒXƒIƒtƒZƒbƒgBƒ‚ƒfƒ‹‚ÌŒ´“_ˆÊ’u‚É‡‚í‚¹‚Ä’²®B*/
+		/*ãƒœã‚¹ã”ã¨ã®ãƒ™ãƒ¼ã‚¹ã‚ªãƒ•ã‚»ãƒƒãƒˆã€‚ãƒ¢ãƒ‡ãƒ«ã®åŸç‚¹ä½ç½®ã«åˆã‚ã›ã¦èª¿æ•´ã€‚*/
 		const std::unordered_map<CharacterModelType, Vector3> BOSS_OFFSETS =
-		{
-			{CharacterModelType::GrayDragon,	Vector3(0.0f,0.0f,0.0f)},
-			{CharacterModelType::TutorialBoss,	Vector3(0.0f,0.0f,0.0f)},
-			{CharacterModelType::RedDragon,		Vector3(0.0f,0.0f,0.0f)},
-			{CharacterModelType::GreenDragon,	Vector3(0.0f,0.0,0.0f)},
+			{
+				{CharacterModelType::GrayDragon, Vector3(0.0f, 0.0f, 0.0f)},
+				{CharacterModelType::TutorialBoss, Vector3(0.0f, 0.0f, 0.0f)},
+				{CharacterModelType::RedDragon, Vector3(0.0f, 0.0f, 0.0f)},
+				{CharacterModelType::GreenDragon, Vector3(0.0f, 0.0, 0.0f)},
 		};
 
-		/*ƒ{ƒXƒ^ƒCƒv‚ğ•¶š—ñ‚É•ÏŠ·B*/
-		static const char* BossTypeToString(CharacterModelType bossType)
+		/*ãƒœã‚¹ã‚¿ã‚¤ãƒ—ã‚’æ–‡å­—åˆ—ã«å¤‰æ›ã€‚*/
+		static const char *BossTypeToString(CharacterModelType bossType)
 		{
 			switch (bossType)
 			{
-			case CharacterModelType::GrayDragon:   return "GrayDragon";
-			case CharacterModelType::GreenDragon:  return "GreenDragon";
-			case CharacterModelType::RedDragon:    return "RedDragon";
-			case CharacterModelType::TutorialBoss: return "TutorialBoss";
-			default:                               return "TutorialBoss";
+			case CharacterModelType::GrayDragon:
+				return "GrayDragon";
+			case CharacterModelType::GreenDragon:
+				return "GreenDragon";
+			case CharacterModelType::RedDragon:
+				return "RedDragon";
+			case CharacterModelType::TutorialBoss:
+				return "TutorialBoss";
+			default:
+				return "TutorialBoss";
 			}
 		}
 
-		/*“Á’è‚ÌƒXƒe[ƒg‚Ì‚¾‚¯’Ç‰Á‚Å•‚‚©‚¹‚éƒe[ƒuƒ‹B*/
+		/*ç‰¹å®šã®ã‚¹ãƒ†ãƒ¼ãƒˆã®æ™‚ã ã‘è¿½åŠ ã§æµ®ã‹ã›ã‚‹ãƒ†ãƒ¼ãƒ–ãƒ«ã€‚*/
 		const std::unordered_map<BossStateID, Vector3> STATE_OFFSETS =
-		{
+			{
 
-			{BossStateID::enDamage,		Vector3(0.0f,5.0f,0.0f)},
+				{BossStateID::enDamage, Vector3(0.0f, 5.0f, 0.0f)},
 		};
 
-		/*ƒXƒe[ƒ^ƒXB*/
+		/*ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹ã€‚*/
 		void Boss::InitStatus()
 		{
-			/*ƒ{ƒX‚Ì‘Ì—ÍB*/
-			m_characterStatus.hp.maxHP = BOSS_MAX_HP;
-			/*Œ»İ‚Ì‘Ì—ÍB*/
-			m_characterStatus.hp.currentHP = BOSS_MAX_HP;
+			/*ãƒœã‚¹ã‚¿ã‚¤ãƒ—ã«å¿œã˜ãŸä½“åŠ›ã‚’è¨­å®šã€‚*/
+			const auto &params = nsApp::nsAI::BossTypeManager::GetBossTypeParameters(m_bossType);
+			int bossHP = static_cast<int>(params.m_baseHP * params.m_Multiplier);
+			m_characterStatus.hp.maxHP = bossHP;
+			/*ç¾åœ¨ã®ä½“åŠ›ã€‚*/
+			m_characterStatus.hp.currentHP = bossHP;
 			m_prevHP = BOSS_MAX_HP;
 
 			m_hitStopFlame = 0;
@@ -67,18 +75,15 @@ namespace nsApp
 				m_stateMachine = new nsState::StateMachine<Actor>(this);
 			}
 
+			/*ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã®åˆæœŸåŒ–ã€‚*/
+			m_BossAnimation = std::make_unique<BossAnimation>();
+			m_BossAnimation->Init(BossTypeToString(m_bossType));
 
-			/*ƒAƒjƒ[ƒVƒ‡ƒ“‚Ì‰Šú‰»B*/
-			m_BossAimation = std::make_unique<BossAnimation>();
-			m_BossAimation->Init(BossTypeToString(m_bossType));
-
-			/*ƒ‚ƒfƒ‹‚Ì“Ç‚İ‚İB*/
-			m_model.LoadCharacterModel
-			(
+			/*ãƒ¢ãƒ‡ãƒ«ã®èª­ã¿è¾¼ã¿ã€‚*/
+			m_model.LoadCharacterModel(
 				m_bossType,
-				m_BossAimation->GetAnimationClips(),
-				(int)BossAnimationID::Max
-			);
+				m_BossAnimation->GetAnimationClips(),
+				(int)BossAnimationID::Max);
 
 			auto it = BOSS_OFFSETS.find(m_bossType);
 			if (it != BOSS_OFFSETS.end())
@@ -86,7 +91,7 @@ namespace nsApp
 				m_modelOffset = it->second;
 			}
 
-			/*‰ŠúÀ•W‚ğİ’èB*/
+			/*åˆæœŸåº§æ¨™ã‚’è¨­å®šã€‚*/
 			m_position = START_POSITION;
 			m_BossController.SetPosition(m_position);
 			m_model.SetPosition(m_position);
@@ -95,29 +100,28 @@ namespace nsApp
 
 			m_rotation.SetRotationYFromDirectionXZ(m_forward);
 
-			/*ƒLƒƒƒ‰ƒRƒ“‚ğ‰Šú‰»B*/
+			/*ã‚­ãƒ£ãƒ©ã‚³ãƒ³ã‚’åˆæœŸåŒ–ã€‚*/
 			m_BossController.Init(40.0, 20.0f, m_position);
 
 			m_BossController.SetPosition(m_position);
 			m_model.SetPosition(m_position);
 
-			/*ƒXƒP[ƒ‹‚ğİ’èB*/
+			/*ã‚¹ã‚±ãƒ¼ãƒ«ã‚’è¨­å®šã€‚*/
 			m_model.SetCharacterScale(Vector3::One * 0.2f);
 
-
-			/*ƒqƒbƒg”»’è‰Šú‰»B*/
+			/*ãƒ’ãƒƒãƒˆåˆ¤å®šåˆæœŸåŒ–ã€‚*/
 			m_BiteHit.Init(3.0f);
 			m_TailHit.Init(4.0f);
 			m_FireHit.Init(6.0f);
 
-			/*ƒXƒe[ƒg“o˜^B*/
+			/*ã‚¹ãƒ†ãƒ¼ãƒˆç™»éŒ²ã€‚*/
 			RegisterState();
 			m_stateMachine->ChangeState(m_stateFactory[enIdle]());
 
-			/*‰Šú‰»‘O‚ÉƒXƒe[ƒ^ƒX‚ğŠm’èB*/
+			/*åˆæœŸåŒ–å‰ã«ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹ã‚’ç¢ºå®šã€‚*/
 			InitStatus();
 
-			/*‰Šú‰»B*/
+			/*åˆæœŸåŒ–ã€‚*/
 			m_prevHP = m_characterStatus.hp.currentHP;
 
 			return true;
@@ -125,27 +129,50 @@ namespace nsApp
 
 		void Boss::Update()
 		{
-			/*ICharacterƒNƒ‰ƒX‚ÌXVˆ—‚ğƒR[ƒ‹B*/
+			/*ICharacterã‚¯ãƒ©ã‚¹ã®æ›´æ–°å‡¦ç†ã‚’ã‚³ãƒ¼ãƒ«ã€‚*/
 			ICharacter::Update();
 
-			if (IsHitStop())return;
+			if (IsHitStop())
+			{
+				return;
+			}
 
-			/*ƒXƒe[ƒgƒ}ƒVƒ“‚ğXV‚·‚éB*/
+			/*Roarã®ã‚¯ãƒ¼ãƒ«ãƒ€ã‚¦ãƒ³ã‚’æ›´æ–°ã€‚*/
+			UpdateRoarCooldown(g_gameTime->GetFrameDeltaTime());
+
+			/*æ€¯ã¿åˆ¶å¾¡ç”¨ã®ã‚¿ã‚¤ãƒãƒ¼æ›´æ–°ã€‚*/
+			if (m_damageResetTimer > 0.0f)
+			{
+				m_damageResetTimer -= g_gameTime->GetFrameDeltaTime();
+				if (m_damageResetTimer <= 0.0f)
+				{
+					/*ä¸€å®šæ™‚é–“ãƒ€ãƒ¡ãƒ¼ã‚¸ã‚’å—ã‘ãªã‘ã‚Œã°ãƒªã‚»ãƒƒãƒˆã€‚*/
+					m_accumulatedDamage = 0;
+				}
+			}
+
+			if (m_flinchCooldownTimer > 0.0f)
+			{
+				m_flinchCooldownTimer -= g_gameTime->GetFrameDeltaTime();
+			}
+
+			if (m_characterStatus.hp.currentHP < m_prevHP)
+			{
+				int damage = m_prevHP - m_characterStatus.hp.currentHP;
+				OnDamageEvent(damage);
+			}
+
+			/*ã‚¹ãƒ†ãƒ¼ãƒˆãƒã‚·ãƒ³ã‚’æ›´æ–°ã™ã‚‹ã€‚*/
 			m_stateMachine->Update();
 
-			/*Ÿ‚ÌƒXƒe[ƒg‚ğŒˆ’è‚·‚éB*/
+			/*æ¬¡ã®ã‚¹ãƒ†ãƒ¼ãƒˆã‚’æ±ºå®šã™ã‚‹ã€‚*/
 			uint8_t nextID = m_currentStateID;
 
-			/*‹­§‘JˆÚŒY‚ğ—DæB*/
-			if (m_characterStatus.hp.currentHP <= 0 )
+			if (m_characterStatus.hp.currentHP <= 0)
 			{
-				nextID = BossStateID::enDeath ;
+				nextID = BossStateID::enDeath;
 			}
-			else if (IsDamage())
-			{
-				nextID = BossStateID::enDamage;
-			}
-			/*ƒXƒe[ƒg‚©‚ç‚Ì‘JˆÚƒŠƒNƒGƒXƒg‚ğŠm”FB*/
+			/*ã‚¹ãƒ†ãƒ¼ãƒˆã‹ã‚‰é·ç§»ãƒªã‚¯ã‚¨ã‚¹ãƒˆã‚’ç¢ºèªã€‚*/
 			else
 			{
 				uint8_t reqID = 0;
@@ -155,7 +182,7 @@ namespace nsApp
 				}
 			}
 
-			/*ƒXƒe[ƒg‚ª•Ï‚í‚é‚Æ‚«‚¾‚¯ƒXƒe[ƒg‚ğ•ÏXB*/
+			/*ã‚¹ãƒ†ãƒ¼ãƒˆãŒå¤‰ã‚ã‚‹ã¨ãã ã‘ã‚¹ãƒ†ãƒ¼ãƒˆã‚’å¤‰æ›´ã€‚*/
 			if (nextID != m_currentStateID)
 			{
 				auto next = static_cast<BossStateID>(nextID);
@@ -166,10 +193,10 @@ namespace nsApp
 				}
 			}
 
-			/*ƒvƒŒƒCƒ„[‚Ì•ûŒü‚ğŒü‚­ˆ—B*/
+			/*ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æ–¹å‘ã‚’å‘ãå‡¦ç†ã€‚*/
 			UpdateRotation(g_gameTime->GetFrameDeltaTime());
 
-			/*ˆÊ’u‚ğŒÅ’èB*/
+			/*ä½ç½®ã‚’å›ºå®šã€‚*/
 			if (m_isYLocked)
 			{
 				m_position.y = m_lockedYPosition;
@@ -179,13 +206,13 @@ namespace nsApp
 			{
 				m_position = m_BossController.GetPosition();
 			}
-			/*z²‚ğŒÅ’èB*/
+			/*zè»¸ã‚’å›ºå®šã€‚*/
 			m_position.z = 0.0f;
 
-			/*ƒ‚ƒfƒ‹‚ÌÀ•W‚ğİ’èB*/ 
+			/*ãƒ¢ãƒ‡ãƒ«ã®åº§æ¨™ã‚’è¨­å®šã€‚*/
 			m_model.SetPosition(m_position);
 
-			/*‰ñ“]”½‰fB*/
+			/*å›è»¢åæ˜ ã€‚*/
 			m_model.SettRotation(m_rotation);
 
 			Vector3 finalOffset = m_modelOffset + m_modelDynamicOffset;
@@ -198,14 +225,52 @@ namespace nsApp
 
 			m_model.SetPosition(m_position + finalOffset);
 
-			/*ƒ‚ƒfƒ‹XVB*/
+			/*ãƒ¢ãƒ‡ãƒ«æ›´æ–°ã€‚*/
 			m_model.Update();
+
+			/*ç¾åœ¨ã®ãƒ•ãƒ¬ãƒ¼ãƒ ã®HPã‚’éå»ã®ãƒ­ã‚°ã¨ã—ã¦ä¿å­˜ã€‚*/
+			m_prevHP = m_characterStatus.hp.currentHP;
 		}
 
-		/*ƒvƒŒƒCƒ„[‚Ì•ûŒü‚ğŒü‚­ˆ—B*/
+		void Boss::OnDamageEvent(int damage)
+		{
+			if (m_characterStatus.hp.currentHP <= 0)
+				return;
+
+			if (m_currentStateID == BossStateID::enDamage || m_currentStateID == BossStateID::enDeath)
+			{
+				/*ã™ã§ã«ãƒ€ãƒ¡ãƒ¼ã‚¸çŠ¶æ…‹ã‹æ­»äº¡çŠ¶æ…‹ãªã‚‰è¿½åŠ ã®å‡¦ç†ã¯ãªã—ã€‚*/
+				return;
+			}
+
+			if (m_currentStateID == BossStateID::enAttack)
+			{
+				return;
+			}
+
+			if (damage > 0)
+			{
+				m_accumulatedDamage += damage;
+				m_damageResetTimer = nsAI::BossAIConfig::DAMAGE_RESET_TIME;
+			}
+
+			/*ç´¯è¨ˆãƒ€ãƒ¡ãƒ¼ã‚¸ãŒé–¾å€¤ã‚’è¶…ãˆãŸå ´åˆã‹ã¤æ€¯ã¿ãŒå›å¾©ã—ã¦ã„ã‚‹ãªã‚‰ã€‚*/
+			if (m_accumulatedDamage >= nsAI::BossAIConfig::FLINCH_DAMAGE_THRESHOLD && m_flinchCooldownTimer <= 0.0f)
+			{
+				/*æ¬¡ã®ãƒ•ãƒ¬ãƒ¼ãƒ ã®Updateã‚’å¾…ãŸãšã«é·ç§»äºˆç´„ã‚‚ã—ãã¯å³æ™‚ã«ã‚¹ãƒ†ãƒ¼ãƒˆã‚’å¤‰ãˆã‚‹ã€‚*/
+				m_currentStateID = BossStateID::enDamage;
+				m_stateMachine->ChangeState(m_stateFactory[BossStateID::enDamage]());
+
+				m_accumulatedDamage = 0;
+				m_flinchCooldownTimer = nsAI::BossAIConfig::FLINCH_COOLDOWN;
+			}
+		}
+
+		/*ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æ–¹å‘ã‚’å‘ãå‡¦ç†ã€‚*/
 		void Boss::UpdateRotation(float deltaTime)
 		{
-			if (!m_target||m_target->IsDead()) return;
+			if (!m_target || m_target->IsDead())
+				return;
 
 			Vector3 toTarget = m_target->GetPosition() - m_position;
 			toTarget.y = 0.0f;
@@ -233,16 +298,16 @@ namespace nsApp
 			}
 		}
 
-		/*Šš‚İ‚Â‚«UŒ‚B*/ 
-		void Boss::AttackBite() 
+		/*å™›ã¿ã¤ãæ”»æ’ƒã€‚*/
+		void Boss::AttackBite()
 		{
 			m_attackPosition = m_position + m_forward * 2.0f;
 
-			m_BiteHit.Enable(); 
+			m_BiteHit.Enable();
 			m_BiteHit.Update(m_attackPosition);
 		}
 
-		/*K”öUŒ‚B*/ 
+		/*å°»å°¾æ”»æ’ƒã€‚*/
 		void Boss::AttackTail()
 		{
 			m_attackPosition = m_position - m_forward * 3.0f;
@@ -251,22 +316,20 @@ namespace nsApp
 			m_TailHit.Update(m_attackPosition);
 		}
 
-		/*‰Î‰ŠUŒ‚B*/
+		/*ç«ç‚æ”»æ’ƒã€‚*/
 		void Boss::ShotFireBall()
 		{
-			if (m_forward.LengthSq() < 0.01f)m_forward = Vector3::Left;
+			if (m_forward.LengthSq() < 0.01f)
+				m_forward = Vector3::Left;
 
 			m_FireHit.Enable();
 
-			/*ƒuƒŒƒX‚ğ‘O‚ÉL‚Î‚·B*/
-			for (int i = 1; i <= 3; i++)
-			{
-				Vector3 pos = m_position + m_forward * (2.0f * i);
-				m_FireHit.Update(pos);
-			}
+			/*ãƒ–ãƒ¬ã‚¹ã‚’å‰ã«ä¼¸ã°ã™ã€‚æœ€åˆã®ä½ç½®ã®ã¿æ›´æ–°ã€‚*/
+			Vector3 pos = m_position + m_forward * 2.0f;
+			m_FireHit.Update(pos);
 		}
 
-		/*ƒ_ƒ[ƒW”»’èB*/
+		/*ãƒ€ãƒ¡ãƒ¼ã‚¸åˆ¤å®šã€‚*/
 		bool Boss::IsDamage()
 		{
 			bool isDamage = m_characterStatus.hp.currentHP < m_prevHP;
@@ -274,27 +337,32 @@ namespace nsApp
 			return isDamage;
 		}
 
-		void Boss::Render(RenderContext& rc)
+		void Boss::Render(RenderContext &rc)
 		{
 			ICharacter::Render(rc);
 		}
 
-		/*ƒXƒe[ƒgB*/
+		/*ã‚¹ãƒ†ãƒ¼ãƒˆã€‚*/
 		void Boss::RegisterState()
 		{
-			/*‘Ò‹@ƒAƒjƒ[ƒVƒ‡ƒ“B*/
-			m_stateFactory[BossStateID::enIdle] = []() {return new nsState::BossIdleState(); };
-			/*ˆÚ“®ƒAƒjƒ[ƒVƒ‡ƒ“B*/
-			m_stateFactory[BossStateID::enMove] = []() {return new nsState::BossMoveState(); };
-			/*UŒ‚ƒAƒjƒ[ƒVƒ‡ƒ“B*/
-			m_stateFactory[BossStateID::enAttack] = []() {return new nsState::BossAttackState(); };
-			/*™ôšKƒAƒjƒ[ƒVƒ‡ƒ“B*/
-			m_stateFactory[BossStateID::enRoar] = []() {return new nsState::BossRoarState(); };
-			/*”í’eƒAƒjƒ[ƒVƒ‡ƒ“B*/
-			m_stateFactory[BossStateID::enDamage] = []() {return new nsState::BossDamageState(); };
-			/*€–SƒAƒjƒ[ƒVƒ‡ƒ“B*/
-			m_stateFactory[BossStateID::enDeath] = []() {return new nsState::BossDethState(); };
-
+			/*å¾…æ©Ÿã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã€‚*/
+			m_stateFactory[BossStateID::enIdle] = []()
+			{ return new nsState::BossIdleState(); };
+			/*ç§»å‹•ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã€‚*/
+			m_stateFactory[BossStateID::enMove] = []()
+			{ return new nsState::BossMoveState(); };
+			/*æ”»æ’ƒã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã€‚*/
+			m_stateFactory[BossStateID::enAttack] = []()
+			{ return new nsState::BossAttackState(); };
+			/*å’†å“®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã€‚*/
+			m_stateFactory[BossStateID::enRoar] = []()
+			{ return new nsState::BossRoarState(); };
+			/*è¢«å¼¾ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã€‚*/
+			m_stateFactory[BossStateID::enDamage] = []()
+			{ return new nsState::BossDamageState(); };
+			/*æ­»äº¡ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã€‚*/
+			m_stateFactory[BossStateID::enDeath] = []()
+			{ return new nsState::BossDethState(); };
 		}
 	}
 }

@@ -46,17 +46,32 @@ namespace nsApp
 		CLASS_T
 	    void StateMachine<T_NAME>::ChangeState(IState<T_NAME>* newState)
 		{
-			/* 現在のステートを終了する。*/
-			m_currentState->Exit();
-			/* 現在のステートを削除する。*/
-			delete m_currentState;
+			if (newState == nullptr)
+			{
+				newState = new NullState<T_NAME>();
+			}
 
-			/* nullが渡されているならNullStateで保護する。*/
-			m_currentState = (newState == nullptr) ? new NullState<T_NAME>() : newState;
+			if (m_isUpdating)
+			{
+				if (m_nextState != nullptr)
+				{
+					delete m_nextState;
+					m_nextState = nullptr;
+				}
 
-			/* ステートの登録。*/
+				m_nextState = newState;
+				return;
+			}
+
+			if(m_currentState != nullptr)
+			{
+				m_currentState->Exit();
+				delete m_currentState;
+				m_currentState = nullptr;
+			}
+
+			m_currentState = newState;
 			m_currentState->Register(m_owner, this);
-			/* ステートの初期化処理を予備だす。*/
 			m_currentState->Enter();
 		}
 
@@ -64,7 +79,21 @@ namespace nsApp
 		CLASS_T
 	    void StateMachine<T_NAME>::Update()
 		{
-			m_currentState->Update();
+			m_isUpdating = true;
+
+			if (m_currentState != nullptr)
+			{
+				m_currentState->Update();
+			}
+
+			m_isUpdating = false;
+
+			if (m_nextState != nullptr)
+			{
+				IState<T_NAME>* nextState = m_nextState;
+				m_nextState = nullptr;
+				ChangeState(nextState);
+			}
 		}
 
 		/* Actorクラスに対してテンプレートの使用可能にする。*/

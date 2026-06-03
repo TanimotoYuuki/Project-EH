@@ -1,39 +1,55 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "NPCBrain.h"
 #include "Boss.h"
 
-#include "Src/Actor/Character/Player/PlayerInput.h"
 #include "Src/Actor/Character/Player/Player.h"
-
-#include "Src/Actor/Character/NPC/State/BasicState/NPCIdleState.h"
+#include "Src/Actor/Character/Player/PlayerInput.h"
 #include "Src/Actor/Character/Player/InputSystem/VirtualInputAdapter.h"
+#include "Src/Actor/Character/NPC/State/BasicState/NPCIdleState.h"
+
+#include "ResourceUtility.h"
 
 namespace nsApp
 {
+	NPCBrain::~NPCBrain()
+	{
+		delete m_npcStateMachine;
+		m_npcStateMachine = nullptr;
+	}
+
+
 	void NPCBrain::Init(nsActor::Player* outer)
 	{
 		m_outer = outer;
-		/* NPC—p‚ÌƒXƒe[ƒgƒ}ƒV[ƒ“‚Ì¶¬B*/
+		/* NPCç”¨ã®ã‚¹ãƒ†ãƒ¼ãƒˆãƒã‚·ãƒ¼ãƒ³ã®ç”Ÿæˆã€‚*/
 		m_npcStateMachine = new nsState::StateMachine<NPCBrain>(this);
 
-		/* NPC—pƒXƒe[ƒgƒNƒ‰ƒX‚ğ¶¬B*/
+		/* NPCç”¨ã‚¹ãƒ†ãƒ¼ãƒˆã‚¯ãƒ©ã‚¹ã‚’ç”Ÿæˆã€‚*/
 		m_npcStateMachine->ChangeState(new nsState::NPCIdleState());
 	}
 
 
 	void NPCBrain::Update()
 	{
-		/* ‘ŠúƒŠƒ^[ƒ“B*/
+		/* æ—©æœŸãƒªã‚¿ãƒ¼ãƒ³ã€‚*/
 		if (m_outer == nullptr || m_virtualInputAdapter == nullptr)
 			return;
 
-		/* ƒtƒŒ[ƒ€ŠJn‚Ìˆ—B*/
-		m_virtualInputAdapter->BeginFlame();
+		/* è‡ªèº«ãŒDethã‚¹ãƒ†ãƒ¼ãƒˆãªã‚‰æ€è€ƒã‚’æ­¢ã‚ã‚‹ã€‚*/
+		if (m_outer->IsDeath() || m_outer->GetCharacterStatus().hp.currentHP <= 0)
+		{
+			m_virtualInputAdapter->Reset();
+			m_helpTarget = nullptr;
+			return;
+		}
 
-		/* ƒ^[ƒQƒbƒg‚ğ’T‚·B*/
-		m_helpTarget = m_outer->SearchCharacter();
+		/* æ”»æ’ƒã‚¤ãƒ³ã‚¿ãƒ¼ãƒãƒ«ã‚’æ›´æ–°ã€‚*/
+		UpdateAttackInterval();
 
-		/* ƒ^[ƒQƒbƒg‚ª‹‚È‚¢ê‡‚Í‰½‚à‚µ‚È‚¢B*/
+		/* ã‚¿ãƒ¼ã‚²ãƒƒãƒˆã‚’æ¢ã™ã€‚*/
+		m_helpTarget = SearchHelpTarget();
+
+		/* ã‚¿ãƒ¼ã‚²ãƒƒãƒˆãŒå±…ãªã„å ´åˆã¯ä½•ã‚‚ã—ãªã„ã€‚*/
 		if (m_npcStateMachine != nullptr)
 			m_npcStateMachine->Update();
 	}
@@ -41,12 +57,42 @@ namespace nsApp
 
 	nsActor::ICharacter* NPCBrain::SearchTarget()
 	{
-		/* –Ú•W‚ğ’Tõ‚·‚éB*/
-		auto target  = FindGO<nsActor::Boss>("boss");
+    	/* ç›®æ¨™ã‚’æ¢ç´¢ã™ã‚‹ã€‚*/
+		m_bossTarget = FindGO<nsActor::Boss>("boss");
 
-		/* Œ©‚Â‚©‚ç‚È‚©‚Á‚½ê‡B*/
-		if (target == nullptr || reinterpret_cast<uintptr_t>(target) == 0xFFFFFFFFFFFFFFFF)
+		/* è¦‹ã¤ã‹ã‚‰ãªã‹ã£ãŸå ´åˆã€‚*/
+		if (m_bossTarget == nullptr)
 			return nullptr;
+
+		/* Bossã®HPãŒ0ã«ãªã£ãŸå ´åˆã€‚*/
+		if(m_bossTarget->GetCharacterStatus().hp.currentHP <= 0)
+			return nullptr;
+
+		return m_bossTarget;
+	}
+
+
+	void NPCBrain::UpdateAttackInterval()
+	{
+		/* æ”»æ’ƒã‚¤ãƒ³ã‚¿ãƒ¼ãƒãƒ«ãŒ0ä»¥ä¸‹ã®å ´åˆã¯ä½•ã‚‚ã—ãªã„ã€‚*/
+		if (m_attackIntervalTimer <= 0)
+			return;
+
+		/* æ”»æ’ƒã‚¤ãƒ³ã‚¿ãƒ¼ãƒãƒ«ã‚’æ¸›ç®—ã€‚*/
+		m_attackIntervalTimer--;
+
+		/* æ”»æ’ƒã‚¤ãƒ³ã‚¿ãƒ¼ãƒãƒ«ãŒ0ä»¥ä¸‹ã«ãªã£ãŸå ´åˆã¯0ã«è£œæ­£ã€‚*/
+		if(m_attackIntervalTimer < 0)
+			m_attackIntervalTimer = 0;
+	}
+
+
+	nsActor::Player* NPCBrain::SearchHelpTarget() const
+	{
+		if (m_outer == nullptr)
+			return nullptr;
+
+		auto* target = nsActor::ResourceUtility::SearchNearestDownCharacter(m_outer, m_helpSearchRange);
 
 		return target;
 	}

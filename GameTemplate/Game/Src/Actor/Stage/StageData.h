@@ -1,10 +1,10 @@
-#pragma once
+ï»¿#pragma once
 
 namespace nsApp
 {
 	namespace nsStage
 	{
-		/* ƒXƒe[ƒWID‚ğŠÇ—‚·‚é—ñ‹“Œ^B*/
+		/* ã‚¹ãƒ†ãƒ¼ã‚¸IDã‚’ç®¡ç†ã™ã‚‹åˆ—æŒ™å‹ã€‚*/
 		enum class StageID : uint8_t
 		{
 			stage1,
@@ -13,24 +13,24 @@ namespace nsApp
 			Invalid
 		};
 
-		/* ƒXƒe[ƒWƒIƒuƒWƒFƒNƒg‚Ìƒf[ƒ^B*/ 
+		/* ã‚¹ãƒ†ãƒ¼ã‚¸ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã®ãƒ‡ãƒ¼ã‚¿ã€‚*/ 
 		struct StageObjectConfig
 		{
-			std::string modelFilePath;               /* ƒ‚ƒfƒ‹‚Ìƒtƒ@ƒCƒ‹–¼B*/
-			Vector3 position;                        /* ˆÊ’uB*/ 
-			Vector3 scale;                           /* Šg‘å—¦B*/ 
-			Quaternion angle;                        /* Šp“xB*/ 
+			std::string modelFilePath;               /* ãƒ¢ãƒ‡ãƒ«ã®ãƒ•ã‚¡ã‚¤ãƒ«åã€‚*/
+			Vector3 position;                        /* ä½ç½®ã€‚*/ 
+			Vector3 scale;                           /* æ‹¡å¤§ç‡ã€‚*/ 
+			Quaternion angle;                        /* è§’åº¦ã€‚*/ 
 		};
 
-		/* ƒXƒe[ƒW‚Ìƒf[ƒ^B*/ 
+		/* ã‚¹ãƒ†ãƒ¼ã‚¸ã®ãƒ‡ãƒ¼ã‚¿ã€‚*/ 
 		struct StageData
 		{
 			StageID stageID;
-			std::string stageName;                   /* ƒXƒe[ƒW–¼B*/ 
-			std::string stageBackGroundModel;        /* ƒXƒe[ƒW”wŒiƒ‚ƒfƒ‹‚Ìƒtƒ@ƒCƒ‹ƒpƒXB*/ 
+			std::string stageName;                   /* ã‚¹ãƒ†ãƒ¼ã‚¸åã€‚*/ 
+			std::string stageBackGroundModel;        /* ã‚¹ãƒ†ãƒ¼ã‚¸èƒŒæ™¯ãƒ¢ãƒ‡ãƒ«ã®ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‘ã‚¹ã€‚*/ 
 
-			Vector3 playerInitPosition;              /* ƒvƒŒƒCƒ„[‚Ì‰ŠúˆÊ’uB*/ 
-			Vector3 stageSacle = Vector3::One;       /* ƒXƒe[ƒW‚ÌŠg‘å—¦B*/
+			Vector3 playerInitPosition;              /* ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®åˆæœŸä½ç½®ã€‚*/ 
+			Vector3 stageSacle = Vector3::One;       /* ã‚¹ãƒ†ãƒ¼ã‚¸ã®æ‹¡å¤§ç‡ã€‚*/
 		};
 	}
 }

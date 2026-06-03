@@ -1,11 +1,12 @@
 #include "stdafx.h"
 #include "BossMoveState.h"
+#include "BossAIConfig.h"
+#include "BossTypeManager.h"
 
 namespace
 {
-	const float MOVE_TIME = 3.0f;/*移動時間。*/
-	const float MOVE_SPEED = 10.0f;/*移動速度。*/
-	const float STOP_DISTANCE = 50.0f;/*これ以上近づいたら止まる距離。*/
+	const float MOVE_TIME = 1.5f;
+	const float MOVE_SPEED = 10.0f;
 }
 
 namespace nsApp
@@ -14,17 +15,15 @@ namespace nsApp
 	{
 		void BossMoveState::Enter()
 		{
-			m_boss = static_cast<nsActor::Boss*>(m_owner);
+			m_boss = static_cast<nsActor::Boss *>(m_owner);
 
 			m_timer = MOVE_TIME;
 
-			/*歩きアニメーション。*/
 			m_boss->PlayAnimation(nsActor::BossAnimationID::Walk);
 		}
 
 		void BossMoveState::Update()
 		{
-			/*時間減少。*/
 			float dt = g_gameTime->GetFrameDeltaTime();
 			m_timer -= dt;
 
@@ -44,29 +43,44 @@ namespace nsApp
 				m_boss->SetForward(moveDirection);
 			}
 
-			Vector3 moveStep = moveDirection * MOVE_SPEED;
+			/*ボスタイプに応じた移動速度を取得。*/
+			const auto &params = nsApp::nsAI::BossTypeManager::GetBossTypeParameters(m_boss->GetBossType());
+			Vector3 moveStep = moveDirection * params.m_moveSpeed;
 			moveStep.z = 0.0f;
 
 			m_boss->GetController().Execute(moveStep, dt);
-		}
 
+			/*移動中でもプレイヤーに近づいたら攻撃。*/
+			uint8_t nextID = 0;
+			if (RequestID(nextID))
+			{
+				m_timer = 0.0f;
+			}
+		}
 
 		void BossMoveState::Exit()
 		{
-
 		}
 
-		bool BossMoveState::RequestID(uint8_t& id)
+		bool BossMoveState::RequestID(uint8_t &id)
 		{
-			/*ターゲットへ近づいたら攻撃。*/
-			if (m_boss->GetDistanceToTarget() < STOP_DISTANCE)
+			/*ボスタイプに応じた移動停止距離を取得。*/
+			const auto &params = nsApp::nsAI::BossTypeManager::GetBossTypeParameters(m_boss->GetBossType());
+			float distance = m_boss->GetDistanceToTarget();
+
+			/*現在の距離が設定された距離未満なら即攻撃。*/
+			if (distance < params.m_moveStopDistance)
 			{
 				id = static_cast<uint8_t>(nsActor::BossStateID::enAttack);
 				return true;
 			}
 
+			if (distance >= 55.0f && m_timer <= 0.5f)
+			{
+				id = static_cast<uint8_t>(nsActor::BossStateID::enAttack);
+				return true;
+			}
 
-			/*時間経過でIdleに戻す。*/
 			if (m_timer <= 0.0f)
 			{
 				id = static_cast<uint8_t>(nsActor::BossStateID::enIdle);

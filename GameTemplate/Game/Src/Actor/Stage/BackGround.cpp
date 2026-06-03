@@ -18,10 +18,10 @@ namespace nsApp
 
 			m_skyCube->SetScale(Vector3::One * 100.0f);
 
-			// IBL�e�N�X�`����ݒ�B
+			// IBLテクスチャを設定。
 			g_renderingEngine->SetAmbientByIBLTexture(m_skyCube->GetTextureFilePath(), 1.0f);
 
-			// SkyCube�̃^�C�v��ݒ�B
+			// SkyCubeのタイプを設定。
 			m_skyCube->SetType(EnSkyCubeType::enSkyCubeType_Day);
 			g_renderingEngine->SetDirectionLight(0, g_vec3Zero, g_vec3Zero);
 			return true;

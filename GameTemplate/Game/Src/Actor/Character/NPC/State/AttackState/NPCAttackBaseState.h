@@ -10,6 +10,7 @@
 #include "Src/Actor/Character/Common/IState.h"
 #include "Src/Actor/Character/NPC/NPCBrain.h"
 #include "Src/Actor/Character/Player/Player.h"
+#include "Src/Actor/Character/NPC/Component/NPCCombatHelper.h"
 
 namespace nsApp
 {
@@ -41,20 +42,7 @@ namespace nsApp
 			 * @brief ターゲットとの距離を計算する処理。
 			 * @param targetObject ターゲットのオブジェクト。
 			 */
-			inline void ComputeDistance(nsActor::ICharacter* targetObject)
-			{
-				/* 距離を計算。*/
-				m_diff = targetObject->GetPosition() - m_getBody->GetPosition();
-
-				m_diff.y = 0.0f;  //! Y軸の差分は無視する。
-
-				/* 距離を保存。*/
-				m_distance = m_diff.Length();
-
-				/* 保存した長さを1として方向ベクトルとして正規化。*/
-				if (m_distance > 0.001f)
-					m_diff.Normalize();
-			}
+			void ComputeDistance(nsActor::ICharacter* targetObject);
 
 			/**
 			 * @brief ターゲットとの位置の差分を元にした押し返す方向を計算する処理。
@@ -71,6 +59,12 @@ namespace nsApp
 			 * @brief 攻撃のタイマーをリセットする処理。
 			 */
 			void ResetVirtualInputs();
+
+			/**
+			 * @brief 攻撃のタイマーを更新する処理。
+			 * @return 攻撃のタイマーが0以下になったらtrue。
+			 */
+			bool CheckHelpTransition();
 
 
 		protected:

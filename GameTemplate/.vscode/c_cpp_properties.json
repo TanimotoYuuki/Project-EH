@@ -1,0 +1,41 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "${workspaceFolder}",
+                "${workspaceFolder}/Game",
+                "${workspaceFolder}/Game/Src",
+                "${workspaceFolder}/k2Engine",
+                "${workspaceFolder}/k2EngineLow",
+                "${workspaceFolder}/k2EngineLow/ExEngine",
+                "${workspaceFolder}/k2EngineLow/ExEngine/DirectXTK/include",
+                "${workspaceFolder}/k2EngineLow/ExEngine/bulletPhysics/src",
+                "${workspaceFolder}/k2EngineLow/ExEngine/effekseer/include",
+                "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/include",
+                "C:/Program Files (x86)/Windows Kits/10/Include/10.0.22621.0/ucrt",
+                "C:/Program Files (x86)/Windows Kits/10/Include/10.0.22621.0/um",
+                "C:/Program Files (x86)/Windows Kits/10/Include/10.0.22621.0/shared"
+            ],
+            "defines": [
+                "_DEBUG",
+                "_WINDOWS",
+                "_UNICODE",
+                "UNICODE",
+                "K2_DEBUG"
+            ],
+            "compilerPath": "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/bin/Hostx64/x64/cl.exe",
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "msvc-x64",
+            "browse": {
+                "path": [
+                    "${workspaceFolder}",
+                    "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.44.35207/include"
+                ],
+                "limitSymbolsToIncludedHeaders": true
+            }
+        }
+    ],
+    "version": 4
+}

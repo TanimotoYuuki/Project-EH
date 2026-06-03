@@ -25,6 +25,8 @@
 #include "Src/Actor/Character/Common/WeaponHitDetection.h"
 #include "Src/Sound/SoundLister.h"
 #include "Src/Actor/Character/NPC/NPCBrain.h"
+#include "Src/Actor/Character/NPC/State/BasicState/NPCHelpState.h"
+#include "ResourceUtility.h"
 
 #include "Src/SceneLoader/SceneLoader.h""
 
@@ -36,8 +38,31 @@ namespace
 	const auto ANGLE_Y = 90.0f;                         //! プレイヤーの初期角度。
 	const auto CHARACTER_SCALE = 0.5f;                  //! プレイヤーのスケール。
 
-	const Vector3 POS = Vector3(0.0f,100.0f, 0.0f);     //! プレイヤーの初期座標。
+	const Vector3 POS = Vector3(0.0f, 100.0f, 0.0f);     //! プレイヤーの初期座標。
 
+	/* カメラクランプ。*/
+	constexpr float BATTLE_MIN_X = -300.0f;
+	constexpr float BATTLE_MAX_X = 260.0f;
+	constexpr float BATTLE_MIN_Z = -100.0f;
+	constexpr float BATTLE_MAX_Z = 100.0f;;
+
+	/**
+	 * @brief 値を最小値と最大値の範囲内にクランプする関数。
+	 * @param value クランプする値。
+	 * @param minValue 最小値。
+	 * @param maxValue 最大値。
+	 * @return クランプされた値。
+	 */
+	auto ClampValue(float value, float minValue, float maxValue)
+	{
+		if (value < minValue)
+			return minValue;
+
+		if (value > maxValue)
+			return maxValue;
+
+		return value;
+	}
 }
 
 namespace nsApp
@@ -104,14 +129,12 @@ namespace nsApp
 
 		void Player::Update()
 		{
-			/* ICharacterクラスの更新処理をコール。*/
-			ICharacter::Update();
+			/* ヒットストップタイマー。*/
+			UpdateHitStioTImer();
 
 			/* すり抜け判定。*/
 			if (!m_isIgnorePlayerSet)
-			{
 				ComputeSlipThrough();
-			}
 
 			/* ヒットストップ状態なら*/
 			if (IsHitStop())
@@ -142,6 +165,20 @@ namespace nsApp
 			/* モデルの更新より先に入力判定を更新する。*/
 			m_playerInput.Update();
 
+			/* 死亡判定を検出する。 */
+			CheckDeth();
+
+			if (IsDeath())
+			{
+				m_playerInput.SetInputEnable(false);
+				m_stateMachine->Update();
+				m_model.SettRotation(m_angle * m_postureOffset);
+				m_model.SetPosition(m_currentPosition);
+				m_model.Update();
+
+				return;
+			}
+
 			/* リクエストを受け取って必要なステートをコール。*/
 			if (m_stateMachine->GetCurrentState()->RequestID(m_currentStateID))
 			{
@@ -156,11 +193,10 @@ namespace nsApp
 			/* ステートマシーンを更新する。*/
 			m_stateMachine->Update();
 
+			/* 角度を更新。*/
 			m_model.SettRotation(m_angle * m_postureOffset);
-
 			/* モデルの座標を更新する。*/
 			m_model.SetPosition(m_currentPosition);
-
 			/* モデルを更新する。*/
 			m_model.Update();
 
@@ -179,13 +215,13 @@ namespace nsApp
 		void Player::InitAttackStatus()
 		{
 			/* 基本ダメージ数の初期化。*/
-			m_characterStatus.attack.normalDamage = 15.0f;	
+			m_characterStatus.attack.normalDamage = 40.0f;
 
-			/* クリティカル率の初期化。*/ 
-			m_characterStatus.attack.criticalRate = 0.1f;
+			/* クリティカル率の初期化。*/
+			m_characterStatus.attack.criticalRate = 0.05f;
 
 			/* クリティカルダメージの初期化。*/
-			m_characterStatus.attack.criticalDamage = 2.0f;
+			m_characterStatus.attack.criticalDamage = 1.5f;
 
 			/* 最大HPを初期化する。*/
 			m_characterStatus.hp.maxHP = 1000;
@@ -237,7 +273,87 @@ namespace nsApp
 				}
 			}
 
-			m_isIgnorePlayerSet = true; 
+			m_isIgnorePlayerSet = true;
+		}
+
+
+		Vector3 Player::ClampBattleAreaMoveVector(const Vector3& moveVector, float frameTime) const
+		{
+			Vector3 currentPos = m_currentPosition;
+
+			// moveVector は速度なので、frameTime を掛けて「今回の移動量」に変換する。
+			Vector3 moveDelta = moveVector * frameTime;
+			Vector3 nextPos = currentPos + moveDelta;
+
+			Vector3 fixedMoveDelta = moveDelta;
+
+			if (nextPos.x < BATTLE_MIN_X)
+				fixedMoveDelta.x = BATTLE_MIN_X - currentPos.x;
+
+			else if (nextPos.x > BATTLE_MAX_X)
+				fixedMoveDelta.x = BATTLE_MAX_X - currentPos.x;
+
+			if (nextPos.z < BATTLE_MIN_Z)
+				fixedMoveDelta.z = BATTLE_MIN_Z - currentPos.z;
+
+			else if (nextPos.z > BATTLE_MAX_Z)
+				fixedMoveDelta.z = BATTLE_MAX_Z - currentPos.z;
+
+			// CharacterController::Execute は速度ベクトルを受け取っているため、
+			// 補正後の移動量を速度に戻す。
+			if (frameTime > 0.0f)
+				return fixedMoveDelta / frameTime;
+
+			return Vector3::Zero;
+		}
+
+
+		void Player::MoveWithBattleClamp(const Vector3& moveVector, float frameTime)
+		{
+			Vector3 fixedMoveVector = ClampBattleAreaMoveVector(moveVector, frameTime);
+
+			m_characterController.Execute(fixedMoveVector, frameTime);
+
+			// キャラコンの結果をPlayer本体の座標へ反映する。
+			SetPosition(m_characterController.GetPosition());
+		}
+
+
+		void Player::CheckDeth()
+		{
+			/* 早期リターン。*/
+			if (m_isDown)
+				return;
+
+			/* HPが0じゃないかチェック。*/
+			if (m_characterStatus.hp.currentHP > 0)
+				return;
+
+			/* Player専用のダウンフラグをセットする。
+			 * IGameObject側の死亡/削除フラグと混同しない。
+			 */
+			m_isDown = true;
+
+			/* 死亡した瞬間の座標をキャラコン基準で固定する。*/
+			const Vector3 deathPosition = m_characterController.GetPosition();
+			m_currentPosition = deathPosition;
+			m_model.SetPosition(m_currentPosition);
+
+			/* Dethステートに遷移。*/
+			m_stateMachine->ChangeState(new nsState::PlayerDethState(deathPosition));
+
+
+			/* 死亡時の処理。*/
+			/* 入力をオフ。*/
+			m_playerInput.SetInputEnable(false);
+			/* 当たり判定をオフ。*/
+			m_weaponHitDetection.Disable();
+			/* ダウンカウントを加算する。*/
+			m_rescueStatusManager.AddDownCount();
+			/* 武器SEを止める。*/
+			StopWeaponSE();
+			/* サブ武器の描画をオフにする。*/
+			ResetSubWeapon();
 		}
 
 
@@ -265,7 +381,14 @@ namespace nsApp
 
 		void Player::ReceiveHelp()
 		{
-			m_characterStatus.hp.currentHP = 1000;
+			/* ダウンフラグを解除する。*/
+			m_isDown = false;
+
+			/* ダウンカウントをリセットする。*/
+			m_rescueStatusManager.ResetRescueStatus();
+
+			/* 最大HPを参照する。*/
+			m_characterStatus.hp.currentHP = m_characterStatus.hp.maxHP;
 
 			/* 自分のHPを回復させる。*/
 			/* 起き上がりステート（PlayerGetUpState）へ強制移行。*/
@@ -275,17 +398,7 @@ namespace nsApp
 
 		nsActor::Player* Player::SearchCharacter()
 		{
-			auto target = FindGO<nsActor::Player>("player2");
-			if (target != nullptr && reinterpret_cast<uintptr_t>(target) != 0xFFFFFFFFFFFFFFFF)
-			{
-				if (target->GetCharacterStatus().hp.currentHP <= 0)
-				{
-					Vector3 diff = GetPosition() - target->GetPosition();
-					if(diff.Length() < 150.0f)
-						return target;
-				}
-			}
-			return nullptr;
+			return ResourceUtility::SearchNearestDownCharacter(this, 150.0f);
 		}
 
 
@@ -307,7 +420,7 @@ namespace nsApp
 			m_stateFactory[PlayerStateID::enHit] = []() { return new nsState::PlayerHitState(); };
 
 			/* 死亡状態。*/
-			m_stateFactory[PlayerStateID::enDeath] = []() { return new nsState::PlayerDethState(); };
+//			m_stateFactory[PlayerStateID::enDeath] = [this]() { return new nsState::PlayerDethState(); };
 
 			/* ガード状態。*/
 			m_stateFactory[PlayerStateID::enGuard] = []() { return new nsState::PlayerGuardState(); };

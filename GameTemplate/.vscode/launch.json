@@ -14,7 +14,7 @@
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}/Game",
             "environment": [],
-            "console": "externalTerminal",
+            "console": "internalConsole",
             "preLaunchTask": "Build with MSBuild"
         }
     ]

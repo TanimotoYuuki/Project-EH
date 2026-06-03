@@ -1,18 +1,21 @@
 #pragma once
 #include "IBossAttackStrategy.h"
 
-
 namespace nsApp
 {
-	namespace nsActor { class Boss; }
+	namespace nsActor
+	{
+		class Boss;
+	}
 
 	namespace nsAI
 	{
-		class TailAttackStrategy :public IBossAttackStrategy
+		class TailAttackStrategy : public IBossAttackStrategy
 		{
 		public:
-			void Enter(nsActor::Boss* boss) override;
-			void Update(nsActor::Boss* boss) override;
+			void Enter(nsActor::Boss *boss) override;
+			void Update(nsActor::Boss *boss) override;
+			void Exit(nsActor::Boss *boss) override;
 			bool IsEnd() override;
 
 		private:

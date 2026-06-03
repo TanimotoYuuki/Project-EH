@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include <time.h>
 #include "Game2.h"
 #include "Src/Fade/Fade.h"
 
@@ -18,7 +19,14 @@
 #include "Boss.h"
 #include "Src/Actor/Stage/BackGround.h"
 #include "Src/Actor/Character/Player/Component/PlayerGenerator.h"
-#include "PlayerControlerHub.h"
+#include "Src/Actor/Character/Player/InputSystem/PlayerControlerHub.h"
+
+#include "Src/Actor/Character/Common/Damage/DamageIndicatorPool.h"
+#include "Src/Actor/Character/Common/Damage/DamageProcessor.h"
+#include "Src/UI/ReboneGage/ReboneGageManager.h"
+#include "Src/UI/Commentary/CommentaryUIManager.h"
+#include <Windows.h>
+
 
 namespace
 {
@@ -31,25 +39,167 @@ namespace
 	const auto INIT_CHARACTER_POSITION_PLAYER4 = Vector3(50.0f, INIT_CHARACTER_POSITION_Y, INIT_CHARACTER_POSITION_Z);
 }
 
+namespace
+{
+	bool IsTriggerKey(int keyCode)
+	{
+		static SHORT prevKeyState[256] = { 0 };
+
+		SHORT currentKeyState = GetAsyncKeyState(keyCode);
+		bool isCurrentDown = (currentKeyState & 0x8000) != 0;
+		bool isPrevDown = (prevKeyState[keyCode] & 0x8000) != 0;
+
+		prevKeyState[keyCode] = currentKeyState;
+
+		return isCurrentDown && !isPrevDown;
+	}
+}
+
 namespace nsApp
 {
 	namespace nsGame
 	{
+
+		void Game2::DebugUpdateHealTest()
+		{
+			/* 1キーで味方全員にデバッグダメージを与える。*/
+			if (IsTriggerKey('1'))
+			{
+				OutputDebugStringA("[DEBUG] 1 DamageParty\n");
+				DebugDamageParty();
+			}
+
+			/* 2キーで味方全員のHPを表示する。*/
+			if (IsTriggerKey('2'))
+			{
+				OutputDebugStringA("[DEBUG] 2 PrintPartyHP\n");
+				DebugPrintPartyHP();
+			}
+		}
+
+		void Game2::DebugDamageParty()
+		{
+			constexpr int DEBUG_DAMAGE = 300;
+
+			const char* playerNames[] =
+			{
+				"player1",
+				"player2",
+				"player3",
+				"player4"
+			};
+
+			for (const char* name : playerNames)
+			{
+				auto player = FindGO<nsActor::Player>(name);
+
+				if (player == nullptr)
+				{
+					char debugText[256];
+					sprintf_s(
+						debugText,
+						"[DEBUG DAMAGE] %s not found\n",
+						name
+					);
+
+					OutputDebugStringA(debugText);
+					continue;
+				}
+
+				player->ApplyDamage(DEBUG_DAMAGE);
+
+				const auto& hp = player->GetCharacterStatus().hp;
+
+				char debugText[256];
+				sprintf_s(
+					debugText,
+					"[DEBUG DAMAGE] %s HP: %d / %d\n",
+					name,
+					hp.currentHP,
+					hp.maxHP
+				);
+
+				OutputDebugStringA(debugText);
+			}
+		}
+
+		void Game2::DebugPrintPartyHP()
+		{
+			const char* playerNames[] =
+			{
+				"player1",
+				"player2",
+				"player3",
+				"player4"
+			};
+
+			for (const char* name : playerNames)
+			{
+				auto player = FindGO<nsActor::Player>(name);
+
+				if (player == nullptr)
+				{
+					char debugText[256];
+					sprintf_s(
+						debugText,
+						"[DEBUG HP] %s not found\n",
+						name
+					);
+
+					OutputDebugStringA(debugText);
+					continue;
+				}
+
+				const auto& hp = player->GetCharacterStatus().hp;
+
+				char debugText[256];
+				sprintf_s(
+					debugText,
+					"[DEBUG HP] %s HP: %d / %d\n",
+					name,
+					hp.currentHP,
+					hp.maxHP
+				);
+
+				OutputDebugStringA(debugText);
+			}
+		}
+
+
 		Game2::~Game2()
 		{
+			if (m_reboneGaugeUIManager != nullptr)
+			{
+				m_reboneGaugeUIManager->ClearPlayers();
+				delete m_reboneGaugeUIManager;
+				m_reboneGaugeUIManager = nullptr;
+			}
+
+			if (m_soundLister != nullptr)
+			{
+				m_soundLister->GetBGMList().StopBGM();
+				m_soundLister = nullptr;
+			}
+
 			nsApp::nsStage::LoadStageData::GetInstance().ChangeStage(nsApp::nsStage::StageID::Invalid);
-			DeleteGO(m_soundLister);
 			DeleteGO(m_backGround);
 			DeleteGO(m_camera);
-			DeleteGO(m_player);
 
 			DeleteGO(m_gameClearDirection);
 			DeleteGO(m_gameTimeUpDirection);
 			DeleteGO(m_gameOverDirection);
 			DeleteGO(m_gameEndSelect);
-
+			DeleteGO(m_commentaryUIManager);
 			DeleteGO(m_pause);
 
+			m_commentaryUIManager = nullptr;
+			m_player = nullptr;
+
+			DamageProcessor::SetDamageIndicatorPool(nullptr);
+			DeleteGO(m_damageIndicatorPool);
+			m_damageIndicatorPool = nullptr;
+
+		
 			delete m_generator;
 			delete m_playerHub;
 		}
@@ -57,10 +207,11 @@ namespace nsApp
 
 		bool Game2::Start()
 		{
-			/* 音源の生成。*/
-			m_soundLister = NewGO<nsSound::SoundLister>(0, "SoundManager");
-			m_soundLister->GetBGMList().Init();
-			m_soundLister->GetSEList().Init();
+			/* 乱数の初期化。*/
+			srand(static_cast<unsigned int>(time(nullptr)));
+
+			/* 音源クラスの設定項目。*/
+			SettingSound();
 
 			/* 初期ステージのセット。*/
 			/* @TODO ステージ選択画面からこの処理を呼ぶようにする。*/
@@ -70,15 +221,24 @@ namespace nsApp
 			/* カメラを生成。*/
 			m_camera = NewGO<Camera>(0, "camera");
 
-			PhysicsWorld::GetInstance()->EnableDrawDebugWireFrame();
 
-			m_player = NewGO<nsActor::Player>(0, "player");
+			/* ダメージプールを生成。*/
+			m_damageIndicatorPool = NewGO<DamageIndicatorPool>(0, "damagePool");
+			DamageProcessor::SetDamageIndicatorPool(m_damageIndicatorPool);
 
-			/*ボスを作成。*/
+			/* Player達を生成。*/
+			SpawnPlayCharacter();
+
+			///*ボスを作成。*/
 			m_boss = NewGO<nsActor::Boss>(0, "boss");
+			/*ボスの種類を設定。*/
+			m_boss->SetBossType((CharacterModelType)GetBossType());
 
-			/*ボスにプレイヤーをターゲットとして教える。*/
-			m_boss->SetTarget(m_player);
+			if(m_boss != nullptr)
+				/*ボスにプレイヤーをターゲットとして教える。*/
+				m_boss->SetTarget(m_player);
+
+
 
 			m_characterHP = NewGO<CharacterHP>(0, "characterHP");
 			for (int i = 0; i < CharacterHP::EnCharacter::enCharacter_Num; i++)
@@ -100,15 +260,16 @@ namespace nsApp
 			/*フェードインに切り替える。*/
 			nsApp::nsFade::Fade::GetInstance()->ChangeFadeType(nsApp::nsFade::Fade::EnFadeType::enFadeType_FadeIn);
 
-			/* プレイアブルキャラを生成する。*/
-			SpawnPlayCharacter();
-
+			/* コメントの生成。*/
+			SettingCommentaryUI();
 			return true;
 		}
 
 
 		void Game2::Update()
 		{
+			DebugUpdateHealTest();
+
 			if(m_playerHub)
 				m_playerHub->Update();
 			
@@ -225,15 +386,22 @@ namespace nsApp
 				}
 			}
 
+
 			/* 現在のステージの更新を行う。*/
 			nsApp::nsStage::LoadStageData::GetInstance().Update();
+
+			if(m_reboneGaugeUIManager != nullptr)
+				m_reboneGaugeUIManager->Update();
 		}
 
 
-		void Game2::Render(RenderContext& rc)
+		void Game2::Render(RenderContext &rc)
 		{
 			/* 現在のステージを描画する。*/
 			nsApp::nsStage::LoadStageData::GetInstance().Draw(rc);
+
+			if(m_reboneGaugeUIManager != nullptr)
+				m_reboneGaugeUIManager->Render(rc);
 		}
 
 
@@ -265,10 +433,49 @@ namespace nsApp
 
 			/* 作成したリストをセットする。*/
 			auto players = m_generator->SpawnPlayers(partyData);
+			if (!players.empty())
+				m_player = players[0];
+
+			/* ReboneUIを登録。*/
+			if (m_reboneGaugeUIManager != nullptr)
+			{
+				for (auto* player : players)
+					m_reboneGaugeUIManager->RegisterPlayer(player);
+			}
 
 			/* Hubを生成する。*/
 			m_playerHub = new PlayerControlerHub();
 			m_playerHub->Initialize(players, partyData);
+		}
+
+
+		void Game2::SettingSound()
+		{
+			/* 音源クラスを生成する。*/
+			m_soundLister = FindGO<nsSound::SoundLister>("SoundManager");
+
+			if (m_soundLister == nullptr)
+				m_soundLister = NewGO<nsSound::SoundLister>(0, "SoundManager");
+
+			/* 初期化。*/
+			m_soundLister->InitSound();
+
+			/* BGMを再生。*/ 
+			m_soundLister->GetBGMList().StopBGM();
+
+			/* ステージBGMを再生する。*/
+			m_soundLister->GetBGMList().PlayBGM(nsSound::BGM_ID::Stage1, 1.0f);
+		}
+
+
+		void Game2::SettingCommentaryUI()
+		{
+			/* UIを生成。*/
+			m_reboneGaugeUIManager = new nsUI::ReboneGaugeUIManager();
+			m_reboneGaugeUIManager->Init();
+
+			/* 実況UIを生成。*/
+			m_commentaryUIManager = NewGO<nsUI::CommentaryUIManager>(0, "CommentaryUIManager");
 		}
 	}
 }
