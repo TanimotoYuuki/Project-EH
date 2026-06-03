@@ -22,6 +22,7 @@ namespace nsApp
 			float lifeTime = 0.0f;						    //! SEの寿命。
 			float currentTime = 0.0f;					    //! SEの現在の経過時間。
 			bool isLoop = false;					        //! SEをループ再生するかどうかのフラグ。
+			float baseVolume = 0.0f;						//! SEの基本音量。音量の割合を考慮して計算される。
 		};
 
 
@@ -103,6 +104,13 @@ namespace nsApp
 			/* ハンマー。*/
 			void RegisterHammerSEBank();
 
+		public:
+			/**
+			* @brief 音量の割合を考慮した音量の計算処理。
+			* @param seEate SEの音量の割合。
+			* @param masterRate マスターボリュームの割合。
+			*/
+			void CalcVolume(int seEate, int masterRate);
 
 		public:
 			/* ファイルパスを格納する。*/

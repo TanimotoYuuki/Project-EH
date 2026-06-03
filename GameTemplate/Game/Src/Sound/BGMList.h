@@ -48,6 +48,13 @@ namespace nsApp
 			 */
 			void StopBGM();
 
+		public:
+			/**
+			* @brief 音量の割合を考慮した音量の計算処理。
+			* @param bgmRate BGMの音量の割合。
+			* @param masterRate マスター音量の割合。
+			*/
+			void CalcVolume(int bgmRate, int masterRate);
 
 		public:
 			/* 
@@ -63,6 +70,7 @@ namespace nsApp
 
 		private:
 			static nsK2EngineLow::SoundSource* m_bgmSource; //! BGMを鳴らすスピーカー。
+			float m_baseVolume = 0.0f;/*BGMの基本音量。*/
 
 		private:
 			static BGM_ID m_currentBGM	;                   //! 現在流れているBGMのIDを記録する変数。

@@ -1,4 +1,5 @@
 #pragma once
+#include <Src/Actor/Character/Player/Component/PlayerSpawnData.h>
 
 /**
 * @file Game.h
@@ -42,6 +43,7 @@ namespace nsApp
 		class GameClearDirection;
 		class GameTimeUpDirection;
 		class GameOverDirection;
+		class Pause;
 
 		class Game2 : public IGameObject
 		{
@@ -110,6 +112,71 @@ namespace nsApp
 				return m_gameEndSelect;
 			}
 
+			/**
+			* @brief ポーズのインスタンスの取得。
+			* @return ポーズのインスタンス。
+			*/
+			inline Pause* GetPauseInstance() const
+			{
+				return m_pause;
+			}
+
+			/**
+			* @brief ボスの種類の設定。
+			* @param bossType ボスの種類。
+			*/
+			inline void SetBossType(int bossType)
+			{
+				m_bossType = bossType;
+			}
+
+			/**
+			* @brief ボスの種類の取得。
+			* @param bossType ボスの種類。
+			*/
+			inline int GetBossType() const
+			{
+				return m_bossType + 5;
+			}
+
+			/**
+			* @brief 各キャラクターの役割の設定。
+			* @param playerIndex プレイヤーのインデックス。
+			*/
+			inline void SetCharacterRole(int playerIndex,int role)
+			{
+				m_characterRole[playerIndex] = role;
+			}
+
+			/**
+			* @brief 各キャラクターの役割の取得。
+			* @param playerIndex プレイヤーのインデックス。
+			* @return キャラクターの役割。
+			*/
+			inline int GetCharacterRole(int playerIndex)const
+			{
+				return m_characterRole[playerIndex];
+			}
+
+			/**
+			* @brief プレイヤーが操作しているかどうかの設定。
+			* @param playerIndex プレイヤーのインデックス。
+			*/
+			inline void SetPlayerControle(int playerIndex, bool isControle)
+			{
+				m_isPlayerControle[playerIndex] = isControle;
+			}
+
+			/**
+			* @brief プレイヤーが操作しているかどうかの取得。
+			* @param playerIndex プレイヤーのインデックス。
+			* @return プレイヤーが操作しているかどうか。
+			*/
+			inline bool IsPlayerControle(int playerIndex) const
+			{
+				return m_isPlayerControle[playerIndex];
+			}
+
 		private:
 			nsApp::nsSound::SoundLister* m_soundLister = nullptr; //! サウンドリスター。
 			nsApp::nsStage::BackGround* m_backGround = nullptr; //! 背景。
@@ -126,7 +193,7 @@ namespace nsApp
 			GameTimeUpDirection* m_gameTimeUpDirection = nullptr;
 			GameOverDirection* m_gameOverDirection = nullptr;
 			GameEndSelect* m_gameEndSelect = nullptr;
-
+			Pause* m_pause = nullptr;
 
 			////////////////////////////////////////////////////////
 			//Player生成: メンバ選択クラスに移動をするなら移動して
@@ -134,6 +201,10 @@ namespace nsApp
 			PlayerGenerator* m_generator = nullptr;
 			PlayerControlerHub* m_playerHub = nullptr;
 
+			int m_bossType = 0;
+			int m_characterRole[4] = { 0 }; //! キャラクターごとの役割。
+			ControllerType m_controllerType[4] = { ControllerType::Player_1P }; //! キャラクターごとのコントローラーの種類。
+			bool m_isPlayerControle[4] = { true }; //! プレイヤーが操作しているかどうか。
 
 			/**
 			 * @brief デバッグ用の回復テスト関数。

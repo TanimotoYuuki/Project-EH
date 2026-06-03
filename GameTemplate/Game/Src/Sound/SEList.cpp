@@ -152,6 +152,7 @@ namespace nsApp
 			info.lifeTime = lifeTime;
 			info.currentTime = 0.0f;
 			info.isLoop = flag;
+			info.baseVolume = volume;
 
 			m_playingSEs.emplace_back(info);
 
@@ -235,6 +236,22 @@ namespace nsApp
 				{ AttackType::PushForward, SE_ID::DashAttack_Hammer},
 				{ AttackType::Charging, SE_ID::Charge}
 			};
+		}
+
+		void SEList::CalcVolume(int seRate, int masterRate)
+		{
+			int bgmVolumeRate = seRate;
+			float bgmVolume = bgmVolumeRate / 100.0f;
+
+			int masterVolumeRate = masterRate;
+			float masterVolume = masterVolumeRate / 100.0f;
+
+			for (const auto& playSe: m_playingSEs)
+			{
+				float finalVolume = playSe.baseVolume * bgmVolume * masterVolume;
+
+				playSe.source->SetVolume(finalVolume);
+			}
 		}
 	}
 }

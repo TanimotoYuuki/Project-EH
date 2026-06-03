@@ -116,6 +116,14 @@ namespace nsK2EngineLow {
 		{
 			return m_textures[texNo].GetHeight();
 		}
+		/// <summary>
+		/// 初期化されているか判定。
+		/// </summary>
+		/// <returns></returns>
+		bool IsInited() const
+		{
+			return m_isInited;
+		}
 	private:
 		/// <summary>
 		/// テクスチャを初期化。
@@ -147,6 +155,7 @@ namespace nsK2EngineLow {
 		/// <param name="initData"></param>
 		void InitConstantBuffer(const SpriteInitData& initData);
 	private:
+		bool m_isInited = false;             //初期化されている？
 		IndexBuffer m_indexBuffer;			//インデックスバッファ。
 		VertexBuffer m_vertexBuffer;		//頂点バッファ。
 		int m_numTexture = 0;				//テクスチャの枚数。

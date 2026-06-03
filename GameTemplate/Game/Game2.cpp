@@ -6,11 +6,12 @@
 #include "Src/Actor/Stage/LoadStageData.h"
 #include "CharacterHP.h"
 #include "GameTimeLimit.h"
-#include "GameStartDirection.h"
-#include "GameClearDirection.h"
-#include "GameTimeUpDirection.h"
-#include "GameOverDirection.h"
-#include "GameEndSelect.h"
+#include "Src/Direction/GameStartDirection.h"
+#include "Src/Direction/GameClearDirection.h"
+#include "Src/Direction/GameTimeUpDirection.h"
+#include "Src/Direction/GameOverDirection.h"
+#include "Src/Select/GameEndSelect.h"
+#include "Src/Scene/InGame/Pause.h"
 
 #include "Src/Camera/Camera.h"
 #include "Src/Actor/Character/Player/Player.h"
@@ -189,6 +190,7 @@ namespace nsApp
 			DeleteGO(m_gameOverDirection);
 			DeleteGO(m_gameEndSelect);
 			DeleteGO(m_commentaryUIManager);
+			DeleteGO(m_pause);
 
 			m_commentaryUIManager = nullptr;
 			m_player = nullptr;
@@ -230,7 +232,7 @@ namespace nsApp
 			///*ボスを作成。*/
 			m_boss = NewGO<nsActor::Boss>(0, "boss");
 			/*ボスの種類を設定。*/
-			m_boss->SetBossType(CharacterModelType::GreenDragon);
+			m_boss->SetBossType((CharacterModelType)GetBossType());
 
 			if(m_boss != nullptr)
 				/*ボスにプレイヤーをターゲットとして教える。*/
@@ -239,6 +241,10 @@ namespace nsApp
 
 
 			m_characterHP = NewGO<CharacterHP>(0, "characterHP");
+			for (int i = 0; i < CharacterHP::EnCharacter::enCharacter_Num; i++)
+			{
+				m_characterHP->SetCharacterRole(i, GetCharacterRole(i));
+			}
 			m_characterHP->Deactivate();
 
 			m_gameTimeLimit = NewGO<GameTimeLimit>(0, "gameTimeLimit");
@@ -247,6 +253,9 @@ namespace nsApp
 
 			m_gameStartDirection = NewGO<GameStartDirection>(2, "gameStartDirection");
 			m_gameStartDirection->Deactivate();
+
+			m_pause = NewGO<Pause>(0, "pause");
+			m_pause->Deactivate();
 
 			/*フェードインに切り替える。*/
 			nsApp::nsFade::Fade::GetInstance()->ChangeFadeType(nsApp::nsFade::Fade::EnFadeType::enFadeType_FadeIn);
@@ -263,9 +272,11 @@ namespace nsApp
 
 			if(m_playerHub)
 				m_playerHub->Update();
-
+			
+			/*ゲーム開始用のインスタンスがnullptrではなければ。*/
 			if (m_gameStartDirection != nullptr)
 			{
+				/*ゲーム開始処理が終わっていたらインスタンスを削除する。*/
 				if (m_gameStartDirection->IsDirectionFinished())
 				{
 					DeleteGO(m_gameStartDirection);
@@ -275,44 +286,103 @@ namespace nsApp
 					return;
 				}
 
+				/*フェードが終わっていたらゲーム開始演出を再生する。*/
 				if (nsApp::nsFade::Fade::GetInstance()->IsEnd())
 				{
 					m_gameStartDirection->Activate();
 				}
 			}
-
-			/*ゲームクリア演出。*/
-			/*現在は左を入力することで演出を流すようにしている。*/
-			/*TODO:今後はボスのHPが0になったら演出を流すようにする。*/
-			if (m_gameClearDirection == nullptr)
-			{
-				if (g_pad[0]->IsTrigger(enButtonLeft))
-				{
-					m_gameClearDirection = NewGO<GameClearDirection>(2, "gameClearDirection");
-					m_characterHP->Deactivate();
-					m_gameTimeLimit->Deactivate();
-				}
-			}
-
-			/*時間切れ演出。*/
-			if (m_gameTimeUpDirection == nullptr)
-			{
-				if (m_gameTimeLimit->IsTimeUp())
-				{
-					m_gameTimeUpDirection = NewGO<GameTimeUpDirection>(2, "gameTimeUpDirection");
-					m_characterHP->Deactivate();
-					m_gameTimeLimit->Deactivate();
-				}
-			}
 			else
 			{
-				if (m_gameEndSelect == nullptr)
+				/*ポーズ画面が表示していないとき。*/
+				if (!m_pause->IsActive())
 				{
-					if (m_gameTimeUpDirection->IsDirectionFinished())
+					/*演出が流れていなければ処理する*/
+					if (m_gameClearDirection == nullptr &&/*ゲームクリア演出*/
+						m_gameOverDirection == nullptr &&/*ゲームオーバー演出*/
+						m_gameTimeUpDirection == nullptr/*時間切れ演出*/
+						)
 					{
-						m_gameTimeUpDirection->Deactivate();
-						m_gameEndSelect = NewGO<GameEndSelect>(2, "gameEndSelect");
+						/*Selectボタンを押すとポーズ画面を表示する。*/
+						if (g_pad[0]->IsTrigger(enButtonSelect))
+						{
+							m_pause->Activate();
+							m_pause->EnableDrawingUI();
+							return;
+						}
+
+						/*ゲーム開始演出が終了しているときに処理する。*/
+						if (m_gameStartDirection == nullptr)
+						{
+							m_characterHP->Activate();
+							m_gameTimeLimit->Activate();
+						}
 					}
+
+					/*ゲームクリア演出。*/
+					/*現在は左を入力することで演出を流すようにしている。*/
+					/*TODO:今後はボスのHPが0になったら演出を流すようにする。*/
+					if (m_gameClearDirection == nullptr)
+					{
+						if (g_pad[0]->IsTrigger(enButtonLeft))
+						{
+							m_gameClearDirection = NewGO<GameClearDirection>(2, "gameClearDirection");
+							m_characterHP->Deactivate();
+							m_gameTimeLimit->Deactivate();
+						}
+					}
+
+					/*時間切れ演出。*/
+					if (m_gameTimeUpDirection == nullptr)
+					{
+						if (m_gameTimeLimit->IsTimeUp())
+						{
+							m_gameTimeUpDirection = NewGO<GameTimeUpDirection>(2, "gameTimeUpDirection");
+							m_characterHP->Deactivate();
+							m_gameTimeLimit->Deactivate();
+						}
+					}
+					else
+					{
+						if (m_gameEndSelect == nullptr)
+						{
+							if (m_gameTimeUpDirection->IsDirectionFinished())
+							{
+								m_gameTimeUpDirection->Deactivate();
+								m_gameEndSelect = NewGO<GameEndSelect>(2, "gameEndSelect");
+							}
+						}
+					}
+
+					/*ゲームオーバー演出。*/
+					/*現在は左を入力することで演出を流すようにしている。*/
+					/*TODO:今後はキャラクター全員のHPが0になったら演出を流すようにする。*/
+					//if (m_gameOverDirection == nullptr)
+					//{
+					//	if (g_pad[0]->IsTrigger(enButtonLeft))
+					//	{
+					//		m_gameOverDirection = NewGO<GameOverDirection>(2, "gameOverDirection");
+					//		m_characterHP->Deactivate();
+					//		m_gameTimeLimit->Deactivate();
+					//	}
+					//}
+					//else
+					//{
+					//	if (m_gameEndSelect == nullptr)
+					//	{
+					//		if (m_gameOverDirection->IsDirectionFinished())
+					//		{
+					//			m_gameOverDirection->Deactivate();
+					//			m_gameEndSelect = NewGO<GameEndSelect>(2, "gameEndSelect");
+					//		}
+					//	}
+					//}
+				}
+				/*ポーズ画面が表示しているとき。*/
+				else
+				{
+					m_characterHP->Deactivate();
+					m_gameTimeLimit->Deactivate();
 				}
 			}
 
@@ -340,13 +410,25 @@ namespace nsApp
 			/* 生成システムクラスを生成する。*/
 			m_generator = new PlayerGenerator();
 
+			for (int i = 0; i < 4; i++)
+			{
+				if (m_isPlayerControle[i])
+				{
+					m_controllerType[i] = (ControllerType)i;
+				}
+				else
+				{
+					m_controllerType[i] = ControllerType::NPC;
+				}
+			}
+
 			/* PlayerGeneratorを用い、プレイアブルキャラを作成する。*/
 			std::vector<PlayerSpawnData> partyData =
-			{			
-				{"player1", WeaponType::GreatSword, ControllerType::NPC ,INIT_CHARACTER_POSITION_PLAYER1},
-				{"player2", WeaponType::Hammer, ControllerType::NPC,INIT_CHARACTER_POSITION_PLAYER2},
-				{"player3", WeaponType::Wand, ControllerType::NPC, INIT_CHARACTER_POSITION_PLAYER3},
-				{"player4", WeaponType::TwinGun, ControllerType::Player_1P, INIT_CHARACTER_POSITION_PLAYER4}
+			{
+				{"player1", (WeaponType)GetCharacterRole(0), m_controllerType[0], INIT_CHARACTER_POSITION_PLAYER1},
+				{"player2", (WeaponType)GetCharacterRole(1), m_controllerType[1], INIT_CHARACTER_POSITION_PLAYER2},
+				{"player3", (WeaponType)GetCharacterRole(2), m_controllerType[2], INIT_CHARACTER_POSITION_PLAYER3},
+				{"player4", (WeaponType)GetCharacterRole(3), m_controllerType[3], INIT_CHARACTER_POSITION_PLAYER4}
 			};
 
 			/* 作成したリストをセットする。*/

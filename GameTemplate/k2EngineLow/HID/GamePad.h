@@ -194,6 +194,16 @@ namespace nsK2EngineLow {
 			Connect,	//接続されている。
 			Disconnect,	//接続されていない。
 		};
+
+		/**
+		* @brief パッドの状態を取得する。
+		* @param padNo パッド番号。
+		*/
+		inline EnXInputPadState GetPadState(int padNo) const
+		{
+			return m_padStates[padNo];
+		}
+
 	private:
 		PAD_STATE m_state;			// パッドステート。
 		int m_padNo = 0;			// パッド番号。

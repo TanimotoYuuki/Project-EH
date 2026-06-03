@@ -3,7 +3,7 @@
 #include "RenderingEngine.h"
 
 namespace nsK2Engine {
-	void SpriteRender::Init(const char* filePath, const float w, const float h, AlphaBlendMode alphaBlendMode)
+	void SpriteRender::Init(const char* filePath, const float w, const float h, bool isBackGroundRender, AlphaBlendMode alphaBlendMode)
 	{
 		SpriteInitData initData;
 		//DDSファイル(画像データ)のファイルパスを指定する。
@@ -15,8 +15,13 @@ namespace nsK2Engine {
 		initData.m_height = static_cast<UINT>(h);
 		initData.m_alphaBlendMode = alphaBlendMode;
 		
-		//Sprite初期化オブジェクトを使用して、Spriteを初期化する。
-		m_sprite.Init(initData);
+		if (isBackGroundRender){
+			m_backGroundSprite.Init(initData);
+		}
+		else{
+			//Sprite初期化オブジェクトを使用して、Spriteを初期化する。
+			m_sprite.Init(initData);
+		}
 	}
 
 	void SpriteRender::Draw(RenderContext& rc)
