@@ -16,6 +16,7 @@ namespace nsApp
 		class PlayerHeavyAttackState : public PlayerAttackBaseState
 		{
 		public:
+			/* コンストラクタとデストラクタ。*/
 			PlayerHeavyAttackState() = default;
 			virtual ~PlayerHeavyAttackState() = default;
 

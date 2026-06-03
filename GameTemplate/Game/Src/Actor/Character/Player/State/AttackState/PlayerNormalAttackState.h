@@ -29,12 +29,12 @@ namespace nsApp
 
 
 		private:
-			/*
+			/**
 			 * @brief WandCharacterを使用している場合、攻撃の際にミサイルを召喚する処理。
 			 */
 			void SummonMissile();
 
-			/*
+			/**
 			 * @brief 銃弾を発射させる処理。
 			 */
 			void FireGunBullet();

@@ -3,7 +3,7 @@
  * @file    DamageProcessor.h
  * @brief   DamageRequestを元にダメージ数を描画する。
  * @author  Yamaguchi Hayato
- * @date    2026/05/20
+ * @date 　 2026/05/29(最終更新日)
  * @details ダメージフォントの描画とダメージの適応を一括で行う。
  */
 
@@ -12,7 +12,6 @@
 namespace nsApp
 {
 	class DamageIndicatorPool;
-
 	class DamageProcessor final
 	{
 	public:
@@ -26,7 +25,10 @@ namespace nsApp
 		 * @brief ダメージ表示用プールを設定する。
 		 * @param damageIndicatorPool ダメージ表示用プール。
 		 */
-		static void SetDamageIndicatorPool(DamageIndicatorPool* damageIndicatorPool);
+		inline static void SetDamageIndicatorPool(DamageIndicatorPool* damageIndicatorPool)
+		{
+			m_damageIndicatorPool = damageIndicatorPool;
+		}
 
 		/**
 		 * @brief ダメージ数を描画する。

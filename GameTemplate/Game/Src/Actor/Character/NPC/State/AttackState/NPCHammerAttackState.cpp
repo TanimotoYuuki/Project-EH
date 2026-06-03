@@ -7,28 +7,31 @@
 namespace
 {
 	/* 乱数・パターン関連 */
-	const auto NUM_HAMMER_PATTERNS = 3;            //! ハンマーNPCが持つ攻撃パターンの総数
+	const auto NUM_HAMMER_PATTERNS = 3;            //! ハンマーNPCが持つ攻撃パターンの総数。
 
 	/* 距離・間合い関連 */
-	const auto CHASE_TRANSITION_DISTANCE = 180.0f; //! 敵がこの距離より離れたら追跡ステートへ戻る
-	const auto RETREAT_DISTANCE = 50.0f;           //! 攻撃後のクールタイム中に、この距離より近ければ後ろに下がる
-	const auto CLIPPING_LIMIT_DISTANCE = 40.0f;    //! めり込みを防止する限界距離（見えない壁）
+	const auto CHASE_TRANSITION_DISTANCE = 180.0f; //! 敵がこの距離より離れたら追跡ステートへ戻る。
+	const auto RETREAT_DISTANCE = 50.0f;           //! 攻撃後のクールタイム中に、この距離より近ければ後ろに下がる。
+	const auto CLIPPING_LIMIT_DISTANCE = 40.0f;    //! めり込みを防止する限界距離。
 
 	/* 時間（フレーム）関連 */
-	const auto ATTACK_DURATION = 40;               //! 攻撃モーションが継続し、敵の方を向き続ける時間
-	const auto ATTACK_RESET_TIME = 70;             //! 次の行動（再抽選）に移るまでの総時間
+	const auto ATTACK_DURATION = 40;               //! 攻撃モーションが継続し、敵の方を向き続ける時間。
+	const auto ATTACK_RESET_TIME = 70;             //! 次の行動（再抽選）に移るまでの総時間。
 
 	/* コンボ入力のタイミング（フレーム） */
-	const auto COMBO_FIRST_INPUT = 1;              //! 1段目のボタン入力タイミング
-	const auto COMBO_HEAVY_INPUT = 15;             //! 重攻撃（Xボタン）の入力タイミング
-	const auto COMBO_AIR_INPUT = 15;               //! 空中攻撃（Bボタン）の入力タイミング
+	const auto COMBO_FIRST_INPUT = 1;              //! 1段目のボタン入力タイミング。
+	const auto COMBO_HEAVY_INPUT = 15;             //! 重攻撃（Xボタン）の入力タイミング。
+	const auto COMBO_AIR_INPUT = 15;               //! 空中攻撃（Bボタン）の入力タイミング。
 
-	const auto PUSH_START_INPUT = 5;               //! ダッシュ攻撃（Push）のBボタン入力タイミング
-	const auto PUSH_HOLD_DURATION = 10;            //! ダッシュ攻撃時のLB1（ダッシュ）ボタン長押し時間
+	const auto PUSH_START_INPUT = 5;               //! ダッシュ攻撃（Push）のBボタン入力タイミング。
+	const auto PUSH_HOLD_DURATION = 10;            //! ダッシュ攻撃時のLB1（ダッシュ）ボタン長押し時間。
 
 	/* モデルの回転角度 */
-	const auto FACING_ANGLE_RIGHT = 90.0f;         //! 右を向く時の角度
-	const auto FACING_ANGLE_LEFT = -90.0f;         //! 左を向く時の角度
+	const auto FACING_ANGLE_RIGHT = 90.0f;         //! 右を向く時の角度。
+	const auto FACING_ANGLE_LEFT = -90.0f;         //! 左を向く時の角度。
+
+	const auto HOLD_FRAME = 3;					   //! ボタンを押し続けるフレーム数（攻撃の持続時間に影響）。
+	const auto STICK_NEUTRAL = 0.0f;			   //! スティックをニュートラル値。
 }
 
 namespace nsApp
@@ -51,13 +54,14 @@ namespace nsApp
 
 		void NPCHammerAttackState::Update()
 		{
+			/* 救助要請がないかチェック。*/
 			if (CheckHelpTransition())
 				return;
 
+			/* 目標を探索する。*/
 			nsActor::ICharacter* target = m_npcBrain->SearchTarget();
 
-
-			/* 早期リターン */
+			/* 目標がいない、もしくは体がない場合は追跡状態に遷移する。*/
 			if (target == nullptr || m_getBody == nullptr)
 			{
 				m_stateMachine->ChangeState(new NPCChaseState());
@@ -103,37 +107,44 @@ namespace nsApp
 				&NPCHammerAttackState::ExecuteMeleePush,
 				&NPCHammerAttackState::ExecuteMeleeAir
 			};
+			/* 現在の攻撃パターンに対応する関数を呼び出す */
 			(this->*actions[static_cast<int>(m_currentPattern)])();
 		}
 
 
 		void NPCHammerAttackState::ExecuteMeleeHeavy()
 		{
+			/* 1フレーム目の入力処理。*/
 			if (m_attackTimer == COMBO_FIRST_INPUT)
-				m_virtualInput->RequestButton(enButtonB, 3);
+				m_virtualInput->RequestButton(enButtonB, HOLD_FRAME);
 
+			/* 重攻撃の入力処理。*/
 			if (m_attackTimer == COMBO_HEAVY_INPUT)
-				m_virtualInput->RequestButton(enButtonX,3);
+				m_virtualInput->RequestButton(enButtonX, HOLD_FRAME);
 		}
 
 
 		void NPCHammerAttackState::ExecuteMeleePush()
 		{
+			/* ダッシュ攻撃の入力処理。*/
 			if (m_attackTimer < PUSH_HOLD_DURATION)
-				m_virtualInput->RequestButton(enButtonLB1 ,3);
+				m_virtualInput->RequestButton(enButtonLB1 , HOLD_FRAME);
 
+			/* ダッシュ攻撃のボタン入力処理。*/
 			if (m_attackTimer == PUSH_START_INPUT)
-				m_virtualInput->RequestButton(enButtonB ,3);
+				m_virtualInput->RequestButton(enButtonB , HOLD_FRAME);
 		}
 
 
 		void NPCHammerAttackState::ExecuteMeleeAir()
 		{
+			/* 1フレーム目の入力処理。*/
 			if (m_attackTimer == COMBO_FIRST_INPUT)
-				m_virtualInput->RequestButton(enButtonA ,3);
+				m_virtualInput->RequestButton(enButtonA , HOLD_FRAME);
 
+			/* 空中攻撃の入力処理。*/
 			if (m_attackTimer == COMBO_AIR_INPUT)
-				m_virtualInput->RequestButton(enButtonB ,3);
+				m_virtualInput->RequestButton(enButtonB , HOLD_FRAME);
 		}
 
 
@@ -143,9 +154,10 @@ namespace nsApp
 			m_isDashAttack = (m_currentPattern == NPCHammerPattern::enPush);
 
 			/* 攻撃中はダッシュの時だけスティックを前へ。それ以外（通常・空中）はその場で振る */
-			m_stickX = m_isAttacking ? (m_isDashAttack ? m_diff.x : 0.0f) : (m_distance < RETREAT_DISTANCE ? -m_diff.x : 0.0f);
-			m_stickZ = m_isAttacking ? (m_isDashAttack ? m_diff.z : 0.0f) : (m_distance < RETREAT_DISTANCE ? -m_diff.z : 0.0f);
+			m_stickX = m_isAttacking ? (m_isDashAttack ? m_diff.x : STICK_NEUTRAL) : (m_distance < RETREAT_DISTANCE ? -m_diff.x : STICK_NEUTRAL);
+			m_stickZ = m_isAttacking ? (m_isDashAttack ? m_diff.z : STICK_NEUTRAL) : (m_distance < RETREAT_DISTANCE ? -m_diff.z : STICK_NEUTRAL);
 
+			/* スティック入力を仮想入力に反映 */
 			m_virtualInput->SetLStick(m_stickX, m_stickZ);
 		}
 

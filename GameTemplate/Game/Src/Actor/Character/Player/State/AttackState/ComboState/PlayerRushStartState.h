@@ -22,6 +22,7 @@ namespace nsApp
 
 
 		protected:
+			/* TemplateMethod */
 			void PlayAttackAnimation() override;
 			void OnEnterAttack() override;
 			bool OnUpdateAttack() override;
@@ -51,7 +52,7 @@ namespace nsApp
 
 			bool m_isSummoned = false;            //! ミサイルを射出したかどうかを管理するフラグ。
 			bool m_isButtonReleased = false;      //! 攻撃ボタンが離されたかどうかを管理するフラグ。
-			bool m_isReleased = false;			  //! 
+			bool m_isReleased = false;			  //! 連続攻撃が終了したかどうかを管理するフラグ。
 
 			Vector3 m_moveVector = Vector3::Zero; //! 前進する際の移動ベクトル。
 			Vector3 m_spawnPos = Vector3::Zero;   //! ミサイルを召喚する位置。

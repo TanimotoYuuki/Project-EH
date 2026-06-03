@@ -5,6 +5,11 @@
 #include "Src/Actor/Gun/Bullet/IGunBullet.h"
 #include "Src/Actor/Gun/Factory/BulletFactory.h"
 
+namespace
+{
+	const auto ATTACK_FRAME_15 = 15;		   //! 攻撃の15フレーム目。
+	const auto WEAPON_ROTATION_ANGLE = -90.0f; //! 武器の回転角度。
+}
 
 namespace nsApp
 {
@@ -12,8 +17,8 @@ namespace nsApp
 	{
 		void PlayerRushEndState::PlayAttackAnimation()
 		{
-			/* 攻撃の種類をセット。*/
-			m_currentAttackType = AttackType::RushAttack_End;
+			/* 攻撃の種類を設定する。*/
+			SetCurrentAttackType(AttackType::RushAttack_End);
 
 			/* 再生するアニメーションをセット。*/
 			m_player->PlayWeaponAnimation(AttackType::RushAttack_End);
@@ -23,10 +28,13 @@ namespace nsApp
 		void PlayerRushEndState::OnAttackTick()
 		{
 			/* 15フレーム目に処理。*/
-			if (m_attackTimer == 15)
+			if (m_attackTimer == ATTACK_FRAME_15)
 			{
+				/* 銃の場合。*/
 				m_spawnPosition = m_player->GetWeaponHitDetection().GetPosition();
+				/* 銃の前方を弾の進行方向とする。*/
 				m_forwardDirection = m_player->GetForwardVector();
+				/* 乱射攻撃の弾を生成して発射する。*/
 				ConstructAndTransmitBulletRequest(BulletType::enRush);
 			}
 		}
@@ -43,7 +51,7 @@ namespace nsApp
 					/* サブウェポンをリセットする。*/
 					m_player->ResetSubWeapon();
 					/* 武器の角度をリセットする。*/
-					m_player->SetWeaponRotationAngle(Vector3::Front, -90.0f);
+					m_player->SetWeaponRotationAngle(Vector3::Front, WEAPON_ROTATION_ANGLE);
 				}
 
 				/* 乱射攻撃のフィニッシュとしてチャージ攻撃を放つ。*/

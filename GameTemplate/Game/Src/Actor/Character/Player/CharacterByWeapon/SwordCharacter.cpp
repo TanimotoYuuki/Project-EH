@@ -10,6 +10,11 @@
 #include "Src/Actor/Character/Player/State/AttackState/ComboState/PlayerRushEndState.h"
 #include "Src/Actor/Character/Player/State/AttackState/ComboState/PlayerSlashUpState.h"
 
+namespace
+{
+	const auto CHARACTER_MAGNIFICAATION_SCALE = 0.5f; //! キャラクターモデルの拡大率。
+	const auto WEAPON_MAGNIFICAATION_SCALE = 0.3f;    //! 武器モデルの拡大率。
+}
 
 namespace nsApp
 {
@@ -28,11 +33,11 @@ namespace nsApp
 				return false;
 
 			/* キャラモデルの大きさをセットする。*/
-			m_model.SetCharacterScale(Vector3::One * 0.5f);
+			m_model.SetCharacterScale(Vector3::One * CHARACTER_MAGNIFICAATION_SCALE);
 
 			/* 武器のモデルとスケールをセット。*/
 			m_model.LoadWeaponModel(CharacterModelType::Weapon_GreatSword);
-			m_model.SetWeaponScale(Vector3::One * 0.3f);
+			m_model.SetWeaponScale(Vector3::One * WEAPON_MAGNIFICAATION_SCALE);
 			m_model.SetWeaponOffset(Vector3::One);
 
 			return true;

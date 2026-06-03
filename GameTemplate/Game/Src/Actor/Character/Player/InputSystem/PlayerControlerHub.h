@@ -52,5 +52,6 @@ namespace nsApp
 
 		int m_activePlayerIndex = 0;					 //! 現在操作しているプレイヤーのインデックス。
 		int m_nextPadIndex = 0;							 //! 次に割り当てるゲームパッドのインデックス。
+		int m_target1PIndex = -1;						 //! 1P操作に割り当てるプレイヤーのインデックス。
 	};
 }

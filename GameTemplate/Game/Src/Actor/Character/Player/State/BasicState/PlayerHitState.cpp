@@ -5,8 +5,14 @@
 
 namespace
 {
-	const auto GRAVITY = 30.0f;                /* ジャンプと同じ重力をかける。*/
-	const auto MOVE_FRAME_RATE = 1.0f / 60.0f; /* 1フレームあたりの固定時間。*/
+	const auto GRAVITY = 30.0f;									//! ジャンプと同じ重力をかける。
+	const auto MOVE_FRAME_RATE = 1.0f / 60.0f;					//! 1フレームあたりの固定時間。
+
+	const auto KNOCKBACK_VELOCITY = 400.0f;					    //! 吹っ飛び速度。
+	const auto KNOCKBACK_SPEED = 0.0f;							//! 吹っ飛びの速度。初速は0で、徐々に減速していく。
+	const auto KNOCKBACK_VALUE = Vector3(-100.0f, 50.0f, 0.0f); //! 吹っ飛びの初速。
+
+	const auto HIT_TIMER_5 = 5;									//! ダメージを受けてからの時間。
 }
 
 namespace nsApp
@@ -28,10 +34,10 @@ namespace nsApp
 			SetGetUpFlag(false);
 
 			/* 吹っ飛ぶ初速を設定。*/
-			SetKnockBackVelocity(400.0f);
+			SetKnockBackVelocity(KNOCKBACK_VELOCITY);
 
 			/* 吹っ飛ぶ速度を設定。*/ 
-			SetKnockBackSpeed(Vector3(-100.0f, 50.0f, 0.0f));
+			SetKnockBackSpeed(KNOCKBACK_VALUE);
 		}
 
 
@@ -51,8 +57,8 @@ namespace nsApp
 				m_knockBackVelocity -= GRAVITY;
 
 				/* ステージを貫通しないように制限をかける。*/
-				if (m_knockBackSpeed.y < -0.0)
-					m_knockBackSpeed.y = 0.0f;
+				if (m_knockBackSpeed.y < -KNOCKBACK_SPEED)
+					m_knockBackSpeed.y = KNOCKBACK_SPEED;
 
 				/* 着地時のY軸の初速を反映させる。*/
 				m_knockBackSpeed.y = m_knockBackVelocity;
@@ -68,7 +74,7 @@ namespace nsApp
 
 
 			/* アニメーションの終了判定(時間経過)。*/
-			if (m_hitTimer > 5)
+			if (m_hitTimer > HIT_TIMER_5)
 			{
 				/* アニメーションが再生し終わったら。*/
 				if (!m_player->IsPlayAnimation())
@@ -90,13 +96,6 @@ namespace nsApp
 						m_stateMachine->ChangeState(new PlayerIdleState());
 				}
 			}
-		}
-
-
-		bool PlayerHitState::RequestID(uint8_t& id)
-		{
-			/* 状態遷移。*/
-			return false;
 		}
 	}
 }

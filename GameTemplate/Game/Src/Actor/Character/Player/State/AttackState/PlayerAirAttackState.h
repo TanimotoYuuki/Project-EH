@@ -25,6 +25,7 @@ namespace nsApp
 		class PlayerAirAttackState : public PlayerAttackBaseState
 		{
 		public:
+			/* コンストラクタとデストラクタ。*/
 			PlayerAirAttackState() = default;
 			virtual ~PlayerAirAttackState() = default;
 

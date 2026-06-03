@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -223,18 +223,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Src\Actor\Character\Status\PlayerStatusParameterTable.cpp" />
+    <ClCompile Include="Src\UI\Loading\LoadingProgressUI.cpp" />
+    <ClCompile Include="Src\AsyncLoad\ParameterAsyncLoadTask.cpp" />
     <ClCompile Include="Src\AsyncLoad\AsyncLoadManager.cpp" />
     <ClCompile Include="Src\AsyncLoad\AsyncLoadTaskBase.cpp" />
-    <ClCompile Include="Src\AsyncLoad\ParameterAsyncLoadTask.cpp" />
-    <ClCompile Include="Src\Direction\GameClearDirection.cpp" />
-    <ClCompile Include="Src\Direction\GameOverDirection.cpp" />
-    <ClCompile Include="Src\Direction\GameStartDirection.cpp" />
-    <ClCompile Include="Src\Direction\GameTimeUpDirection.cpp" />
-    <ClCompile Include="Src\Effect\EffectList.cpp" />
-    <ClCompile Include="Src\Effect\EffectListener.cpp" />
-    <ClCompile Include="Src\Select\GameEndSelect.cpp" />
-    <ClCompile Include="Src\UI\Loading\LoadingProgressUI.cpp" />
     <ClCompile Include="BiteAttackStrategy.cpp" />
     <ClCompile Include="Boss.cpp" />
     <ClCompile Include="BossAnimation.cpp" />
@@ -273,13 +265,19 @@
     <ClCompile Include="Src\Actor\Magic\Parameter\MagicParameterTable.cpp" />
     <ClCompile Include="Src\Actor\Character\NPC\State\AttackState\NPCAttackBaseState.cpp" />
     <ClCompile Include="Src\Actor\Gun\Bullet\IGunBullet.cpp" />
+    <ClCompile Include="Src\Effect\EffectListener.cpp" />
     <ClCompile Include="Src\Actor\Gun\Factory\BulletFactory.cpp" />
     <ClCompile Include="CharacterHP.cpp" />
     <ClCompile Include="Src\Select\ConfirmationSelect.cpp" />
+    <ClCompile Include="Src\Direction\GameClearDirection.cpp" />
+    <ClCompile Include="Src\Select\GameEndSelect.cpp" />
+    <ClCompile Include="Src\Direction\GameOverDirection.cpp" />
+    <ClCompile Include="Src\Direction\GameStartDirection.cpp" />
     <ClCompile Include="HowToPlay.cpp" />
     <ClCompile Include="Option.cpp" />
     <ClCompile Include="Src\Scene\InGame\Pause.cpp" />
     <ClCompile Include="Src\Scene\ResultScene\Result.cpp" />
+    <ClCompile Include="Src\Actor\Character\NPC\NPCBrain.cpp" />
     <ClCompile Include="Src\Actor\Character\NPC\State\AttackState\NPCHammerAttackState.cpp" />
     <ClCompile Include="Src\Actor\Character\NPC\State\AttackState\NPCSwordAttackState.cpp" />
     <ClCompile Include="Src\Actor\Character\NPC\State\AttackState\NPCWandAttackState.cpp" />
@@ -334,12 +332,12 @@
     <ClCompile Include="Src\Actor\Character\Player\State\BasicState\PlayerWalkState.cpp" />
     <ClCompile Include="Src\Actor\Stage\LoadStageData.cpp" />
     <ClCompile Include="Src\Actor\Stage\Stage.cpp" />
+    <ClCompile Include="Src\Effect\EffectList.cpp" />
     <ClCompile Include="Src\SceneLoader\SceneLoader.cpp" />
     <ClCompile Include="Src\Sound\BGMList.cpp" />
     <ClCompile Include="Src\Sound\SEList.cpp" />
     <ClCompile Include="Src\Sound\SoundLister.cpp" />
     <ClCompile Include="Src\StateMachine\StateMachine.cpp" />
-    <ClCompile Include="Src\Utilty\TSVTable.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
@@ -348,27 +346,19 @@
     <ClCompile Include="system\system.cpp" />
     <ClCompile Include="TailAttackStrategy.cpp" />
     <ClCompile Include="GameTimeLimit.cpp" />
+    <ClCompile Include="Src\Direction\GameTimeUpDirection.cpp" />
     <ClCompile Include="Src\Scene\TitleScene\Title.cpp" />
     <ClCompile Include="Src\Actor\Character\Common\WeaponHitDetection.cpp" />
     <ClCompile Include="Src\UIAnimation\UIAnimation.cpp" />
     <ClCompile Include="Src\Scene\TitleScene\TitleBackGround.cpp" />
     <ClCompile Include="Src\Scene\TitleScene\TitleSelect.cpp" />
+    <ClCompile Include="Src\Debug\Sandbag.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Src\Actor\Character\Common\Pool\GameObjectPool.h" />
-    <ClInclude Include="Src\Actor\Character\Status\PlayerStatusParameterTable.h" />
-    <ClInclude Include="Src\Actor\Gun\Shooter\GunShooter.h" />
+    <ClInclude Include="Src\UI\Loading\LoadingProgressUI.h" />
+    <ClInclude Include="Src\AsyncLoad\ParameterAsyncLoadTask.h" />
     <ClInclude Include="Src\AsyncLoad\AsyncLoadManager.h" />
     <ClInclude Include="Src\AsyncLoad\AsyncLoadTaskBase.h" />
-    <ClInclude Include="Src\AsyncLoad\ParameterAsyncLoadTask.h" />
-    <ClInclude Include="Src\Direction\GameClearDirection.h" />
-    <ClInclude Include="Src\Direction\GameOverDirection.h" />
-    <ClInclude Include="Src\Direction\GameStartDirection.h" />
-    <ClInclude Include="Src\Direction\GameTimeUpDirection.h" />
-    <ClInclude Include="Src\Effect\EffectList.h" />
-    <ClInclude Include="Src\Effect\EffectListener.h" />
-    <ClInclude Include="Src\Select\GameEndSelect.h" />
-    <ClInclude Include="Src\UI\Loading\LoadingProgressUI.h" />
     <ClInclude Include="BiteAttackStrategy.h" />
     <ClInclude Include="Boss.h" />
     <ClInclude Include="BossAnimation.h" />
@@ -399,6 +389,7 @@
     <ClInclude Include="Src\Actor\Character\Common\Damage\DamageRequest.h" />
     <ClInclude Include="FireAttackStrategy.h" />
     <ClInclude Include="Game2.h" />
+    <ClInclude Include="Src\Actor\Character\Common\Pool\GameObjectPool.h" />
     <ClInclude Include="Src\Actor\Character\Common\Pool\IPoolable.h" />
     <ClInclude Include="Src\Actor\Character\Player\InputSystem\PlayerControlerHub.h" />
     <ClInclude Include="Src\Actor\Character\Player\InputSystem\GamePadInputAdapter.h" />
@@ -410,12 +401,17 @@
     <ClInclude Include="Src\Actor\Magic\Parameter\MagicParameterTable.h" />
     <ClInclude Include="Src\Actor\Magic\Parameter\MagicParameter.h" />
     <ClInclude Include="Src\Actor\Character\NPC\State\AttackState\NPCAttackBaseState.h" />
+    <ClInclude Include="Src\Effect\EffectListener.h" />
     <ClInclude Include="Src\Actor\Gun\Shooter\BulletFireRequest.h" />
     <ClInclude Include="Src\Actor\Gun\Shooter\IBulletFireListener.h" />
     <ClInclude Include="Src\Actor\Gun\Parameter\BulletParameter.h" />
     <ClInclude Include="Src\Actor\Gun\Factory\BulletFactory.h" />
     <ClInclude Include="CharacterHP.h" />
     <ClInclude Include="Src\Select\ConfirmationSelect.h" />
+    <ClInclude Include="Src\Direction\GameClearDirection.h" />
+    <ClInclude Include="Src\Select\GameEndSelect.h" />
+    <ClInclude Include="Src\Direction\GameOverDirection.h" />
+    <ClInclude Include="Src\Direction\GameStartDirection.h" />
     <ClInclude Include="HowToPlay.h" />
     <ClInclude Include="Option.h" />
     <ClInclude Include="Src\Scene\InGame\Pause.h" />
@@ -480,6 +476,7 @@
     <ClInclude Include="Src\Actor\Stage\LoadStageData.h" />
     <ClInclude Include="Src\Actor\Stage\Stage.h" />
     <ClInclude Include="Src\Actor\Stage\StageData.h" />
+    <ClInclude Include="Src\Effect\EffectList.h" />
     <ClInclude Include="Src\SceneLoader\SceneLoader.h" />
     <ClInclude Include="Src\Sound\BGMList.h" />
     <ClInclude Include="Src\Sound\SEList.h" />
@@ -490,6 +487,7 @@
     <ClInclude Include="system\system.h" />
     <ClInclude Include="TailAttackStrategy.h" />
     <ClInclude Include="GameTimeLimit.h" />
+    <ClInclude Include="Src\Direction\GameTimeUpDirection.h" />
     <ClInclude Include="Src\Scene\TitleScene\Title.h" />
     <ClInclude Include="Src\UIAnimation\UIAnimation.h" />
     <ClInclude Include="Src\Actor\Character\Common\WeaponHitDetection.h" />

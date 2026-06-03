@@ -32,6 +32,7 @@ namespace nsApp
 		class NPCSwordAttackState : public NPCAttackBaseState
 		{
 		public:
+			/* コンストラクタとデストラクタ。*/
 			NPCSwordAttackState() = default;
 			virtual ~NPCSwordAttackState() = default;
 
@@ -63,7 +64,7 @@ namespace nsApp
 
 
 		private:
-			NPCSwordPattern m_currentPattern = NPCSwordPattern::enNone;     //! 現在の攻撃パターンを保存する変数。
+			NPCSwordPattern m_currentPattern = NPCSwordPattern::enNone; //! 現在の攻撃パターンを保存する変数。
 		};
 	}
 }

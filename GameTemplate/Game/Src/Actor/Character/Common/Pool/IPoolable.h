@@ -1,9 +1,9 @@
 #pragma once
 /**
- * @file  IPoolable.h
- * @brief プールを付与するオブジェクトを管理するインタフェース。
+ * @file   IPoolable.h
+ * @brief  プールを付与するオブジェクトを管理するインタフェース。
  * @author Yamaguchi Hayato
- * @date  2026/05/22
+ * @date   2026/05/29
  */
 
 namespace nsApp

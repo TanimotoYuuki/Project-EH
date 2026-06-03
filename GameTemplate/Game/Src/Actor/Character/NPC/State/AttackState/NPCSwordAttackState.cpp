@@ -10,7 +10,6 @@ namespace
 	const auto PATTERN_ZERO = 0;                   //! 乱数のパターン0。
 	const auto PATTERN_ONE = 1;                    //! 乱数のパターン1。
 
-
 	/* 距離・間合い関連 */
 	const auto CHASE_TRANSITION_DISTANCE = 180.0f; //! 敵がこの距離より離れたら追跡ステートへ戻る。
 	const auto RETREAT_DISTANCE = 50.0f;           //! 攻撃後のクールタイム中に、この距離より近ければ後ろに下がる。
@@ -28,9 +27,15 @@ namespace
 	const auto PUSH_START_INPUT = 5;               //! ダッシュ攻撃（Push）のBボタン入力タイミング。
 	const auto PUSH_HOLD_DURATION = 10;            //! ダッシュ攻撃時のLB1（ダッシュ）ボタン長押し時間。
 
+	const auto AIR_FIRST_INPUT = 1;               //! 空中攻撃の1段目の入力タイミング。
+	const auto AIR_SECOND_INPUT = 15;             //! 空中攻撃の2段目の入力タイミング。
+
 	/* モデルの回転角度 */
 	const auto FACING_ANGLE_RIGHT = 90.0f;         //! 右を向く時の角度。
 	const auto FACING_ANGLE_LEFT = -90.0f;         //! 左を向く時の角度。
+
+	const auto HOLD_FRAME = 3;					   //! ボタンを押し続けるフレーム数。
+	const auto STICK_NEUTRAL = 0.0f;			   //! スティックをニュートラル値。
 }
 
 namespace nsApp
@@ -55,6 +60,7 @@ namespace nsApp
 
 		void NPCSwordAttackState::Update()
 		{
+			/* 救助要請がないかチェック。*/
 			if (CheckHelpTransition())
 				return;
 
@@ -64,6 +70,7 @@ namespace nsApp
 			/* 早期リターン。*/
 			if (target == nullptr || m_getBody == nullptr)
 			{
+				/* 追跡ステートに遷移。*/
 				m_stateMachine->ChangeState(new NPCChaseState());
 				return;
 			}
@@ -88,7 +95,7 @@ namespace nsApp
 			/* めり込み防止。*/
 			PreventClipping(target);
 
-			/* */
+			/* 攻撃時間が終了したら、次の行動に移る。*/
 			if (m_attackTimer > ATTACK_RESET_TIME)
 				Enter();
 		}
@@ -115,15 +122,15 @@ namespace nsApp
 			/* 攻撃のタイミングでBボタンを押す。*/ 
 			/* 1段目の攻撃入力。*/ 
 			if (m_attackTimer == COMBO_FIRST_INPUT)
-				m_virtualInput->RequestButton(enButtonB,3);
+				m_virtualInput->RequestButton(enButtonB, HOLD_FRAME);
 
 			/* 2段目の攻撃入力。*/
 			if (m_attackTimer == COMBO_SECOND_INPUT)
-				m_virtualInput->RequestButton(enButtonB,3);
+				m_virtualInput->RequestButton(enButtonB, HOLD_FRAME);
 
 			/* 3段目の攻撃入力。*/
 			if (m_attackTimer == COMBO_THIRD_INPUT)
-				m_virtualInput->RequestButton(enButtonB,3);
+				m_virtualInput->RequestButton(enButtonB, HOLD_FRAME);
 		}
 
 
@@ -133,30 +140,34 @@ namespace nsApp
 			/* LB1を押してダッシュ開始。*/
 			/* 1段目の攻撃入力。*/
 			if (m_attackTimer == COMBO_FIRST_INPUT)
-				m_virtualInput->RequestButton(enButtonA,3);
+				m_virtualInput->RequestButton(enButtonA, HOLD_FRAME);
 
 			/* ダッシュの持続入力。*/
 			/* LB1を長押ししてダッシュを持続。*/
 			if (m_attackTimer == COMBO_SECOND_INPUT)
-				m_virtualInput->RequestButton(enButtonB,3);
+				m_virtualInput->RequestButton(enButtonB, HOLD_FRAME);
 		}
 
 
 		void NPCSwordAttackState::ExecuteMeleeAir()
 		{
-			if (m_attackTimer == 1) 
-				m_virtualInput->RequestButton(enButtonA,3);
+			/* 空中攻撃の1段目の入力。*/
+			if (m_attackTimer == AIR_FIRST_INPUT)
+				m_virtualInput->RequestButton(enButtonA, HOLD_FRAME);
 
-			if (m_attackTimer == 15) 
-				m_virtualInput->RequestButton(enButtonB,3);
+			/* 空中攻撃の2段目の入力。*/
+			if (m_attackTimer == AIR_SECOND_INPUT)
+				m_virtualInput->RequestButton(enButtonB, HOLD_FRAME);
 		}
 
 
 		void NPCSwordAttackState::UpdateMovement()
 		{
-			m_stickX = m_isAttacking ? 0.0f : (m_distance < RETREAT_DISTANCE ? -m_diff.x : 0.0f);
-			m_stickZ = m_isAttacking ? 0.0f : (m_distance < RETREAT_DISTANCE ? -m_diff.z : 0.0f);
+			/* 攻撃中は敵の方を向き続ける。*/
+			m_stickX = m_isAttacking ? STICK_NEUTRAL : (m_distance < RETREAT_DISTANCE ? -m_diff.x : STICK_NEUTRAL);
+			m_stickZ = m_isAttacking ? STICK_NEUTRAL : (m_distance < RETREAT_DISTANCE ? -m_diff.z : STICK_NEUTRAL);
 
+			/* スティック入力を仮想入力に反映。*/
 			m_virtualInput->SetLStick(m_stickX, m_stickZ);
 		}
 

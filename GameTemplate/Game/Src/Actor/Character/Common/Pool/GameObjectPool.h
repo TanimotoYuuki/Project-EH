@@ -1,5 +1,12 @@
 #pragma once
 
+/*
+ * @file GameObjectPool.h
+ * @brief ゲームオブジェクトのプールクラス。
+ * @author Yamaguchi Hayato
+ * @date 2026/05/29
+ */ 
+
 #include <type_traits>
 #include <vector>
 #include "IPoolable.h"
@@ -9,10 +16,8 @@ namespace nsApp
     template<class PoolObject>
     class GameObjectPool final
     {
-        static_assert(
-            std::is_base_of<IPoolable, PoolObject>::value,
-            "PoolObject must inherit IPoolable."
-            );
+		/* PoolObjectがIPoolableを継承していることをコンパイル時にチェック。*/
+        static_assert( std::is_base_of<IPoolable, PoolObject>::value, "PoolObject must inherit IPoolable.");
 
 
     public:
@@ -47,7 +52,7 @@ namespace nsApp
 
 
     private:
-        std::vector<PoolObject*> m_objects;
+		std::vector<PoolObject*> m_objects; //! プール内のオブジェクトのリスト。
     };
 }
 

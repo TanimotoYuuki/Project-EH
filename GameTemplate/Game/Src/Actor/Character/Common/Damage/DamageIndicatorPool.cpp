@@ -10,7 +10,9 @@ namespace nsApp
 {
 	bool DamageIndicatorPool::Start()
 	{
+		/* ダメージテキストを初期化する。*/
 		m_damageTextPool.Initialize(DAMAGE_TEXT_POOL_SIZE);
+
 		return true;
 	}
 
@@ -20,6 +22,7 @@ namespace nsApp
 		/* プールからダメージ表示を取得する。*/
 		auto* indicator = m_damageTextPool.Spawn();
 
+		/* Indicator が nullの場合処理を止める。*/
 		if (indicator == nullptr)
 			return;
 

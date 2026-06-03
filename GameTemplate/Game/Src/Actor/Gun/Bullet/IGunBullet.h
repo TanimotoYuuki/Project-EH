@@ -18,6 +18,7 @@ namespace nsApp
 		class IGunBullet : public Actor
 		{
 		public:
+			/* コンストラクタとデストラクタ。*/
 			IGunBullet() = default;
 			virtual ~IGunBullet();
 

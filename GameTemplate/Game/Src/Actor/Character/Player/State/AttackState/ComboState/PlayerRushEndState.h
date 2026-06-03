@@ -22,6 +22,7 @@ namespace nsApp
 
 
 		protected:
+			/* TemplateMethod */
 			void PlayAttackAnimation() override;
 			void OnAttackTick() override;
 			bool OnUpdateAttack() override;

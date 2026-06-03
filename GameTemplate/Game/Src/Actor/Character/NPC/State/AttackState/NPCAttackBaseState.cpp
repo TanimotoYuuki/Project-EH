@@ -39,10 +39,13 @@ namespace nsApp
 
 		void NPCAttackBaseState::Exit()
 		{
+			/* 攻撃インターバルを開始。*/
 			if (m_npcBrain != nullptr)
 			{
+				/* NPCBrainクラスから攻撃インターバル開始処理を呼び出す。*/
 				m_npcBrain->StartAttackInterval();
 
+				/* VirtualInputAdapterが存在する場合は、入力をリセットする。*/
 				auto* virtualInput = m_npcBrain->GetVirtualInputAdapter();
 				if (virtualInput != nullptr)
 					virtualInput->Reset();
@@ -70,6 +73,7 @@ namespace nsApp
 
 		void NPCAttackBaseState::PreventClipping(nsActor::ICharacter* target)
 		{
+			/* Playerクラスが居ないなら処理を止める。*/
 			if (m_getBody == nullptr || target == nullptr)
 				return;
 
@@ -80,6 +84,7 @@ namespace nsApp
 
 		void NPCAttackBaseState::UpdateFacingDirection()
 		{
+			/* Playerクラスが居ないなら処理を止める。*/
 			if (m_getBody == nullptr)
 				return;
 
@@ -90,28 +95,35 @@ namespace nsApp
 
 		void NPCAttackBaseState::ResetVirtualInputs() 
 		{
+			/* 入力情報が無いなら処理を止める。*/
 			if (!m_virtualInput)
 				return;
 
+			/* VirtualInputAdapterクラスのResetメソッドを呼び出す。*/
 			m_virtualInput->Reset();
 		}
 
 
 		bool NPCAttackBaseState::CheckHelpTransition()
 		{
+			/* NPCBrainクラスが存在しない場合は、以降の処理を行わない。*/
 			if (m_npcBrain == nullptr || m_stateMachine == nullptr)
 				return false;
 
+			/* ヘルプ対象を取得。*/
 			auto* helpTarget = m_npcBrain->GetHelpTarget();
 			if (helpTarget == nullptr)
 				return false;
 
+			/* ヘルプ対象が自分自身であれば、ヘルプ状態に遷移しない。*/
 			if (helpTarget == m_getBody)
 				return false;
 
+			/* ヘルプ対象が死亡していない、またはHPが0より大きい場合は、ヘルプ状態に遷移しない。*/
 			if (!helpTarget->IsDeath() && helpTarget->GetCharacterStatus().hp.currentHP > 0)
 				return false;
 
+			/* ヘルプ状態に遷移する。*/
 			m_stateMachine->ChangeState(new NPCHelpState(helpTarget));
 
 			return true;

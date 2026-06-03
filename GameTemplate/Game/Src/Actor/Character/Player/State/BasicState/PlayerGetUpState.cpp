@@ -8,6 +8,7 @@ namespace nsApp
 	{
 		void PlayerGetUpState::Enter()
 		{
+			/* キャスト。*/
 			m_player = static_cast<nsActor::Player*>(m_owner);
 
 			/* 起き上がりアニメーションを再生。*/
@@ -19,9 +20,7 @@ namespace nsApp
 		{
 			/* アニメーションが終わったら待機状態へ。*/
 			if (!m_player->IsPlayAnimation())
-			{
 				m_stateMachine->ChangeState(new PlayerIdleState());
-			}
 		}
 	}
 }

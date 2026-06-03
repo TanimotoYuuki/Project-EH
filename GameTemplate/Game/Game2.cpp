@@ -25,6 +25,7 @@
 #include "Src/Actor/Character/Common/Damage/DamageProcessor.h"
 #include "Src/UI/ReboneGage/ReboneGageManager.h"
 #include "Src/UI/Commentary/CommentaryUIManager.h"
+#include "Src/Parameter/ParameterSystem.h"
 #include <Windows.h>
 
 
@@ -217,6 +218,7 @@ namespace nsApp
 			/* @TODO ステージ選択画面からこの処理を呼ぶようにする。*/
 			nsApp::nsStage::LoadStageData::GetInstance().ChangeStage(nsApp::nsStage::StageID::stage1);
 
+			
 			m_backGround = NewGO<nsStage::BackGround>(0, "BackGround");
 			/* カメラを生成。*/
 			m_camera = NewGO<Camera>(0, "camera");
@@ -237,7 +239,6 @@ namespace nsApp
 			if(m_boss != nullptr)
 				/*ボスにプレイヤーをターゲットとして教える。*/
 				m_boss->SetTarget(m_player);
-
 
 
 			m_characterHP = NewGO<CharacterHP>(0, "characterHP");

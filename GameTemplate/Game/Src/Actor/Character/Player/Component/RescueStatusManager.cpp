@@ -1,31 +1,29 @@
 #include "stdafx.h"
 #include "RescueStatusManager.h"
+#include "Src/Actor/Character/NPC/Component/RescueTimeTable.h"
 
 namespace
 {
-	const auto BASE_HELP_TIME = 30;		   //! 助けるのに必要な時間。
-	const auto PENALTY_TIME_PER_DOWN = 10; //! ダウンするごとに加算されるペナルティ時間。
-
-	const std::unordered_map<nsApp::WeaponType, float> RESCUE_TIME_MULTIPLIER =
-	{
-		{nsApp::WeaponType::GreatSword, 10.0f},
-		{nsApp::WeaponType::Hammer,15.0f},
-		{nsApp::WeaponType::TwinGun, 12.0f},
-		{nsApp::WeaponType::Wand, 8.0f}
-	};
+	const auto PENALTY_TIME_PER_DOWN = 10;
+	const auto REQUEST_TIME = 1.0f;
 }
 
 namespace nsApp
 {
 	int RescueStatusManager::CalculateRequiredHelpTime(WeaponType helperWeapon) const
 	{
-		/* 基本の助けるのに必要な時間に、ダウンするごとに加算されるペナルティ時間を加算する。*/
-		int requiredTime = BASE_HELP_TIME + (m_downCount * PENALTY_TIME_PER_DOWN);
+		/* 救助に必要な時間を計算する。*/
+		const auto& parameter = RescueTimeTable::GetParameter(helperWeapon);
 
-		/* 助ける武器の種類に応じた時間の倍率を適用する。*/
-		float multiplier = RESCUE_TIME_MULTIPLIER.count(helperWeapon) ? RESCUE_TIME_MULTIPLIER.at(helperWeapon) : 1.0f;
+		/* ダウン数に応じたペナルティ時間を加算する。*/
+		float requiredTime = static_cast<float>(parameter.requiredHelpTime + (m_downCount * PENALTY_TIME_PER_DOWN));
+		if (parameter.rescueGaugeSpeed > 0.0f)
+			requiredTime /= parameter.rescueGaugeSpeed;
 
-		/* 計算された助けるのに必要な時間を返す。*/
-		return static_cast<int>(requiredTime * multiplier);
+		/* リクエストの要請。*/
+		if (requiredTime <= REQUEST_TIME)
+			requiredTime = REQUEST_TIME;
+
+		return static_cast<int>(requiredTime);
 	}
 }

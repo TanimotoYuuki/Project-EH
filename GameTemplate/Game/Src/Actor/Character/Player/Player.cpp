@@ -1,5 +1,6 @@
 ﻿#include "stdafx.h"
 #include "Player.h"
+#include "Src/Actor/Character/Status/PlayerStatusParameterTable.h"
 
 /* 基本動作ステート。*/
 #include "Src/Actor/Character/Player/State/BasicState/PlayerIdleState.h"
@@ -26,7 +27,7 @@
 #include "Src/Sound/SoundLister.h"
 #include "Src/Actor/Character/NPC/NPCBrain.h"
 #include "Src/Actor/Character/NPC/State/BasicState/NPCHelpState.h"
-#include "ResourceUtility.h"
+#include "Src/Utilty/ResourceUtility.h"
 
 #include "Src/SceneLoader/SceneLoader.h""
 
@@ -38,13 +39,13 @@ namespace
 	const auto ANGLE_Y = 90.0f;                         //! プレイヤーの初期角度。
 	const auto CHARACTER_SCALE = 0.5f;                  //! プレイヤーのスケール。
 
-	const Vector3 POS = Vector3(0.0f, 100.0f, 0.0f);     //! プレイヤーの初期座標。
+	const Vector3 POS = Vector3(0.0f, 100.0f, 0.0f);    //! プレイヤーの初期座標。
 
 	/* カメラクランプ。*/
-	constexpr float BATTLE_MIN_X = -300.0f;
-	constexpr float BATTLE_MAX_X = 260.0f;
-	constexpr float BATTLE_MIN_Z = -100.0f;
-	constexpr float BATTLE_MAX_Z = 100.0f;;
+	constexpr float BATTLE_MIN_X = -300.0f;				//! カメラのクランプ範囲（最小X）
+	constexpr float BATTLE_MAX_X = 260.0f;				//! カメラのクランプ範囲（最大X）
+	constexpr float BATTLE_MIN_Z = -100.0f;				//! カメラのクランプ範囲（最小Z）
+	constexpr float BATTLE_MAX_Z = 100.0f;;				//! カメラのクランプ範囲（最大Z）
 
 	/**
 	 * @brief 値を最小値と最大値の範囲内にクランプする関数。
@@ -71,6 +72,7 @@ namespace nsApp
 	{
 		Player::~Player()
 		{
+			/* NPCの脳を削除する。*/
 			if (m_brain != nullptr)
 				delete m_brain;
 		}
@@ -214,22 +216,21 @@ namespace nsApp
 
 		void Player::InitAttackStatus()
 		{
-			/* 基本ダメージ数の初期化。*/
+			/* TSV導入前の基礎ステータスに戻す。*/
 			m_characterStatus.attack.normalDamage = 40.0f;
-
-			/* クリティカル率の初期化。*/
 			m_characterStatus.attack.criticalRate = 0.05f;
-
-			/* クリティカルダメージの初期化。*/
 			m_characterStatus.attack.criticalDamage = 1.5f;
 
-			/* 最大HPを初期化する。*/
 			m_characterStatus.hp.maxHP = 1000;
-
-			/* 現在のHPを初期化する。*/
 			m_characterStatus.hp.currentHP = m_characterStatus.hp.maxHP;
-		}
 
+			m_walkSpeed = 50.0f;
+			m_runSpeed = 120.0f;
+			m_jumpPower = 500.0f;
+			m_airMoveSpeed = 120.0f;
+			m_gravity = 30.0f;
+			m_maxFallVelocity = -1200.0f;
+		}
 
 		void Player::InitDummyModel()
 		{

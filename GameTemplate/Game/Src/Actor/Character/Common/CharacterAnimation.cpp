@@ -1,14 +1,20 @@
 #include "stdafx.h"
 #include "CharacterAnimation.h"
 
+namespace
+{
+	const auto WEAPON_DATA_NUM_ZERO = 0; //! 武器データの数をゼロで初期化。
+	const auto CURRENT_INDEX_CLEAR = 0;  //! 現在のインデックスをゼロで解放。
+}
 
 namespace nsApp
 {
 	void CharacterAnimation::Initialize(WeaponType kind)
 	{		
+		/* 武器の種類に応じて読み込むアニメーションを変える。*/
 		switch (kind)
 		{
-		case WeaponType::GreatSword:
+		case WeaponType::GreatSword: //! ケース:ソード。
 		{
 			 /* ソードキャラクターのアニメーションのファイルパスを初期化。*/
              /* 基本動作用。*/
@@ -18,7 +24,7 @@ namespace nsApp
 			 break;
 		}
 
-		case WeaponType::Hammer:
+		case WeaponType::Hammer: //! ケース:ハンマー
 		{
 			/* ハンマーキャラクターのアニメーションのファイルパスを初期化。*/
 			/* 基本動作用。*/
@@ -28,7 +34,7 @@ namespace nsApp
 			break;
 		}
 
-		case WeaponType::Wand:
+		case WeaponType::Wand: //! ケース:杖
 		{
 			/* 杖キャラクターのアニメーションファイルパスを初期化。*/
             /* 基本動作用。*/
@@ -38,7 +44,7 @@ namespace nsApp
 			break;
 		}
 
-		case WeaponType::TwinGun:
+		case WeaponType::TwinGun: //! ケース:ツインガン
 		{
 			/* 銃キャラクターのアニメーションファイルパスを初期化。*/
 			/* 基本動作用。*/
@@ -146,6 +152,7 @@ namespace nsApp
 		/* 助ける状態。*/
 		m_basicAnimationFilePathList[CharacterBasicAnimationList::Help] = GetBasicAnimationFilePath("Hammer/Help");
 
+		/* 登録データをリストに登録。*/
 		m_weaponDataList[WeaponType::Hammer] = m_hammerData;
 	}
 
@@ -308,13 +315,17 @@ namespace nsApp
 	void CharacterAnimation::LoadAnimation(WeaponType weaponType)
 	{
 		/* アニメーションを読み込む前に箱をリセット。*/
-		m_basicIndexMap.clear();
-		m_attackIndexMap.clear();
-		m_currentIndex = 0;
+		/* 基本アニメーションのマップを解放。*/
+		m_basicIndexMap.clear();  
+		/* 武器アニメーションのマップを解放。*/
+		m_attackIndexMap.clear();			
+		/* 現在のアニメーションを解放。*/
+		m_currentIndex = CURRENT_INDEX_CLEAR;	      
 
 		/* 必要なアニメーションの合計数を計算する。*/
 		m_animationNum = static_cast<int>(m_basicAnimationFilePathList.size());
-		if (m_weaponDataList.count(weaponType) > 0)
+		/* 武器の種類に応じて必要なアニメーションの数を加算する。*/
+		if (m_weaponDataList.count(weaponType) > WEAPON_DATA_NUM_ZERO)
 			m_animationNum += static_cast<int>(m_weaponDataList[weaponType].weaponAnimationList.size());
 
 		/* 合計数と同じになるように配列を組む。*/
@@ -323,12 +334,11 @@ namespace nsApp
 		/* 基本動作をロード */
 		for (auto& pair : m_basicAnimationFilePathList)
 		{
-			/* 特定のアニメーションは再生ループをオフにする。
-			 * 今回はダメージアニメーション。  
-			 */
+			/* 特定のアニメーションは再生ループをオフにする。*/
 			if (pair.first == CharacterBasicAnimationList::Hit_Fly ||
 				pair.first == CharacterBasicAnimationList::Hit_UP ||
 				pair.first == CharacterBasicAnimationList::Help)
+
 				/* ダメージと死亡はループさせない。*/
 				/* true だと ループ。*/
 				m_isLoop = false;
@@ -342,14 +352,11 @@ namespace nsApp
 		}
 
 		/* 武器用アニメーションをロード */
-		if (m_weaponDataList.count(weaponType) > 0)
+		if (m_weaponDataList.count(weaponType) > WEAPON_DATA_NUM_ZERO)
 		{
 			auto& weaponData = m_weaponDataList[weaponType];
 			for (auto& pair : weaponData.weaponAnimationList)
-			{
-				// 攻撃はループさせないので false
 				m_attackIndexMap[pair.first] = SetAnimationClip(pair.second, false);
-			}
 		}
 	}
 }

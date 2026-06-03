@@ -16,6 +16,10 @@ namespace nsApp
 {
 	namespace nsState
 	{
+		/**
+		 * @struct Transition
+		 * @brief  状態遷移の条件と遷移先を表す構造体。
+		 */
 		struct Transition
 		{
 			bool condition;                     //! 遷移条件。

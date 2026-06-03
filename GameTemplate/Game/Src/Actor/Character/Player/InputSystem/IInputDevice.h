@@ -54,6 +54,5 @@ namespace nsApp
 		 * @return 左スティックのY軸の値。
 		 */
 		virtual float GetLStickY() const = 0;
-		
 	};
 }

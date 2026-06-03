@@ -4,6 +4,13 @@
 #include "Src/Actor/Gun/Factory/BulletFactory.h"
 #include "Src/Actor/Magic/Factory/MagicFactory.h"
 
+namespace
+{
+	const auto ATTACK_TIMER_1 = 1;   //! 遠距離武器の攻撃タイマーのフレーム数。
+	const auto ATTACK_TIMER_48 = 48; //! 遠距離武器の攻撃タイマーのフレーム数。
+	const auto ATTACK_TIMER_50 = 50; //! 遠距離武器の攻撃状態を維持するフレーム数。
+}
+
 namespace nsApp
 {
 	namespace nsState
@@ -11,7 +18,7 @@ namespace nsApp
 		void PlayerNormalAttackState::PlayAttackAnimation()
 		{
 			/* 攻撃の種類を設定する。*/
-			m_currentAttackType = AttackType::NormalAttack;
+			SetCurrentAttackType(AttackType::NormalAttack);
 
 			/* 攻撃アニメーションを再生する。*/
 			m_player->PlayWeaponAnimation(AttackType::NormalAttack);
@@ -20,22 +27,24 @@ namespace nsApp
 
 		void PlayerNormalAttackState::OnAttackTick()
 		{
-			if (m_attackTimer == 1)
+			if (m_attackTimer == ATTACK_TIMER_1)
 				m_player->GetWeaponHitDetection().Enable();
 		}
 
 
 		bool PlayerNormalAttackState::OnUpdateAttack()
 		{
+			/* 遠距離武器かどうかを確認する。*/
 			const bool isRangeWeapon =
 				m_player->GetCurrentWeapon() == WeaponType::Wand ||
 				m_player->GetCurrentWeapon() == WeaponType::TwinGun;
 
+			/* 遠距離武器かどうか検知。*/
 			if (!isRangeWeapon)
 				return false;
 
 			/* 48フレーム目で遠距離武器の弾丸を発射。*/
-			if (m_attackTimer == 48)
+			if (m_attackTimer == ATTACK_TIMER_48)
 			{
 				/* 杖の場合。*/
 				if (m_player->GetCurrentWeapon() == WeaponType::Wand)
@@ -47,7 +56,7 @@ namespace nsApp
 			}
 
 			/* 遠距離武器は50Fまでは攻撃状態を維持する。*/
-			if (m_attackTimer < 50)
+			if (m_attackTimer < ATTACK_TIMER_50)
 				return true;
 
 			return false;
@@ -56,6 +65,7 @@ namespace nsApp
 
 		bool PlayerNormalAttackState::OnRequestAttackID(uint8_t& id)
 		{
+			/* 連続攻撃の条件を満たしているか確認する。*/
 			return CheckCombo(nsActor::PlayerStateID::enNormalAttack, id);
 		}
 

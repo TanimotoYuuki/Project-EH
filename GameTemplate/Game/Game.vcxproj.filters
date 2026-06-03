@@ -52,6 +52,120 @@
     <Filter Include="Src\Actor\Character\Boss\State">
       <UniqueIdentifier>{6c9d9ef2-f516-4c04-b093-71b4b9b9a8db}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\AsyncLoad">
+      <UniqueIdentifier>{e5e6ab58-0fbc-4b6b-ac84-88ce3fdc0a43}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Direction">
+      <UniqueIdentifier>{c8d631b7-ed76-4e8c-9ab2-97146cbcd462}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Effect">
+      <UniqueIdentifier>{78fd3ad4-6cb5-4064-bc84-63753a7be212}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Fade">
+      <UniqueIdentifier>{ff86a33d-c241-4d31-b374-94969df76508}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Parameter">
+      <UniqueIdentifier>{2d925063-25c4-4809-b538-66ad3d736e34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Scene">
+      <UniqueIdentifier>{f8a06f5a-1734-49a4-ae37-d1d0a270dd56}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Scene\InGame">
+      <UniqueIdentifier>{bfc45ff9-844a-471b-abd5-e7420d1f024a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Scene\ResultScene">
+      <UniqueIdentifier>{1799e76c-b14e-42fd-9546-fa53fd55dee0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Scene\SelectScene">
+      <UniqueIdentifier>{eefb868a-39ae-4072-ba62-55e8b818c0b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Scene\TitleScele">
+      <UniqueIdentifier>{d3d49061-338e-41a3-aa3e-082f3ffbe2c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Select">
+      <UniqueIdentifier>{103a5909-4c3c-440c-85ff-8febffb40510}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Sound">
+      <UniqueIdentifier>{0f5dd3a5-9ba8-467e-844e-fa00fc6557a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\UI">
+      <UniqueIdentifier>{68086056-9830-4476-af1c-e51615bfc518}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\UI\Commentary">
+      <UniqueIdentifier>{c4754d14-8cfb-4c65-9b00-5aa9e5d8aa60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\UI\Loading">
+      <UniqueIdentifier>{ce9b4f94-0587-4d35-9409-3e18f27a2a57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\UI\ReboneGage">
+      <UniqueIdentifier>{a4298056-837b-4a94-a240-93b4a36d6f90}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\UIAnimation">
+      <UniqueIdentifier>{4e8a4af2-af25-49f3-9fa0-0f307e76d88d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Utility">
+      <UniqueIdentifier>{029a481a-9ce8-46d9-b49e-8ffcf7831915}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Actor\Gun">
+      <UniqueIdentifier>{e56d2206-b4c3-4ebe-a400-077153f7106d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Actor\Gun\Bullet">
+      <UniqueIdentifier>{c59469e4-7b78-4ec2-bfd2-7c7971bd17ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Actor\Gun\Factory">
+      <UniqueIdentifier>{1ff7e41f-d260-403d-ba1f-c708b0031544}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Actor\Gun\Parameter">
+      <UniqueIdentifier>{01ec7b22-815f-49b8-b2ed-6cbb6a22713a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Actor\Gun\Register">
+      <UniqueIdentifier>{833eb25c-2474-455f-a141-d84426cafb70}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Actor\Gun\Shooter">
+      <UniqueIdentifier>{a0c3d6a4-9311-4ad8-bf25-de4e0301cbe9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Actor\Heel">
+      <UniqueIdentifier>{1a40a58b-df0e-47bf-b5bf-c6c62e0fa9b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Actor\Magic">
+      <UniqueIdentifier>{3bda2901-0766-40e6-afc9-e2645e7753c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Actor\Magic\Factory">
+      <UniqueIdentifier>{ec925c8d-0544-43e6-acd5-e02a6a626f28}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Actor\Magic\Parameter">
+      <UniqueIdentifier>{8606e928-8024-436b-82e3-b9145d83d1c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Actor\Character\NPC">
+      <UniqueIdentifier>{259dd337-c636-414c-b69d-0d111a726a4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Actor\Character\NPC\Component">
+      <UniqueIdentifier>{69d822a7-2eb9-457b-a34a-166a4536f501}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Actor\Character\NPC\State">
+      <UniqueIdentifier>{f4dc2c20-841a-4730-87fb-99953341342b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Actor\Character\NPC\State\AttackState">
+      <UniqueIdentifier>{09feabf9-792c-459d-8c93-0fe8aebd765e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Actor\Character\NPC\State\BasicState">
+      <UniqueIdentifier>{fbe81a14-ad42-40a7-a33e-49bc8f9f27df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Actor\Character\Status">
+      <UniqueIdentifier>{8b031269-560b-4272-8528-a685bebd2a31}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Actor\Character\Player\CharacterByWeapon">
+      <UniqueIdentifier>{fd62296d-619d-4f17-9d2f-44b02db094fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Actor\Character\Player\InputSystem">
+      <UniqueIdentifier>{38ecc80c-a9da-46ba-97c1-0fecfa3c6cb2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Actor\Character\Common\Damage">
+      <UniqueIdentifier>{5cb04228-b4e7-4d32-bc41-6c71fdd9fa12}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Actor\Character\Common\Pool">
+      <UniqueIdentifier>{9252f266-46dd-4521-9248-0b26e9200365}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -71,7 +185,6 @@
     <ClCompile Include="Src\StateMachine\StateMachine.cpp">
       <Filter>Src\StateMachine</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Scene\TitleScene\Title.cpp" />
     <ClCompile Include="Src\SceneLoader\SceneLoader.cpp">
       <Filter>Src\SceneManager</Filter>
     </ClCompile>
@@ -133,18 +246,10 @@
       <Filter>Src\Actor\Character\Player\State\AttackState</Filter>
     </ClCompile>
     <ClCompile Include="Src\Camera\Camera.cpp" />
-    <ClCompile Include="Src\Actor\Character\Common\Damage\PresentDamageIndicator.cpp" />
-    <ClCompile Include="Src\Actor\Character\Common\WeaponHitDetection.cpp" />
     <ClCompile Include="Src\Camera\Camera.cpp">
       <Filter>Src\Camera</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Actor\Character\Status\AttackParameterTable.cpp" />
     <ClCompile Include="Src\Actor\Stage\BackGround.cpp" />
-    <ClCompile Include="Src\Sound\SEList.cpp" />
-    <ClCompile Include="Src\Sound\BGMList.cpp" />
-    <ClCompile Include="Src\Sound\SoundLister.cpp" />
-    <ClCompile Include="Src\Effect\EffectList.cpp" />
-    <ClCompile Include="Src\Actor\Character\Player\State\AttackState\PlayerChargingState.cpp" />
     <ClCompile Include="BossIdleState.cpp">
       <Filter>Src\Actor\Character\Boss\State</Filter>
     </ClCompile>
@@ -181,72 +286,251 @@
     <ClCompile Include="FireAttackStrategy.cpp">
       <Filter>Src\Actor\Character\Boss\State</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Actor\Character\Player\State\BasicState\PlayerGuardState.cpp" />
-    <ClCompile Include="Src\Actor\Character\Player\State\BasicState\PlayerReBoneState.cpp" />
-    <ClCompile Include="Src\Actor\Character\Player\State\BasicState\PlayerGetUpState.cpp" />
-    <ClCompile Include="Src\Fade\Fade.cpp" />
-    <ClCompile Include="Src\UIAnimation\UIAnimation.cpp" />
-    <ClCompile Include="Src\Scene\SelectScene\Select.cpp" />
-    <ClCompile Include="Src\Scene\SelectScene\QuestSelect.cpp" />
-    <ClCompile Include="Src\Scene\SelectScene\MemberSelect.cpp" />
     <ClCompile Include="CharacterHP.cpp" />
-    <ClCompile Include="Src\Select\ConfirmationSelect.cpp" />
-    <ClCompile Include="Src\Direction\GameStartDirection.cpp" />
     <ClCompile Include="GameTimeLimit.cpp" />
-    <ClCompile Include="Src\Scene\ResultScene\Result.cpp" />
-    <ClCompile Include="Src\Select\GameEndSelect.cpp" />
-    <ClCompile Include="Src\Direction\GameClearDirection.cpp" />
-    <ClCompile Include="Src\Direction\GameTimeUpDirection.cpp" />
-    <ClCompile Include="Src\Direction\GameOverDirection.cpp" />
-    <ClCompile Include="Src\Actor\Character\Player\CharacterByWeapon\IWeaponCharacter.cpp" />
-    <ClCompile Include="Src\Actor\Character\Player\CharacterByWeapon\SwordCharacter.cpp" />
-    <ClCompile Include="Src\Actor\Character\Player\CharacterByWeapon\HammerCharacter.cpp" />
-    <ClCompile Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerHeavyAttackState.cpp" />
-    <ClCompile Include="Src\Actor\Character\Player\CharacterByWeapon\WandCharacter.cpp" />
-    <ClCompile Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerHeelMagicState.cpp" />
-    <ClCompile Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerMagicAttackState.cpp" />
-    <ClCompile Include="Src\Actor\Magic\MagicProjectotile.cpp" />
     <ClCompile Include="Option.cpp" />
-    <ClCompile Include="Src\Scene\InGame\Pause.cpp" />
-    <ClCompile Include="Src\Scene\SelectScene\RoleSelect.cpp" />
-    <ClCompile Include="Src\Scene\TitleScene\TitleSelect.cpp" />
-    <ClCompile Include="Src\Scene\TitleScene\TitleBackGround.cpp" />
     <ClCompile Include="HowToPlay.cpp" />
-    <ClCompile Include="Src\Actor\Character\Player\CharacterByWeapon\TwinGunCharacter.cpp" />
-    <ClCompile Include="Src\Actor\Character\Player\Component\PlayerGenerator.cpp" />
-    <ClCompile Include="Src\Actor\Character\NPC\NPCBrain.cpp" />
-    <ClCompile Include="Src\Actor\Character\NPC\State\BasicState\NPCChaseState.cpp" />
-    <ClCompile Include="Src\Actor\Character\NPC\State\BasicState\NPCIdleState.cpp" />
-    <ClCompile Include="Src\Actor\Character\NPC\State\AttackState\NPCSwordAttackState.cpp" />
-    <ClCompile Include="Src\Actor\Character\NPC\State\AttackState\NPCHammerAttackState.cpp" />
-    <ClCompile Include="Src\Actor\Character\NPC\State\AttackState\NPCWandAttackState.cpp" />
-    <ClCompile Include="Src\Actor\Gun\Register\BulletModelRegister.cpp" />
-    <ClCompile Include="Src\Actor\Gun\Parameter\BulletParameterTable.cpp" />
-    <ClCompile Include="Src\Actor\Gun\Factory\BulletFactory.cpp" />
-    <ClCompile Include="Src\Actor\Gun\Shooter\GunShooter.cpp" />
-    <ClCompile Include="Src\Effect\EffectListener.cpp" />
     <ClCompile Include="Game2.cpp" />
-    <ClCompile Include="Src\Actor\Character\NPC\State\AttackState\NPCAttackBaseState.cpp" />
-    <ClCompile Include="Src\Actor\Gun\Bullet\IGunBullet.cpp" />
-    <ClCompile Include="Src\Actor\Magic\Parameter\MagicParameter.cpp" />
-    <ClCompile Include="Src\Actor\Magic\Parameter\MagicParameterTable.cpp" />
-    <ClCompile Include="Src\Actor\Magic\Factory\MagicFactory.cpp" />
-    <ClCompile Include="Src\Actor\Character\NPC\State\AttackState\NPCTwinGunAttackState.cpp" />
-    <ClCompile Include="Src\Actor\Character\Player\InputSystem\VirtualInputAdapter.cpp" />
-    <ClCompile Include="Src\Actor\Character\Player\InputSystem\PlayerControlerHub.cpp" />
-    <ClCompile Include="BossRoarState.cpp" />
-    <ClCompile Include="Src\Actor\Character\Common\Damage\DamageProcessor.cpp" />
-    <ClCompile Include="Src\Actor\Character\Common\Damage\DamageIndicatorPool.cpp" />
-    <ClCompile Include="Src\Actor\Heel\HeelArea.cpp" />
-    <ClCompile Include="Src\Actor\Character\NPC\State\BasicState\NPCHelpState.cpp" />
-    <ClCompile Include="ResourceUtility.cpp" />
-    <ClCompile Include="Src\Actor\Character\Player\Component\RescueStatusManager.cpp" />
-    <ClCompile Include="Src\Actor\Character\NPC\Component\NPCCombatHelper.cpp" />
-    <ClCompile Include="Src\UI\ReboneGage\ReboneGaugeUI.cpp" />
-    <ClCompile Include="Src\UI\ReboneGage\ReboneGageManager.cpp" />
-    <ClCompile Include="Src\Actor\Character\NPC\Component\RescueStatusLister.cpp" />
-    <ClCompile Include="Src\UI\Commentary\CommentaryUI.cpp" />
-    <ClCompile Include="Src\UI\Commentary\CommentaryUIManager.cpp" />
+    <ClCompile Include="Src\AsyncLoad\AsyncLoadManager.cpp">
+      <Filter>Src\AsyncLoad</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\AsyncLoad\AsyncLoadTaskBase.cpp">
+      <Filter>Src\AsyncLoad</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\AsyncLoad\ParameterAsyncLoadTask.cpp">
+      <Filter>Src\AsyncLoad</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Direction\GameClearDirection.cpp">
+      <Filter>Src\Direction</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Direction\GameOverDirection.cpp">
+      <Filter>Src\Direction</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Direction\GameStartDirection.cpp">
+      <Filter>Src\Direction</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Direction\GameTimeUpDirection.cpp">
+      <Filter>Src\Direction</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Effect\EffectList.cpp">
+      <Filter>Src\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Effect\EffectListener.cpp">
+      <Filter>Src\Effect</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Fade\Fade.cpp">
+      <Filter>Src\Fade</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Parameter\ParameterSystem.cpp">
+      <Filter>Src\Parameter</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Parameter\PlayerStatusParameterTable.cpp">
+      <Filter>Src\Parameter</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Scene\InGame\Pause.cpp">
+      <Filter>Src\Scene\InGame</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Scene\ResultScene\Result.cpp">
+      <Filter>Src\Scene\ResultScene</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Scene\SelectScene\Select.cpp">
+      <Filter>Src\Scene\SelectScene</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Scene\SelectScene\RoleSelect.cpp">
+      <Filter>Src\Scene\SelectScene</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Scene\SelectScene\QuestSelect.cpp">
+      <Filter>Src\Scene\SelectScene</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Scene\SelectScene\MemberSelect.cpp">
+      <Filter>Src\Scene\SelectScene</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Scene\TitleScene\Title.cpp">
+      <Filter>Src\Scene\TitleScele</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Scene\TitleScene\TitleBackGround.cpp">
+      <Filter>Src\Scene\TitleScele</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Scene\TitleScene\TitleSelect.cpp">
+      <Filter>Src\Scene\TitleScele</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Select\ConfirmationSelect.cpp">
+      <Filter>Src\Select</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Select\GameEndSelect.cpp">
+      <Filter>Src\Select</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Sound\BGMList.cpp">
+      <Filter>Src\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Sound\SEList.cpp">
+      <Filter>Src\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Sound\SoundLister.cpp">
+      <Filter>Src\Sound</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\UI\Commentary\CommentaryUI.cpp">
+      <Filter>Src\UI\Commentary</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\UI\Commentary\CommentaryUIManager.cpp">
+      <Filter>Src\UI\Commentary</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\UI\ReboneGage\ReboneGageManager.cpp">
+      <Filter>Src\UI\ReboneGage</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\UI\ReboneGage\ReboneGaugeUI.cpp">
+      <Filter>Src\UI\ReboneGage</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\UIAnimation\UIAnimation.cpp">
+      <Filter>Src\UIAnimation</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Utilty\ResourceUtility.cpp">
+      <Filter>Src\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Utilty\TSVTable.cpp">
+      <Filter>Src\Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Gun\Bullet\IGunBullet.cpp">
+      <Filter>Src\Actor\Gun\Bullet</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Gun\Factory\BulletFactory.cpp">
+      <Filter>Src\Actor\Gun\Factory</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Gun\Parameter\BulletParameterTable.cpp">
+      <Filter>Src\Actor\Gun\Parameter</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Gun\Register\BulletModelRegister.cpp">
+      <Filter>Src\Actor\Gun\Register</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Gun\Shooter\GunShooter.cpp">
+      <Filter>Src\Actor\Gun\Shooter</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Heel\HeelArea.cpp">
+      <Filter>Src\Actor\Heel</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Magic\Factory\MagicFactory.cpp">
+      <Filter>Src\Actor\Magic\Factory</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Magic\Parameter\MagicParameterTable.cpp">
+      <Filter>Src\Actor\Magic\Parameter</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Magic\MagicProjectotile.cpp">
+      <Filter>Src\Actor\Magic</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\NPC\Component\NPCActionParameterTable.cpp">
+      <Filter>Src\Actor\Character\NPC\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\NPC\Component\RescueStatusLister.cpp">
+      <Filter>Src\Actor\Character\NPC\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\NPC\Component\NPCCombatHelper.cpp">
+      <Filter>Src\Actor\Character\NPC\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\NPC\Component\RescueTimeTable.cpp">
+      <Filter>Src\Actor\Character\NPC\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\NPC\State\AttackState\NPCAttackBaseState.cpp">
+      <Filter>Src\Actor\Character\NPC\State\AttackState</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\NPC\State\BasicState\NPCChaseState.cpp">
+      <Filter>Src\Actor\Character\NPC\State\BasicState</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\NPC\State\BasicState\NPCHelpState.cpp">
+      <Filter>Src\Actor\Character\NPC\State\BasicState</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\NPC\State\BasicState\NPCIdleState.cpp">
+      <Filter>Src\Actor\Character\NPC\State\BasicState</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\NPC\State\AttackState\NPCHammerAttackState.cpp">
+      <Filter>Src\Actor\Character\NPC\State\AttackState</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\NPC\State\AttackState\NPCSwordAttackState.cpp">
+      <Filter>Src\Actor\Character\NPC\State\AttackState</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\NPC\State\AttackState\NPCTwinGunAttackState.cpp">
+      <Filter>Src\Actor\Character\NPC\State\AttackState</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\NPC\State\AttackState\NPCWandAttackState.cpp">
+      <Filter>Src\Actor\Character\NPC\State\AttackState</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\UI\Loading\LoadingProgressUI.cpp">
+      <Filter>Src\UI\Loading</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\NPC\NPCBrain.cpp">
+      <Filter>Src\Actor\Character\NPC</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\Status\AttackParameterTable.cpp">
+      <Filter>Src\Actor\Character\Status</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\Status\NPCStatusParameterTable.cpp">
+      <Filter>Src\Actor\Character\Status</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\Status\PlayerStatusParameterTable.cpp">
+      <Filter>Src\Actor\Character\Status</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\Player\Component\PlayerGenerator.cpp">
+      <Filter>Src\Actor\Character\Player\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\Player\Component\RescueStatusManager.cpp">
+      <Filter>Src\Actor\Character\Player\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\Player\CharacterByWeapon\IWeaponCharacter.cpp">
+      <Filter>Src\Actor\Character\Player\CharacterByWeapon</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\Player\CharacterByWeapon\TwinGunCharacter.cpp">
+      <Filter>Src\Actor\Character\Player\CharacterByWeapon</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\Player\CharacterByWeapon\HammerCharacter.cpp">
+      <Filter>Src\Actor\Character\Player\CharacterByWeapon</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\Player\CharacterByWeapon\SwordCharacter.cpp">
+      <Filter>Src\Actor\Character\Player\CharacterByWeapon</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\Player\CharacterByWeapon\WandCharacter.cpp">
+      <Filter>Src\Actor\Character\Player\CharacterByWeapon</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\Player\InputSystem\PlayerControlerHub.cpp">
+      <Filter>Src\Actor\Character\Player\InputSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\Player\InputSystem\VirtualInputAdapter.cpp">
+      <Filter>Src\Actor\Character\Player\InputSystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerHeavyAttackState.cpp">
+      <Filter>Src\Actor\Character\Player\State\AttackState\ComboState</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerHeelMagicState.cpp">
+      <Filter>Src\Actor\Character\Player\State\AttackState\ComboState</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\Player\State\AttackState\PlayerChargingState.cpp">
+      <Filter>Src\Actor\Character\Player\State\AttackState</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\Player\State\BasicState\PlayerGetUpState.cpp">
+      <Filter>Src\Actor\Character\Player\State\BasicState</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\Player\State\BasicState\PlayerGuardState.cpp">
+      <Filter>Src\Actor\Character\Player\State\BasicState</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\Player\State\BasicState\PlayerReBoneState.cpp">
+      <Filter>Src\Actor\Character\Player\State\BasicState</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerMagicAttackState.cpp">
+      <Filter>Src\Actor\Character\Player\State\AttackState\ComboState</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\Common\WeaponHitDetection.cpp">
+      <Filter>Src\Actor\Character\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\Common\Damage\DamageIndicatorPool.cpp">
+      <Filter>Src\Actor\Character\Common\Damage</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\Common\Damage\DamageProcessor.cpp">
+      <Filter>Src\Actor\Character\Common\Damage</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\Common\Damage\PresentDamageIndicator.cpp">
+      <Filter>Src\Actor\Character\Common\Damage</Filter>
+    </ClCompile>
+    <ClCompile Include="BossRoarState.cpp">
+      <Filter>Src\Actor\Character\Boss\State</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -271,7 +555,6 @@
     <ClInclude Include="Src\StateMachine\NullState.h">
       <Filter>Src\StateMachine</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Scene\TitleScene\Title.h" />
     <ClInclude Include="Src\SceneLoader\SceneLoader.h">
       <Filter>Src\SceneManager</Filter>
     </ClInclude>
@@ -344,15 +627,7 @@
     <ClInclude Include="Src\Camera\Camera.h">
       <Filter>Src\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Actor\Character\Common\Damage\PresentDamageIndicator.h" />
-    <ClInclude Include="Src\Actor\Character\Common\WeaponHitDetection.h" />
-    <ClInclude Include="Src\Actor\Character\Status\AttackParameterTable.h" />
     <ClInclude Include="Src\Actor\Stage\BackGround.h" />
-    <ClInclude Include="Src\Sound\SEList.h" />
-    <ClInclude Include="Src\Sound\BGMList.h" />
-    <ClInclude Include="Src\Sound\SoundLister.h" />
-    <ClInclude Include="Src\Effect\EffectList.h" />
-    <ClInclude Include="Src\Actor\Character\Player\State\AttackState\PlayerChargingState.h" />
     <ClInclude Include="BossIdleState.h">
       <Filter>Src\Actor\Character\Boss\State</Filter>
     </ClInclude>
@@ -386,83 +661,295 @@
     <ClInclude Include="FireAttackStrategy.h">
       <Filter>Src\Actor\Character\Boss\State</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Actor\Character\Player\State\BasicState\PlayerGuardState.h" />
-    <ClInclude Include="Src\Actor\Character\Player\State\BasicState\PlayerReBoneState.h" />
-    <ClInclude Include="Src\Actor\Character\Player\State\BasicState\PlayerGetUpState.h" />
-    <ClInclude Include="Src\Fade\Fade.h" />
-    <ClInclude Include="Src\UIAnimation\UIAnimation.h" />
-    <ClInclude Include="Src\Scene\SelectScene\Select.h" />
-    <ClInclude Include="Src\Scene\SelectScene\QuestSelect.h" />
-    <ClInclude Include="Src\Scene\SelectScene\MemberSelect.h" />
     <ClInclude Include="CharacterHP.h" />
-    <ClInclude Include="Src\Select\ConfirmationSelect.h" />
-    <ClInclude Include="Src\Direction\GameStartDirection.h" />
     <ClInclude Include="GameTimeLimit.h" />
-    <ClInclude Include="Src\Scene\ResultScene\Result.h" />
-    <ClInclude Include="Src\Select\GameEndSelect.h" />
-    <ClInclude Include="Src\Direction\GameClearDirection.h" />
-    <ClInclude Include="Src\Direction\GameTimeUpDirection.h" />
-    <ClInclude Include="Src\Direction\GameOverDirection.h" />
-    <ClInclude Include="Src\Actor\Character\Player\CharacterByWeapon\IWeaponCharacter.h" />
-    <ClInclude Include="Src\Actor\Character\Player\CharacterByWeapon\SwordCharacter.h" />
-    <ClInclude Include="Src\Actor\Character\Player\CharacterByWeapon\HammerCharacter.h" />
-    <ClInclude Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerHeavyAttackState.h" />
-    <ClInclude Include="Src\Actor\Character\Player\CharacterByWeapon\WandCharacter.h" />
-    <ClInclude Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerHeelMagicState.h" />
-    <ClInclude Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerMagicAttackState.h" />
-    <ClInclude Include="Src\Actor\Magic\MagicProjectotile.h" />
-    <ClInclude Include="Src\Actor\Character\Player\CharacterByWeapon\TwinGunCharacter.h" />
-    <ClInclude Include="Src\Actor\Character\Player\Component\PlayerSpawnData.h" />
-    <ClInclude Include="Src\Actor\Character\Player\Component\PlayerGenerator.h" />
-    <ClInclude Include="Src\Actor\Character\NPC\NPCBrain.h" />
-    <ClInclude Include="Src\Actor\Character\NPC\State\BasicState\NPCChaseState.h" />
-    <ClInclude Include="Src\Actor\Character\NPC\State\BasicState\NPCIdleState.h" />
-    <ClInclude Include="Src\Actor\Character\NPC\State\AttackState\NPCSwordAttackState.h" />
-    <ClInclude Include="Src\Actor\Character\NPC\State\AttackState\NPCHammerAttackState.h" />
-    <ClInclude Include="Src\Actor\Character\NPC\State\AttackState\NPCWandAttackState.h" />
-    <ClInclude Include="Src\Actor\Gun\Bullet\IGunBullet.h" />
-    <ClInclude Include="Src\Actor\Gun\Register\BulletModelRegister.h" />
-    <ClInclude Include="Src\Actor\Gun\Parameter\BulletParameterTable.h" />
-    <ClInclude Include="Src\Actor\Gun\Factory\BulletFactory.h" />
-    <ClInclude Include="Src\Actor\Gun\Shooter\BulletFireRequest.h" />
-    <ClInclude Include="Src\Actor\Gun\Shooter\IBulletFireListener.h" />
-    <ClInclude Include="Src\Actor\Gun\Parameter\BulletParameter.h" />
-    <ClInclude Include="Src\Effect\EffectListener.h" />
     <ClInclude Include="Game2.h" />
-    <ClInclude Include="Src\Actor\Character\NPC\State\AttackState\NPCAttackBaseState.h" />
-    <ClInclude Include="Src\Actor\Magic\Parameter\MagicParameter.h" />
-    <ClInclude Include="Src\Actor\Magic\Parameter\MagicParameterTable.h" />
-    <ClInclude Include="Src\Actor\Magic\Factory\MagicFactory.h" />
-    <ClInclude Include="Src\Actor\Character\NPC\State\AttackState\NPCTwinGunAttackState.h" />
-    <ClInclude Include="Src\Actor\Character\Player\InputSystem\IInputDevice.h" />
-    <ClInclude Include="Src\Actor\Character\Player\InputSystem\GamePadInputAdapter.h" />
-    <ClInclude Include="Src\Actor\Character\Player\InputSystem\VirtualInputAdapter.h" />
-    <ClInclude Include="Src\Actor\Character\Player\InputSystem\PlayerControlerHub.h" />
-    <ClInclude Include="BossRoarState.h" />
     <ClInclude Include="Option.h" />
-    <ClInclude Include="Src\Scene\InGame\Pause.h" />
-    <ClInclude Include="Src\Scene\SelectScene\RoleSelect.h" />
-    <ClInclude Include="Src\Scene\TitleScene\TitleSelect.h" />
-    <ClInclude Include="Src\Scene\TitleScene\TitleBackGround.h" />
     <ClInclude Include="HowToPlay.h" />
-    <ClInclude Include="Src\Actor\Character\Common\Damage\DamageRequest.h" />
-    <ClInclude Include="Src\Actor\Character\Common\Damage\DamageProcessor.h" />
-    <ClInclude Include="Src\Actor\Character\Common\Pool\IPoolable.h" />
-    <ClInclude Include="Src\Actor\Character\Common\Pool\GameObjectPool.h" />
-    <ClInclude Include="Src\Actor\Character\Common\Damage\DamageIndicatorPool.h" />
-    <ClInclude Include="Src\Actor\Heel\HeelArea.h" />
-    <ClInclude Include="Src\Actor\Character\NPC\State\BasicState\NPCHelpState.h" />
-    <ClInclude Include="ResourceUtility.h" />
-    <ClInclude Include="Src\Actor\Character\Player\Component\RescueStatusManager.h" />
-    <ClInclude Include="Src\Actor\Character\NPC\Component\NPCCombatHelper.h" />
-    <ClInclude Include="Src\UI\ReboneGage\ReboneGaugeUI.h" />
-    <ClInclude Include="Src\UI\ReboneGage\ReboneGageManager.h" />
-    <ClInclude Include="Src\Actor\Character\NPC\Component\RescueStatusLister.h" />
-    <ClInclude Include="Src\UI\Commentary\CommentaryMessage.h" />
-    <ClInclude Include="Src\UI\Commentary\CommentaryUI.h" />
-    <ClInclude Include="Src\UI\Commentary\CommentaryUIManager.h" />
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="Src\AsyncLoad\AsyncLoadManager.h">
+      <Filter>Src\AsyncLoad</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\AsyncLoad\AsyncLoadTaskBase.h">
+      <Filter>Src\AsyncLoad</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\AsyncLoad\ParameterAsyncLoadTask.h">
+      <Filter>Src\AsyncLoad</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Direction\GameClearDirection.h">
+      <Filter>Src\Direction</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Direction\GameOverDirection.h">
+      <Filter>Src\Direction</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Direction\GameStartDirection.h">
+      <Filter>Src\Direction</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Direction\GameTimeUpDirection.h">
+      <Filter>Src\Direction</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Effect\EffectList.h">
+      <Filter>Src\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Effect\EffectListener.h">
+      <Filter>Src\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Fade\Fade.h">
+      <Filter>Src\Fade</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Parameter\ParameterSystem.h">
+      <Filter>Src\Parameter</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Parameter\PlayerStatusParameterTable.h">
+      <Filter>Src\Parameter</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Scene\InGame\Pause.h">
+      <Filter>Src\Scene\InGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Scene\ResultScene\Result.h">
+      <Filter>Src\Scene\ResultScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Scene\SelectScene\Select.h">
+      <Filter>Src\Scene\SelectScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Scene\SelectScene\RoleSelect.h">
+      <Filter>Src\Scene\SelectScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Scene\SelectScene\QuestSelect.h">
+      <Filter>Src\Scene\SelectScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Scene\SelectScene\MemberSelect.h">
+      <Filter>Src\Scene\SelectScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Scene\TitleScene\Title.h">
+      <Filter>Src\Scene\TitleScele</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Scene\TitleScene\TitleBackGround.h">
+      <Filter>Src\Scene\TitleScele</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Scene\TitleScene\TitleSelect.h">
+      <Filter>Src\Scene\TitleScele</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Select\ConfirmationSelect.h">
+      <Filter>Src\Select</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Select\GameEndSelect.h">
+      <Filter>Src\Select</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Sound\BGMList.h">
+      <Filter>Src\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Sound\SEList.h">
+      <Filter>Src\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Sound\SoundLister.h">
+      <Filter>Src\Sound</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\UI\Commentary\CommentaryMessage.h">
+      <Filter>Src\UI\Commentary</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\UI\Commentary\CommentaryUI.h">
+      <Filter>Src\UI\Commentary</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\UI\Commentary\CommentaryUIManager.h">
+      <Filter>Src\UI\Commentary</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\UI\ReboneGage\ReboneGageManager.h">
+      <Filter>Src\UI\ReboneGage</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\UI\ReboneGage\ReboneGaugeUI.h">
+      <Filter>Src\UI\ReboneGage</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\UIAnimation\UIAnimation.h">
+      <Filter>Src\UIAnimation</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Utilty\ResourceUtility.h">
+      <Filter>Src\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Utilty\TSVTableLoder.h">
+      <Filter>Src\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Utilty\TSVTable.h">
+      <Filter>Src\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Gun\Bullet\IGunBullet.h">
+      <Filter>Src\Actor\Gun\Bullet</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Gun\Factory\BulletFactory.h">
+      <Filter>Src\Actor\Gun\Factory</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Gun\Parameter\BulletParameter.h">
+      <Filter>Src\Actor\Gun\Parameter</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Gun\Parameter\BulletParameterTable.h">
+      <Filter>Src\Actor\Gun\Parameter</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Gun\Register\BulletModelRegister.h">
+      <Filter>Src\Actor\Gun\Register</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Gun\Shooter\BulletFireRequest.h">
+      <Filter>Src\Actor\Gun\Shooter</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Gun\Shooter\IBulletFireListener.h">
+      <Filter>Src\Actor\Gun\Shooter</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Gun\Shooter\GunShooter.h">
+      <Filter>Src\Actor\Gun\Shooter</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Heel\HeelArea.h">
+      <Filter>Src\Actor\Heel</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Magic\Factory\MagicFactory.h">
+      <Filter>Src\Actor\Magic\Factory</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Magic\Parameter\MagicParameter.h">
+      <Filter>Src\Actor\Magic\Parameter</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Magic\Parameter\MagicParameterTable.h">
+      <Filter>Src\Actor\Magic\Parameter</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Magic\MagicProjectotile.h">
+      <Filter>Src\Actor\Magic</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\NPC\Component\NPCActionParameterTable.h">
+      <Filter>Src\Actor\Character\NPC\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\NPC\Component\RescueStatusLister.h">
+      <Filter>Src\Actor\Character\NPC\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\NPC\Component\NPCCombatHelper.h">
+      <Filter>Src\Actor\Character\NPC\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\NPC\Component\RescueTimeTable.h">
+      <Filter>Src\Actor\Character\NPC\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\NPC\State\AttackState\NPCAttackBaseState.h">
+      <Filter>Src\Actor\Character\NPC\State\AttackState</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\NPC\State\BasicState\NPCChaseState.h">
+      <Filter>Src\Actor\Character\NPC\State\BasicState</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\NPC\State\BasicState\NPCIdleState.h">
+      <Filter>Src\Actor\Character\NPC\State\BasicState</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\NPC\State\BasicState\NPCHelpState.h">
+      <Filter>Src\Actor\Character\NPC\State\BasicState</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\NPC\State\AttackState\NPCHammerAttackState.h">
+      <Filter>Src\Actor\Character\NPC\State\AttackState</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\NPC\State\AttackState\NPCSwordAttackState.h">
+      <Filter>Src\Actor\Character\NPC\State\AttackState</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\NPC\State\AttackState\NPCTwinGunAttackState.h">
+      <Filter>Src\Actor\Character\NPC\State\AttackState</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\NPC\State\AttackState\NPCWandAttackState.h">
+      <Filter>Src\Actor\Character\NPC\State\AttackState</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\UI\Loading\LoadingProgressUI.h">
+      <Filter>Src\UI\Loading</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\NPC\NPCBrain.h">
+      <Filter>Src\Actor\Character\NPC</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Status\AttackParameterTable.h">
+      <Filter>Src\Actor\Character\Status</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Status\NPCStatusParameterTable.h">
+      <Filter>Src\Actor\Character\Status</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Status\PlayerStatusParameterTable.h">
+      <Filter>Src\Actor\Character\Status</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Player\Component\PlayerGenerator.h">
+      <Filter>Src\Actor\Character\Player\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Player\Component\PlayerSpawnData.h">
+      <Filter>Src\Actor\Character\Player\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Player\Component\RescueStatusManager.h">
+      <Filter>Src\Actor\Character\Player\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Player\CharacterByWeapon\IWeaponCharacter.h">
+      <Filter>Src\Actor\Character\Player\CharacterByWeapon</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Player\CharacterByWeapon\TwinGunCharacter.h">
+      <Filter>Src\Actor\Character\Player\CharacterByWeapon</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Player\CharacterByWeapon\HammerCharacter.h">
+      <Filter>Src\Actor\Character\Player\CharacterByWeapon</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Player\CharacterByWeapon\SwordCharacter.h">
+      <Filter>Src\Actor\Character\Player\CharacterByWeapon</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Player\CharacterByWeapon\WandCharacter.h">
+      <Filter>Src\Actor\Character\Player\CharacterByWeapon</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Player\InputSystem\IInputDevice.h">
+      <Filter>Src\Actor\Character\Player\InputSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Player\InputSystem\GamePadInputAdapter.h">
+      <Filter>Src\Actor\Character\Player\InputSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Player\InputSystem\PlayerControlerHub.h">
+      <Filter>Src\Actor\Character\Player\InputSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Player\InputSystem\VirtualInputAdapter.h">
+      <Filter>Src\Actor\Character\Player\InputSystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerHeavyAttackState.h">
+      <Filter>Src\Actor\Character\Player\State\AttackState\ComboState</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerHeelMagicState.h">
+      <Filter>Src\Actor\Character\Player\State\AttackState\ComboState</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Player\State\AttackState\PlayerChargingState.h">
+      <Filter>Src\Actor\Character\Player\State\AttackState</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Player\State\BasicState\PlayerGetUpState.h">
+      <Filter>Src\Actor\Character\Player\State\BasicState</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Player\State\BasicState\PlayerGuardState.h">
+      <Filter>Src\Actor\Character\Player\State\BasicState</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Player\State\BasicState\PlayerReBoneState.h">
+      <Filter>Src\Actor\Character\Player\State\BasicState</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerMagicAttackState.h">
+      <Filter>Src\Actor\Character\Player\State\AttackState\ComboState</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Common\WeaponHitDetection.h">
+      <Filter>Src\Actor\Character\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Common\Damage\DamageIndicatorPool.h">
+      <Filter>Src\Actor\Character\Common\Damage</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Common\Damage\DamageProcessor.h">
+      <Filter>Src\Actor\Character\Common\Damage</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Common\Damage\DamageRequest.h">
+      <Filter>Src\Actor\Character\Common\Damage</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Common\Damage\PresentDamageIndicator.h">
+      <Filter>Src\Actor\Character\Common\Damage</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Common\Pool\IPoolable.h">
+      <Filter>Src\Actor\Character\Common\Pool</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Common\Pool\GameObjectPool.h">
+      <Filter>Src\Actor\Character\Common\Pool</Filter>
+    </ClInclude>
+    <ClInclude Include="BossRoarState.h">
+      <Filter>Src\Actor\Character\Boss\State</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Src\Actor\Character\Common\Pool\GameObjectPool.inl" />
+    <None Include="Src\Utilty\TSVTableLoder.inl">
+      <Filter>Src\Utility</Filter>
+    </None>
+    <None Include="Src\Actor\Character\Common\Pool\GameObjectPool.inl">
+      <Filter>Src\Actor\Character\Common\Pool</Filter>
+    </None>
   </ItemGroup>
 </Project>

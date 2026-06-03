@@ -132,7 +132,6 @@ namespace nsApp
 		}
 
 
-
 	private:
 		nsActor::Player* m_outer = nullptr;                           //! ポインタを持つ対象。
 		nsActor::Player* m_helpTarget = nullptr;                      //! 助ける対象。

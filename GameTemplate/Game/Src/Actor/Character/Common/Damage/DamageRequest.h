@@ -3,7 +3,7 @@
  * @file DamageRequest.h
  * @brie 対象にどんな攻撃が当たったかを渡すためのデータ。
  * @author Yamaguchi Hayato
- * @date 2026/05/20
+ * @date 2026/05/29(最終更新日)
  */
 
 
@@ -18,8 +18,8 @@ namespace nsApp
 	 */
 	struct DamageRequest 
 	{
-		nsActor::ICharacter* target = nullptr;			//! ダメージを受けるキャラクター。
-		int damageAmount = 0;                           //! ダメージ量。
-		Vector3 hitPosition = Vector3::Zero;            //! ダメージフォントを生成する座標。
+		nsActor::ICharacter* target = nullptr; //! ダメージを受けるキャラクター。
+		int damageAmount = 0;                  //! ダメージ量。
+		Vector3 hitPosition = Vector3::Zero;   //! ダメージフォントを生成する座標。
 	};
 }
