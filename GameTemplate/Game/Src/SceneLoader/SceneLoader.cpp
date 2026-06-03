@@ -19,6 +19,7 @@
 #include "Src/Scene/InGame/Pause.h"
 #include "Src/Scene/ResultScene/Result.h"
 
+#include "Src/AsyncLoad/ParameterAsyncLoadTask.h"
 namespace nsApp
 {
 	namespace nsTitle
@@ -783,6 +784,66 @@ namespace nsApp
 		}
 	}
 
+
+	namespace nsLoading
+	{
+		bool LoadingScene::Start()
+		{
+			/* フラグをセット。*/
+			m_isChangesScene = false;
+
+			/* 『パラメーターを読み込む』タスクを追加する。*/
+			m_asyncLoadManager.AddTask(std::make_unique<ParameterAsyncLoadTask>());
+
+			/* 非同期ロードを開始する。*/
+			m_asyncLoadManager.Start();
+
+			return true;
+		}
+
+
+		void LoadingScene::Update()
+		{
+			/* 非同期ロードの状態を更新する。*/
+			m_asyncLoadManager.Update();
+
+			/* ロードに失敗した場合。*/
+			if(m_asyncLoadManager.IsFailed())
+			{
+				if (!m_isChangesScene)
+				{
+					/* ロードに失敗したことをユーザーに伝えるための処理をここに書く。*/
+					m_isChangesScene = true; 
+
+					std::string errorMessage = m_asyncLoadManager.GetErrorMessage();
+					OutputDebugStringA(errorMessage.c_str());
+					OutputDebugStringA("\n");
+					return;
+				}
+			}
+
+			/* ロードに成功した場合。*/
+			if (m_asyncLoadManager.IsCompleted())
+			{
+				if (!m_isChangesScene)
+				{
+					m_isChangesScene = true;
+					/* ロードに成功した場合はインゲームシーンに遷移する。*/
+					nsScene::SceneLoader::GetInstance()->ChangeScene(IScene::EnSceneID::enSceneID_InGame);
+				}
+
+				return;
+			}
+		}
+
+
+		void LoadingScene::Render(RenderContext& rc)
+		{
+
+		}
+	}
+
+
 	namespace nsScene
 	{
 		SceneLoader* SceneLoader::m_instance = nullptr;/*シングルトンインスタンスの初期化。*/
@@ -839,6 +900,15 @@ namespace nsApp
 				m_currentSceneID = IScene::enSceneID_Select;
 				m_currentScene = NewGO<nsSelect::SelectScene>(0, "selectScene");
 				break;
+
+
+			case IScene::enSceneID_Loading:
+			{
+				m_currentSceneID = IScene::enSceneID_Loading;
+				m_currentScene = NewGO<nsLoading::LoadingScene>(0, "asyncLoading");
+				break;
+			}
+
 			case IScene::enSceneID_InGame:/*インゲームシーン。*/
 				m_currentSceneID = IScene::enSceneID_InGame;
 				m_currentScene = NewGO<nsGame::InGameScene>(0, "inGameScene");
