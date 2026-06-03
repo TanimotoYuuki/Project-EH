@@ -38,6 +38,9 @@ namespace nsApp
 			/* 音量をセット */
 			m_bgmSource->SetVolume(volume);
 
+			/* 基本音量をセット。*/
+			m_baseVolume = volume;
+
 			/* 再生。*/
 			m_bgmSource->Play(true);
 
@@ -59,6 +62,19 @@ namespace nsApp
 			}
 			/* 音源をリセット。*/
 			m_currentBGM = BGM_ID::None;
+		}
+
+		void BGMList::CalcVolume(int bgmRate, int masterRate)
+		{
+			int bgmVolumeRate = bgmRate;
+			float bgmVolume = bgmVolumeRate / 100.0f;
+
+			int masterVolumeRate = masterRate;
+			float masterVolume = masterVolumeRate / 100.0f;
+
+			float finalVolume = m_baseVolume * bgmVolume * masterVolume;
+
+			m_bgmSource->SetVolume(finalVolume);
 		}
 	}
 }

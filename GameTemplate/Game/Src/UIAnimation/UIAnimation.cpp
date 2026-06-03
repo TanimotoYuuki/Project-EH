@@ -57,7 +57,8 @@ namespace nsApp
 			}
 
 			/*現在のアニメーション経過時間のパーセント。*/
-			const float computePercent = m_elapsedTime / m_targetTime;
+			float computePercent = m_elapsedTime / m_targetTime;
+			computePercent = m_easingFunc(computePercent);
 
 			/*初期値から目標値までをなめらかに変化。*/
 			Vector3 computePosition = basePosition;
@@ -130,7 +131,8 @@ namespace nsApp
 			}
 
 			/*現在のアニメーション経過時間のパーセント。*/
-			const float computePercent = m_elapsedTime / m_targetTime;
+			float computePercent = m_elapsedTime / m_targetTime;
+			computePercent = m_easingFunc(computePercent);
 
 			/*初期値から目標値までをなめらかに変化。*/
 			Quaternion computeRotation = baseRotation;
@@ -202,7 +204,8 @@ namespace nsApp
 			}
 
 			/*現在のアニメーション経過時間のパーセント。*/
-			const float computePercent = m_elapsedTime / m_targetTime;
+			float computePercent = m_elapsedTime / m_targetTime;
+			computePercent = m_easingFunc(computePercent);
 
 			/*初期値から目標値までをなめらかに変化。*/
 			Vector2 computeScale = baseScale;
@@ -274,7 +277,8 @@ namespace nsApp
 			}
 
 			/*現在のアニメーション経過時間のパーセント。*/
-			const float computePercent = m_elapsedTime / m_targetTime;
+			float computePercent = m_elapsedTime / m_targetTime;
+			computePercent = m_easingFunc(computePercent);
 
 			/*初期値から目標値までをなめらかに変化。*/
 			Vector4 computeColor = nsK2EngineLow::Math::Lerp<Vector4>(computePercent, baseColor, targetColor);
@@ -344,7 +348,8 @@ namespace nsApp
 			}
 
 			/*現在のアニメーション経過時間のパーセント。*/
-			const float computePercent = m_elapsedTime / m_targetTime;
+			float computePercent = m_elapsedTime / m_targetTime;
+			computePercent = m_easingFunc(computePercent);
 
 			/*初期値から目標値までをなめらかに変化。*/
 			float computeAlpha = nsK2EngineLow::Math::Lerp<float>(computePercent, baseAlpha, targetAlpha);

@@ -557,6 +557,11 @@ namespace nsK2Engine {
         /// </summary>
         /// <param name="rc">レンダリングコンテキスト</param>
         void Render2D(RenderContext& rc);
+		/// <summary>
+		/// 背景描画
+		/// </summary>
+		/// <param name="rc">レンダリングコンテキスト</param>
+		void RenderBackGround(RenderContext& rc);
         /// <summary>
         /// メインレンダリングターゲットの内容をフレームバッファにコピーする
         /// </summary>
@@ -601,6 +606,10 @@ namespace nsK2Engine {
         /// 2D描画用のレンダ―ターゲットを初期化
         /// </summary>
         void Init2DRenderTarget();
+		/// <summary>
+        /// 背景描画用のスプライトを初期化
+        /// </summary>
+		void InitBackGround();
     private:
         // GBufferの定義
         enum EnGBuffer
@@ -650,7 +659,9 @@ namespace nsK2Engine {
         SceneGeometryData m_sceneGeometryData;                          // シーンのジオメトリ情報。
         static RenderingEngine* m_instance;		                        // 唯一のインスタンスのアドレスを記録する変数。
         RenderTarget m_2DRenderTarget;                                  // 2D描画用のレンダ―ターゲット。
+		RenderTarget m_backGroundRenderTarget;                          // 背景描画用のレンダリングターゲット。
         Sprite m_2DSprite;                                              // 2D合成用のスプライト。
+		Sprite m_backGroundSprite;                                      // 背景描画用のスプライト。
         Sprite m_mainSprite;
         SIBLData m_iblData;                                             // IBLデータ。
         bool m_isEnableRaytracing = true;                               // レイトレーシングが有効？

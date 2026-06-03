@@ -65,6 +65,15 @@ namespace nsApp{
 				return m_isEnd;
 			}
 
+			/**
+			* @brief 補完関数を設定。
+			* @param easingFunc 進行度(0.0f～1.0f)を受け取り、計算後の進行度を返す関数。
+			*/
+			inline void SetEasingFunction(std::function<float(float)> easingFunc)
+			{
+				m_easingFunc = easingFunc;
+			}
+
 		protected:/*メンバ変数。*/
 			SpriteRender* m_render = nullptr;/*アニメーションさせるスプライト。*/
 			float m_elapsedTime = 0.0f;/*経過した割合。*/
@@ -76,6 +85,7 @@ namespace nsApp{
 			bool m_isLoop = false;/*ループするか ?*/
 			bool m_isEnd = false;/*アニメーションの再生終了したか？*/
 			bool m_isCompleted = false;/*処理が完了したか ?*/
+			std::function<float(float)> m_easingFunc = [](float t) {return t; };/*カスタム補完関数(デフォルトは線形保管)。*/
 		};
 
 		/*座標を変えるUIアニメーションクラス。*/

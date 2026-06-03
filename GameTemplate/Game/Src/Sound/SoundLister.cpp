@@ -14,6 +14,12 @@ namespace nsApp
 			return true;
 		}
 
+		void SoundLister::Update()
+		{
+			/* BGM‚ÆSE‚Ì‰¹—Ê‚ÌŠ„‡‚ğl—¶‚µ‚½ŒvZˆ—B*/
+			//m_bgmList.CalcVolume(m_bgmVolumeRate, m_masterVolumeRate);
+			//m_seList.CalcVolume(m_seVolumeRate, m_masterVolumeRate);
+		}
 
 		void SoundLister::InitSound()
 		{

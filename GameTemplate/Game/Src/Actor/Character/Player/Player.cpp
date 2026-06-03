@@ -28,6 +28,8 @@
 #include "Src/Actor/Character/NPC/State/BasicState/NPCHelpState.h"
 #include "ResourceUtility.h"
 
+#include "Src/SceneLoader/SceneLoader.h""
+
 namespace
 {
 	const auto CHARACON_RADIUS = 12.5f;                 //! キャラクターコントローラーの半径。
@@ -138,14 +140,23 @@ namespace nsApp
 			if (IsHitStop())
 				return;
 
-			/* ゲーム開始直後数フレームは入力を受け付けない*/
-			if (m_inputWaitTimer > 0)
+			/*選択シーンではないとき。*/
+			if (nsApp::nsScene::SceneLoader::GetInstance()->GetCurrentSceneID() != nsApp::IScene::enSceneID_Select)
 			{
-				m_inputWaitTimer--;
+				/* ゲーム開始直後数フレームは入力を受け付けない*/
+				/*@全体共有: その硬直はボス戦の開始演出でカバーする*/
+				if (m_inputWaitTimer > 0)
+				{
+					m_inputWaitTimer--;
+					m_playerInput.SetInputEnable(false);
+				}
+				else
+					m_playerInput.SetInputEnable(true);
+			}
+			else/*選択シーンでは操作を受け付けないようにする。*/
+			{
 				m_playerInput.SetInputEnable(false);
 			}
-			else
-				m_playerInput.SetInputEnable(true);
 
 			/* NPCの場合、仮想のコントローラーによる判定を行う。*/
 			if (m_brain != nullptr)

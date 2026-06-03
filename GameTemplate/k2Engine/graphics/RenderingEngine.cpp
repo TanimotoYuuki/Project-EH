@@ -18,6 +18,7 @@ namespace nsK2Engine {
 
         InitZPrepassRenderTarget();
         InitMainRenderTarget();
+        InitBackGround();
         m_volumeLightRender.Init();
         InitGBuffer();
         InitMainRTSnapshotRenderTarget();
@@ -119,6 +120,38 @@ namespace nsK2Engine {
             shadowMapRender.Init(m_isSoftShadow);
         }
     }
+    void RenderingEngine::InitBackGround()
+    {
+        float clearColor[4] = { 0.0f,0.0f,0.0f,0.0f };
+        m_backGroundRenderTarget.Create(
+            UI_SPACE_WIDTH,
+            UI_SPACE_HEIGHT,
+            1,
+            1,
+            DXGI_FORMAT_R8G8B8A8_UNORM,
+            DXGI_FORMAT_UNKNOWN,
+            clearColor
+        );
+
+        // 最終合成用のスプライトを初期化する
+        SpriteInitData spriteInitData;
+        //テクスチャは2Dレンダ―ターゲット。
+        spriteInitData.m_textures[0] = &m_backGroundRenderTarget.GetRenderTargetTexture();
+        spriteInitData.m_textures[1] = &m_zprepassRenderTarget.GetRenderTargetTexture();
+        // 解像度はmainRenderTargetの幅と高さ
+        spriteInitData.m_width = m_mainRenderTarget.GetWidth();
+        spriteInitData.m_height = m_mainRenderTarget.GetHeight();
+        // 2D用のシェーダーを使用する
+        spriteInitData.m_fxFilePath = "Assets/shader/CompositeBackground.fx";
+		spriteInitData.m_vsEntryPointFunc = "VSMain";
+        spriteInitData.m_psEntryPoinFunc = "PSMain";
+        //上書き。
+        spriteInitData.m_alphaBlendMode = AlphaBlendMode_Trans;
+        //レンダリングターゲットのフォーマット。
+        spriteInitData.m_colorBufferFormat[0] = m_mainRenderTarget.GetColorBufferFormat();
+
+        m_backGroundSprite.Init(spriteInitData);
+	}
     void RenderingEngine::InitZPrepassRenderTarget()
     {
         float clearColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
@@ -312,6 +345,27 @@ namespace nsK2Engine {
         // シーンライトの更新。
         m_sceneLight.Update();
     }
+    void RenderingEngine::RenderBackGround(RenderContext& rc)
+    {
+        BeginGPUEvent("RenderBackGround");
+        // レンダリングターゲットとして利用できるまで待つ。
+        rc.WaitUntilToPossibleSetRenderTarget(m_backGroundRenderTarget);
+
+        // レンダリングターゲットを設定
+        rc.SetRenderTargetAndViewport(m_backGroundRenderTarget);
+
+        // レンダリングターゲットをクリア
+        rc.ClearRenderTargetView(m_backGroundRenderTarget);
+
+        for (auto& renderObj : m_renderObjects)
+        {
+            renderObj->OnRenderBackGround(rc);
+        }
+
+        //RENDERTARGETからPRESENTへ。
+        rc.WaitUntilFinishDrawingToRenderTarget(m_backGroundRenderTarget);
+        EndGPUEvent();
+	}
     void RenderingEngine::ComputeAnimatedVertex(RenderContext& rc)
     {
         for (auto& renderObj : m_renderObjects) {
@@ -329,6 +383,9 @@ namespace nsK2Engine {
         m_raytracingLightData.m_iblIntencity = m_iblData.m_intencity;
         m_raytracingLightData.m_ambientLight = m_sceneLight.GetSceneLight().ambinetLight;
         m_raytracingLightData.m_enableIBLTexture = m_iblData.m_texture.IsValid() ? 1 : 0;
+
+		// 背景描画
+        RenderBackGround(rc);
 
         // アニメーション済み頂点の計算。
         ComputeAnimatedVertex(rc);
@@ -364,6 +421,13 @@ namespace nsK2Engine {
 
         // ポストエフェクトを実行
         m_postEffect.Render(rc, m_mainRenderTarget);
+
+        BeginGPUEvent("CompositeBackground");
+        rc.WaitUntilToPossibleSetRenderTarget(m_mainRenderTarget);
+        rc.SetRenderTargetAndViewport(m_mainRenderTarget);
+        m_backGroundSprite.Draw(rc);
+        rc.WaitUntilFinishDrawingToRenderTarget(m_mainRenderTarget);
+        EndGPUEvent();
 
         // 2D描画
         Render2D(rc);
