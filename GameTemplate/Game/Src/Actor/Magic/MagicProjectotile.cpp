@@ -1,9 +1,35 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "MagicProjectotile.h"
 #include "Src/Actor/Character/Common/Damage/DamageProcessor.h"
 #include "Boss.h"
 
 #include "Src/Effect/EffectList.h"
+
+namespace
+{
+	/* スケール関連 */
+	const auto RUSH_MAGIC_MAX_SCALE = 1.5f;     //! 連打魔法の最大スケール。
+	const auto SCALE_GROWTH_RATE = 0.02f;       //! スケールの拡大スピード。
+
+	/* 追尾・座標関連 */
+	const auto AIM_HEIGHT_OFFSET = 10.0f;       //! ターゲットの足元から少し上を狙うオフセット。
+	const auto HOMING_TURN_RATE = 0.08f;        //! 追尾時の旋回性能。
+
+	/* システム・計算用 */
+	const auto BASE_FPS = 60.0f;                //! 基準となるフレームレート。
+	const auto VECTOR_EPSILON = 0.001f;         //! ゼロ除算回避のための極小値。
+
+	/* ボス・当たり判定関連 */
+	const auto BOSS_AIM_HEIGHT_OFFSET = 50.0f;  //! ボスの中心座標（狙う位置）の高さ調整
+	const auto BOSS_HIT_RADIUS = 150.0f;        //! すり抜け防止用の当たり判定の広さ（半径）
+
+	/* エフェクト関連 */
+	const auto HIT_EFFECT_OFFSET_Y = 10.0f;     //! ヒットエフェクトを出す高さの調整
+	const auto HIT_EFFECT_SCALE = 8.0f;         //! ヒットエフェクトの大きさ
+
+	/* システム関連 */
+	const auto HIDE_POSITION_Y = -100000.0f;    //! 無効化時に画面外（はるか下）へ飛ばすY座標
+}
 
 namespace nsApp
 {
@@ -25,22 +51,22 @@ namespace nsApp
 			m_previousPosition = spawnPosition;
 
 
-			/* �����Ƒ��x���������i�ǔ��v�Z�Ŏg�����ߕۑ��j*/
+			/* 寿命と速度を初期化（追尾計算で使うため保存）*/
 			m_currentLifeTime = param.lifeTime;
 			m_moveSpeed = param.speedPerSecond;
 			m_velocity = forwardDirection * m_moveSpeed;
 
-			/* ���f���̑傫���������� */
+			/* モデルの大きさを初期化 */
 			m_scale = param.scale;
 
-			/* ���f���̉�]������������ */
+			/* モデルの回転方向を初期化 */
 			m_direction.SetRotation(Vector3::Front, forwardDirection);
 			m_angle = m_direction * param.angle;
 
-			/* �_���[�W�ʂ������� */
+			/* ダメージ量を初期化 */
 			SetDamage(param.damage);
 
-			/* �e�~�T�C�����f���̃p�X�������� */
+			/* 各ミサイルモデルのパスを初期化 */
 			if (!m_isModelInitialized)
 			{
 				m_missileModel = std::make_unique<ModelRender>();
@@ -48,6 +74,7 @@ namespace nsApp
 				m_isModelInitialized = true;
 			}
 
+			/* ミサイルの位置と回転を初期化 */
 			if (m_missileModel != nullptr)
 			{
 				m_missileModel->SetScale(m_scale);
@@ -56,7 +83,7 @@ namespace nsApp
 				m_missileModel->Update();
 			}
 
-			/* �~�T�C���̓����蔻��������� */
+			/* ミサイルの当たり判定を初期化 */
 			if (m_magicCollider == nullptr)
 			{
 				m_magicCollider = NewGO<nsK2Engine::CollisionObject>(0, "MagicCollision");
@@ -75,13 +102,13 @@ namespace nsApp
 
 			m_previousPosition = m_position;
 
-			/* �t���[���Ԃ̎��Ԃ��擾 */
+			/* フレーム間の時間を取得 */
 			float deltaTime = g_gameTime->GetFrameDeltaTime();
 
-			/* �ʒu���X�V����i�������ɂȂ�Ȃ��悤 deltaTime ���|����I�j*/
+			/* 位置を更新する（超高速にならないよう deltaTime を掛ける！）*/
 			m_position += m_velocity * deltaTime;
 
-			/* ������b���Ō��炵�ď��ŏ��� */
+			/* 寿命を秒数で減らして消滅処理 */
 			m_currentLifeTime -= deltaTime;
 			if (m_currentLifeTime <= 0.0f)
 			{
@@ -89,14 +116,15 @@ namespace nsApp
 				return;
 			}
 
-			/* �A�Ŗ��@�̏ꍇ�A���� */
+			/* 連打魔法の場合、発動 */
 			if (m_magicType == MagicType::enRushMagic)
 				TargetMoving();
 
-			/* �����蔻��̒Ǐ] */
+			/* 当たり判定の追従 */
 			if (m_magicCollider != nullptr)
 				m_magicCollider->SetPosition(m_position);
 
+			/* ミサイルの位置と回転を更新 */
 			if (m_missileModel != nullptr)
 			{
 				m_missileModel->SetRotation(m_angle);
@@ -114,9 +142,11 @@ namespace nsApp
 
 		void MagicProjectotile::Render(RenderContext& rc)
 		{
+			/* ミサイルの描画 */
 			if (!m_isInUse)
 				return;
 
+			/* ミサイルのモデルが存在する場合、描画する */
 			if (m_missileModel != nullptr)
 				m_missileModel->Draw(rc);
 		}
@@ -124,30 +154,40 @@ namespace nsApp
 
 		void MagicProjectotile::TargetMoving()
 		{
+			/* フレーム間の時間を取得 */
 			float deltaTime = g_gameTime->GetFrameDeltaTime();
 
-			if (m_scale.x < 1.5f)
-				m_scale += Vector3::One * (0.02f * 60.0f * deltaTime);
+			/* 連打魔法のスケールを徐々に大きくする */
+			if (m_scale.x < RUSH_MAGIC_MAX_SCALE)
+				m_scale += Vector3::One * (SCALE_GROWTH_RATE * BASE_FPS * deltaTime);
 
+			/* ターゲットが存在する場合、追尾計算を行う */
 			if (m_target != nullptr)
 			{
+				/* ターゲットの位置を取得し、少し上にオフセットする */
 				m_targetPosition = m_target->GetPosition();
-				m_targetPosition.y += 10.0f;
+				m_targetPosition.y += AIM_HEIGHT_OFFSET;
 
+				/* ターゲットへのベクトルを計算 */
 				m_toTargetVector = m_targetPosition - m_position;
 
-				if (m_toTargetVector.LengthSq() > 0.001f)
+				/* ターゲットへのベクトルの長さが十分に大きい場合、追尾計算を行う */
+				if (m_toTargetVector.LengthSq() > VECTOR_EPSILON)
 				{
+					/* ターゲットへのベクトルを正規化して、現在の移動方向と比較する */
 					m_toTargetVector.Normalize();
 					m_currentDirection = m_velocity;
 
-					if (m_currentDirection.Length() > 0.001f)
+					/* 現在の移動方向とターゲットへのベクトルを線形補間して、新しい移動方向を計算する */
+					if (m_currentDirection.Length() > VECTOR_EPSILON)
 					{
+						/* 現在の移動方向を正規化して、線形補間を行う前に単位ベクトルにする */
 						m_currentDirection.Normalize();
 
-						m_newPosition.Lerp(0.08f * 60.0f * deltaTime, m_currentDirection, m_toTargetVector);
+						/* 線形補間を行い、新しい移動方向を計算する */
+						m_newPosition.Lerp(HOMING_TURN_RATE * BASE_FPS * deltaTime, m_currentDirection, m_toTargetVector);
 						m_newPosition.Normalize();
-						m_velocity = m_newPosition * m_moveSpeed; // �b�ԑ��x���|������
+						m_velocity = m_newPosition * m_moveSpeed; // 秒間速度を掛け直す
 						m_direction.SetRotation(Vector3::Front, m_newPosition);
 					}
 				}
@@ -157,18 +197,21 @@ namespace nsApp
 
 		bool MagicProjectotile::CheckHitBoss()
 		{
+			/* コライダーがない場合は判定しない */
 			if (m_magicCollider == nullptr)
 				return false;
 
-			auto*boss = FindGO<nsActor::Boss>("boss");
+			/* ボスが存在するか（ポインタが有効か）チェック */
+			auto* boss = FindGO<nsActor::Boss>("boss");
 			if (boss == nullptr || reinterpret_cast<uintptr_t>(boss) == 0xFFFFFFFFFFFFFFFF)
 				return false;
 
-			auto applyDamageToBoss = [this, boss]()
-				{
-					DamageProcessor::ApplyDamageToTarget(boss, static_cast<int>(m_damage));
+			/* ダメージ処理をまとめたラムダ式。*/
+			auto applyDamageToBoss = [this, boss]() {
+				DamageProcessor::ApplyDamageToTarget(boss, static_cast<int>(m_damage));
 				};
 
+			/* 判定：コライダー同士の単純なヒット判定*/
 			if (m_magicCollider->IsHit(boss->GetController()))
 			{
 				applyDamageToBoss();
@@ -176,47 +219,62 @@ namespace nsApp
 				return true;
 			}
 
+			/* すり抜け対策。*/
 			m_bossPosition = boss->GetPosition();
-			m_bossPosition.y += 50.0f;
+			m_bossPosition.y += BOSS_AIM_HEIGHT_OFFSET;
 
+			/* 1フレーム前の位置から今の位置へのベクトル（弾が動いた軌跡） */
 			m_missileTrajectory = m_position - m_previousPosition;
+			/* 1フレーム前の位置からボスへのベクトル */
 			m_vectorToBossTarget = m_bossPosition - m_previousPosition;
 			m_trajectoryLengthSquared = m_missileTrajectory.LengthSq();
 
-			if (m_trajectoryLengthSquared > 0.0f)
+			/* 弾がちゃんと移動している場合のみ計算する */
+			if (m_trajectoryLengthSquared > VECTOR_EPSILON)
 			{
+				/* 軌跡の長さに対する、ボスまでの投影距離の割合（内積で計算） */
 				m_closestPointRatio = m_vectorToBossTarget.Dot(m_missileTrajectory) / m_trajectoryLengthSquared;
 
+				/* 割合が0.0〜1.0の間なら、弾の動いた線分の真横にボスがいるということ */
 				if (m_closestPointRatio >= 0.0f && m_closestPointRatio <= 1.0f)
 				{
+					/* 軌跡の線上で一番ボスに近い座標を割り出す */
 					m_closestPointOnTrajectory = m_previousPosition + (m_missileTrajectory * m_closestPointRatio);
+
+					/* その一番近い点とボスの実際の距離を測る */
 					m_distanceToBoss = (m_bossPosition - m_closestPointOnTrajectory).Length();
 
-					if (m_distanceToBoss < 150.0f)
+					/* 距離が当たり判定の半径より小さければ「かすった（当たった）」とみなす！ */
+					if (m_distanceToBoss < BOSS_HIT_RADIUS)
 					{
 						applyDamageToBoss();
+						// すり抜けて当たったので、今の位置ではなく軌跡上の当たった地点で爆発させる
 						PlayHitEffect(m_closestPointOnTrajectory);
 						return true;
 					}
 				}
 			}
 
-			return false;
+			return false; 
 		}
 
 
 		void MagicProjectotile::Deactivate()
 		{
+			/* 無効化フラグを立てる */
 			m_isInUse = false;
 
+			/* 各種パラメータを初期化して、画面外に飛ばす */
 			m_currentLifeTime = 0.0f;
 			m_velocity = Vector3::Zero;
 			m_target = nullptr;
 			m_effectList = nullptr;
-
-			m_position = Vector3(0.0f, -100000.0f, 0.0f);
+			
+			/* 画面外に飛ばす */
+			m_position = Vector3(0.0f, HIDE_POSITION_Y, 0.0f);
 			m_previousPosition = m_position;
 
+			/* 当たり判定も画面外に飛ばす */
 			if (m_magicCollider != nullptr)
 				m_magicCollider->SetPosition(m_position);
 		}
@@ -227,11 +285,11 @@ namespace nsApp
 			if (m_effectList == nullptr)
 				return;
 
-			/* �G�t�F�N�g���Đ�������W��ݒ�B*/
+			/* エフェクトを再生する座標を設定。*/
 			m_effectPosition = position;
 			m_effectPosition.y += 10.0f;
 
-			/* �G�t�F�N�g��ݒ�B*/
+			/* エフェクトを設定。*/
 			m_effectList->PlayEffect(nsEffect::Hit,
 				m_effectPosition,
 				Quaternion::Identity,

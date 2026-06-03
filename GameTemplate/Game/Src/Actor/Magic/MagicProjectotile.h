@@ -3,7 +3,7 @@
  * @file   MagicProjectotile.h
  * @brief  攻撃の際に飛ばすオブジェクトを管理するクラス。
  * @author Yamaguchi Hayato。
- * @date   2026/03/23
+ * @date   2026/06/03: 最終更新日。
  */
 
 #include "Src/Actor/Character/Common/WeaponHitDetection.h"
@@ -38,7 +38,7 @@ namespace nsApp
 
 
 		public:
-			/* 
+			/** 
 			 * @brief 初期化処理。
 			 * @param type:             魔法の種類。
 			 * @param spawnPosition: 　 魔法の出現位置。
@@ -115,7 +115,7 @@ namespace nsApp
 			
 		/* ゲッター。*/
 		public:
-			/* 
+			/** 
 			 * @brief 魔法の種類を取得。
 			 */
 			inline MagicType GetMagicType() const
@@ -123,7 +123,7 @@ namespace nsApp
 				return m_magicType;
 			}
 
-			/* 
+			/** 
 			 * @brief モデル名を取得。
 			 * @param modelName モデル名。
 			 * @return モデルのパス。
@@ -133,7 +133,7 @@ namespace nsApp
 				return "Assets/modelData/Character/Weapon/" + modelName + ".tkm";
 			}
 
-			/* 
+			/** 
 			 * @brief 角度計算。
 			 * @param degX X軸の回転角度。
 			 * @param degY Y軸の回転角度。
@@ -161,6 +161,7 @@ namespace nsApp
 			nsActor::ICharacter* m_target = nullptr;					   //! 目標。
 			nsK2Engine::CollisionObject* m_magicCollider = nullptr;        //! 魔法の当たり判定を管理するクラス。
 			nsEffect::EffectList* m_effectList = nullptr;				   //! エフェクト管理クラスのポインタ。
+
 
 		private:
 			std::unique_ptr<ModelRender> m_missileModel = nullptr;		   //! ミサイルを描画するレンダー。
