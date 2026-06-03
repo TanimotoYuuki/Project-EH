@@ -116,6 +116,8 @@ namespace {
 
 	const float SELECT_DIRECTION_UI_ANIMATION_PLAY_SPEED = 7.0f;/*選択したときの演出UIアニメーションの再生速度。*/
 
+	const float SLIDE_UI_ANIMATION_POSITION_OFFSET = 2500.0f;/*UIをスライドさせるアニメーションの位置のオフセット。*/
+
 	const Vector3 AFTER_UI_ANIMATION_POSITION[nsApp::nsSelect::MemberSelect::EnSlide::enSlide_Num][nsApp::nsSelect::MemberSelect::EnSlideUIAnimationSprite::enSlideUIAnimationSprite_Num] = {
 		/*左側にスライドした時の位置。*/
 		Vector3{-715.0f,50.0f,0.0f},/*キャラクター選択UI。*/
@@ -243,11 +245,7 @@ namespace nsApp
 				if (m_isPlayerControle[m_currentSelect])
 				{
 					/*選択したときの演出UIアニメーションが終わっていないとき描画する。*/
-					if (!IsEndSelectDirectionUIAnimation(
-						enPosition_Up,
-						(EnSelectDirectionUIAnimationSprite)(GetCurrentSelect() + 1)
-						)
-					)
+					if (!IsEndSelectEndDirectionUIAnimation(GetCurrentSelect() + 1))
 					{
 						/*キャラクター選択UIの描画。*/
 						m_characterSelectUI.Draw(rc);
@@ -256,11 +254,7 @@ namespace nsApp
 				else
 				{
 					/*選択したときの演出UIアニメーションが終わっていないとき描画する。*/
-					if (!IsEndSelectDirectionUIAnimation(
-						enPosition_Up,
-						(EnSelectDirectionUIAnimationSprite)(GetCurrentSelect() + 4)
-						)
-					)
+					if (!IsEndSelectEndDirectionUIAnimation(GetCurrentSelect() + 4))
 					{
 						/*キャラクター選択UIの描画。*/
 						m_characterSelectUI.Draw(rc);
@@ -298,11 +292,7 @@ namespace nsApp
 				if (m_isPlayerControle[m_currentSelect])
 				{
 					/*選択したときの演出UIアニメーションが終わっているとき描画する。*/
-					if (IsEndSelectDirectionUIAnimation(
-						enPosition_Up,
-						(EnSelectDirectionUIAnimationSprite)(GetCurrentSelect() + 1)
-					)
-						)
+					if (IsEndSelectEndDirectionUIAnimation(GetCurrentSelect() + 1))
 					{
 						/*キャラクターフェイドUIの描画。*/
 						m_characterFadeUI.Draw(rc);
@@ -311,11 +301,7 @@ namespace nsApp
 				else
 				{
 					/*選択したときの演出UIアニメーションが終わっているとき描画する。*/
-					if (IsEndSelectDirectionUIAnimation(
-						enPosition_Up,
-						(EnSelectDirectionUIAnimationSprite)(GetCurrentSelect() + 4)
-					)
-						)
+					if (IsEndSelectEndDirectionUIAnimation(GetCurrentSelect() + 4))
 					{
 						/*キャラクターフェイドUIの描画。*/
 						m_characterFadeUI.Draw(rc);
@@ -336,11 +322,7 @@ namespace nsApp
 			{
 				/*選択したときの演出UIアニメーションが終わっているときはXボタンUIを描画しない。*/
 				/*役割選択画面を表示していて存在しない操作をしないため。*/
-				if (IsEndSelectDirectionUIAnimation(
-					enPosition_Up,
-					(EnSelectDirectionUIAnimationSprite)(GetCurrentSelect() + 1)
-					)
-				)
+				if (IsEndSelectEndDirectionUIAnimation(GetCurrentSelect() + 1))
 				{
 					if (j == enButtonUI_X || j == enButtonUI_Y) { continue; }
 				}
@@ -353,11 +335,7 @@ namespace nsApp
 			{
 				/*選択したときの演出UIアニメーションが終わっているときはXボタンUIを描画しない。*/
 				/*役割選択画面を表示していて存在しない操作をしないため。*/
-				if (IsEndSelectDirectionUIAnimation(
-					enPosition_Up,
-					(EnSelectDirectionUIAnimationSprite)(GetCurrentSelect() + 1)
-					)
-				)
+				if (IsEndSelectEndDirectionUIAnimation(GetCurrentSelect() + 1))
 				{
 					if (k == enTextUI_GameOption || k == enTextUI_HowToPlay) { continue; }
 				}
@@ -433,6 +411,10 @@ namespace nsApp
 			m_characterSelectUI.SetScale(CHARACTER_SELECT_UI_INIT_SCALE);/*大きさ設定。*/
 			m_characterSelectUI.SetMulColor(CHARACTER_SELECT_UI_INIT_MUL_COLOR);/*乗算色設定。*/
 			m_characterSelectUI.Update();/*更新処理。*/
+
+			m_slideUIAnimationSprite.push_back(&m_characterSelectUI);/*UIをスライドさせるアニメーションのスプライトに追加。*/
+			m_alphaUIAnimationSprite.push_back(&m_characterSelectUI);/*UIの透明度を変えるアニメーションのスプライトに追加。*/
+			m_selectDirectionUIAnimationSprite.push_back(&m_characterSelectUI);/*選択したときの演出UIアニメーションのスプライトに追加。*/
 		}
 
 		/*キャラクター枠UIの初期化。*/
@@ -445,6 +427,9 @@ namespace nsApp
 			m_characterFrameUI[characterFrameUI].SetPosition(initPosition);/*位置設定。*/
 			m_characterFrameUI[characterFrameUI].SetScale(CHARACTER_FRAME_UI_INIT_SCALE);/*大きさ設定。*/
 			m_characterFrameUI[characterFrameUI].Update();/*更新処理。*/
+
+			m_slideUIAnimationSprite.push_back(&m_characterFrameUI[characterFrameUI]);/*UIをスライドさせるアニメーションのスプライトに追加。*/
+			m_selectDirectionUIAnimationSprite.push_back(&m_characterFrameUI[characterFrameUI]);/*選択したときの演出UIアニメーションのスプライトに追加。*/
 		}
 
 		/*NPC用のキャラクター枠UIの初期化。*/
@@ -454,6 +439,9 @@ namespace nsApp
 			m_npcCharacterFrameUI[npcCharacterFrameUI].SetPosition(m_characterFrameUI[npcCharacterFrameUI + 1].GetPosition());/*位置設定。*/
 			m_npcCharacterFrameUI[npcCharacterFrameUI].SetScale(CHARACTER_FRAME_UI_INIT_SCALE);/*大きさ設定。*/
 			m_npcCharacterFrameUI[npcCharacterFrameUI].Update();/*更新処理。*/
+
+			m_slideUIAnimationSprite.push_back(&m_npcCharacterFrameUI[npcCharacterFrameUI]);/*UIをスライドさせるアニメーションのスプライトに追加。*/
+			m_selectDirectionUIAnimationSprite.push_back(&m_npcCharacterFrameUI[npcCharacterFrameUI]);/*選択したときの演出UIアニメーションのスプライトに追加。*/
 		}
 
 		/*役割アイコンUIの初期化。*/
@@ -485,6 +473,10 @@ namespace nsApp
 			m_deploySelectUI.SetScale(DEPLOY_SELECT_UI_INIT_SCALE);/*大きさ設定。*/
 			m_deploySelectUI.SetMulColor(DEPLOY_SELECT_UI_INIT_MUL_COLOR);/*乗算色設定。*/
 			m_deploySelectUI.Update();/*更新処理。*/
+
+			m_slideUIAnimationSprite.push_back(&m_deploySelectUI);/*UIをスライドさせるアニメーションのスプライトに追加。*/
+			m_alphaUIAnimationSprite.push_back(&m_deploySelectUI);/*UIの透明度を変えるアニメーションのスプライトに追加。*/
+			m_selectDirectionUIAnimationSprite.push_back(&m_deploySelectUI);/*選択したときの演出UIアニメーションのスプライトに追加。*/
 		}
 
 		/*出撃テキストUIの初期化。*/
@@ -494,6 +486,9 @@ namespace nsApp
 			m_deployTextUI.SetPosition(DEPLOY_TEXT_UI_INIT_POSITION);/*位置設定。*/
 			m_deployTextUI.SetScale(DEPLOY_TEXT_UI_INIT_SCALE);/*大きさ設定。*/
 			m_deployTextUI.Update();/*更新処理。*/
+
+			m_slideUIAnimationSprite.push_back(&m_deployTextUI);/*UIをスライドさせるアニメーションのスプライトに追加。*/
+			m_selectDirectionUIAnimationSprite.push_back(&m_deployTextUI);/*選択したときの演出UIアニメーションのスプライトに追加。*/
 		}
 
 		/*ボタンUIの初期化。*/
@@ -517,719 +512,138 @@ namespace nsApp
 		/*UIアニメーションの初期化。*/
 		void MemberSelect::InitUIAnimation()
 		{
-			/*UIをスライドさせるアニメーション。*/
-			InitSlideUIAnimation();
+			for (int i = 0; i < m_slideUIAnimationSprite.size(); i++)
+			{
+				/*UIを左にスライドさせるアニメーション。*/
+				InitSlideLeftUIAnimation(m_slideUIAnimationSprite[i]);
 
-			/*UIの透明度を変えるアニメーション。*/
-			InitAlphaUIAnimation();
+				/*UIを右にスライドさせるアニメーション。*/
+				InitSlideRightUIAnimation(m_slideUIAnimationSprite[i]);
+			}
 
-			/*選択したときの演出UIアニメーション*/
-			InitSelectDirectionUIAnimation();
+			for (int j = 0; j < m_alphaUIAnimationSprite.size(); j++)
+			{
+				/*UIの透明度を変えるアニメーション。*/
+				InitAlphaUIAnimation(m_alphaUIAnimationSprite[j]);
+			}
+
+			for (int k = 0; k < m_selectDirectionUIAnimationSprite.size(); k++)
+			{
+				/*選択したときの演出UIアニメーション(開始)。*/
+				InitSelectStartDirectionUIAnimation(m_selectDirectionUIAnimationSprite[k]);
+
+				/*選択したときの演出UIアニメーション(終了)。*/
+				InitSelectEndDirectionUIAnimation(m_selectDirectionUIAnimationSprite[k]);	
+			}
 		}
 
-		/*UIをスライドさせるアニメーションの初期化。*/
-		void MemberSelect::InitSlideUIAnimation()
+		/*UIを左にスライドさせるアニメーション。*/
+		void MemberSelect::InitSlideLeftUIAnimation(SpriteRender* spriteData)
 		{
 			/*UIをスライドさせるアニメーションの値の設定。*/
-			Vector3 basePosition = m_characterSelectUI.GetPosition();/*元の位置。*/
-			Vector3 targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_CharacterSelectUI];/*ターゲット位置。*/
+			Vector3 basePosition = spriteData->GetPosition();/*元の位置。*/
+			Vector3 targetPosition = spriteData->GetPosition();/*ターゲットの位置。*/
+			targetPosition.x -= SLIDE_UI_ANIMATION_POSITION_OFFSET;/*位置のオフセットを加算。*/
 
 			/*初期化。*/
-			m_slideUIAnimation[enSlide_Left][enSlideUIAnimationSprite_CharacterSelectUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				&m_characterSelectUI,/*アニメーションをさせるスプライト。*/
+			m_slideLeftUIAnimation.push_back(std::make_unique<nsApp::nsUI::PositionUIAnimation>(
+				spriteData,/*アニメーションをさせるスプライト。*/
 				1.0f,/*ターゲットの割合。*/
 				SLIDE_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
 				false,/*ループするか？*/
 				0.0f,/*アニメーションを開始する前の遅延時間。*/
 				0.0f,/*アニメーションを終了した後の遅延時間。*/
 				basePosition,/*元の位置。*/
-				targetPosition/*ターゲットの位置。*/
+				targetPosition/*ターゲットの位置。*/)
 			);
+		}
 
+		/*UIを右にスライドさせるアニメーション。*/
+		void MemberSelect::InitSlideRightUIAnimation(SpriteRender* spriteData)
+		{
 			/*UIをスライドさせるアニメーションの値の設定。*/
-			basePosition = m_characterFrameUI[enCharacterFrameUI_One].GetPosition();/*元の位置。*/
-			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_OneCharacterFrameUI];/*ターゲットの位置。*/
+			Vector3 basePosition = spriteData->GetPosition();/*元の位置。*/
+			basePosition.x -= SLIDE_UI_ANIMATION_POSITION_OFFSET;/*位置のオフセットを加算。*/
+			Vector3 targetPosition = spriteData->GetPosition();/*ターゲットの位置。*/
 
 			/*初期化。*/
-			m_slideUIAnimation[enSlide_Left][enSlideUIAnimationSprite_OneCharacterFrameUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				&m_characterFrameUI[enCharacterFrameUI_One],/*アニメーションをさせるスプライト。*/
+			m_slideRightUIAnimation.push_back(std::make_unique<nsApp::nsUI::PositionUIAnimation>(
+				spriteData,/*アニメーションをさせるスプライト。*/
 				1.0f,/*ターゲットの割合。*/
 				SLIDE_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
 				false,/*ループするか？*/
 				0.0f,/*アニメーションを開始する前の遅延時間。*/
 				0.0f,/*アニメーションを終了した後の遅延時間。*/
 				basePosition,/*元の位置。*/
-				targetPosition/*ターゲットの位置。*/
-			);
-
-			/*UIをスライドさせるアニメーションの値の設定。*/
-			basePosition = m_characterFrameUI[enCharacterFrameUI_Two].GetPosition();/*元の位置。*/
-			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_TwoCharacterFrameUI];/*ターゲットの位置。*/
-
-			/*初期化。*/
-			m_slideUIAnimation[enSlide_Left][enSlideUIAnimationSprite_TwoCharacterFrameUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				&m_characterFrameUI[enCharacterFrameUI_Two],/*アニメーションをさせるスプライト。*/
-				1.0f,/*ターゲットの割合。*/
-				SLIDE_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
-				false,/*ループするか？*/
-				0.0f,/*アニメーションを開始する前の遅延時間。*/
-				0.0f,/*アニメーションを終了した後の遅延時間。*/
-				basePosition,/*元の位置。*/
-				targetPosition/*ターゲットの位置。*/
-			);
-
-			/*UIをスライドさせるアニメーションの値の設定。*/
-			basePosition = m_characterFrameUI[enCharacterFrameUI_Three].GetPosition();/*元の位置。*/
-			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_ThreeCharacterFrameUI];/*ターゲット位置。*/
-
-			/*初期化。*/
-			m_slideUIAnimation[enSlide_Left][enSlideUIAnimationSprite_ThreeCharacterFrameUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				&m_characterFrameUI[enCharacterFrameUI_Three],/*アニメーションをさせるスプライト。*/
-				1.0f,/*ターゲットの割合。*/
-				SLIDE_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
-				false,/*ループするか？*/
-				0.0f,/*アニメーションを開始する前の遅延時間。*/
-				0.0f,/*アニメーションを終了した後の遅延時間。*/
-				basePosition,/*元の位置。*/
-				targetPosition/*ターゲットの位置。*/
-			);
-
-			/*UIをスライドさせるアニメーションの値の設定。*/
-			basePosition = m_characterFrameUI[enCharacterFrameUI_Four].GetPosition();/*元の位置。*/
-			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_FourCharacterFrameUI];/*ターゲット位置。*/
-
-			/*初期化。*/
-			m_slideUIAnimation[enSlide_Left][enSlideUIAnimationSprite_FourCharacterFrameUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				&m_characterFrameUI[enCharacterFrameUI_Four],/*アニメーションをさせるスプライト。*/
-				1.0f,/*ターゲットの割合。*/
-				SLIDE_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
-				false,/*ループするか？*/
-				0.0f,/*アニメーションを開始する前の遅延時間。*/
-				0.0f,/*アニメーションを終了した後の遅延時間。*/
-				basePosition,/*元の位置。*/
-				targetPosition/*ターゲットの位置。*/
-			);
-
-			/*UIをスライドさせるアニメーションの値の設定。*/
-			basePosition = m_characterFrameUI[enNpcCharacterFrameUI_Two].GetPosition();/*元の位置。*/
-			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_TwoNpcCharacterFrameUI];/*ターゲット位置。*/
-
-			/*初期化。*/
-			m_slideUIAnimation[enSlide_Left][enSlideUIAnimationSprite_TwoNpcCharacterFrameUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				&m_npcCharacterFrameUI[enNpcCharacterFrameUI_Two],/*アニメーションをさせるスプライト。*/
-				1.0f,/*ターゲットの割合。*/
-				SLIDE_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
-				false,/*ループするか？*/
-				0.0f,/*アニメーションを開始する前の遅延時間。*/
-				0.0f,/*アニメーションを終了した後の遅延時間。*/
-				basePosition,/*元の位置。*/
-				targetPosition/*ターゲットの位置。*/
-			);
-
-			/*UIをスライドさせるアニメーションの値の設定。*/
-			basePosition = m_characterFrameUI[enNpcCharacterFrameUI_Three].GetPosition();/*元の位置。*/
-			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_ThreeNpcCharacterFrameUI];/*ターゲット位置。*/
-
-			/*初期化。*/
-			m_slideUIAnimation[enSlide_Left][enSlideUIAnimationSprite_ThreeNpcCharacterFrameUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				&m_npcCharacterFrameUI[enNpcCharacterFrameUI_Three],/*アニメーションをさせるスプライト。*/
-				1.0f,/*ターゲットの割合。*/
-				SLIDE_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
-				false,/*ループするか？*/
-				0.0f,/*アニメーションを開始する前の遅延時間。*/
-				0.0f,/*アニメーションを終了した後の遅延時間。*/
-				basePosition,/*元の位置。*/
-				targetPosition/*ターゲットの位置。*/
-			);
-
-			/*UIをスライドさせるアニメーションの値の設定。*/
-			basePosition = m_characterFrameUI[enNpcCharacterFrameUI_Four].GetPosition();/*元の位置。*/
-			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_FourNpcCharacterFrameUI];/*ターゲット位置。*/
-
-			/*初期化。*/
-			m_slideUIAnimation[enSlide_Left][enSlideUIAnimationSprite_FourNpcCharacterFrameUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				&m_npcCharacterFrameUI[enNpcCharacterFrameUI_Four],/*アニメーションをさせるスプライト。*/
-				1.0f,/*ターゲットの割合。*/
-				SLIDE_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
-				false,/*ループするか？*/
-				0.0f,/*アニメーションを開始する前の遅延時間。*/
-				0.0f,/*アニメーションを終了した後の遅延時間。*/
-				basePosition,/*元の位置。*/
-				targetPosition/*ターゲットの位置。*/
-			);
-
-			/*UIをスライドさせるアニメーションの値の設定。*/
-			basePosition = m_deploySelectUI.GetPosition();/*元の位置。*/
-			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_DeploySelectUI];/*ターゲットの位置。*/
-
-			/*初期化。*/
-			m_slideUIAnimation[enSlide_Left][enSlideUIAnimationSprite_DeploySelectUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				&m_deploySelectUI,/*アニメーションをさせるスプライト。*/
-				1.0f,/*ターゲットの割合。*/
-				SLIDE_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
-				false,/*ループするか？*/
-				0.0f,/*アニメーションを開始する前の遅延時間。*/
-				0.0f,/*アニメーションを終了した後の遅延時間。*/
-				basePosition,/*元の位置。*/
-				targetPosition/*ターゲットの位置。*/
-			);
-
-			/*UIをスライドさせるアニメーションの値の設定。*/
-			basePosition = m_deployTextUI.GetPosition();/*元の位置。*/
-			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_DeployTextUI];/*ターゲットの位置。*/
-
-			/*初期化。*/
-			m_slideUIAnimation[enSlide_Left][enSlideUIAnimationSprite_DeployTextUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				&m_deployTextUI,/*アニメーションをさせるスプライト。*/
-				1.0f,/*ターゲットの割合。*/
-				SLIDE_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
-				false,/*ループするか？*/
-				0.0f,/*アニメーションを開始する前の遅延時間。*/
-				0.0f,/*アニメーションを終了した後の遅延時間。*/
-				basePosition,/*元の位置。*/
-				targetPosition/*ターゲットの位置。*/
-			);
-
-
-			/*UIをスライドさせるアニメーションの値の設定。*/
-			basePosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_CharacterSelectUI];/*元の位置。*/
-			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Right][enSlideUIAnimationSprite_CharacterSelectUI];/*ターゲット位置。*/
-
-			/*初期化。*/
-			m_slideUIAnimation[enSlide_Right][enSlideUIAnimationSprite_CharacterSelectUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				&m_characterSelectUI,/*アニメーションをさせるスプライト。*/
-				1.0f,/*ターゲットの割合。*/
-				SLIDE_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
-				false,/*ループするか？*/
-				0.0f,/*アニメーションを開始する前の遅延時間。*/
-				0.0f,/*アニメーションを終了した後の遅延時間。*/
-				basePosition,/*元の位置。*/
-				targetPosition/*ターゲットの位置。*/
-			);
-
-			/*UIをスライドさせるアニメーションの値の設定。*/
-			basePosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_OneCharacterFrameUI];/*元の位置。*/
-			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Right][enSlideUIAnimationSprite_OneCharacterFrameUI];/*ターゲットの位置。*/
-
-			/*初期化。*/
-			m_slideUIAnimation[enSlide_Right][enSlideUIAnimationSprite_OneCharacterFrameUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				&m_characterFrameUI[enCharacterFrameUI_One],/*アニメーションをさせるスプライト。*/
-				1.0f,/*ターゲットの割合。*/
-				SLIDE_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
-				false,/*ループするか？*/
-				0.0f,/*アニメーションを開始する前の遅延時間。*/
-				0.0f,/*アニメーションを終了した後の遅延時間。*/
-				basePosition,/*元の位置。*/
-				targetPosition/*ターゲットの位置。*/
-			);
-
-			/*UIをスライドさせるアニメーションの値の設定。*/
-			basePosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_TwoCharacterFrameUI];/*元の位置。*/
-			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Right][enSlideUIAnimationSprite_TwoCharacterFrameUI];/*ターゲットの位置。*/
-
-			/*初期化。*/
-			m_slideUIAnimation[enSlide_Right][enSlideUIAnimationSprite_TwoCharacterFrameUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				&m_characterFrameUI[enCharacterFrameUI_Two],/*アニメーションをさせるスプライト。*/
-				1.0f,/*ターゲットの割合。*/
-				SLIDE_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
-				false,/*ループするか？*/
-				0.0f,/*アニメーションを開始する前の遅延時間。*/
-				0.0f,/*アニメーションを終了した後の遅延時間。*/
-				basePosition,/*元の位置。*/
-				targetPosition/*ターゲットの位置。*/
-			);
-
-			/*UIをスライドさせるアニメーションの値の設定。*/
-			basePosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_ThreeCharacterFrameUI];/*元の位置。*/
-			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Right][enSlideUIAnimationSprite_ThreeCharacterFrameUI];/*ターゲット位置。*/
-
-			/*初期化。*/
-			m_slideUIAnimation[enSlide_Right][enSlideUIAnimationSprite_ThreeCharacterFrameUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				&m_characterFrameUI[enCharacterFrameUI_Three],/*アニメーションをさせるスプライト。*/
-				1.0f,/*ターゲットの割合。*/
-				SLIDE_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
-				false,/*ループするか？*/
-				0.0f,/*アニメーションを開始する前の遅延時間。*/
-				0.0f,/*アニメーションを終了した後の遅延時間。*/
-				basePosition,/*元の位置。*/
-				targetPosition/*ターゲットの位置。*/
-			);
-
-			/*UIをスライドさせるアニメーションの値の設定。*/
-			basePosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_FourCharacterFrameUI];/*元の位置。*/
-			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Right][enSlideUIAnimationSprite_FourCharacterFrameUI];/*ターゲット位置。*/
-
-			/*初期化。*/
-			m_slideUIAnimation[enSlide_Right][enSlideUIAnimationSprite_FourCharacterFrameUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				&m_characterFrameUI[enCharacterFrameUI_Four],/*アニメーションをさせるスプライト。*/
-				1.0f,/*ターゲットの割合。*/
-				SLIDE_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
-				false,/*ループするか？*/
-				0.0f,/*アニメーションを開始する前の遅延時間。*/
-				0.0f,/*アニメーションを終了した後の遅延時間。*/
-				basePosition,/*元の位置。*/
-				targetPosition/*ターゲットの位置。*/
-			);
-
-			/*UIをスライドさせるアニメーションの値の設定。*/
-			basePosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_TwoNpcCharacterFrameUI];/*元の位置。*/
-			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Right][enSlideUIAnimationSprite_TwoNpcCharacterFrameUI];/*ターゲット位置。*/
-
-			/*初期化。*/
-			m_slideUIAnimation[enSlide_Right][enSlideUIAnimationSprite_TwoNpcCharacterFrameUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				&m_npcCharacterFrameUI[enNpcCharacterFrameUI_Two],/*アニメーションをさせるスプライト。*/
-				1.0f,/*ターゲットの割合。*/
-				SLIDE_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
-				false,/*ループするか？*/
-				0.0f,/*アニメーションを開始する前の遅延時間。*/
-				0.0f,/*アニメーションを終了した後の遅延時間。*/
-				basePosition,/*元の位置。*/
-				targetPosition/*ターゲットの位置。*/
-			);
-
-			/*UIをスライドさせるアニメーションの値の設定。*/
-			basePosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_ThreeNpcCharacterFrameUI];/*元の位置。*/
-			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Right][enSlideUIAnimationSprite_ThreeNpcCharacterFrameUI];/*ターゲット位置。*/
-
-			/*初期化。*/
-			m_slideUIAnimation[enSlide_Right][enSlideUIAnimationSprite_ThreeNpcCharacterFrameUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				&m_npcCharacterFrameUI[enNpcCharacterFrameUI_Three],/*アニメーションをさせるスプライト。*/
-				1.0f,/*ターゲットの割合。*/
-				SLIDE_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
-				false,/*ループするか？*/
-				0.0f,/*アニメーションを開始する前の遅延時間。*/
-				0.0f,/*アニメーションを終了した後の遅延時間。*/
-				basePosition,/*元の位置。*/
-				targetPosition/*ターゲットの位置。*/
-			);
-
-			/*UIをスライドさせるアニメーションの値の設定。*/
-			basePosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_FourNpcCharacterFrameUI];/*元の位置。*/
-			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Right][enSlideUIAnimationSprite_FourNpcCharacterFrameUI];/*ターゲット位置。*/
-
-			/*初期化。*/
-			m_slideUIAnimation[enSlide_Right][enSlideUIAnimationSprite_FourNpcCharacterFrameUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				&m_npcCharacterFrameUI[enNpcCharacterFrameUI_Four],/*アニメーションをさせるスプライト。*/
-				1.0f,/*ターゲットの割合。*/
-				SLIDE_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
-				false,/*ループするか？*/
-				0.0f,/*アニメーションを開始する前の遅延時間。*/
-				0.0f,/*アニメーションを終了した後の遅延時間。*/
-				basePosition,/*元の位置。*/
-				targetPosition/*ターゲットの位置。*/
-			);
-
-			/*UIをスライドさせるアニメーションの値の設定。*/
-			basePosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_DeploySelectUI];/*元の位置。*/
-			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Right][enSlideUIAnimationSprite_DeploySelectUI];/*ターゲットの位置。*/
-
-			/*初期化。*/
-			m_slideUIAnimation[enSlide_Right][enSlideUIAnimationSprite_DeploySelectUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				&m_deploySelectUI,/*アニメーションをさせるスプライト。*/
-				1.0f,/*ターゲットの割合。*/
-				SLIDE_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
-				false,/*ループするか？*/
-				0.0f,/*アニメーションを開始する前の遅延時間。*/
-				0.0f,/*アニメーションを終了した後の遅延時間。*/
-				basePosition,/*元の位置。*/
-				targetPosition/*ターゲットの位置。*/
-			);
-
-			/*UIをスライドさせるアニメーションの値の設定。*/
-			basePosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_DeployTextUI];/*元の位置。*/
-			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Right][enSlideUIAnimationSprite_DeployTextUI];/*ターゲットの位置。*/
-
-			/*初期化。*/
-			m_slideUIAnimation[enSlide_Right][enSlideUIAnimationSprite_DeployTextUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				&m_deployTextUI,/*アニメーションをさせるスプライト。*/
-				1.0f,/*ターゲットの割合。*/
-				SLIDE_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
-				false,/*ループするか？*/
-				0.0f,/*アニメーションを開始する前の遅延時間。*/
-				0.0f,/*アニメーションを終了した後の遅延時間。*/
-				basePosition,/*元の位置。*/
-				targetPosition/*ターゲットの位置。*/
+				targetPosition/*ターゲットの位置。*/)
 			);
 		}
 
 		/*UIの透明度を変えるアニメーションの初期化。*/
-		void MemberSelect::InitAlphaUIAnimation()
+		void MemberSelect::InitAlphaUIAnimation(SpriteRender* spriteData)
 		{
 			/*UIの透明度を変えるアニメーションの値の設定。*/
-			float baseAlpha = m_characterSelectUI.GetMulColor().a;/*元の透明度。*/
+			float baseAlpha = spriteData->GetMulColor().a;/*元の透明度。*/
 			float targetAlpha = AFTER_UI_ANIMATION_ALPHA;/*ターゲットの透明度。*/
 
 			/*初期化。*/
-			m_alphaUIAnimation[enAlphaUIAnimationSprite_CharacterSelectUI] = std::make_unique<nsApp::nsUI::AlphaUIAnimation>(
-				&m_characterSelectUI,/*アニメーションをさせるスプライト。*/
+			m_alphaUIAnimation.push_back(std::make_unique<nsApp::nsUI::AlphaUIAnimation>(
+				spriteData,/*アニメーションをさせるスプライト。*/
 				1.0f,/*ターゲットの割合。*/
 				ALPHA_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
 				true,/*ループするか？*/
 				0.0f,/*アニメーションを開始する前の遅延時間。*/
 				0.0f,/*アニメーションを終了した後の遅延時間。*/
 				baseAlpha,/*元の透明度。*/
-				targetAlpha/*ターゲットの透明度。*/
-			);
-
-			/*UIの透明度を変えるアニメーションの値の設定。*/
-			baseAlpha = m_deploySelectUI.GetMulColor().a;/*元の透明度。*/
-			targetAlpha = AFTER_UI_ANIMATION_ALPHA;/*ターゲットの透明度。*/
-
-			/*初期化。*/
-			m_alphaUIAnimation[enAlphaUIAnimationSprite_DeploySelectUI] = std::make_unique<nsApp::nsUI::AlphaUIAnimation>(
-				&m_deploySelectUI,/*アニメーションをさせるスプライト。*/
-				1.0f,/*ターゲットの割合。*/
-				ALPHA_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
-				true,/*ループするか？*/
-				0.0f,/*アニメーションを開始する前の遅延時間。*/
-				0.0f,/*アニメーションを終了した後の遅延時間。*/
-				baseAlpha,/*元の透明度。*/
-				targetAlpha/*ターゲットの透明度。*/
+				targetAlpha/*ターゲットの透明度。*/)
 			);
 		}
 
-		/*選択したときの演出UIアニメーションの初期化。*/
-		void MemberSelect::InitSelectDirectionUIAnimation()
+		/*選択したときの演出UIアニメーション(開始)。*/
+		void MemberSelect::InitSelectStartDirectionUIAnimation(SpriteRender* spriteData)
 		{
 			/*選択したときの演出UIアニメーションの値の設定。*/
-			Vector3 basePosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_CharacterSelectUI];/*元の位置。*/
-			Vector3 targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_CharacterSelectUI];/*ターゲットの位置。*/
+			Vector3 spritePosition = spriteData->GetPosition();/*対象となるスプライトの位置。*/
+			spritePosition.x -= SLIDE_UI_ANIMATION_POSITION_OFFSET;
+
+			Vector3 basePosition = spritePosition;/*元の位置。*/
+			Vector3 targetPosition = spritePosition;/*ターゲットの位置。*/
 			targetPosition.y -= DOWN_POSITION_OFFSET;
 
 			/*初期化。*/
-			m_selectDirectionUIAnimation[enPosition_Down][enSelectDirectionUIAnimationSprite_CharacterSelectUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				&m_characterSelectUI,/*アニメーションをさせるスプライト。*/
+			m_selectStartDirectionUIAnimation.push_back(std::make_unique<nsApp::nsUI::PositionUIAnimation>(
+				spriteData,/*アニメーションをさせるスプライト。*/
 				1.0f,/*ターゲットの割合。*/
 				SELECT_DIRECTION_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
 				false,/*ループするか？*/
 				0.0f,/*アニメーションを開始する前の遅延時間。*/
 				0.0f,/*アニメーションを終了した後の遅延時間。*/
 				basePosition,/*元の位置。*/
-				targetPosition/*ターゲットの位置。*/
+				targetPosition/*ターゲットの位置。*/)
 			);
+		}
 
+		/*選択したときの演出UIアニメーション(終了)。*/
+		void MemberSelect::InitSelectEndDirectionUIAnimation(SpriteRender* spriteData)
+		{
 			/*選択したときの演出UIアニメーションの値の設定。*/
-			basePosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_OneCharacterFrameUI];/*元の位置。*/
-			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_OneCharacterFrameUI];/*ターゲットの位置。*/
-			targetPosition.y -= DOWN_POSITION_OFFSET;
+			Vector3 spritePosition = spriteData->GetPosition();/*対象となるスプライトの位置。*/
+			spritePosition.x -= SLIDE_UI_ANIMATION_POSITION_OFFSET;
 
-			/*初期化。*/
-			m_selectDirectionUIAnimation[enPosition_Down][enSelectDirectionUIAnimationSprite_OneCharacterFrameUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				&m_characterFrameUI[enCharacterFrameUI_One],/*アニメーションをさせるスプライト。*/
-				1.0f,/*ターゲットの割合。*/
-				SELECT_DIRECTION_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
-				false,/*ループするか？*/
-				0.0f,/*アニメーションを開始する前の遅延時間。*/
-				0.0f,/*アニメーションを終了した後の遅延時間。*/
-				basePosition,/*元の位置。*/
-				targetPosition/*ターゲットの位置。*/
-			);
-
-			/*選択したときの演出UIアニメーションの値の設定。*/
-			basePosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_TwoCharacterFrameUI];/*元の位置。*/
-			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_TwoCharacterFrameUI];/*ターゲットの位置。*/
-			targetPosition.y -= DOWN_POSITION_OFFSET;
-
-			/*初期化。*/
-			m_selectDirectionUIAnimation[enPosition_Down][enSelectDirectionUIAnimationSprite_TwoCharacterFrameUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				&m_characterFrameUI[enCharacterFrameUI_Two],/*アニメーションをさせるスプライト。*/
-				1.0f,/*ターゲットの割合。*/
-				SELECT_DIRECTION_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
-				false,/*ループするか？*/
-				0.0f,/*アニメーションを開始する前の遅延時間。*/
-				0.0f,/*アニメーションを終了した後の遅延時間。*/
-				basePosition,/*元の位置。*/
-				targetPosition/*ターゲットの位置。*/
-			);
-
-			/*選択したときの演出UIアニメーションの値の設定。*/
-			basePosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_ThreeCharacterFrameUI];/*元の位置。*/
-			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_ThreeCharacterFrameUI];/*ターゲットの位置。*/
-			targetPosition.y -= DOWN_POSITION_OFFSET;
-
-			/*初期化。*/
-			m_selectDirectionUIAnimation[enPosition_Down][enSelectDirectionUIAnimationSprite_ThreeCharacterFrameUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				&m_characterFrameUI[enCharacterFrameUI_Three],/*アニメーションをさせるスプライト。*/
-				1.0f,/*ターゲットの割合。*/
-				SELECT_DIRECTION_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
-				false,/*ループするか？*/
-				0.0f,/*アニメーションを開始する前の遅延時間。*/
-				0.0f,/*アニメーションを終了した後の遅延時間。*/
-				basePosition,/*元の位置。*/
-				targetPosition/*ターゲットの位置。*/
-			);
-
-			/*選択したときの演出UIアニメーションの値の設定。*/
-			basePosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_FourCharacterFrameUI];/*元の位置。*/
-			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_FourCharacterFrameUI];/*ターゲットの位置。*/
-			targetPosition.y -= DOWN_POSITION_OFFSET;
-
-			/*初期化。*/
-			m_selectDirectionUIAnimation[enPosition_Down][enSelectDirectionUIAnimationSprite_FourCharacterFrameUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				&m_characterFrameUI[enCharacterFrameUI_Four],/*アニメーションをさせるスプライト。*/
-				1.0f,/*ターゲットの割合。*/
-				SELECT_DIRECTION_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
-				false,/*ループするか？*/
-				0.0f,/*アニメーションを開始する前の遅延時間。*/
-				0.0f,/*アニメーションを終了した後の遅延時間。*/
-				basePosition,/*元の位置。*/
-				targetPosition/*ターゲットの位置。*/
-			);
-
-			/*選択したときの演出UIアニメーションの値の設定。*/
-			basePosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_TwoNpcCharacterFrameUI];/*元の位置。*/
-			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_TwoNpcCharacterFrameUI];/*ターゲットの位置。*/
-			targetPosition.y -= DOWN_POSITION_OFFSET;
-
-			/*初期化。*/
-			m_selectDirectionUIAnimation[enPosition_Down][enSelectDirectionUIAnimationSprite_TwoNpcCharacterFrameUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				&m_npcCharacterFrameUI[enNpcCharacterFrameUI_Two],/*アニメーションをさせるスプライト。*/
-				1.0f,/*ターゲットの割合。*/
-				SELECT_DIRECTION_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
-				false,/*ループするか？*/
-				0.0f,/*アニメーションを開始する前の遅延時間。*/
-				0.0f,/*アニメーションを終了した後の遅延時間。*/
-				basePosition,/*元の位置。*/
-				targetPosition/*ターゲットの位置。*/
-			);
-
-			/*選択したときの演出UIアニメーションの値の設定。*/
-			basePosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_ThreeNpcCharacterFrameUI];/*元の位置。*/
-			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_ThreeNpcCharacterFrameUI];/*ターゲットの位置。*/
-			targetPosition.y -= DOWN_POSITION_OFFSET;
-
-			/*初期化。*/
-			m_selectDirectionUIAnimation[enPosition_Down][enSelectDirectionUIAnimationSprite_ThreeNpcCharacterFrameUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				&m_npcCharacterFrameUI[enNpcCharacterFrameUI_Three],/*アニメーションをさせるスプライト。*/
-				1.0f,/*ターゲットの割合。*/
-				SELECT_DIRECTION_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
-				false,/*ループするか？*/
-				0.0f,/*アニメーションを開始する前の遅延時間。*/
-				0.0f,/*アニメーションを終了した後の遅延時間。*/
-				basePosition,/*元の位置。*/
-				targetPosition/*ターゲットの位置。*/
-			);
-
-			/*選択したときの演出UIアニメーションの値の設定。*/
-			basePosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_FourNpcCharacterFrameUI];/*元の位置。*/
-			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_FourNpcCharacterFrameUI];/*ターゲットの位置。*/
-			targetPosition.y -= DOWN_POSITION_OFFSET;
-
-			/*初期化。*/
-			m_selectDirectionUIAnimation[enPosition_Down][enSelectDirectionUIAnimationSprite_FourNpcCharacterFrameUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				&m_npcCharacterFrameUI[enNpcCharacterFrameUI_Four],/*アニメーションをさせるスプライト。*/
-				1.0f,/*ターゲットの割合。*/
-				SELECT_DIRECTION_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
-				false,/*ループするか？*/
-				0.0f,/*アニメーションを開始する前の遅延時間。*/
-				0.0f,/*アニメーションを終了した後の遅延時間。*/
-				basePosition,/*元の位置。*/
-				targetPosition/*ターゲットの位置。*/
-			);
-
-			/*選択したときの演出UIアニメーションの値の設定。*/
-			basePosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_DeploySelectUI];/*元の位置。*/
-			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_DeploySelectUI];/*ターゲットの位置。*/
-			targetPosition.y -= DOWN_POSITION_OFFSET;
-
-			/*初期化。*/
-			m_selectDirectionUIAnimation[enPosition_Down][enSelectDirectionUIAnimationSprite_DeploySelectUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				&m_deploySelectUI,/*アニメーションをさせるスプライト。*/
-				1.0f,/*ターゲットの割合。*/
-				SELECT_DIRECTION_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
-				false,/*ループするか？*/
-				0.0f,/*アニメーションを開始する前の遅延時間。*/
-				0.0f,/*アニメーションを終了した後の遅延時間。*/
-				basePosition,/*元の位置。*/
-				targetPosition/*ターゲットの位置。*/
-			);
-
-			/*選択したときの演出UIアニメーションの値の設定。*/
-			basePosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_DeployTextUI];/*元の位置。*/
-			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_DeployTextUI];/*ターゲットの位置。*/
-			targetPosition.y -= DOWN_POSITION_OFFSET;
-
-			/*初期化。*/
-			m_selectDirectionUIAnimation[enPosition_Down][enSelectDirectionUIAnimationSprite_DeployTextUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				&m_deployTextUI,/*アニメーションをさせるスプライト。*/
-				1.0f,/*ターゲットの割合。*/
-				SELECT_DIRECTION_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
-				false,/*ループするか？*/
-				0.0f,/*アニメーションを開始する前の遅延時間。*/
-				0.0f,/*アニメーションを終了した後の遅延時間。*/
-				basePosition,/*元の位置。*/
-				targetPosition/*ターゲットの位置。*/
-			);
-
-
-			/*選択したときの演出UIアニメーションの値の設定。*/
-			basePosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_CharacterSelectUI];/*元の位置。*/
+			Vector3 basePosition = spritePosition;/*元の位置。*/
 			basePosition.y -= DOWN_POSITION_OFFSET;
-			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_CharacterSelectUI];/*ターゲットの位置。*/
+			Vector3 targetPosition = spritePosition;/*ターゲットの位置。*/
 
 			/*初期化。*/
-			m_selectDirectionUIAnimation[enPosition_Up][enSelectDirectionUIAnimationSprite_CharacterSelectUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				&m_characterSelectUI,/*アニメーションをさせるスプライト。*/
+			m_selectEndDirectionUIAnimation.push_back(std::make_unique<nsApp::nsUI::PositionUIAnimation>(
+				spriteData,/*アニメーションをさせるスプライト。*/
 				1.0f,/*ターゲットの割合。*/
 				SELECT_DIRECTION_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
 				false,/*ループするか？*/
 				0.0f,/*アニメーションを開始する前の遅延時間。*/
 				0.0f,/*アニメーションを終了した後の遅延時間。*/
 				basePosition,/*元の位置。*/
-				targetPosition/*ターゲットの位置。*/
-			);
-
-			/*選択したときの演出UIアニメーションの値の設定。*/
-			basePosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_OneCharacterFrameUI];/*元の位置。*/
-			basePosition.y -= DOWN_POSITION_OFFSET;
-			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_OneCharacterFrameUI];/*ターゲットの位置。*/
-
-			/*初期化。*/
-			m_selectDirectionUIAnimation[enPosition_Up][enSelectDirectionUIAnimationSprite_OneCharacterFrameUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				&m_characterFrameUI[enCharacterFrameUI_One],/*アニメーションをさせるスプライト。*/
-				1.0f,/*ターゲットの割合。*/
-				SELECT_DIRECTION_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
-				false,/*ループするか？*/
-				0.0f,/*アニメーションを開始する前の遅延時間。*/
-				0.0f,/*アニメーションを終了した後の遅延時間。*/
-				basePosition,/*元の位置。*/
-				targetPosition/*ターゲットの位置。*/
-			);
-
-			/*選択したときの演出UIアニメーションの値の設定。*/
-			basePosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_TwoCharacterFrameUI];/*元の位置。*/
-			basePosition.y -= DOWN_POSITION_OFFSET;
-			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_TwoCharacterFrameUI];/*ターゲットの位置。*/
-
-			/*初期化。*/
-			m_selectDirectionUIAnimation[enPosition_Up][enSelectDirectionUIAnimationSprite_TwoCharacterFrameUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				&m_characterFrameUI[enCharacterFrameUI_Two],/*アニメーションをさせるスプライト。*/
-				1.0f,/*ターゲットの割合。*/
-				SELECT_DIRECTION_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
-				false,/*ループするか？*/
-				0.0f,/*アニメーションを開始する前の遅延時間。*/
-				0.0f,/*アニメーションを終了した後の遅延時間。*/
-				basePosition,/*元の位置。*/
-				targetPosition/*ターゲットの位置。*/
-			);
-
-			/*選択したときの演出UIアニメーションの値の設定。*/
-			basePosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_ThreeCharacterFrameUI];/*元の位置。*/
-			basePosition.y -= DOWN_POSITION_OFFSET;
-			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_ThreeCharacterFrameUI];/*ターゲットの位置。*/
-
-			/*初期化。*/
-			m_selectDirectionUIAnimation[enPosition_Up][enSelectDirectionUIAnimationSprite_ThreeCharacterFrameUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				&m_characterFrameUI[enCharacterFrameUI_Three],/*アニメーションをさせるスプライト。*/
-				1.0f,/*ターゲットの割合。*/
-				SELECT_DIRECTION_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
-				false,/*ループするか？*/
-				0.0f,/*アニメーションを開始する前の遅延時間。*/
-				0.0f,/*アニメーションを終了した後の遅延時間。*/
-				basePosition,/*元の位置。*/
-				targetPosition/*ターゲットの位置。*/
-			);
-
-			/*選択したときの演出UIアニメーションの値の設定。*/
-			basePosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_FourCharacterFrameUI];/*元の位置。*/
-			basePosition.y -= DOWN_POSITION_OFFSET;
-			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_FourCharacterFrameUI];/*ターゲットの位置。*/
-
-			/*初期化。*/
-			m_selectDirectionUIAnimation[enPosition_Up][enSelectDirectionUIAnimationSprite_FourCharacterFrameUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				&m_characterFrameUI[enCharacterFrameUI_Four],/*アニメーションをさせるスプライト。*/
-				1.0f,/*ターゲットの割合。*/
-				SELECT_DIRECTION_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
-				false,/*ループするか？*/
-				0.0f,/*アニメーションを開始する前の遅延時間。*/
-				0.0f,/*アニメーションを終了した後の遅延時間。*/
-				basePosition,/*元の位置。*/
-				targetPosition/*ターゲットの位置。*/
-			);
-
-			/*選択したときの演出UIアニメーションの値の設定。*/
-			basePosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_TwoNpcCharacterFrameUI];/*元の位置。*/
-			basePosition.y -= DOWN_POSITION_OFFSET;
-			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_TwoNpcCharacterFrameUI];/*ターゲットの位置。*/
-
-			/*初期化。*/
-			m_selectDirectionUIAnimation[enPosition_Up][enSelectDirectionUIAnimationSprite_TwoNpcCharacterFrameUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				&m_npcCharacterFrameUI[enNpcCharacterFrameUI_Two],/*アニメーションをさせるスプライト。*/
-				1.0f,/*ターゲットの割合。*/
-				SELECT_DIRECTION_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
-				false,/*ループするか？*/
-				0.0f,/*アニメーションを開始する前の遅延時間。*/
-				0.0f,/*アニメーションを終了した後の遅延時間。*/
-				basePosition,/*元の位置。*/
-				targetPosition/*ターゲットの位置。*/
-			);
-
-			/*選択したときの演出UIアニメーションの値の設定。*/
-			basePosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_ThreeNpcCharacterFrameUI];/*元の位置。*/
-			basePosition.y -= DOWN_POSITION_OFFSET;
-			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_ThreeNpcCharacterFrameUI];/*ターゲットの位置。*/
-
-			/*初期化。*/
-			m_selectDirectionUIAnimation[enPosition_Up][enSelectDirectionUIAnimationSprite_ThreeNpcCharacterFrameUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				&m_npcCharacterFrameUI[enNpcCharacterFrameUI_Three],/*アニメーションをさせるスプライト。*/
-				1.0f,/*ターゲットの割合。*/
-				SELECT_DIRECTION_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
-				false,/*ループするか？*/
-				0.0f,/*アニメーションを開始する前の遅延時間。*/
-				0.0f,/*アニメーションを終了した後の遅延時間。*/
-				basePosition,/*元の位置。*/
-				targetPosition/*ターゲットの位置。*/
-			);
-
-			/*選択したときの演出UIアニメーションの値の設定。*/
-			basePosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_FourNpcCharacterFrameUI];/*元の位置。*/
-			basePosition.y -= DOWN_POSITION_OFFSET;
-			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_FourNpcCharacterFrameUI];/*ターゲットの位置。*/
-
-			/*初期化。*/
-			m_selectDirectionUIAnimation[enPosition_Up][enSelectDirectionUIAnimationSprite_FourNpcCharacterFrameUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				&m_npcCharacterFrameUI[enNpcCharacterFrameUI_Four],/*アニメーションをさせるスプライト。*/
-				1.0f,/*ターゲットの割合。*/
-				SELECT_DIRECTION_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
-				false,/*ループするか？*/
-				0.0f,/*アニメーションを開始する前の遅延時間。*/
-				0.0f,/*アニメーションを終了した後の遅延時間。*/
-				basePosition,/*元の位置。*/
-				targetPosition/*ターゲットの位置。*/
-			);
-
-			/*選択したときの演出UIアニメーションの値の設定。*/
-			basePosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_DeploySelectUI];/*元の位置。*/
-			basePosition.y -= DOWN_POSITION_OFFSET;
-			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_DeploySelectUI];/*ターゲットの位置。*/
-
-			/*初期化。*/
-			m_selectDirectionUIAnimation[enPosition_Up][enSelectDirectionUIAnimationSprite_DeploySelectUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				&m_deploySelectUI,/*アニメーションをさせるスプライト。*/
-				1.0f,/*ターゲットの割合。*/
-				SELECT_DIRECTION_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
-				false,/*ループするか？*/
-				0.0f,/*アニメーションを開始する前の遅延時間。*/
-				0.0f,/*アニメーションを終了した後の遅延時間。*/
-				basePosition,/*元の位置。*/
-				targetPosition/*ターゲットの位置。*/
-			);
-
-			/*選択したときの演出UIアニメーションの値の設定。*/
-			basePosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_DeployTextUI];/*元の位置。*/
-			basePosition.y -= DOWN_POSITION_OFFSET;
-			targetPosition = AFTER_UI_ANIMATION_POSITION[enSlide_Left][enSlideUIAnimationSprite_DeployTextUI];/*ターゲットの位置。*/
-
-			/*初期化。*/
-			m_selectDirectionUIAnimation[enPosition_Up][enSelectDirectionUIAnimationSprite_DeployTextUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				&m_deployTextUI,/*アニメーションをさせるスプライト。*/
-				1.0f,/*ターゲットの割合。*/
-				SELECT_DIRECTION_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
-				false,/*ループするか？*/
-				0.0f,/*アニメーションを開始する前の遅延時間。*/
-				0.0f,/*アニメーションを終了した後の遅延時間。*/
-				basePosition,/*元の位置。*/
-				targetPosition/*ターゲットの位置。*/
+				targetPosition/*ターゲットの位置。*/)
 			);
 		}
 
@@ -1268,33 +682,48 @@ namespace nsApp
 			}
 		}
 
-		/*UIをスライドさせるアニメーションのリセット処理。*/
-		void MemberSelect::ResetSlideUIAnimation(EnSlide slide)
+		/*UIを左にスライドさせるアニメーションのリセット処理。*/
+		void MemberSelect::ResetSlideLeftUIAnimation()
 		{
-			for (int i = 0; i < enSlideUIAnimationSprite_Num; i++)
+			for (int i = 0; i < m_slideLeftUIAnimation.size(); i++)
 			{
-				m_slideUIAnimation[slide][i]->Reset();
+				m_slideLeftUIAnimation[i]->Reset();
+			}
+		}
+
+		/*UIを右にスライドさせるアニメーションのリセット処理。*/
+		void MemberSelect::ResetSlideRightUIAnimation()
+		{
+			for (int i = 0; i < m_slideRightUIAnimation.size(); i++)
+			{
+				m_slideRightUIAnimation[i]->Reset();
 			}
 		}
 
 		/*UIの透明度を変えるアニメーションのリセット処理。*/
 		void MemberSelect::ResetAlphaUIAnimation()
 		{
-			for (int i = 0; i < enAlphaUIAnimationSprite_Num; i++)
+			for (int i = 0; i < m_alphaUIAnimationSprite.size(); i++)
 			{
 				m_alphaUIAnimation[i]->Reset();
 			}
 		}
 
-		/*選択したときの演出UIアニメーションのリセット処理。*/
-		void MemberSelect::ResetSelectDirectionUIAnimation()
+		/*選択したときの演出UIアニメーションのリセット処理(開始)。*/
+		void MemberSelect::ResetSelectStartDirectionUIAnimation()
 		{
-			for (int i = 0; i < enPosition_Num; i++)
+			for (int i = 0; i < m_selectStartDirectionUIAnimation.size(); i++)
 			{
-				for (int j = 0; j < enSelectDirectionUIAnimationSprite_Num; j++)
-				{
-					m_selectDirectionUIAnimation[i][j]->Reset();
-				}
+				m_selectStartDirectionUIAnimation[i]->Reset();
+			}
+		}
+
+		/*選択したときの演出UIアニメーションのリセット処理(終了)。*/
+		void MemberSelect::ResetSelectEndDirectionUIAnimation()
+		{
+			for (int i = 0; i < m_selectEndDirectionUIAnimation.size(); i++)
+			{
+				m_selectEndDirectionUIAnimation[i]->Reset();
 			}
 		}
 
@@ -1441,15 +870,15 @@ namespace nsApp
 							currentTargetUIFeature = npc;/*NPC。*/
 					}
 
-					if (!m_selectDirectionUIAnimation[enPosition_Down][currentTargetUIFeature]->IsEnd())
+					if (!m_selectStartDirectionUIAnimation[currentTargetUIFeature]->IsEnd())
 					{
-						m_selectDirectionUIAnimation[enPosition_Down][currentTargetUIFeature]->Update();
-						m_selectDirectionUIAnimation[enPosition_Down][currentSelectUIFeature]->Update();
+						m_selectStartDirectionUIAnimation[currentTargetUIFeature]->Update();
+						m_selectStartDirectionUIAnimation[currentSelectUIFeature]->Update();
 					}
-					else if (!m_selectDirectionUIAnimation[enPosition_Up][currentTargetUIFeature]->IsEnd())
+					else if (!m_selectEndDirectionUIAnimation[currentTargetUIFeature]->IsEnd())
 					{
-						m_selectDirectionUIAnimation[enPosition_Up][currentTargetUIFeature]->Update();
-						m_selectDirectionUIAnimation[enPosition_Up][currentSelectUIFeature]->Update();
+						m_selectEndDirectionUIAnimation[currentTargetUIFeature]->Update();
+						m_selectEndDirectionUIAnimation[currentSelectUIFeature]->Update();
 					}
 					else
 					{
@@ -1462,9 +891,19 @@ namespace nsApp
 				/*選択できていない状態。*/
 				else
 				{
-					for (int i = 0; i < enSlideUIAnimationSprite_Num; i++)
+					if (m_currentSlide == enSlide_Left)
 					{
-						m_slideUIAnimation[m_currentSlide][i]->Update();
+						for (int i = 0; i < m_slideLeftUIAnimation.size(); i++)
+						{
+							m_slideLeftUIAnimation[i]->Update();
+						}
+					}
+					else
+					{
+						for (int j = 0; j < m_slideRightUIAnimation.size(); j++)
+						{
+							m_slideRightUIAnimation[j]->Update();
+						}
 					}
 				}
 				return;
@@ -1563,11 +1002,7 @@ namespace nsApp
 					m_characterModel[i][j]->SetPosition(currentPosition);
 
 					/*選択したときの演出UIアニメーションが終わっていないときモデルの処理を有効化する。*/
-					if (!IsEndSelectDirectionUIAnimation(
-						enPosition_Up,
-						(EnSelectDirectionUIAnimationSprite)(GetCurrentSelect() + 1)
-						)
-					)
+					if (!IsEndSelectEndDirectionUIAnimation(GetCurrentSelect() + 1))
 					{
 						if (m_currentRole[i] == j)
 						{
@@ -1585,11 +1020,7 @@ namespace nsApp
 			if (m_currentSelect != enSelect_Deploy)
 			{
 				/*選択したときの演出UIアニメーションが終わっていないときモデルの処理を有効化する。*/
-				if (IsEndSelectDirectionUIAnimation(
-					enPosition_Up,
-					(EnSelectDirectionUIAnimationSprite)(GetCurrentSelect() + 1)
-				)
-					)
+				if (IsEndSelectEndDirectionUIAnimation(GetCurrentSelect() + 1))
 				{
 					m_characterModel[m_currentSelect][m_currentRole[m_currentSelect]]->Deactivate();
 				}

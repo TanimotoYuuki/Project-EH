@@ -149,6 +149,26 @@ namespace nsApp
 		/*UIアニメーションの初期化。*/
 		void Title::InitUIAnimation()
 		{
+			/*UIの大きさを小さくするアニメーション。*/
+			InitScaleDownUIAnimation();
+
+			/*UIの透明度を変えるアニメーション。*/
+			InitAlphaUIAnimation();
+
+			/*UIをスライドさせるアニメーション。*/
+			for (int i = 0; i < m_slideUIAnimationSprite.size(); i++)
+			{
+				/*UIを上にスライドさせるアニメーション。*/
+				InitSlideUpUIAnimation(m_slideUIAnimationSprite[i], i);
+
+				/*UIを下にスライドさせるアニメーション。*/
+				InitSlideDownUIAnimation(m_slideUIAnimationSprite[i], i);
+			}
+		}
+
+		/*UIの大きさを小さくするアニメーションの初期化。*/
+		void Title::InitScaleDownUIAnimation()
+		{
 			/*UIの大きさを小さくするアニメーションの値の設定。*/
 			Vector2 baseScale = { m_titleNameUI.GetScale().x,m_titleNameUI.GetScale().y };/*元の大きさ。*/
 			Vector2 targetScale = AFTER_UI_ANIMATION_SCALE;/*ターゲットの大きさ。*/
@@ -164,7 +184,11 @@ namespace nsApp
 				baseScale,/*元の大きさ*/
 				targetScale/*ターゲットの大きさ。*/
 			);
+		}
 
+		/*UIの透明度を変えるアニメーションの初期化。*/
+		void Title::InitAlphaUIAnimation()
+		{
 			/*UIの透明度を変えるアニメーションの値の設定。*/
 			float baseAlpha = m_titleNameUI.GetMulColor().a;/*元の透明度。*/
 			float targetAlpha = AFTER_UI_ANIMATION_ALPHA;/*ターゲットの透明度。*/
@@ -196,16 +220,6 @@ namespace nsApp
 				baseAlpha,/*元の透明度。*/
 				targetAlpha/*ターゲットの透明度。*/
 			);
-
-			/*UIをスライドさせるアニメーション。*/
-			for (int i = 0; i < m_slideUIAnimationSprite.size(); i++)
-			{
-				/*UIを上にスライドさせるアニメーション。*/
-				InitSlideUpUIAnimation(m_slideUIAnimationSprite[i], i);
-
-				/*UIを下にスライドさせるアニメーション。*/
-				InitSlideDownUIAnimation(m_slideUIAnimationSprite[i], i);
-			}
 		}
 
 		/*UIを上にスライドさせるアニメーションの初期化。*/

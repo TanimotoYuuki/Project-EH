@@ -184,7 +184,6 @@ namespace nsApp
 		{
 			m_select = NewGO<Select>(0, "select");
 			m_howToPlay = NewGO<nsApp::nsHowToPlay::HowToPlay>(0, "howToPlay");
-			m_howToPlay->Deactivate();
 			m_option = NewGO<nsApp::nsOption::Option>(1, "option");
 			for (int i = 0; i < nsApp::nsOption::Option::EnGaugeUI::enGaugeUI_Num; i++)
 			{
@@ -260,11 +259,7 @@ namespace nsApp
 			/*クエスト選択で選択できていたらメンバー選択画面が表示されている。*/
 			if (m_questSelect->DidSelect())
 			{
-				if (m_questSelect->IsEndSelectDirectionUIAnimation(
-					nsApp::nsSelect::QuestSelect::EnPosition::enPosition_Up,
-					(nsApp::nsSelect::QuestSelect::EnSelectDirectionUIAnimationSprite)(m_questSelect->GetCurrentSelect() + 1)
-					)
-				)
+				if (m_questSelect->IsEndSelectEndDirectionUIAnimation(m_questSelect->GetCurrentSelect()))
 				{
 					m_memberSelect->Activate();
 					m_memberSelect->EnableDrawingButtonAndTextUI();
@@ -316,7 +311,8 @@ namespace nsApp
 						{
 							m_memberSelect->DisableSelect();
 							m_memberSelect->DisableDirection();
-							m_memberSelect->ResetSelectDirectionUIAnimation();
+							m_memberSelect->ResetSelectStartDirectionUIAnimation();
+							m_memberSelect->ResetSelectEndDirectionUIAnimation();
 							m_memberSelect->EnableDrawingButtonAndTextUI();
 							m_confirmationSelect->DisableSelect();
 							m_confirmationSelect->DisableDirection();
@@ -324,8 +320,7 @@ namespace nsApp
 						}
 
 						/*選択したときの演出UIアニメーションが終わっていたら確認選択画面を表示する。*/
-						if (m_memberSelect->IsEndSelectDirectionUIAnimation(
-							nsApp::nsSelect::MemberSelect::EnPosition::enPosition_Up,
+						if (m_memberSelect->IsEndSelectEndDirectionUIAnimation(
 							nsApp::nsSelect::MemberSelect::EnSelectDirectionUIAnimationSprite::enSelectDirectionUIAnimationSprite_DeployTextUI
 							)
 						)
@@ -351,7 +346,8 @@ namespace nsApp
 
 							m_memberSelect->DisableSelect();
 							m_memberSelect->DisableDirection();
-							m_memberSelect->ResetSelectDirectionUIAnimation();
+							m_memberSelect->ResetSelectStartDirectionUIAnimation();
+							m_memberSelect->ResetSelectEndDirectionUIAnimation();
 							m_memberSelect->EnableDrawingButtonAndTextUI();
 							m_roleSelect->DiableSelect();
 							m_roleSelect->DisableBackSelect();
@@ -360,11 +356,7 @@ namespace nsApp
 						if (m_memberSelect->IsPlayerControle(m_memberSelect->GetCurrentSelect()))
 						{
 							/*選択したときの演出UIアニメーションが終わっていないときは役割選択画面を表示しない。*/
-							if (!m_memberSelect->IsEndSelectDirectionUIAnimation(
-								nsApp::nsSelect::MemberSelect::EnPosition::enPosition_Up,
-								(nsApp::nsSelect::MemberSelect::EnSelectDirectionUIAnimationSprite)(m_memberSelect->GetCurrentSelect() + 1)
-								)
-							)
+							if (!m_memberSelect->IsEndSelectEndDirectionUIAnimation(m_memberSelect->GetCurrentSelect() + 1))
 							{
 								return;
 							}
@@ -372,11 +364,7 @@ namespace nsApp
 						else
 						{
 							/*選択したときの演出UIアニメーションが終わっていないときは役割選択画面を表示しない。*/
-							if (!m_memberSelect->IsEndSelectDirectionUIAnimation(
-								nsApp::nsSelect::MemberSelect::EnPosition::enPosition_Up,
-								(nsApp::nsSelect::MemberSelect::EnSelectDirectionUIAnimationSprite)(m_memberSelect->GetCurrentSelect() + 4)
-								)
-							)
+							if (!m_memberSelect->IsEndSelectEndDirectionUIAnimation(m_memberSelect->GetCurrentSelect() + 4))
 							{
 								return;
 							}
@@ -421,17 +409,15 @@ namespace nsApp
 				if (m_questSelect->IsDirection())
 				{
 					/*UIをスライドさせるアニメーションが終了していたら。*/
-					if (m_memberSelect->IsEndSlideUIAnimation(
-						nsApp::nsSelect::MemberSelect::EnSlide::enSlide_Left,
-						nsApp::nsSelect::MemberSelect::EnSlideUIAnimationSprite::enSlideUIAnimationSprite_FourCharacterFrameUI)
-						)
+					if (m_memberSelect->IsEndSlideLeftUIAnimation())
 					{
 						m_questSelect->ChangeSlide(nsApp::nsSelect::QuestSelect::enSlide_Right);
 						m_questSelect->DisableDirection();
-						m_questSelect->ResetSlideUIAnimation(nsApp::nsSelect::QuestSelect::EnSlide::enSlide_Left);
-						m_questSelect->ResetSelectDirectionUIAnimation();
+						m_questSelect->ResetSlideLeftUIAnimation();
+						m_questSelect->ResetSelectStartDirectionUIAnimation();
+						m_questSelect->ResetSelectEndDirectionUIAnimation();
 						m_memberSelect->DisableDirection();
-						m_memberSelect->ResetSlideUIAnimation(nsApp::nsSelect::MemberSelect::EnSlide::enSlide_Left);
+						m_memberSelect->ResetSlideLeftUIAnimation();
 						return;
 					}
 
@@ -441,11 +427,7 @@ namespace nsApp
 					m_questSelect->ResetAlphaUIAnimation();
 
 					/*クエスト選択画面で選択したときの演出UIアニメーションが終わっていたらメンバー選択画面での演出を流す。*/
-					if (m_questSelect->IsEndSelectDirectionUIAnimation(
-						nsApp::nsSelect::QuestSelect::EnPosition::enPosition_Up,
-						(nsApp::nsSelect::QuestSelect::EnSelectDirectionUIAnimationSprite)(m_questSelect->GetCurrentSelect() + 1)
-						)
-					)
+					if (m_questSelect->IsEndSelectEndDirectionUIAnimation(m_questSelect->GetCurrentSelect()))
 					{
 						m_questSelect->DisableDrawingButtonAndTextUI();
 						m_memberSelect->EnableDirection();
@@ -500,17 +482,13 @@ namespace nsApp
 				if (m_memberSelect->IsDirection())
 				{
 					/*UIをスライドさせるアニメーションが終了していたら。*/
-					if (m_questSelect->IsEndSlideUIAnimation(
-						nsApp::nsSelect::QuestSelect::EnSlide::enSlide_Right,
-						(nsApp::nsSelect::QuestSelect::EnSlideUIAnimationSprite)(m_questSelect->GetCurrentSelect() + 5)
-						)
-					)
+					if (m_questSelect->IsEndSlideRightUIAnimation())
 					{
 						m_memberSelect->ChangeSlide(nsApp::nsSelect::MemberSelect::enSlide_Left);
 						m_memberSelect->DisableDirection();
-						m_memberSelect->ResetSlideUIAnimation(nsApp::nsSelect::MemberSelect::EnSlide::enSlide_Right);
+						m_memberSelect->ResetSlideRightUIAnimation();
 						m_questSelect->DisableDirection();
-						m_questSelect->ResetSlideUIAnimation(nsApp::nsSelect::QuestSelect::EnSlide::enSlide_Right);
+						m_questSelect->ResetSlideRightUIAnimation();
 						return;
 					}
 

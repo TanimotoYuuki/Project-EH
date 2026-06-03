@@ -92,7 +92,6 @@ namespace nsApp
 			enum EnSelectFauture : uint8_t
 			{
 				enSelectFauture_Character,/*キャラクター。*/
-				enSelectFauture_NpcCharacter,/*NPCキャラクター。*/
 				enSelectFauture_Deploy,/*出撃。*/
 				enSelectFauture_Num/*選択している内容の特徴数。*/
 			};
@@ -215,19 +214,33 @@ namespace nsApp
 			void InitUIAnimation();
 
 			/**
-			* @brief UIをスライドさせるアニメーションの初期化。
+			* @brief UIを左にスライドさせるアニメーションの初期化。
+			* @param spriteData　UIを左にスライドさせるアニメーション用のスプライトデータ。
 			*/
-			void InitSlideUIAnimation();
+			void InitSlideLeftUIAnimation(SpriteRender* spriteData);
+
+			/**
+			* @brief UIを右にスライドさせるアニメーションの初期化。
+			* @param spriteData　UIを右にスライドさせるアニメーション用のスプライトデータ。
+			*/
+			void InitSlideRightUIAnimation(SpriteRender* spriteData);
 
 			/**
 			* @brief UIの透明度を変えるアニメーションの初期化。
 			*/
-			void InitAlphaUIAnimation();
+			void InitAlphaUIAnimation(SpriteRender* spriteData);
 
 			/**
-			* @brief 選択したときの演出UIアニメーションの初期化。
+			* @brief 選択したときの演出UIアニメーションの初期化(開始)。
+			* @param spriteData　選択したときの演出UIアニメーション用のスプライトデータ(開始)。
 			*/
-			void InitSelectDirectionUIAnimation();
+			void InitSelectStartDirectionUIAnimation(SpriteRender* spriteData);
+
+			/**
+			* @brief 選択したときの演出UIアニメーションの初期化(終了)。
+			* @param spriteData　選択したときの演出UIアニメーション用のスプライトデータ(終了)。
+			*/
+			void InitSelectEndDirectionUIAnimation(SpriteRender* spriteData);
 
 			/**
 			* @brief キャラクターモデルの生成。
@@ -260,10 +273,14 @@ namespace nsApp
 		public:/*メンバ関数。*/
 
 			/**
-			* @brief UIをスライドさせるアニメーションのリセット処理。
-			* @param slide スライドさせる方向。
+			* @brief UIを左にスライドさせるアニメーションのリセット処理。
 			*/
-			void ResetSlideUIAnimation(EnSlide slide);
+			void ResetSlideLeftUIAnimation();
+
+			/**
+			* @brief UIを右にスライドさせるアニメーションのリセット処理。
+			*/
+			void ResetSlideRightUIAnimation();
 
 			/**
 			* @brief UIの透明度を変えるアニメーションのリセット処理。
@@ -271,9 +288,14 @@ namespace nsApp
 			void ResetAlphaUIAnimation();
 
 			/**
-			* @brief 選択したときの演出UIアニメーションのリセット処理。
+			* @brief 選択したときの演出UIアニメーション(開始)のリセット処理。
 			*/
-			void ResetSelectDirectionUIAnimation();
+			void ResetSelectStartDirectionUIAnimation();
+
+			/**
+			* @breif 選択したときの演出UIアニメーション(終了)のリセット処理。
+			*/
+			void ResetSelectEndDirectionUIAnimation();
 
 			/**
 			* @brief 選択のリセット処理。
@@ -298,14 +320,29 @@ namespace nsApp
 			void AllCharacterModelDeactivate();
 
 			/**
-			* @brief UIをスライドさせるアニメーションの再生終了したか？
-			* @param slide スライドさせる方向。
-			* @param slideUIAnimationSprite アニメーションさせるスプライト。
-			* @return trueなら再生終了している。
+			* @brief UIを左にスライドさせるアニメーション再生終了したか？
+			* @return trueなら終了している。
 			*/
-			bool IsEndSlideUIAnimation(EnSlide slide, EnSlideUIAnimationSprite slideUIAnimationSprite) const
+			inline bool IsEndSlideLeftUIAnimation() const
 			{
-				return m_slideUIAnimation[slide][slideUIAnimationSprite]->IsEnd();
+				return m_slideLeftUIAnimation[0]->IsEnd();
+			}
+			inline bool IsEndSlideLeftUIAnimation(int index) const
+			{
+				return m_slideLeftUIAnimation[index]->IsEnd();
+			}
+
+			/**
+			* @brief UIを右にスライドさせるアニメーション再生終了したか？
+			* @return trueなら終了している。
+			*/
+			inline bool IsEndSlideRightUIAnimation() const
+			{
+				return m_slideRightUIAnimation[0]->IsEnd();
+			}
+			inline bool IsEndSlideRightUIAnimation(int index) const
+			{
+				return m_slideRightUIAnimation[index]->IsEnd();
 			}
 
 			/**
@@ -319,14 +356,29 @@ namespace nsApp
 			}
 
 			/**
-			* @brief 選択したときの演出UIアニメーション再生終了したか？
-			* @param position 位置を変える種類。
-			* @param selectDirectionUIAnimationSprite アニメーションさせるスプライト。
+			* @brief 選択したときの演出UIアニメーション(開始)再生終了したか？
 			* @return trueなら再生終了している。
 			*/
-			bool IsEndSelectDirectionUIAnimation(EnPosition position, EnSelectDirectionUIAnimationSprite selectDirectionUIAnimationSprite)
+			inline bool IsEndSelectStartDirectionUIAnimation() const
 			{
-				return m_selectDirectionUIAnimation[position][selectDirectionUIAnimationSprite]->IsEnd();
+				return m_selectStartDirectionUIAnimation[0]->IsEnd();
+			}
+			inline bool IsEndSelectStartDirectionUIAnimation(int index) const
+			{
+				return m_selectStartDirectionUIAnimation[index]->IsEnd();
+			}
+
+			/**
+			* @brief 選択したときの演出UIアニメーション(終了)再生終了したか？
+			* @return trueなら再生終了している。
+			*/
+			inline bool IsEndSelectEndDirectionUIAnimation() const
+			{
+				return m_selectEndDirectionUIAnimation[0]->IsEnd();
+			}
+			inline bool IsEndSelectEndDirectionUIAnimation(int index) const
+			{
+				return m_selectEndDirectionUIAnimation[index]->IsEnd();
 			}
 
 			/**
@@ -549,9 +601,14 @@ namespace nsApp
 			int m_currentSelect = enSelect_OneCharacter;/*現在の選択している内容。*/
 			int m_previousSelect = enSelect_Num;/*前に選択していた内容。*/
 			int m_currentRole[enCharacterFrameUI_Num] = { RoleSelect::EnRole::enRole_Sword };/*現在の役割。*/
-			std::unique_ptr<nsApp::nsUI::PositionUIAnimation> m_slideUIAnimation[enSlide_Num][enSlideUIAnimationSprite_Num];/*UIをスライドさせるアニメーション。*/
-			std::unique_ptr<nsApp::nsUI::AlphaUIAnimation> m_alphaUIAnimation[enAlphaUIAnimationSprite_Num];/*透明度を変えるアニメーション。*/
-			std::unique_ptr<nsApp::nsUI::PositionUIAnimation> m_selectDirectionUIAnimation[enPosition_Num][enSelectDirectionUIAnimationSprite_Num];/*選択したときの演出UIアニメーション。*/
+			std::vector<std::unique_ptr<nsApp::nsUI::PositionUIAnimation>> m_slideLeftUIAnimation;/*UIを左にスライドさせるアニメーション。*/
+			std::vector<std::unique_ptr<nsApp::nsUI::PositionUIAnimation>> m_slideRightUIAnimation;/*UIを右にスライドさせるアニメーション。*/
+			std::vector<std::unique_ptr<nsApp::nsUI::PositionUIAnimation>> m_selectStartDirectionUIAnimation;/*選択したときの演出UIアニメーション(開始)。*/
+			std::vector<std::unique_ptr<nsApp::nsUI::PositionUIAnimation>> m_selectEndDirectionUIAnimation;/*選択したときの演出UIアニメーション(終了)。*/
+			std::vector<std::unique_ptr<nsApp::nsUI::AlphaUIAnimation>> m_alphaUIAnimation;/*UIの透明度を変えるアニメーション。*/
+			std::vector<SpriteRender*> m_slideUIAnimationSprite;/*UIをスライドさせるアニメーション用のスプライト。*/
+			std::vector<SpriteRender*> m_selectDirectionUIAnimationSprite;/*選択したときの演出UIアニメーション用のスプライト。*/
+			std::vector<SpriteRender*> m_alphaUIAnimationSprite;/*UIの透明度を変えるアニメーション用のスプライト。*/
 			nsActor::IWeaponCharacter* m_characterModel[enCharacterFrameUI_Num][RoleSelect::EnRole::enRole_Num];/*キャラクターモデル。*/
 			bool m_isPlayerControle[enCharacterFrameUI_Num] = { true,true,true,true };/*プレイヤーがキャラクターを操作するか？*/
 			bool m_isDirection = false;/*演出中？*/

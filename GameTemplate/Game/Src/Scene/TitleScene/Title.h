@@ -63,6 +63,16 @@ namespace nsApp
 			void InitUIAnimation();
 
 			/**
+			* @brief UIの大きさを小さくするアニメーションの初期化。
+			*/
+			void InitScaleDownUIAnimation();
+
+			/*
+			* @brief UIの透明度を変えるアニメーションの初期化。
+			*/
+			void InitAlphaUIAnimation();
+
+			/**
 			* @brief UIを上にスライドさせるアニメーションの初期化。
 			* @param spriteData スライドさせるスプライトのデータ。
 			* @param spriteIndex スライドさせるスプライトのインデックス。
