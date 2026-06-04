@@ -22,11 +22,14 @@ namespace nsApp
 		/* 未使用の弾丸を探す。*/
 		nsActor::IGunBullet* bullet = nullptr;
 
+		/* 基底クラスを探索する。*/
 		const auto& bullets = FindGOs<nsActor::IGunBullet>("Bullet");
 		for (auto* pooledBullet : bullets)
 		{
+			/* 未使用の弾丸が見つかった場合、再利用する。*/
 			if (pooledBullet != nullptr && !pooledBullet->IsInUse())
 			{
+				/* 再利用する弾丸を設定してループを抜ける。*/
 				bullet = pooledBullet;
 				break;
 			}

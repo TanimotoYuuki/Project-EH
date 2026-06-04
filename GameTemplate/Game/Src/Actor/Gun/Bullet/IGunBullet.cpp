@@ -7,7 +7,7 @@ namespace
 {
 	const auto BOSS_CENTER_OFFSET_Y = 50.0f;            //! ボスの中心を狙うためのY軸オフセット
 	const auto BOSS_HIT_DISTANCE_THRESHOLD = 150.0f;    //! 線分判定でヒットとする許容距離
-	const auto DAMAGE_TEXT_OFFSET_Y = 120.0f;
+	const auto DAMAGE_TEXT_OFFSET_Y = 120.0f;			//! ダメージテキストの表示位置をボスの中心からどれだけ上にするかのオフセット
 }
 
 namespace nsApp
@@ -16,6 +16,7 @@ namespace nsApp
 	{
 		IGunBullet::~IGunBullet()
 		{
+			/* 削除判定。*/
 			if (m_bulletCollider != nullptr)
 				DeleteGO(m_bulletCollider);
 		}

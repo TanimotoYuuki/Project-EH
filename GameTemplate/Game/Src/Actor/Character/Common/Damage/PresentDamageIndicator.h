@@ -1,10 +1,10 @@
 #pragma once
 /**
-* @file  PresentDamageIndicator.h
-* @brief ボスに与えるダメージ数を即座に描画/削除を行うクラス。
-* @author Yamaguchi Hayato
-* @date  2026/03/19
-*/
+ * @file   PresentDamageIndicator.h
+ * @brief  ボスに与えるダメージ数を即座に描画/削除を行うクラス。
+ * @author Yamaguchi Hayato
+ * @date   2026/05/29
+ */
 
 #include "Src/Actor/Character/Common/Pool/IPoolable.h"
 

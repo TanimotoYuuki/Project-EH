@@ -14,6 +14,7 @@
 #include "Src/Actor/Magic/Factory/MagicFactory.h"
 #include "Src/Actor/Character/Player/Component/ComboRouteTable.h"
 #include "Src/Actor/Character/NPC/Component/NPCCombatHelper.h"
+#include "Src/Actor/Character/Status/AttackParameterTable.h"
 
  /** @def
   * プレイヤーの遷移状態を PLAYER_STATE_IDという名前で定義するマクロ。
@@ -50,7 +51,7 @@ namespace nsApp
 
 			/* TemplateMethod。*/
 		protected:
-			/*
+			/**
 			 * @brief 攻撃アニメーションの再生や攻撃タイプの設定。
 			 */
 			virtual void PlayAttackAnimation() {};
@@ -144,7 +145,7 @@ namespace nsApp
 			 * @param target 魔法のターゲット(デフォルト値で初期化済み)。
 			 * @detail プレイヤーの座標と向きを自動取得してセットするバージョン。
 			 */
-			inline void ConstructAndTransmitMagicRequest(nsActor::MagicType type, nsActor::ICharacter* target = nullptr)
+			void ConstructAndTransmitMagicRequest(nsActor::MagicType type, nsActor::ICharacter* target = nullptr)
 			{
 				m_spawnPosition = m_player->GetWeaponHitDetection().GetPosition();
 				m_forwardDirection = m_player->GetForwardVector();
@@ -179,6 +180,27 @@ namespace nsApp
 					target,
 					&m_player->GetEffectList()
 				);
+			}
+
+		 	/**
+			 * @brief 現在の攻撃タイプをセットする。
+			 * @param attackKind セットする攻撃タイプ。
+		 	 */
+		 	inline void SetCurrentAttackType(AttackType attackKind)
+			{
+				m_currentAttackType = attackKind;
+			}
+
+
+		/* ゲッター。*/
+		public:
+			/**
+			 * @brief 現在の攻撃タイプに対応する攻撃パラメーターを取得する。
+			 * @return 現在の攻撃タイプに対応する攻撃パラメーター。
+			 */
+			inline const AttackParameter& GetCurrentAttackParameter() const
+			{
+				return AttackParameterTable::GetAttackParameter(m_currentAttackType);
 			}
 
 

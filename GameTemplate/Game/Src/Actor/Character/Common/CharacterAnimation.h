@@ -1,10 +1,11 @@
 #pragma once
+
 /**
-* @file   CharacterAnimation.h
-* @brief  キャラクターのアニメーションを管理するクラス。
-* @author Yamaguchi Hayato。
-* @date   2026/03/11
-*/
+ * @file   CharacterAnimation.h
+ * @brief  キャラクターのアニメーションを管理するクラス。
+ * @author Yamaguchi Hayato。
+ * @date   2026/06/02: 最終更新日
+ */
 
 
 namespace nsApp
@@ -32,19 +33,19 @@ namespace nsApp
 	 */
 	enum class AttackType : uint8_t
 	{
-		NormalAttack,          //! 通常攻撃。
-		HeavyAttack,           //! 強攻撃。
-		Charging,              //! チャージ中。
-		ChargeAttack,          //! チャージ攻撃。
-		HeelMagic,             //! 回復魔法。
-		HeelMagic_Particle,    //! 回復魔法のパーティクル。
-		MagicAttack,           //! 魔法攻撃。
-		AirAttack,             //! 空中攻撃。
-		RushAttack_Start,      //! 連続攻撃。
-		RushAttack_End,        //! 連続攻撃のループ部分。
-		SlashUp,               //! 斬り上げ攻撃。
-		PushForward,           //! 突き進む攻撃。
-		None,		           //! 攻撃なし。
+		NormalAttack,       //! 通常攻撃。
+		HeavyAttack,        //! 強攻撃。
+		Charging,           //! チャージ中。
+		ChargeAttack,       //! チャージ攻撃。
+		HeelMagic,          //! 回復魔法。
+		HeelMagic_Particle, //! 回復魔法のパーティクル。
+		MagicAttack,        //! 魔法攻撃。
+		AirAttack,          //! 空中攻撃。
+		RushAttack_Start,   //! 連続攻撃。
+		RushAttack_End,     //! 連続攻撃のループ部分。
+		SlashUp,            //! 斬り上げ攻撃。
+		PushForward,        //! 突き進む攻撃。
+		None,		        //! 攻撃なし。
 	};
 
 	/**
@@ -60,7 +61,10 @@ namespace nsApp
 		None,       //! 武器なし。
 	};
 
-	/* 武器ごとのアニメーションと表示のズレをまとめた構造体。*/
+	/**
+	 * @struct WeaponData。
+	 * @detail モデルのファイルパス/基準ボーン/アニメーションのファイルパスを管理。
+	 */
 	struct WeaponData
 	{
 		/* 武器モデルの描画を管理。*/
@@ -85,61 +89,90 @@ namespace nsApp
 		/* 初期化処理。*/
 		void Initialize(WeaponType kind);
 
-		/* 武器を持ち替えたときに呼んで必要なアニメーションを読み込む。
-		* @param weaponType 持ち替える武器のタイプ。
-		*/
+		/* 
+		 * @brief 武器を持ち替えたときに呼んで必要なアニメーションを読み込む。
+		 * @param weaponType 持ち替える武器のタイプ。
+		 */
 		void LoadAnimation(WeaponType weaponType);
 
 		
 	/* ゲッター。*/
 	public:
-		/* 再生したいアニメーションの状態を渡す処理。*/
+		/* 
+		 * @brief 再生したいアニメーションの状態を渡す処理。
+		 * @param state 再生したいアニメーションの状態。
+		 */
 		inline int GetBasicAnimationIndex(CharacterBasicAnimationList state)
 		{
 			return m_basicIndexMap.count(state) ? m_basicIndexMap[state] : 0;
 		}
 
-	    /* 渡したい配列の要素数を数える処理。*/
+	    /* 
+		 * @brief 渡したい配列の要素数を数える処理。
+		 * @param attack 再生したい攻撃の種類。
+		 */
 		inline int GetAttackAnimationIndex(AttackType attack)
 		{
 			return m_attackIndexMap.count(attack) ? m_attackIndexMap[attack] : 0;
 		}
 
-		/* 基本動作用アニメーションのファイルパスを取得する処理。*/
+		/* 
+		 * @brief 基本動作用アニメーションのファイルパスを取得する処理。
+		 * @param filePath 再生したい基本動作用アニメーションの状態。
+		 */
 		inline const std::string GetBasicAnimationFilePath(const std::string filePath)
 		{
 			const std::string basicAnimation = m_basicAnimationFilePath + filePath + m_animationExtension;
 			return basicAnimation;
 		}
 
-		/* 武器専用のアニメーションのファイルパスを取得する処理。*/
+		/* 
+		 * @brief 武器専用のアニメーションのファイルパスを取得する処理。
+		 * @param filePath 再生したい武器専用のアニメーションの状態。
+		 */
 		inline const std::string GetWeaponAnimationFilePath(const std::string filePath)
 		{
 			const std::string weaponAnimation = m_weaponAnimationFilePath + filePath + m_animationExtension;
 			return weaponAnimation;
 		}
 
-		/* ModelRenderにアニメーションを渡す配列。*/
+		/**
+		 * @brief 読み込んだアニメーションを管理する配列を取得する処理。
+		 * @return 読み込んだアニメーションを管理する配列。
+		 */
 		inline AnimationClip* GetAnimatiocClip()
 		{
 			return m_animationClipList.get();
 		}
 
-		/* AnimationClipの数を取得。*/
+		/**
+		 * @brief 読み込んだアニメーションの数を取得する処理。
+		 * @return 読み込んだアニメーションの数。
+		 */
 		inline int GetAnimationClips() const
 		{
 			return m_animationNum;
 		}
 
-		/* 武器のデータを取得。*/
+		/**
+		 * @brief 武器のアニメーションと表示のズレを管理する構造体を取得する処理。
+		 * @param type 武器のタイプ。
+		 * @return 武器のアニメーションと表示のズレを管理する構造体。
+		 */
 		inline const WeaponData& GetWeaponData(WeaponType type)const
 		{
 			return m_weaponDataList.at(type);
 		}
 
+
 	/* セッター。*/
 	public:
-		/* アニメーションの共通設定項目をセット。*/
+		/**
+		 * @brief アニメーションを読み込む処理。
+		 * @param filePath 読み込むアニメーションのファイルパス。
+		 * @param isLoop アニメーションをループするかどうかのフラグ。
+		 * @return 
+		 */
 		inline int SetAnimationClip(const std::string filePath, bool isLoop)
 		{
 			/* アニメーションをロード。*/
@@ -178,29 +211,29 @@ namespace nsApp
 
 
 	private:
-		std::unordered_map<CharacterBasicAnimationList, std::string> m_basicAnimationFilePathList;                  //! 基本動作用アニメーションのファイルパスを管理するマップ。
-		std::unordered_map<WeaponType, WeaponData> m_weaponDataList;                                                //! 武器ごとのアニメーションと表示のズレを管理するマップ。
-
-        /* 読み込んだアニメーションの要素数を代入する変数。*/
-		std::unordered_map<CharacterBasicAnimationList, int> m_basicIndexMap;                                       //! 基本動作用アニメーシを管理するマップ。
-		std::unordered_map<AttackType, int> m_attackIndexMap;                                                       //! 武器ごとのアニメーションを管理するマップ。
-		std::unique_ptr<AnimationClip[]> m_animationClipList;                                                       //! 読み込んだアニメーションを管理する配列。
-
-		/* ファイルパスを定数化するための変数群。*/
-		const std::string m_basicAnimationFilePath = "Assets/animData/Player/BasicAnimation/";                      //! 基本動作用アニメーションのファイルパスの共通部分。
-		const std::string m_weaponAnimationFilePath = "Assets/animData/Player/WeaponAnimation/";                    //! 武器ごとのアニメーションのファイルパスの共通部分。
-		const std::string m_animationExtension = ".tka";                                                            //! アニメーションファイルの拡張子。
-
-		/* 武器の種類ごとに代入用変数を設定。*/
-		WeaponData m_greatSwordData;                                                                                //! 大剣のアニメーションと表示のズレを管理する変数。
-		WeaponData m_hammerData;                                                                                    //! ハンマーのアニメーションと表示のズレを管理する変数。
-		WeaponData m_wandData;                                                                                      //! 杖のアニメーションと表示のズレを管理する変数。
-		WeaponData m_twinGunData;                                                                                   //! 双銃のアニメーションと表示のズレを管理する変数。
-
-		int m_currentIndex = 0;																						//! 現在のアニメーションの再生数を管理。
-		int m_animationNum = 0;                                                                                     //! 読み込んだアニメーションの数を管理する変数。
-		
-		bool m_isLoop = false;                                                                                      //! アニメーションをループするか管理する変数。
+		std::unordered_map<CharacterBasicAnimationList, std::string> m_basicAnimationFilePathList; //! 基本動作用アニメーションのファイルパスを管理するマップ。
+		std::unordered_map<WeaponType, WeaponData> m_weaponDataList;                               //! 武器ごとのアニメーションと表示のズレを管理するマップ。
+																								  
+        /* 読み込んだアニメーションの要素数を代入する変数。*/									  
+		std::unordered_map<CharacterBasicAnimationList, int> m_basicIndexMap;                      //! 基本動作用アニメーシを管理するマップ。
+		std::unordered_map<AttackType, int> m_attackIndexMap;                                      //! 武器ごとのアニメーションを管理するマップ。
+		std::unique_ptr<AnimationClip[]> m_animationClipList;                                      //! 読み込んだアニメーションを管理する配列。
+																								  
+		/* ファイルパスを定数化するための変数群。*/											   
+		const std::string m_basicAnimationFilePath = "Assets/animData/Player/BasicAnimation/";     //! 基本動作用アニメーションのファイルパスの共通部分。
+		const std::string m_weaponAnimationFilePath = "Assets/animData/Player/WeaponAnimation/";   //! 武器ごとのアニメーションのファイルパスの共通部分。
+		const std::string m_animationExtension = ".tka";                                           //! アニメーションファイルの拡張子。
+																								  
+		/* 武器の種類ごとに代入用変数を設定。*/													 
+		WeaponData m_greatSwordData;                                                               //! 大剣のアニメーションと表示のズレを管理する変数。
+		WeaponData m_hammerData;                                                                   //! ハンマーのアニメーションと表示のズレを管理する変数。
+		WeaponData m_wandData;                                                                     //! 杖のアニメーションと表示のズレを管理する変数。
+		WeaponData m_twinGunData;                                                                  //! 双銃のアニメーションと表示のズレを管理する変数。
+																								  
+		int m_currentIndex = 0;																	   //! 現在のアニメーションの再生数を管理。
+		int m_animationNum = 0;                                                                    //! 読み込んだアニメーションの数を管理する変数。
+																								  
+		bool m_isLoop = false;                                                                     //! アニメーションをループするか管理する変数。
 	};
 }
 

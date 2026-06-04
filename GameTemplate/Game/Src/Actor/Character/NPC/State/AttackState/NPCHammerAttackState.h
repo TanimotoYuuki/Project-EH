@@ -33,6 +33,7 @@ namespace nsApp
 		class NPCHammerAttackState : public NPCAttackBaseState
 		{
 		public:
+			/* コンストラクタとデストラクタ。*/
 			NPCHammerAttackState() = default;
 			virtual ~NPCHammerAttackState() = default;
 
@@ -66,7 +67,7 @@ namespace nsApp
 
 		private:
 			NPCHammerPattern m_currentPattern = NPCHammerPattern::enNone;   //! 現在の攻撃パターンを保存する変数。
-			bool m_isDashAttack = false;
+			bool m_isDashAttack = false;									//! ダッシュ攻撃かどうかを示すフラグ。
 		};
 	}
 }

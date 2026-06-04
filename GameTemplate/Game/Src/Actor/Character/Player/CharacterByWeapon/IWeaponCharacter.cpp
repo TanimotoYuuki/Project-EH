@@ -8,6 +8,7 @@ namespace nsApp
 	{
 		bool IWeaponCharacter::Start()
 		{
+			/* PlayerクラスのStartが処理されない場合はスキップ。*/
 			if (!Player::Start())
 				return false;
 

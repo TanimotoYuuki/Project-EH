@@ -13,8 +13,7 @@
 
 namespace nsApp
 {
-	namespace nsActor
-	{
+	namespace nsActor {
 		class Player;
 	}
 

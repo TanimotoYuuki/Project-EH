@@ -48,11 +48,14 @@ namespace nsApp
 		/* 未使用の魔法弾を探す。*/
 		const char* objectName = GetMagicObjectName(type);
 
+		/* プールから未使用の魔法弾を探す。*/
 		nsActor::MagicProjectotile* createMagic = nullptr;
 
+		/* プールから未使用の魔法弾を探す。*/
 		const auto& magics = FindGOs<nsActor::MagicProjectotile>(objectName);
 		for (auto* pooledMagic : magics)
 		{
+			/* プール内の魔法弾が未使用であれば、それを生成する魔法弾として選択する。*/
 			if (pooledMagic != nullptr && !pooledMagic->IsInUse())
 			{
 				createMagic = pooledMagic;
@@ -60,14 +63,18 @@ namespace nsApp
 			}
 		}
 
+		/* プールに未使用の魔法弾がない場合、新たに魔法弾を生成する。*/
 		if (createMagic == nullptr)
 			createMagic = NewGO<nsActor::MagicProjectotile>(0, objectName);
 
+		/* 魔法弾を初期化する。*/
 		if (createMagic)
 		{
+			/* 魔法弾を初期化する。*/
 			createMagic->Initialize(type, localSpawnPosition, localForwardPosition, magicParameter);
 			createMagic->SetEffectList(effectList);
 
+			/* ターゲットが存在する場合、魔法弾のターゲットを設定する。*/
 			if (target)
 				createMagic->SetTarget(target);
 		}

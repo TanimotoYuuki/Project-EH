@@ -22,6 +22,7 @@ namespace nsApp
 		class NPCChaseState : public IState<NPCBrain>
 		{
 		public:
+			/* コンストラクタとデストラクタ。*/
 			NPCChaseState() = default;
 			virtual ~NPCChaseState() = default;
 

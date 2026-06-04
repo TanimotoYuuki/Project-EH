@@ -36,40 +36,44 @@ namespace nsApp
 
 		/* セッター。*/
 		public:
-			/* 移動速度をセット。*/
+			/**
+			 * @brief 走る速度を設定。
+			 * @param speed 走る速度。
+			 */
 			inline void SetRunSpeed(float speed) 
 			{
 				m_runSpeed = speed;
 			}
 
-			/* 移動速度を設定。*/
+			/**
+			 * @brief 現在の座標を設定。
+			 * @param position 現在の座標。
+			 */
 			inline void SetPosition(const Vector3& position) 
 			{
 				m_currentPosition = position;
 			}
 
-			/* 移動ベクトルを設定。*/
+			/**
+			 * @brief 移動方向を設定。
+			 * @param direction 移動方向のベクトル。
+			 */
 			inline void SetMoveDirection(const Vector3& direction) 
 			{
 				m_moveDirection = direction;
 			}
 			
 
-		/* ゲッター。*/
-		public:
-		
-
-
 		private:	
-			nsActor::Player* m_player = nullptr;
+			nsActor::Player* m_player = nullptr;		//! Playerへのポインタ。
 
 
 		private:
-			float m_runSpeed;                           /* 走る速度。*/
+			float m_runSpeed;                           //! 走る速度。
 
-			Vector3 m_moveVector = Vector3::Zero;       /* 走る際の移動ベクトル。*/
-			Vector3 m_currentPosition = Vector3::Zero;  /* 現在の座標。*/
-			Vector3 m_moveDirection = Vector3::Zero;    /* 移動ベクトル。*/
+			Vector3 m_moveVector = Vector3::Zero;       //! 走る際の移動ベクトル。
+			Vector3 m_currentPosition = Vector3::Zero;  //! 現在の座標。
+			Vector3 m_moveDirection = Vector3::Zero;    //! 移動ベクトル。
 		};
 	}
 }

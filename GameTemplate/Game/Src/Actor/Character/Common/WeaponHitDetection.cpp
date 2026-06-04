@@ -3,7 +3,7 @@
 
 namespace
 {
-	const auto HIT_RADIUS = 30.0f; /* 武器の当たり判定の半径。*/
+	const auto HIT_RADIUS = 30.0f; //! 武器の当たり判定の半径。
 }
 
 
@@ -13,19 +13,14 @@ namespace nsApp
 	{
 		/* 当たり判定をセットする。*/
 		m_radius = radius;
+		/* 合ったり判定をセットする。*/
 		SetRadius(m_radius);
-	}
-
-
-	void WeaponHitDetection::Update(const Vector3& weaponPosition)
-	{
-		/* 座標を保持する。*/
-		m_position = weaponPosition;
 	}
 
 
 	bool WeaponHitDetection::IsHit(nsActor::ICharacter* target)
 	{
+		/* 武器が有効でない、もしくは敵がいない場合は当たらない。*/
 		if(!m_isActive || !target)
 			return false;
 

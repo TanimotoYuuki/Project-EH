@@ -17,19 +17,9 @@ namespace nsApp
 		}
 
 
-		void PlayerIdleState::Update()
-		{
-		}
-
-
-		void PlayerIdleState::Exit()
-		{
-
-		}
-
-
 		bool PlayerIdleState::RequestID(uint8_t& id)
 		{
+			/* Playerの入力クラスを取得して、遷移可能な状態かどうかをStateTransitionDiagramに問い合わせる。*/
 			return StateTransitionDiagram::CheckCommonTransition(m_player->GetInputClass(), id, static_cast<uint8_t>(nsActor::PlayerStateID::enIdle));
 		}
 	}

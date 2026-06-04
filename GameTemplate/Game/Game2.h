@@ -8,6 +8,7 @@
 * @date 2026/05/08
 */
 
+#include "Src/Parameter/ParameterSystem.h"
 
 namespace nsApp
 {
@@ -16,6 +17,7 @@ namespace nsApp
 	class PlayerGenerator;
 	class PlayerControlerHub;
 	class DamageIndicatorPool;
+	class ParameterSystem;
 
 	namespace nsSound {
 		class SoundLister;
@@ -185,6 +187,7 @@ namespace nsApp
 			nsApp::Camera* m_camera = nullptr;
 			nsActor::Player* m_player = nullptr;
 			nsActor::Boss* m_boss = nullptr;
+			ParameterSystem m_parameterSystem;
 			DamageIndicatorPool* m_damageIndicatorPool = nullptr;
 			CharacterHP* m_characterHP = nullptr;
 			GameTimeLimit* m_gameTimeLimit = nullptr;

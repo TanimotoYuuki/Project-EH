@@ -42,9 +42,9 @@ namespace nsApp
 	 */
 	struct ComboRule
 	{
-		ComboInputType inputType;           //! コンボを発生させるボタン入力の条件。
-		int cancelTime;                     //! コンボを発生させるための入力の猶予時間。
-		PLAYER_STATE_ID nextStateID;        //! コンボ攻撃の次の状態ID。
+		ComboInputType inputType;    //! コンボを発生させるボタン入力の条件。
+		int cancelTime;              //! コンボを発生させるための入力の猶予時間。
+		PLAYER_STATE_ID nextStateID; //! コンボ攻撃の次の状態ID。
 	};
 
 
@@ -66,7 +66,7 @@ namespace nsApp
 
 
 	private:
-		static const COMBO_RULE m_empty; //! ルートがない場合のnullルート。
+		static const COMBO_RULE m_empty;											//! ルートがない場合のnullルート。
 	};
 }
 

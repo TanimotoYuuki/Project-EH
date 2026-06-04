@@ -14,12 +14,7 @@ namespace nsApp
 
 
 	public:
-		/* 
-		 * @brief 親クラスからのオーバーライド処理。
-		 * 処理の詳細はIInputDeviceクラスの同名関数の説明を参照。
-		 */
-
-		/* 
+		/** 
 		 * @brief リセット処理。
 		 */
 		void Reset() override {};

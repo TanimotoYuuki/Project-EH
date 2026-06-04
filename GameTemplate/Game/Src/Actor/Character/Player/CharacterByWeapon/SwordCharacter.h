@@ -16,18 +16,22 @@ namespace nsApp
 		class SwordCharacter : public IWeaponCharacter
 		{
 		public:
+			/* コンストラクタとデストラクタ。*/
 			SwordCharacter() = default;
 			virtual ~SwordCharacter() = default;
 
 
 		public:
 			/**
-			* 初期化。
-			*/
+			 * 初期化。
+			 */
 			bool Start() override;
 
 
 		protected:
+			/**
+			 * @brief 状態の登録。
+			 */
 			void RegisterState() override;
 		};
 	}

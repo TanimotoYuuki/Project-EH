@@ -1,6 +1,11 @@
 #include "stdafx.h"
 #include "ICharacter.h"
 
+namespace
+{
+	const auto HP_0 = 0;
+}
+
 namespace nsApp
 {
 	namespace nsActor
@@ -18,6 +23,7 @@ namespace nsApp
 
 		void ICharacter::Render(RenderContext& rc)
 		{
+			/* キャラクターを描画する。*/
 			m_model.DrawCharacterModel(rc);
 		}
 
@@ -28,8 +34,8 @@ namespace nsApp
 			m_characterStatus.hp.currentHP -= damage;
 
 			/* HPが0以下になった場合は0にする。*/
-			if(m_characterStatus.hp.currentHP < 0)
-				m_characterStatus.hp.currentHP = 0;
+			if(m_characterStatus.hp.currentHP < HP_0)
+				m_characterStatus.hp.currentHP = HP_0;
 
 			/* 最大HPを参照する。*/
 			if(m_characterStatus.hp.currentHP > m_characterStatus.hp.maxHP)

@@ -7,12 +7,20 @@
 #include "Src/Actor/Character/Player/InputSystem/VirtualInputAdapter.h"
 #include "Src/Actor/Character/NPC/State/BasicState/NPCIdleState.h"
 
-#include "ResourceUtility.h"
+#include "Src/Utilty/ResourceUtility.h"
+#include "Src/Actor/Character/NPC/Component/NPCActionParameterTable.h"
+
+namespace
+{
+	const auto REFERENCE_VALUE_HP = 0;				//! HPの比較値。
+	const auto REFERENCE_VALUE_ATTACK_INTERVAL = 0; //! 攻撃インターバルの比較値。
+}
 
 namespace nsApp
 {
 	NPCBrain::~NPCBrain()
 	{
+		/* NPCステートマシーンを削除する。*/
 		delete m_npcStateMachine;
 		m_npcStateMachine = nullptr;
 	}
@@ -20,7 +28,12 @@ namespace nsApp
 
 	void NPCBrain::Init(nsActor::Player* outer)
 	{
+		/* 仮想入力アダプタの生成。*/
 		m_outer = outer;
+
+		/* TSV導入前と同じ救助探索範囲に戻す。*/
+		m_helpSearchRange = 800.0f;
+
 		/* NPC用のステートマシーンの生成。*/
 		m_npcStateMachine = new nsState::StateMachine<NPCBrain>(this);
 
@@ -65,7 +78,7 @@ namespace nsApp
 			return nullptr;
 
 		/* BossのHPが0になった場合。*/
-		if(m_bossTarget->GetCharacterStatus().hp.currentHP <= 0)
+		if(m_bossTarget->GetCharacterStatus().hp.currentHP <= REFERENCE_VALUE_HP)
 			return nullptr;
 
 		return m_bossTarget;
@@ -75,25 +88,28 @@ namespace nsApp
 	void NPCBrain::UpdateAttackInterval()
 	{
 		/* 攻撃インターバルが0以下の場合は何もしない。*/
-		if (m_attackIntervalTimer <= 0)
+		if (m_attackIntervalTimer <= REFERENCE_VALUE_ATTACK_INTERVAL)
 			return;
 
 		/* 攻撃インターバルを減算。*/
 		m_attackIntervalTimer--;
 
 		/* 攻撃インターバルが0以下になった場合は0に補正。*/
-		if(m_attackIntervalTimer < 0)
-			m_attackIntervalTimer = 0;
+		if(m_attackIntervalTimer < REFERENCE_VALUE_ATTACK_INTERVAL)
+			m_attackIntervalTimer = REFERENCE_VALUE_ATTACK_INTERVAL;
 	}
 
 
 	nsActor::Player* NPCBrain::SearchHelpTarget() const
 	{
+		/* 早期リターン。*/
 		if (m_outer == nullptr)
 			return nullptr;
 
+		/* 目標を探索する。*/
 		auto* target = nsActor::ResourceUtility::SearchNearestDownCharacter(m_outer, m_helpSearchRange);
 
+		/* 救助対象が有効かどうかをチェック。*/
 		return target;
 	}
 }

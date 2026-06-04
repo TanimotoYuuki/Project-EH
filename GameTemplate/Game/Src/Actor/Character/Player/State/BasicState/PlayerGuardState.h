@@ -9,19 +9,21 @@ namespace nsApp
 		class PlayerGuardState : public IState<nsActor::Actor>
 		{
 		public:
+			/* コンストラクタとデストラクタ。*/
 			PlayerGuardState() = default;
 			~PlayerGuardState() = default;
 
 
 		public:
+			/* ライフサイクル。*/
 			void Enter() override;
 			void Update() override;
-			void Exit() override;
-			bool RequestID(uint8_t& id)override;
+			void Exit() override {};
+			bool RequestID(uint8_t& id)override { return false; };
 
 
 		private:
-			nsActor::Player* m_player = nullptr;
+			nsActor::Player* m_player = nullptr; //! プレイヤーへのポインタ。
 		};
 	}
 }

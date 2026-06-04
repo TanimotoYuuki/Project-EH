@@ -1,28 +1,33 @@
 #pragma once
 /**
  * @file   MagicParameter.h
- * @brief  魔法のパラメータを管理するクラス。
- * @author Yamaguchi Hayato。
- * @date   2026/05/12
+ * @brief  魔法のパラメータ構造体定義
+ * @author Yamaguchi Hayato
+ * @date   2026/06/03: 最終更新日。
  */
+
+
+#include <string>
 
 namespace nsApp
 {
 	/**
 	 * @struct MagicParameter
-	 * @brief  魔法のパラメータをまとめた構造体。
-	 * @detail 魔法の種類ごとにパラメーターが異なるため構造体を用いて管理する。
+	 * @brief 魔法のパラメータ構造体
 	 */
 	struct MagicParameter
 	{
-		float speedPerSecond = 0.0f;				//! 射出速度。
-		float lifeTime = 0.0f;						//! 生成時間。
+		float speedPerSecond = 0.0f;				//! 1秒あたりの移動距離。
+		float lifeTime = 0.0f;						//! 存在時間。
 		float damage = 0.0f;						//! ダメージ量。
-		float radius = 0.0f;						//! 半径。
-		float spawnOffsetY = 0.0f;					//! 生成時のY軸オフセット。
-		float forwardOffset = 0.0f;					//! 射出方向へのオフセット。
-		Vector3 scale = Vector3::One;		        //! 大きさ。
-		Quaternion angle = Quaternion::Identity;    //! 角度。
-		std::string modelPath;						//! モデル名。
+		float healAmount = 0.0f;					//! 回復量。
+		float radius = 0.0f;						//! 当たり判定の半径。
+		float coolTime = 0.0f;						//! クールタイム。
+		float spawnOffsetY = 0.0f;					//! 魔法の生成位置のY軸方向のオフセット。
+		float forwardOffset = 0.0f;					//! 魔法の生成位置の前方方向のオフセット。
+		Vector3 scale = Vector3::One;				//! 魔法のスケール。
+		Quaternion angle = Quaternion::Identity;	//! 魔法の回転角。
+		std::string modelPath;						//! 魔法のモデルパス。
+		std::string effectName;						//! 魔法のエフェクト名。
 	};
 }

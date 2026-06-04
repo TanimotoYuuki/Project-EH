@@ -74,7 +74,6 @@ namespace nsApp
 
 
 	private:
-		int m_requiredTime = 0;		   //! 救助に必要な時間
 		int m_downCount = 0;		   //! ダウンした回数
 
 		float m_multiplier = 0.0f;	   //! ダウン回数に応じた時間の倍率

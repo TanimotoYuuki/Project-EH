@@ -56,7 +56,10 @@ namespace nsApp
 
 		/* セッター。*/
 		public:
-			/* ジャンプの初速を設定。*/
+			/**
+			 * @brief ジャンプ中の移動速度を設定する。
+			 * @param velocity 移動速度。
+			 */
 			inline void SetJumpVelocity(float velocity) 
 			{
 				m_jumpVelocity = velocity; 

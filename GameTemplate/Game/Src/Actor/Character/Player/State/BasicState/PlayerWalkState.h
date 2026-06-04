@@ -36,7 +36,10 @@ namespace nsApp
 
 		/* セッター。*/
 		public:
-			/* 歩行速度をセット。*/
+			/**
+			 * @brief 歩行速度を設定する処理。
+			 * @param speed 歩行速度。
+			 */
 			inline void SetWalkSpeed(float speed)
 			{
 				m_walkSpeed = speed;
@@ -44,15 +47,15 @@ namespace nsApp
 
 
 		private:
-			nsActor::Player* m_player = nullptr;       /* プレイヤーのポインタ。*/
+			nsActor::Player* m_player = nullptr;       //! プレイヤーのポインタ。
 
 
 		private:
-			float m_walkSpeed = 0.0f;                  /* 歩行速度。*/
+			float m_walkSpeed = 0.0f;                  //! 歩行速度。
 
-			Vector3 m_moveVector = Vector3::Zero;      /* 歩行する際の移動ベクトル。*/
-			Vector3 m_currentPosition = Vector3::Zero; /* 現在の位置。*/
-			Vector3 m_moveDirection = Vector3::Zero;   /* 移動方向。*/
+			Vector3 m_moveVector = Vector3::Zero;      //! 歩行する際の移動ベクトル。
+			Vector3 m_currentPosition = Vector3::Zero; //! 現在の位置。
+			Vector3 m_moveDirection = Vector3::Zero;   //! 移動方向。
 		};
 	}
 }

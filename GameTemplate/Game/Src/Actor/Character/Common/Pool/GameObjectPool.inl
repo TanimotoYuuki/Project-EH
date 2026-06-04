@@ -1,5 +1,16 @@
 #pragma once
 #include "GameObjectPool.h"
+/**
+ * @file GameObjectPool.inl
+ * @brief GameObjectPoolクラスのインライン関数定義。
+ * @author Yamaguchi Hayato
+ * @date 2026/05/29
+ */
+
+namespace
+{
+	const auto LOOP_INIT_VALUE = 0; //! ループの初期値
+}
 
 namespace nsApp
 {
@@ -10,11 +21,12 @@ namespace nsApp
         m_objects.reserve(poolSize);
 
         /* プールのサイズ分、オブジェクトを生成する。*/
-        for (int i = 0; i < poolSize; ++i)
+        for (int i = LOOP_INIT_VALUE; i < poolSize; ++i)
         {
             /* プール対象のオブジェクトを生成する。*/
             PoolObject* object = NewGO<PoolObject>(0);
 
+			/* オブジェクトが存在しない場合は次へ。*/
             if (object == nullptr)
                 continue;
 
@@ -30,6 +42,7 @@ namespace nsApp
     template<class PoolObject>
     PoolObject* GameObjectPool<PoolObject>::Spawn()
     {
+		/* プール内のオブジェクトを順番に確認する。*/
         for (auto* object : m_objects)
         {
             /* オブジェクトが存在しない場合は次へ。*/
@@ -39,6 +52,7 @@ namespace nsApp
             /* 未使用のオブジェクトを取得する。*/
             if (!object->IsActive())
             {
+				/* オブジェクトを使用状態にする。*/
                 object->OnAcquire();
                 return object;
             }

@@ -27,7 +27,7 @@ namespace nsApp
 
 
 		private:
-			/* 
+			/** 
 			 * @broef チャージ弾を発射させる。
 			 */
 			void FireChargeBullet();

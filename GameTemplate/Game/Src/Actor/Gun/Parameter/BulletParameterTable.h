@@ -8,12 +8,22 @@
 
 #include "Src/Actor/Gun/Register/BulletModelRegister.h"
 #include "Src/Actor/Gun/Parameter/BulletParameter.h"
+#include <unordered_map>
+
 
 namespace nsApp
 {
+	class TSVTable;
 	class BulletParameterTable
 	{
 	public:
+		/**
+		 * @brief TSVファイルから弾丸のパラメータを読み込む。
+		 * @param filePath 読み込むTSVファイルのパス。
+		 * @return 読み込みに成功した場合はtrue。
+		 */
+		static bool LoadTSVFile(const char* filePath);
+
 		/**
 		 * @brief 弾丸の種類に応じたパラメータを取得する。
 		 * @param kindBullet 弾丸の種類。
@@ -33,6 +43,25 @@ namespace nsApp
 
 
 	private:
-		static const std::unordered_map<BulletType, BulletParameter> m_bulletParameterTable; //! 弾の種類と性能データの対応表。
+		/**
+		 * @brief TSVの文字列から弾丸の種類に変換する。
+		 * @param typeName TSV上の弾丸名。
+		 * @return 弾丸の種類。
+		 */
+		static BulletType ConvertBulletType(const std::string& typeName);
+
+		/**
+		 * @brief TSVの1行から弾丸パラメータを作成する。
+		 * @param table TSVテーブル。
+		 * @param rowIndex 行番号。
+		 * @param bulletType 弾丸の種類。
+		 * @return 弾丸パラメータ。
+		 */
+		static BulletParameter CreateParameterFromRow(const TSVTable& table, int rowIndex, BulletType bulletType);
+
+
+	private:
+		static std::unordered_map<BulletType, BulletParameter> m_bulletParameterTable;
+
 	};
 }
