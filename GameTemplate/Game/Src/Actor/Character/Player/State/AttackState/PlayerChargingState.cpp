@@ -11,10 +11,14 @@
 
 namespace
 {
-	const auto EFFECT_SCALE = Vector3::One * 5.0f; //! エフェクトの大きさ。
-	const auto EFFECT_POSITION = 50.0f;            //! エフェクトの位置。
-	const auto FIRE_EFFECT_ANGLE = 22.5f;          //! 炎エフェクトの角度。
-	constexpr int kRequiredChargeFrame = 30;
+	const auto EFFECT_SCALE = Vector3::One * 5.0f;  //! エフェクトの大きさ。
+	const auto EFFECT_POSITION = 50.0f;             //! エフェクトの位置。
+	const auto FIRE_EFFECT_ANGLE = 22.5f;           //! 炎エフェクトの角度。
+	const auto FIRE_EFFECT_SCALE_BASE = 1.25f;      //! 炎エフェクトの基本の大きさ。
+	const auto FIRE_EFFECT_SCALE_MULTIPLIER = 2.5f; //! 炎エフェクトの大きさの倍率。
+	const auto CHARGE_TIMER = 10;                   //! チャージエフェクトを生成するためのフレーム数。
+
+	constexpr int kRequiredChargeFrame = 30;	    //! チャージ攻撃が発動するために必要なフレーム数。
 
 }
 
@@ -93,18 +97,21 @@ namespace nsApp
 
 		void PlayerChargingState::Exit()
 		{
+			/* エフェクトを停止する。*/
 			if (m_chargeEffect != nullptr)
 			{
 				m_chargeEffect->Stop();
 				m_chargeEffect = nullptr;
 			}
 
+			/* ハンマーの炎エフェクトを停止する。*/
 			if (m_hammerEffect != nullptr)
 			{
 				m_hammerEffect->Stop();
 				m_hammerEffect = nullptr;
 			}
 
+			/* 武器のSEを停止する。*/
 			if (m_player)
 				m_player->StopWeaponSE();
 		}
@@ -130,7 +137,7 @@ namespace nsApp
 
 		void PlayerChargingState::CreateFireEffect()
 		{
-			if (m_chargingTimer == 10)
+			if (m_chargingTimer == CHARGE_TIMER)
 			{
 				if(m_player->GetCurrentWeapon() == WeaponType::Hammer)
 					m_hammerEffect = m_player->GetEffectList().PlayEffect(nsEffect::Fire, HIT_DETECTION.GetPosition());
@@ -144,7 +151,7 @@ namespace nsApp
 			m_weaponPosition = HIT_DETECTION.GetPosition();
 
 			/* チャージレベルにあわせてエフェクトを大きくする。*/
-			m_fireEffectScale = 1.25f + (m_currentEffectLevel * 2.5f);
+			m_fireEffectScale = FIRE_EFFECT_SCALE_BASE + (m_currentEffectLevel * FIRE_EFFECT_SCALE_MULTIPLIER);
 			m_hammerEffect->SetScale(Vector3::One * m_fireEffectScale);
 
 			/* 角度を設定。*/

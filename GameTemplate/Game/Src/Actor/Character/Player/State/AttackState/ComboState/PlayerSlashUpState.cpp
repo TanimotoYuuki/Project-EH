@@ -6,7 +6,9 @@
 
 namespace
 {
-	const auto MOVE_FRAME_TIME = 1.0f / 60.0f; /* 1フレームあたりの固定時間。*/
+	const auto MOVE_FRAME_TIME = 1.0f / 60.0f; //! 1フレームあたりの固定時間。
+	const auto ATTACK_TIMER_10 = 10;		   //! 攻撃タイマーの10フレーム目。
+	const auto ATTACK_TIMER_5 = 5;		       //! 攻撃タイマーの5フレーム目。
 }
 
 namespace nsApp
@@ -16,7 +18,7 @@ namespace nsApp
 		void PlayerSlashUpState::PlayAttackAnimation()
 		{
 			/* 攻撃の種類を設定。*/
-			m_currentAttackType = AttackType::SlashUp;
+			SetCurrentAttackType(AttackType::SlashUp);
 
 			/* 攻撃アニメーションを再生する。*/
 			m_player->PlayWeaponAnimation(AttackType::SlashUp);
@@ -37,7 +39,7 @@ namespace nsApp
 		bool PlayerSlashUpState::OnUpdateAttack()
 		{
 			/* 杖のエフェクト。*/
-			if (m_player->GetCurrentWeapon() == WeaponType::Wand && m_attackTimer == 10 && !m_isSummoned)
+			if (m_player->GetCurrentWeapon() == WeaponType::Wand && m_attackTimer == ATTACK_TIMER_10 && !m_isSummoned)
 			{
 				/* Playerクラスの座標を取得。*/
 				m_effectPosition = m_player->GetPosition();
@@ -48,9 +50,9 @@ namespace nsApp
 			}
 
 			/* 上昇/重力処理。*/
-			m_jumpVelocity -= 30.0f;
-			if (m_jumpVelocity < -1200.0f)
-				m_jumpVelocity = -1200.0f;
+			m_jumpVelocity -= m_player->GetGravity();
+			if (m_jumpVelocity < m_player->GetMaxFallVelocity())
+				m_jumpVelocity = m_player->GetMaxFallVelocity();
 
 			/* 移動速度を設定。*/
 			m_moveSpeed = Vector3(0.0f, m_jumpVelocity, 0.0f);
@@ -59,7 +61,7 @@ namespace nsApp
 			m_jumpVelocity = m_moveSpeed.y;
 
 			/* アニメーション終了後にジャンプステートへ遷移。*/
-			if (m_attackTimer > 5 && !m_player->IsPlayAnimation())
+			if (m_attackTimer > ATTACK_TIMER_5 && !m_player->IsPlayAnimation())
 			{
 				TransitionJumpState();
 				return true;

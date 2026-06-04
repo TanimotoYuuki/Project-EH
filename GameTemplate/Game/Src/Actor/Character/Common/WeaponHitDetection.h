@@ -3,7 +3,7 @@
 * @file   WeaponHitDetection.h
 * @brief  武器の当たり判定を管理するクラス。
 * @author Yamaguchi Hayato
-* @date   2026/03/20
+* @date   2026/05/29
 */
 
 #include "Src/Actor/Character/Common/ICharacter.h"
@@ -20,32 +20,41 @@ namespace nsApp
 
 	public:
 		/** 
-		* 当たり判定の初期化処理。
-		* @param radius 武器の当たり判定の半径。
-		**/
+		 * @brief当たり判定の初期化処理。
+		 * @param radius 武器の当たり判定の半径。
+		 **/
 		void Init(float radius);
 
 		/**
-		* 当たり判定の更新処理。
-		* @param weaponPosition 武器の現在の座標。
-		*/
-		void Update(const Vector3& weaponPosition);
+		 * @brief当たり判定の更新処理。
+		 * @param weaponPosition 武器の現在の座標。
+		 */
+		inline void Update(const Vector3& weaponPosition)
+		{
+			/* 座標を保持する。*/
+			m_position = weaponPosition;
+		}
 
 		/**
-		* 描画処理。
-		*/
+		 * @brief描画処理。
+		 * @param rc レンダリングコンテキスト。
+		 */
 		void Render(RenderContext& rc);
 
 
 	public:
-		/* 当たり判定をオン。*/
-		void Enable()
+		/**
+		 * @brief 当たり判定をオン。
+		 */
+		inline void Enable()
 		{
 			m_isActive = true;
 		}
 
-		/* 当たり判定をオフ。*/
-		void Disable()
+		/**
+		 * @brief 当たり判定をオフ。
+		 */
+		inline void Disable()
 		{
 			m_isActive = false;
 			m_hitTargets.clear();
@@ -54,7 +63,10 @@ namespace nsApp
 
 	/* セッター。*/
 	public:
-		/* 当たり判定を設定。*/
+		/**
+		 * @brief 当たり判定の半径を設定。
+		 * @param radius 当たり判定の半径。
+		 */
 		inline void SetRadius(float radius)
 		{
 			m_radius = radius;
@@ -63,10 +75,17 @@ namespace nsApp
 
 	/* ゲッター。*/
 	public:
-		/* 当たっているかを検知。*/
+        /**
+		 * @brief 指定したターゲットが当たり判定にヒットしているかどうかを判定。
+		 * @param target 判定対象のキャラクター。
+		 * @return ターゲットが当たり判定にヒットしている場合はtrue、そうでない場合はfalse。
+         */
         bool IsHit(nsActor::ICharacter* target);
 
-		/* 当たり判定の座標を取得。*/
+		/**
+		 * @brief 当たり判定の中心座標を取得。
+		 * @return 当たり判定の中心座標。
+		 */
 		inline const Vector3& GetPosition()
 		{
 			return m_position;

@@ -17,6 +17,7 @@ namespace nsApp
 		class IWeaponCharacter : public Player
 		{
 		public:
+			/* コンストラクタとデストラクタ。*/
 			IWeaponCharacter() = default;
 			virtual ~IWeaponCharacter() = default;
 
@@ -38,14 +39,14 @@ namespace nsApp
 		/* ゲッター。*/
 		public:
 			/* 武器の当たり判定を取得。*/
-			WeaponHitDetection& GetWeaponHitDetection()
+			inline WeaponHitDetection& GetWeaponHitDetection()
 			{
 				return m_weaponHitDetection;
 			}
 
 
 		protected:	
-			int m_animationIndex = 0;                      //! 再生するアニメーションのインデックス
+			int m_animationIndex = 0; //! 再生するアニメーションのインデックス
 		};
 	}
 }

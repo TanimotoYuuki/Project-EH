@@ -16,6 +16,7 @@ namespace nsApp
 
 		for (auto it = m_buttonHoldFrames.begin(); it != m_buttonHoldFrames.end();)
 		{
+			/* ボタンの保持フレーム数が0より大きい場合は、保持フレーム数をデクリメントし、現在の入力状態をtrueに設定。*/
 			if (it->second > 0)
 			{
 				it->second--;

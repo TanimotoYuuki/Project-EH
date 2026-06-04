@@ -21,13 +21,15 @@ namespace nsApp
 			/* 武器の種類によってアニメーションを変化させる。*/
 			if (m_player->GetCurrentWeapon() == WeaponType::Hammer)
 			{
-				m_currentAttackType = AttackType::HeavyAttack;
+				/* 攻撃の種類を設定する。*/
+				SetCurrentAttackType(AttackType::HeavyAttack);
 				m_player->PlayWeaponAnimation(AttackType::ChargeAttack);
 			}
 
 			else
 			{
-				m_currentAttackType = AttackType::ChargeAttack;
+				/* 攻撃の種類を設定する。*/
+				SetCurrentAttackType(AttackType::ChargeAttack);
 				m_player->PlayWeaponAnimation(AttackType::ChargeAttack);
 			}
 		}

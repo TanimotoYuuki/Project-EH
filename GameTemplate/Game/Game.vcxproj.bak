@@ -1,0 +1,506 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Preview|Win32">
+      <Configuration>Preview</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Preview|x64">
+      <Configuration>Preview</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>16.0</VCProjectVersion>
+    <ProjectGuid>{282445E9-421F-46C0-9165-6C90D7C7EFC4}</ProjectGuid>
+    <RootNamespace>Game</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Preview|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Preview|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Preview|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Preview|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(ProjectDir);$(ProjectDir)../k2Engine/;$(ProjectDir)../k2EngineLow/;$(ProjectDir)../k2EngineLow/ExEngine/;$(ProjectDir)../k2EngineLow/ExEngine/bulletPhysics/src;$(ProjectDir)../k2EngineLow/ExEngine/effekseer/install_msvc2019/include/Effekseer;$(ProjectDir)../k2EngineLow/ExEngine/effekseer/install_msvc2019/include/EffekseerRendererDX12;$(ProjectDir)..\k2EngineLow\ExEngine\Photon;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)../exlib/$(Platform)\$(Configuration)\;$(ProjectDir)..\k2EngineLow\ExEngine\DirectXTK\Bin\Desktop_2019_Win10\$(Platform)\$(Configuration)\;$(ProjectDir)..\k2EngineLow\ExEngine\effekseer/install_msvc2019/lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Preview|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(ProjectDir);$(ProjectDir)../k2Engine/;$(ProjectDir)../k2EngineLow/;$(ProjectDir)../k2EngineLow/ExEngine/;$(ProjectDir)../k2EngineLow/ExEngine/bulletPhysics/src;$(ProjectDir)../k2EngineLow/ExEngine/effekseer/install_msvc2019/include/Effekseer;$(ProjectDir)../k2EngineLow/ExEngine/effekseer/install_msvc2019/include/EffekseerRendererDX12;$(ProjectDir)..\k2EngineLow\ExEngine\Photon;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)../exlib/$(Platform)\$(Configuration)\;$(ProjectDir)..\k2EngineLow\ExEngine\DirectXTK\Bin\Desktop_2019_Win10\$(Platform)\$(Configuration)\;$(ProjectDir)..\k2EngineLow\ExEngine\effekseer/install_msvc2019/lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Preview|x64'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(ProjectDir);$(ProjectDir)../k2Engine/;$(ProjectDir)../k2EngineLow/;$(ProjectDir)../k2EngineLow/ExEngine/;$(ProjectDir)../k2EngineLow/ExEngine/bulletPhysics/src;$(ProjectDir)../k2EngineLow/ExEngine/effekseer/install_msvc2019/include/Effekseer;$(ProjectDir)../k2EngineLow/ExEngine/effekseer/install_msvc2019/include/EffekseerRendererDX12;$(ProjectDir)..\k2EngineLow\ExEngine\Photon;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)../exlib/$(Platform)\$(Configuration)\;$(ProjectDir)..\k2EngineLow\ExEngine\DirectXTK\Bin\Desktop_2019_Win10\$(Platform)\$(Configuration)\;$(ProjectDir)..\k2EngineLow\ExEngine\effekseer/install_msvc2019/lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>K2_DEBUG;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderOutputFile>$(Platform)\$(Configuration)\$(TargetName).pch</PrecompiledHeaderOutputFile>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;k2Engine.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/ignore:4006 %(AdditionalOptions)</AdditionalOptions>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Preview|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderOutputFile>$(Platform)\$(Configuration)\$(TargetName).pch</PrecompiledHeaderOutputFile>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;k2Engine.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Preview|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>K2_DEBUG;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderOutputFile>$(Platform)\$(Configuration)\$(TargetName).pch</PrecompiledHeaderOutputFile>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;k2Engine.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="Src\UI\Loading\LoadingProgressUI.cpp" />
+    <ClCompile Include="Src\AsyncLoad\ParameterAsyncLoadTask.cpp" />
+    <ClCompile Include="Src\AsyncLoad\AsyncLoadManager.cpp" />
+    <ClCompile Include="Src\AsyncLoad\AsyncLoadTaskBase.cpp" />
+    <ClCompile Include="BiteAttackStrategy.cpp" />
+    <ClCompile Include="Boss.cpp" />
+    <ClCompile Include="BossAnimation.cpp" />
+    <ClCompile Include="BossAttackState.cpp" />
+    <ClCompile Include="BossDamageState.cpp" />
+    <ClCompile Include="BossDethState.cpp" />
+    <ClCompile Include="BossIdleState.cpp" />
+    <ClCompile Include="BossMoveState.cpp" />
+    <ClCompile Include="BossRoarState.cpp" />
+    <ClCompile Include="Src\Actor\Character\NPC\Component\NPCActionParameterTable.cpp" />
+    <ClCompile Include="Src\Actor\Character\NPC\Component\NPCCombatHelper.cpp" />
+    <ClCompile Include="Src\Actor\Character\NPC\Component\RescueStatusLister.cpp" />
+    <ClCompile Include="Src\Actor\Character\NPC\Component\RescueTimeTable.cpp" />
+    <ClCompile Include="Src\Actor\Character\NPC\NPCBrain.cpp" />
+    <ClCompile Include="Src\Actor\Character\NPC\State\BasicState\NPCChaseState.cpp" />
+    <ClCompile Include="Src\Actor\Character\Status\NPCStatusParameterTable.cpp" />
+    <ClCompile Include="Src\Parameter\PlayerStatusParameterTable.cpp" />
+    <ClCompile Include="Src\Parameter\ParameterSystem.cpp" />
+    <ClCompile Include="Src\Actor\Character\Status\AttackParameterTable.cpp" />
+    <ClCompile Include="Src\UI\Commentary\CommentaryUIManager.cpp" />
+    <ClCompile Include="Src\UI\Commentary\CommentaryUI.cpp" />
+    <ClCompile Include="Src\UI\ReboneGage\ReboneGageManager.cpp" />
+    <ClCompile Include="Src\UI\ReboneGage\ReboneGaugeUI.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\Component\RescueStatusManager.cpp" />
+    <ClCompile Include="Src\Utilty\ResourceUtility.cpp" />
+    <ClCompile Include="Src\Actor\Character\NPC\State\BasicState\NPCHelpState.cpp" />
+    <ClCompile Include="Src\Actor\Heel\HeelArea.cpp" />
+    <ClCompile Include="Src\Actor\Character\Common\Damage\DamageIndicatorPool.cpp" />
+    <ClCompile Include="Src\Actor\Character\Common\Damage\DamageProcessor.cpp" />
+    <ClCompile Include="FireAttackStrategy.cpp" />
+    <ClCompile Include="Game2.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\InputSystem\PlayerControlerHub.cpp" />
+    <ClCompile Include="Src\Actor\Character\NPC\State\AttackState\NPCTwinGunAttackState.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\InputSystem\VirtualInputAdapter.cpp" />
+    <ClCompile Include="Src\Actor\Magic\Factory\MagicFactory.cpp" />
+    <ClCompile Include="Src\Actor\Magic\Parameter\MagicParameterTable.cpp" />
+    <ClCompile Include="Src\Actor\Character\NPC\State\AttackState\NPCAttackBaseState.cpp" />
+    <ClCompile Include="Src\Actor\Gun\Bullet\IGunBullet.cpp" />
+    <ClCompile Include="Src\Effect\EffectListener.cpp" />
+    <ClCompile Include="Src\Actor\Gun\Factory\BulletFactory.cpp" />
+    <ClCompile Include="CharacterHP.cpp" />
+    <ClCompile Include="Src\Select\ConfirmationSelect.cpp" />
+    <ClCompile Include="Src\Direction\GameClearDirection.cpp" />
+    <ClCompile Include="Src\Select\GameEndSelect.cpp" />
+    <ClCompile Include="Src\Direction\GameOverDirection.cpp" />
+    <ClCompile Include="Src\Direction\GameStartDirection.cpp" />
+    <ClCompile Include="HowToPlay.cpp" />
+    <ClCompile Include="Option.cpp" />
+    <ClCompile Include="Src\Scene\InGame\Pause.cpp" />
+    <ClCompile Include="Src\Scene\ResultScene\Result.cpp" />
+    <ClCompile Include="Src\Actor\Character\NPC\NPCBrain.cpp" />
+    <ClCompile Include="Src\Actor\Character\NPC\State\AttackState\NPCHammerAttackState.cpp" />
+    <ClCompile Include="Src\Actor\Character\NPC\State\AttackState\NPCSwordAttackState.cpp" />
+    <ClCompile Include="Src\Actor\Character\NPC\State\AttackState\NPCWandAttackState.cpp" />
+    <ClCompile Include="Src\Actor\Character\NPC\State\BasicState\NPCIdleState.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\CharacterByWeapon\HammerCharacter.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\CharacterByWeapon\IWeaponCharacter.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\CharacterByWeapon\SwordCharacter.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\CharacterByWeapon\TwinGunCharacter.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\CharacterByWeapon\WandCharacter.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\Component\PlayerGenerator.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerHeavyAttackState.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerHeelMagicState.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerMagicAttackState.cpp" />
+    <ClCompile Include="Src\Actor\Gun\Register\BulletModelRegister.cpp" />
+    <ClCompile Include="Src\Actor\Gun\Parameter\BulletParameterTable.cpp" />
+    <ClCompile Include="Src\Actor\Gun\Shooter\GunShooter.cpp" />
+    <ClCompile Include="Src\Actor\Magic\MagicProjectotile.cpp" />
+    <ClCompile Include="Src\Scene\SelectScene\RoleSelect.cpp" />
+    <ClCompile Include="Src\Fade\Fade.cpp" />
+    <ClCompile Include="IBossAttackStrategy.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Src\Scene\SelectScene\MemberSelect.cpp" />
+    <ClCompile Include="Src\Scene\SelectScene\QuestSelect.cpp" />
+    <ClCompile Include="Src\Scene\SelectScene\Select.cpp" />
+    <ClCompile Include="Src\Actor\Character\Common\Damage\PresentDamageIndicator.cpp" />
+    <ClCompile Include="Src\Actor\Actor.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\State\AttackState\PlayerChargingState.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\State\BasicState\PlayerGetUpState.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\State\BasicState\PlayerGuardState.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\State\BasicState\PlayerReBoneState.cpp" />
+    <ClCompile Include="Src\Actor\Stage\BackGround.cpp" />
+    <ClCompile Include="Src\Camera\Camera.cpp" />
+    <ClCompile Include="Src\Actor\Character\Common\CharacterAnimation.cpp" />
+    <ClCompile Include="Src\Actor\Character\Common\CharacterModel.cpp" />
+    <ClCompile Include="Src\Actor\Character\Common\ICharacter.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\Component\ComboRouteTable.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\Player.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\PlayerInput.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerPushState.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerRushEndState.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerRushStartState.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerSlashUpState.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\State\AttackState\PlayerAirAttackState.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\State\AttackState\PlayerAttackBaseState.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\State\AttackState\PlayerChargeAttackState.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\State\AttackState\PlayerNormalAttackState.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\State\BasicState\PlayerDethState.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\State\BasicState\PlayerHitState.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\State\BasicState\PlayerIdleState.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\State\BasicState\PlayerJumpState.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\State\BasicState\PlayerRunState.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\State\BasicState\PlayerWalkState.cpp" />
+    <ClCompile Include="Src\Actor\Stage\LoadStageData.cpp" />
+    <ClCompile Include="Src\Actor\Stage\Stage.cpp" />
+    <ClCompile Include="Src\Effect\EffectList.cpp" />
+    <ClCompile Include="Src\SceneLoader\SceneLoader.cpp" />
+    <ClCompile Include="Src\Sound\BGMList.cpp" />
+    <ClCompile Include="Src\Sound\SEList.cpp" />
+    <ClCompile Include="Src\Sound\SoundLister.cpp" />
+    <ClCompile Include="Src\StateMachine\StateMachine.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Preview|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="system\system.cpp" />
+    <ClCompile Include="TailAttackStrategy.cpp" />
+    <ClCompile Include="GameTimeLimit.cpp" />
+    <ClCompile Include="Src\Direction\GameTimeUpDirection.cpp" />
+    <ClCompile Include="Src\Scene\TitleScene\Title.cpp" />
+    <ClCompile Include="Src\Actor\Character\Common\WeaponHitDetection.cpp" />
+    <ClCompile Include="Src\UIAnimation\UIAnimation.cpp" />
+    <ClCompile Include="Src\Scene\TitleScene\TitleBackGround.cpp" />
+    <ClCompile Include="Src\Scene\TitleScene\TitleSelect.cpp" />
+    <ClCompile Include="Src\Debug\Sandbag.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Src\UI\Loading\LoadingProgressUI.h" />
+    <ClInclude Include="Src\AsyncLoad\ParameterAsyncLoadTask.h" />
+    <ClInclude Include="Src\AsyncLoad\AsyncLoadManager.h" />
+    <ClInclude Include="Src\AsyncLoad\AsyncLoadTaskBase.h" />
+    <ClInclude Include="BiteAttackStrategy.h" />
+    <ClInclude Include="Boss.h" />
+    <ClInclude Include="BossAnimation.h" />
+    <ClInclude Include="BossAttackState.h" />
+    <ClInclude Include="BossDamageState.h" />
+    <ClInclude Include="BossDethState.h" />
+    <ClInclude Include="BossIdleState.h" />
+    <ClInclude Include="BossMoveState.h" />
+    <ClInclude Include="BossRoarState.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\Component\NPCActionParameterTable.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\Component\NPCCombatHelper.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\Component\RescueStatusLister.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\Component\RescueTimeTable.h" />
+    <ClInclude Include="Src\Actor\Character\Status\NPCStatusParameterTable.h" />
+    <ClInclude Include="Src\Parameter\PlayerStatusParameterTable.h" />
+    <ClInclude Include="Src\Parameter\ParameterSystem.h" />
+    <ClInclude Include="Src\UI\Commentary\CommentaryUIManager.h" />
+    <ClInclude Include="Src\UI\Commentary\CommentaryUI.h" />
+    <ClInclude Include="Src\UI\Commentary\CommentaryMessage.h" />
+    <ClInclude Include="Src\UI\ReboneGage\ReboneGageManager.h" />
+    <ClInclude Include="Src\UI\ReboneGage\ReboneGaugeUI.h" />
+    <ClInclude Include="Src\Actor\Character\Player\Component\RescueStatusManager.h" />
+    <ClInclude Include="Src\Utilty\ResourceUtility.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\State\BasicState\NPCHelpState.h" />
+    <ClInclude Include="Src\Actor\Heel\HeelArea.h" />
+    <ClInclude Include="Src\Actor\Character\Common\Damage\DamageIndicatorPool.h" />
+    <ClInclude Include="Src\Actor\Character\Common\Damage\DamageProcessor.h" />
+    <ClInclude Include="Src\Actor\Character\Common\Damage\DamageRequest.h" />
+    <ClInclude Include="FireAttackStrategy.h" />
+    <ClInclude Include="Game2.h" />
+    <ClInclude Include="Src\Actor\Character\Common\Pool\GameObjectPool.h" />
+    <ClInclude Include="Src\Actor\Character\Common\Pool\IPoolable.h" />
+    <ClInclude Include="Src\Actor\Character\Player\InputSystem\PlayerControlerHub.h" />
+    <ClInclude Include="Src\Actor\Character\Player\InputSystem\GamePadInputAdapter.h" />
+    <ClInclude Include="IBossAttackStrategy.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\State\AttackState\NPCTwinGunAttackState.h" />
+    <ClInclude Include="Src\Actor\Character\Player\InputSystem\IInputDevice.h" />
+    <ClInclude Include="Src\Actor\Character\Player\InputSystem\VirtualInputAdapter.h" />
+    <ClInclude Include="Src\Actor\Magic\Factory\MagicFactory.h" />
+    <ClInclude Include="Src\Actor\Magic\Parameter\MagicParameterTable.h" />
+    <ClInclude Include="Src\Actor\Magic\Parameter\MagicParameter.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\State\AttackState\NPCAttackBaseState.h" />
+    <ClInclude Include="Src\Effect\EffectListener.h" />
+    <ClInclude Include="Src\Actor\Gun\Shooter\BulletFireRequest.h" />
+    <ClInclude Include="Src\Actor\Gun\Shooter\IBulletFireListener.h" />
+    <ClInclude Include="Src\Actor\Gun\Parameter\BulletParameter.h" />
+    <ClInclude Include="Src\Actor\Gun\Factory\BulletFactory.h" />
+    <ClInclude Include="CharacterHP.h" />
+    <ClInclude Include="Src\Select\ConfirmationSelect.h" />
+    <ClInclude Include="Src\Direction\GameClearDirection.h" />
+    <ClInclude Include="Src\Select\GameEndSelect.h" />
+    <ClInclude Include="Src\Direction\GameOverDirection.h" />
+    <ClInclude Include="Src\Direction\GameStartDirection.h" />
+    <ClInclude Include="HowToPlay.h" />
+    <ClInclude Include="Option.h" />
+    <ClInclude Include="Src\Scene\InGame\Pause.h" />
+    <ClInclude Include="Src\Scene\ResultScene\Result.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\NPCBrain.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\State\AttackState\NPCHammerAttackState.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\State\AttackState\NPCSwordAttackState.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\State\AttackState\NPCWandAttackState.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\State\BasicState\NPCChaseState.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\State\BasicState\NPCIdleState.h" />
+    <ClInclude Include="Src\Actor\Character\Player\CharacterByWeapon\HammerCharacter.h" />
+    <ClInclude Include="Src\Actor\Character\Player\CharacterByWeapon\IWeaponCharacter.h" />
+    <ClInclude Include="Src\Actor\Character\Player\CharacterByWeapon\SwordCharacter.h" />
+    <ClInclude Include="Src\Actor\Character\Player\CharacterByWeapon\TwinGunCharacter.h" />
+    <ClInclude Include="Src\Actor\Character\Player\CharacterByWeapon\WandCharacter.h" />
+    <ClInclude Include="Src\Actor\Character\Player\Component\PlayerGenerator.h" />
+    <ClInclude Include="Src\Actor\Character\Player\Component\PlayerSpawnData.h" />
+    <ClInclude Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerHeavyAttackState.h" />
+    <ClInclude Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerHeelMagicState.h" />
+    <ClInclude Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerMagicAttackState.h" />
+    <ClInclude Include="Src\Actor\Gun\Register\BulletModelRegister.h" />
+    <ClInclude Include="Src\Actor\Gun\Bullet\IGunBullet.h" />
+    <ClInclude Include="Src\Actor\Gun\Parameter\BulletParameterTable.h" />
+    <ClInclude Include="Src\Actor\Magic\MagicProjectotile.h" />
+    <ClInclude Include="Src\Scene\SelectScene\RoleSelect.h" />
+    <ClInclude Include="Src\Fade\Fade.h" />
+    <ClInclude Include="Game.h" />
+    <ClInclude Include="Src\Scene\SelectScene\MemberSelect.h" />
+    <ClInclude Include="Src\Scene\SelectScene\QuestSelect.h" />
+    <ClInclude Include="Src\Scene\SelectScene\Select.h" />
+    <ClInclude Include="Src\Actor\Character\Common\Damage\PresentDamageIndicator.h" />
+    <ClInclude Include="Src\Actor\Actor.h" />
+    <ClInclude Include="Src\Actor\Character\Player\State\AttackState\PlayerChargingState.h" />
+    <ClInclude Include="Src\Actor\Character\Player\State\BasicState\PlayerGetUpState.h" />
+    <ClInclude Include="Src\Actor\Character\Player\State\BasicState\PlayerGuardState.h" />
+    <ClInclude Include="Src\Actor\Character\Player\State\BasicState\PlayerReBoneState.h" />
+    <ClInclude Include="Src\Actor\Character\Status\AttackParameterTable.h" />
+    <ClInclude Include="Src\Actor\Stage\BackGround.h" />
+    <ClInclude Include="Src\Camera\Camera.h" />
+    <ClInclude Include="Src\Actor\Character\Common\CharacterAnimation.h" />
+    <ClInclude Include="Src\Actor\Character\Common\CharacterModel.h" />
+    <ClInclude Include="Src\Actor\Character\Common\ICharacter.h" />
+    <ClInclude Include="Src\Actor\Character\Common\IState.h" />
+    <ClInclude Include="Src\Actor\Character\Player\Component\ComboRouteTable.h" />
+    <ClInclude Include="Src\Actor\Character\Player\Component\StateTransitionDiagram.h" />
+    <ClInclude Include="Src\Actor\Character\Player\Player.h" />
+    <ClInclude Include="Src\Actor\Character\Player\PlayerInput.h" />
+    <ClInclude Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerPushState.h" />
+    <ClInclude Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerRushEndState.h" />
+    <ClInclude Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerRushStartState.h" />
+    <ClInclude Include="Src\Actor\Character\Player\State\AttackState\ComboState\PlayerSlashUpState.h" />
+    <ClInclude Include="Src\Actor\Character\Player\State\AttackState\PlayerAirAttackState.h" />
+    <ClInclude Include="Src\Actor\Character\Player\State\AttackState\PlayerAttackBaseState.h" />
+    <ClInclude Include="Src\Actor\Character\Player\State\AttackState\PlayerChargeAttackState.h" />
+    <ClInclude Include="Src\Actor\Character\Player\State\AttackState\PlayerNormalAttackState.h" />
+    <ClInclude Include="Src\Actor\Character\Player\State\BasicState\PlayerDethState.h" />
+    <ClInclude Include="Src\Actor\Character\Player\State\BasicState\PlayerHitState.h" />
+    <ClInclude Include="Src\Actor\Character\Player\State\BasicState\PlayerIdleState.h" />
+    <ClInclude Include="Src\Actor\Character\Player\State\BasicState\PlayerJumpState.h" />
+    <ClInclude Include="Src\Actor\Character\Player\State\BasicState\PlayerRunState.h" />
+    <ClInclude Include="Src\Actor\Character\Player\State\BasicState\PlayerWalkState.h" />
+    <ClInclude Include="Src\Actor\Stage\LoadStageData.h" />
+    <ClInclude Include="Src\Actor\Stage\Stage.h" />
+    <ClInclude Include="Src\Actor\Stage\StageData.h" />
+    <ClInclude Include="Src\Effect\EffectList.h" />
+    <ClInclude Include="Src\SceneLoader\SceneLoader.h" />
+    <ClInclude Include="Src\Sound\BGMList.h" />
+    <ClInclude Include="Src\Sound\SEList.h" />
+    <ClInclude Include="Src\Sound\SoundLister.h" />
+    <ClInclude Include="Src\StateMachine\NullState.h" />
+    <ClInclude Include="Src\StateMachine\StateMachine.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="system\system.h" />
+    <ClInclude Include="TailAttackStrategy.h" />
+    <ClInclude Include="GameTimeLimit.h" />
+    <ClInclude Include="Src\Direction\GameTimeUpDirection.h" />
+    <ClInclude Include="Src\Scene\TitleScene\Title.h" />
+    <ClInclude Include="Src\UIAnimation\UIAnimation.h" />
+    <ClInclude Include="Src\Actor\Character\Common\WeaponHitDetection.h" />
+    <ClInclude Include="Src\Utilty\TSVTable.h" />
+    <ClInclude Include="Src\Utilty\TSVTableLoder.h" />
+    <ClInclude Include="Src\Scene\TitleScene\TitleBackGround.h" />
+    <ClInclude Include="Src\Scene\TitleScene\TitleSelect.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Src\Actor\Character\Common\Pool\GameObjectPool.inl" />
+    <None Include="Src\Utilty\TSVTableLoder.inl" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

@@ -16,10 +16,8 @@
 
 namespace
 {
-	const int CRITICAL_PERCENTAGE = 100;
+	const int CRITICAL_PERCENTAGE = 100;		//! クリティカル率の計算に使用する定数。
 	const auto ATTACK_END_FRAME = 5;			//! 攻撃終了フレーム。
-	const auto RUSH_COMBO_THRESHOLD = 2;		//! 連続攻撃の閾値。
-	const auto HIT_STOP_FRAME = 8;              //! ヒットストップのフレーム数。
 	const auto DAMAGE_TEXT_OFFSET_Y = 120.0f;   //! ダメージテキストのY軸オフセット。
 
 	/**
@@ -42,7 +40,6 @@ namespace
 		/* 補正値を返す。*/
 		return value;
 	}
-
 }
 
 namespace nsApp
@@ -66,6 +63,7 @@ namespace nsApp
 			/* 攻撃内容を実況UIへ通知する。*/
 			NotifyAttackCommentary();
 
+			/* 子クラスの初期化。*/
 			OnEnterAttack();
 		}
 
@@ -91,6 +89,7 @@ namespace nsApp
 				m_inputRequests[ComboInputType::PressB] = true;
 			}
 
+			/* Xボタンアクション。*/
 			if (inputClass.IsPressX())
 				m_inputRequests[ComboInputType::PressX] = true;
 
@@ -100,6 +99,7 @@ namespace nsApp
 			else if (inputClass.IsJump())
 				m_inputRequests[ComboInputType::PressA] = true;
 
+			/* 連続攻撃の条件を満たしていたら予約を入れる。*/
 			if (m_rushCount >= 2)
 				m_inputRequests[ComboInputType::RushB] = true;
 
@@ -120,15 +120,23 @@ namespace nsApp
 			/* 衝突判定。*/
 			if (m_boss != nullptr)
 			{
+				/* プレイヤーの攻撃当たり判定を取得。*/
 				auto& hitDetection = m_player->GetWeaponHitDetection();
 
 				if (!m_isHit && hitDetection.IsHit(m_boss))
 				{
+					/* ヒットフラグをセット。*/
 					m_isHit = true;
+
+					/* 攻撃パラメータを取得。*/
+					const auto& attackParameter = GetCurrentAttackParameter();
+
+					/* ダメージテキストの表示とダメージの計算を行う処理。*/
 					ApplyDamageToText(m_boss);
 
-					m_player->SetHitStop(HIT_STOP_FRAME);
-					m_boss->SetHitStop(HIT_STOP_FRAME);
+					/* ヒットストップする機能をセット。*/
+					m_player->SetHitStop(attackParameter.hitStopFrame);
+					m_boss->SetHitStop(attackParameter.hitStopFrame);
 				}
 
 				/* 終了判定。*/
@@ -161,17 +169,21 @@ namespace nsApp
 
 		void PlayerAttackBaseState::NotifyAttackCommentary()
 		{
+			/* Playerクラスが存在するか検知。*/
 			if (m_player == nullptr)
 				return;
 
+			/* 実況用の攻撃名を取得する。*/
 			const auto actionName = GetCommentaryActionName();
 			if (actionName.empty())
 				return;
 
+			/* CommentaryUIManagerクラスを探索。*/
 			auto* commentary = FindGO<nsUI::CommentaryUIManager>("CommentaryUIManager");
 			if (commentary == nullptr)
 				return;
 
+			/* 攻撃内容を実況UIへ通知する。*/
 			commentary->AddActionMessage(m_player->GetCurrentWeapon(), actionName);
 		}
 
@@ -264,26 +276,34 @@ namespace nsApp
 
 		int PlayerAttackBaseState::CalculateFinalDamage() const
 		{
+			/* Playerクラスがいるか検知。*/
 			if (m_player == nullptr)
 				return 0;
 
+			/* 攻撃力を取得。*/
 			const auto& playerStatus = m_player->GetCharacterStatus().attack;
-			const auto& attackParameter = AttackParameterTable::GetAttackParameter(m_currentAttackType);
 
+			/* 攻撃パラメータを取得。*/
+			const auto& attackParameter = GetCurrentAttackParameter();
+
+			/* ダメージ数を計算。元の処理と同じく、基礎ダメージ × 攻撃倍率で計算する。*/
 			int finalDamage = static_cast<int>(playerStatus.normalDamage * attackParameter.damageMultiplier);
 
+			/* クリティカル率を計算。*/
 			float criticalRate = playerStatus.criticalRate + attackParameter.criticalRatel;
 			criticalRate = ClampFloat(criticalRate, 0.0f, 1.0f);
 
-			const int criticalThreshold = static_cast<int>(
-				criticalRate * static_cast<float>(CRITICAL_PERCENTAGE)
-				);
+			/* クリティカルの閾値を計算。*/
+			const int criticalThreshold = static_cast<int>( criticalRate * static_cast<float>(CRITICAL_PERCENTAGE));
 
+			/* クリティカル判定。*/
 			if ((rand() % CRITICAL_PERCENTAGE) < criticalThreshold)
 				finalDamage = static_cast<int>(finalDamage * playerStatus.criticalDamage);
 
+			/* 最終的なダメージ数を計算。*/
 			finalDamage = static_cast<int>(finalDamage * m_player->GetAttackDamageRate());
 
+			/* ダメージが0以下で、かつダメージ倍率が0より大きい場合は1にする。*/
 			if (finalDamage <= 0 && attackParameter.damageMultiplier > 0.0f)
 				finalDamage = 1;
 

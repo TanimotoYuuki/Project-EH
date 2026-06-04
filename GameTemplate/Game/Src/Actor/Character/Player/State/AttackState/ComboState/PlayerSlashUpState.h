@@ -21,6 +21,7 @@ namespace nsApp
 
 
 		protected:
+			/* TemplateMethod */
 			void PlayAttackAnimation() override;
 			void OnEnterAttack() override;
 			bool OnUpdateAttack() override;
@@ -30,20 +31,20 @@ namespace nsApp
 
 
 		private:
-			/* 
+			/** 
 			 * @brief 空中攻撃に遷移。
 			 */
 			inline void TransitionAirAttack();
 
 
-			/* 
+			/** 
 			 * @brief ジャンプ状態に遷移。
 			 */
 			inline void TransitionJumpState();
 
 
 		public:
-			/*
+			/**
 			 * @brief 斬り上げ時の初速を設定。
 			 * @param 初速の大きさ。
 			 */

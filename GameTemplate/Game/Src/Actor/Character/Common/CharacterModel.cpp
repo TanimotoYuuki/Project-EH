@@ -1,20 +1,22 @@
 ﻿#include "stdafx.h"
 #include "CharacterModel.h"
 
+namespace
+{
+	const auto FILEPATHLIST_NUM = 0; //! キャラモデルのファイルパスの数。
+	const auto OUT_RANGE_VALUE = -1; //! ファイルパスのリストから外れた値。
+}
+
 namespace nsApp
 {
 	CharacterModel::CharacterModel()
 	{
-		/* モデルのファイルパスを格納。*/
-		/* デバッグ用のサンドバッグモデル。*/
-		m_filePathList[CharacterModelType::Sandbag] = "Assets/modelData/Character/Debag/PunchBagKun.tkm";
-
 		/* キャラモデルの格納。*/
 		/* プレイヤーモデル。*/
-		m_filePathList[CharacterModelType::Player_1P] = GetCharacterModelFilePath("1p/Player_1P"); //! 1Pモデル。
-		m_filePathList[CharacterModelType::Player_2P] = GetCharacterModelFilePath("2p/player_2p"); //! 2Pモデル。
-		m_filePathList[CharacterModelType::Player_3P] = GetCharacterModelFilePath("3p/Player_3P"); //! 3Pモデル。
-		m_filePathList[CharacterModelType::Player_4P] = GetCharacterModelFilePath("4p/Player_4P"); //! 4Pモデル。
+		m_filePathList[CharacterModelType::Player_1P] = GetCharacterModelFilePath("1p/Player_1P"); 
+		m_filePathList[CharacterModelType::Player_2P] = GetCharacterModelFilePath("2p/player_2p"); 
+		m_filePathList[CharacterModelType::Player_3P] = GetCharacterModelFilePath("3p/Player_3P"); 
+		m_filePathList[CharacterModelType::Player_4P] = GetCharacterModelFilePath("4p/Player_4P"); 
 
 		/* ボスモデル。*/
 		m_filePathList[CharacterModelType::TutorialBoss] = GetBossModelFilePath("TutorialBoss/Tutorial_Boss");
@@ -80,9 +82,11 @@ namespace nsApp
 
 	bool CharacterModel::LoadSubWeaponModel(CharacterModelType subWeaponType)
 	{
-		if (m_filePathList.count(subWeaponType) == 0)
+		/* 読み込むサブ武器がリストにあるのかを確認。*/
+		if (m_filePathList.count(subWeaponType) == FILEPATHLIST_NUM)
 			return false;
-
+		
+		/* サブ武器モデルを生成してロードする。*/
 		m_subWeaponModelRender = std::make_unique<ModelRender>();
 		m_subWeaponModelRender->Init(
 			m_filePathList[subWeaponType].c_str(),
@@ -91,13 +95,6 @@ namespace nsApp
 			enModelUpAxisZ
 		);
 		return false;
-	}
-
-
-	void CharacterModel::PlayAnimation(int animationNumber, float interpolateTime)
-	{
-		if (m_characterModelRender != nullptr)
-			m_characterModelRender->PlayAnimation(animationNumber, interpolateTime);
 	}
 
 
@@ -150,10 +147,11 @@ namespace nsApp
 			m_yAxis.Normalize();
 			m_zAxis.Normalize();
 
+			/* オフセット計算。*/
 			m_offsetPosition = m_matrixPosition + (m_xAxis * m_weaponOffset.x) + (m_yAxis * m_weaponOffset.y) + (m_zAxis * m_weaponOffset.z);
 			m_weaponModelRender->SetPosition(m_offsetPosition);
 
-
+			/* ボーンの回転を行列から抽出。*/
 			m_rotationMatrix = m_handMatrix;
 			m_rotationMatrix.m[0][0] = m_xAxis.x; m_rotationMatrix.m[0][1] = m_xAxis.y; m_rotationMatrix.m[0][2] = m_xAxis.z;
 			m_rotationMatrix.m[1][0] = m_yAxis.x; m_rotationMatrix.m[1][1] = m_yAxis.y; m_rotationMatrix.m[1][2] = m_yAxis.z;
@@ -208,10 +206,11 @@ namespace nsApp
 		if (m_characterModelRender)
 		{
 			/* ボーンIDを取得。*/
-			boneID = m_characterModelRender->FindBoneID(boneName);
+			m_boneID = m_characterModelRender->FindBoneID(boneName);
 
-			if (boneID != -1)
-				return m_characterModelRender->GetBone(boneID)->GetWorldMatrix();
+			/* ボーンIDが範囲内なら、ボーンのワールド行列を返す。*/
+			if (m_boneID != OUT_RANGE_VALUE)
+				return m_characterModelRender->GetBone(m_boneID)->GetWorldMatrix();
 		}
 		/* ボーンが見つからない場合。*/
 		return Matrix::Identity;

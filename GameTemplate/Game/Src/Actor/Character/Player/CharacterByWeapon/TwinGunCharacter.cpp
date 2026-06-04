@@ -29,6 +29,8 @@ namespace
 	const auto GUN_ANGLE_X = 0.0f;                            //! 銃のX軸の角度。
 	const auto GUN_ANGLE_Y = 0.0f;                            //! 銃のY軸の角度。
 	const auto GUN_ANGLE_Z = -90.0f;                          //! 銃のZ軸の角度。
+
+	const auto CHARACTER_MAGNIFICAATION_SCALE = 2.0f;		  //! キャラクターモデルの拡大率。
 }
 
 namespace nsApp
@@ -43,7 +45,7 @@ namespace nsApp
 			/* モデルの種類をセット。*/
 			m_modelType = CharacterModelType::Player_1P;
 
-			/* */
+			/* 基底クラスが処理されないのなら処理を行わない。*/
 			if (!IWeaponCharacter::Start())
 				return false;
 
@@ -52,7 +54,7 @@ namespace nsApp
 
 			/* 武器のスケールと位置の調整。*/
 			/* スケール。*/
-			m_model.SetWeaponScale(Vector3::One * 2.0f);
+			m_model.SetWeaponScale(Vector3::One * CHARACTER_MAGNIFICAATION_SCALE);
 
 			/* 大きさ。*/
 			m_model.SetWeaponOffset(GUN_OFFSET);

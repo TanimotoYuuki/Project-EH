@@ -45,24 +45,28 @@ namespace nsApp
 
 		void PlayerReBoneState::Update()
 		{
+			/* 救助開始前、または救助対象が無効になった場合は待機ステートに戻す。*/
 			if (m_shouldReturnIdle)
 			{
 				ChangeIdleState();
 				return;
 			}
 
+			/* 救助開始前は対象の有効性を確認しない。*/
 			if (m_player == nullptr || m_targetPlayer == nullptr)
 			{
 				ChangeIdleState();
 				return;
 			}
 
+			/* 救助開始後は対象の有効性を常に確認する。*/
 			if (!IsValidTargetCharacter())
 			{
 				ChangeIdleState();
 				return;
 			}
 
+			/* 救助開始後は救助進行を更新する。*/
 			auto& rescueStatus = m_targetPlayer->GetRescueStatusManager();
 
 			/* 救助進行はRescueStatusManagerに任せる。*/
@@ -80,9 +84,11 @@ namespace nsApp
 
 		void PlayerReBoneState::Exit()
 		{
+			/* 救助中は入力を止める。*/
 			if (m_player != nullptr)
 				m_player->SetInputEnable(true);
 
+			/* 救助が完了していない場合は、救助をキャンセルする。*/
 			if (!m_isHelpCompleted && m_targetPlayer != nullptr && IsValidTargetCharacter())
 				m_targetPlayer->GetRescueStatusManager().CancelHelp();
 
@@ -115,12 +121,15 @@ namespace nsApp
 
 		bool PlayerReBoneState::IsValidTargetCharacter() const
 		{
+			/* 対象が存在しない、または自分自身を対象にしている場合は無効。*/
 			if (m_player == nullptr || m_targetPlayer == nullptr)
 				return false;
 
+			/* 自分自身を対象にすることはできない。*/
 			if (m_targetPlayer == m_player)
 				return false;
 
+			/* 対象が死亡している、またはHPが0以下の場合は無効。*/
 			return m_targetPlayer->IsDeath() ||
 				m_targetPlayer->GetCharacterStatus().hp.currentHP <= 0;
 		}
@@ -128,9 +137,11 @@ namespace nsApp
 
 		void PlayerReBoneState::BeginHelpProgress()
 		{
+			/* 救助開始前、または救助対象が無効になった場合は救助を開始しない。*/
 			if (m_player == nullptr || m_targetPlayer == nullptr || m_isHelpStarted)
 				return;
 
+			/* 救助開始。*/
 			m_targetPlayer->GetRescueStatusManager().BeginHelp(m_player->GetCurrentWeapon());
 			m_isHelpStarted = true;
 		}
@@ -140,6 +151,7 @@ namespace nsApp
 		{
 			if (m_targetPlayer != nullptr)
 			{
+				/* 救助完了。*/
 				m_isHelpCompleted = true;
 
 				/* 救助対象を復活させる。*/
@@ -154,6 +166,7 @@ namespace nsApp
 
 		void PlayerReBoneState::ChangeIdleState()
 		{
+			/* 救助開始前、または救助対象が無効になった場合は待機ステートに戻す。*/
 			if (m_stateMachine != nullptr)
 				m_stateMachine->ChangeState(new PlayerIdleState());
 		}

@@ -3,7 +3,7 @@
 * @file   PlayerIdleState.h
 * @brief  PlayerのIdle状態を管理するクラス。
 * @author Yamaguchi Hayato
-* @date   2026/03/15
+* @date   2026/06/03: 最終更新日。
 */
 
 
@@ -27,14 +27,15 @@ namespace nsApp
 			/* ステートに入った際、1度呼ばれる。*/
 			void Enter() override;
 			/* ステート中、毎フレーム更新する。。*/
-			void Update() override;
+			void Update() override {};
 			/* ステートを抜ける際、呼ぶ。*/ 
-			void Exit() override;
+			void Exit() override {};
 			/* ステートを遷移させる*/
 			bool RequestID(uint8_t& id) override;
 
+
 		private:
-			nsActor::Player* m_player; /* プレイヤーの実態へのポインタ。*/
+			nsActor::Player* m_player; //! プレイヤーの実態へのポインタ。
 		};
 	}
 }

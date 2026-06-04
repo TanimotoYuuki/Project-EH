@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "BulletParameterTable.h"
-
+#include "Src/Utilty/TSVTableLoder.h"
 
 namespace
 {
@@ -22,28 +22,96 @@ namespace
 		/* 最終的な回転行列の計算結果を戻り値とする。*/
 		return localMakeAngleX * localMakeAngleY * localMakeAngleZ;
 	}
-
-	const auto UNIFIED_SPEED = 500.0f;								    //! 共通の射出速度。 
-	const auto UNIFIED_LIFE = 1.0f;									    //! 共通の描画時間。
-	const auto UNIFIED_SCALE = Vector3::One * 1.0f;						//! 共通のスケール。
-
-	const auto BULLET_ANGLE = MakeAngle(0.0f, 0.0f, -90.0f);            // ! 弾丸の基本的な角度。モデルの向きに合わせて設定。
-	const auto HEAVY_ANGLE = MakeAngle(90.0f, 0.0f, 0.0f);
 }
 
 
 namespace nsApp
 {
-	/* 各弾丸のパラメータを設定する。*/
-	const std::unordered_map<BulletType, BulletParameter> BulletParameterTable::m_bulletParameterTable =
+	std::unordered_map<BulletType, BulletParameter> BulletParameterTable::m_bulletParameterTable;
+
+
+	bool BulletParameterTable::LoadTSVFile(const char* filePath)
 	{
-		{ BulletType::enNormal,    { BulletType::enNormal,    UNIFIED_SPEED, UNIFIED_LIFE, 10.0f, 15.0f, 10.0f, 10.0f, UNIFIED_SCALE, BULLET_ANGLE, GetModelPath("NormalBullet") } },
-		{ BulletType::enCharge,    { BulletType::enCharge,    UNIFIED_SPEED, UNIFIED_LIFE, 30.0f, 20.0f, 10.0f, 10.0f, UNIFIED_SCALE, BULLET_ANGLE, GetModelPath("ChargeBullet") } },
-		{ BulletType::enRush,      { BulletType::enRush,      UNIFIED_SPEED, UNIFIED_LIFE, 8.0f,  15.0f, 10.0f, 10.0f, UNIFIED_SCALE, BULLET_ANGLE, GetModelPath("NormalBullet") } },
-		{ BulletType::enExplosive, { BulletType::enExplosive, UNIFIED_SPEED, UNIFIED_LIFE, 50.0f, 40.0f, 20.0f, 30.0f, UNIFIED_SCALE, HEAVY_ANGLE,  GetModelPath("ExplosionBullet") } },
-		{ BulletType::enAirial,    { BulletType::enAirial,    UNIFIED_SPEED, UNIFIED_LIFE, 10.0f, 15.0f, 12.0f, 22.0f, UNIFIED_SCALE, BULLET_ANGLE, GetModelPath("AirBullet") } },
-		{ BulletType::enDash,      { BulletType::enDash,      UNIFIED_SPEED, UNIFIED_LIFE, 15.0f, 20.0f, 8.0f,  18.0f, UNIFIED_SCALE, BULLET_ANGLE, GetModelPath("DashBullet") } }
-	}; 
+		/* TSVTableLoderを使って、TSVからBulletParameterのテーブルを作成する。 */
+		return TSVTableLoder::LoadTable<BulletType, BulletParameter>(
+			filePath,
+			"Type",
+			m_bulletParameterTable,
+			BulletParameterTable::ConvertBulletType,
+			[](const TSVTable& table, int rowIndex, BulletType bulletType)
+			{
+				/* TSVの1行からBulletParameterを作成する。 */
+				return BulletParameterTable::CreateParameterFromRow(table, rowIndex, bulletType);
+			}
+		);
+	}
+
+
+	BulletParameter BulletParameterTable::CreateParameterFromRow(const TSVTable& table, int rowIndex, BulletType bulletType)
+	{
+		/* 弾丸のスケールを作成。*/
+		const Vector3 scale = Vector3(
+			table.GetFloat(rowIndex, "ScaleX", 1.0f),
+			table.GetFloat(rowIndex, "ScaleY", 1.0f),
+			table.GetFloat(rowIndex, "ScaleZ", 1.0f)
+		);
+
+		/* 弾丸の回転行列を作成。*/
+		const Quaternion angle = MakeAngle(
+			table.GetFloat(rowIndex, "AngleX", 0.0f),
+			table.GetFloat(rowIndex, "AngleY", 0.0f),
+			table.GetFloat(rowIndex, "AngleZ", 0.0f)
+		);
+
+		/* 弾丸のモデル名を取得。*/
+		const std::string modelName = table.GetString(rowIndex, "ModelName", "NormalBullet");
+
+		/* TSVファイル内のデータから弾丸パラメータを作成。*/
+		return BulletParameter
+		{
+			bulletType,
+			table.GetFloat(rowIndex, "Speed", 500.0f),
+			table.GetFloat(rowIndex, "LifeTime", 1.0f),
+			table.GetFloat(rowIndex, "Damage", 10.0f),
+			table.GetFloat(rowIndex, "Radius", 15.0f),
+			table.GetFloat(rowIndex, "SpawnOffsetY", 10.0f),
+			table.GetFloat(rowIndex, "SpawnForwardOffset", 10.0f),
+			scale,
+			angle,
+			GetModelPath(modelName)
+		};
+	}
+
+
+	BulletType BulletParameterTable::ConvertBulletType(const std::string& typeName)
+	{
+		/* 通常弾。*/
+		if (typeName == "Normal" || typeName == "enNormal" || typeName == "BulletType::enNormal")
+			return BulletType::enNormal;
+
+		/* チャージ弾。*/ 
+		if (typeName == "Charge" || typeName == "enCharge" || typeName == "BulletType::enCharge")
+			return BulletType::enCharge;
+
+		/* ラッシュ弾。*/
+		if (typeName == "Rush" || typeName == "enRush" || typeName == "BulletType::enRush")
+			return BulletType::enRush;
+
+		/* 爆発弾。*/
+		if (typeName == "Explosive" || typeName == "enExplosive" || typeName == "BulletType::enExplosive")
+			return BulletType::enExplosive;
+
+		/* 空中弾。*/
+		if (typeName == "Air" || typeName == "Airial" || typeName == "enAir" || typeName == "enAirial" || typeName == "BulletType::enAir" || typeName == "BulletType::enAirial")
+			return BulletType::enAirial;
+
+		/* ダッシュ弾。*/
+		if (typeName == "Dash" || typeName == "enDash" || typeName == "BulletType::enDash")
+			return BulletType::enDash;
+
+		return BulletType::enNormal;
+	}
+
 
 	const BulletParameter& BulletParameterTable::GetParameter(BulletType type)
 	{
@@ -54,8 +122,21 @@ namespace nsApp
 		if (bulletIterator != m_bulletParameterTable.end())
 			return bulletIterator->second;
 
-		return m_bulletParameterTable.at(BulletType::enNormal);
+		/* TSV読み込み前、または読み込み失敗時の保険を返す。*/
+		static const BulletParameter fallbackParameter =
+		{
+			BulletType::enNormal,
+			500.0f,
+			1.0f,
+			10.0f,
+			15.0f,
+			10.0f,
+			10.0f,
+			Vector3::One,
+			MakeAngle(0.0f, 0.0f, -90.0f),
+			BulletParameterTable::GetModelPath("NormalBullet")
+		};
+
+		return fallbackParameter;
 	}
-
-
 }

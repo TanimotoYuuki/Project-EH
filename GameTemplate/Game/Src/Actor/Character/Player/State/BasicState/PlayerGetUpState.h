@@ -1,10 +1,10 @@
 #pragma once
 /**
-* @file PlayerGetUpState.h
-* @brief プレイヤーの起き上がり状態を管理するクラス。
-* @author Yamaguchi Hayato
-* @date 2026/03/23
-*/
+ * @file   PlayerGetUpState.h
+ * @brief  プレイヤーの起き上がり状態を管理するクラス。
+ * @author Yamaguchi Hayato
+ * @date   2026/06/03: 最終更新日。
+ */
 
 #include "Src/Actor/Character/Common/IState.h"
 #include "Src/Actor/Character/Player/Player.h"
@@ -22,6 +22,7 @@ namespace nsApp
 
 
 		public:
+			/* ライフサイクル。*/
 			void Enter() override;
 			void Update() override;
 			void Exit() override {};
@@ -29,10 +30,8 @@ namespace nsApp
 
 
 		private:
-			nsActor::Player* m_player = nullptr;
+			nsActor::Player* m_player = nullptr; //! プレイヤーのポインタ。
 		};
-
-
 	}
 }
 

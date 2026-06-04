@@ -29,7 +29,7 @@ namespace nsApp
 			void PlayAttackAnimation() override;
 			void OnEnterAttack() override;
 			bool OnUpdateAttack() override;
-			void OnAttackTick() override;
+			void OnAttackTick() override {};
 			void OnExitAttack() override;
 
 

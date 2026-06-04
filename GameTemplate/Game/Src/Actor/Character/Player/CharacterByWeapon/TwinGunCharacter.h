@@ -62,7 +62,7 @@ namespace nsApp
 
 
 		private:
-			Quaternion m_angle = Quaternion::Identity;        //! モデルの角度。
+			Quaternion m_angle = Quaternion::Identity; //! モデルの角度。
 		};
 	}
 }

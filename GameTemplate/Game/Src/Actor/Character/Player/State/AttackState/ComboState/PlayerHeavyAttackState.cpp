@@ -3,14 +3,19 @@
 #include "Src/Actor/Character/Player/State/BasicState/PlayerIdleState.h"
 #include "Src/Actor/Gun/Factory/BulletFactory.h"
 
+namespace
+{
+	const auto ATTACK_TIMER_10 = 10.0f; // 攻撃タイマーの初期値（10フレーム）
+}
+
 namespace nsApp
 {
 	namespace nsState
 	{
         void PlayerHeavyAttackState::PlayAttackAnimation()
         {
-            /* 攻撃の種類をセットする。*/
-            m_currentAttackType = AttackType::HeavyAttack;
+            /* 攻撃の種類を設定する。*/
+            SetCurrentAttackType(AttackType::HeavyAttack);
 
             /* 再生するアニメーションを設定する。*/
             m_player->PlayWeaponAnimation(AttackType::HeavyAttack);
@@ -33,6 +38,7 @@ namespace nsApp
             /* アニメーション終了時の安全な待機状態遷移（銃は少し早いタイミング） */
             if (m_player->GetCurrentWeapon() == WeaponType::TwinGun)
             {
+				/* 攻撃のタイミングで弾を発射する。*/
                 if (!m_player->IsPlayAnimation()) {
                     m_stateMachine->ChangeState(new PlayerIdleState());
                     return true;
@@ -40,7 +46,7 @@ namespace nsApp
             }
             else
             {
-                if (m_attackTimer > 10 && !m_player->IsPlayAnimation()) {
+                if (m_attackTimer > ATTACK_TIMER_10 && !m_player->IsPlayAnimation()) {
                     m_stateMachine->ChangeState(new PlayerIdleState());
 					return true;
                 }
@@ -52,6 +58,7 @@ namespace nsApp
 
         void PlayerHeavyAttackState::FireHeavyBullet()
         {
+			/* 銃の場合。*/
             nsActor::Player* pPlayer=m_player;
             m_spawnPosition = pPlayer->GetBonePosition(L"mixamorig:RightHand");
             m_forwardDirection = pPlayer->GetForwardVector();

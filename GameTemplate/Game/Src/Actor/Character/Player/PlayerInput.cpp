@@ -71,9 +71,11 @@ namespace nsApp
 
 	void PlayerInput::EvaluateJumpAndSlashUp()
 	{
+		/* ジャンプと斬り上げのフラグをリセット。*/
 		SetJumpFlag(false);
 		SetSlashUpFlag(false);
 
+		/* Aボタンがトリガーされた場合、スティックのY軸の値に応じてジャンプか斬り上げを判定する。*/
 		if (CheckButtonTrigger(enButtonA))
 		{
 			if (m_stickY > 0.5f)
@@ -82,6 +84,7 @@ namespace nsApp
 				SetJumpFlag(true);
 		}
 
+		/* LB2ボタンがトリガーされた場合、斬り上げフラグを立てる。*/
 		if(CheckButtonTrigger(enButtonLB2))
 			SetSlashUpFlag(true);
 	}
@@ -100,6 +103,6 @@ namespace nsApp
 		m_isComboAttack = false;     //! コンボ攻撃フラグ。
 		m_isRushStart = false;       //! 連続攻撃開始フラグ。
 		m_isRushEnd = false;         //! 連続攻撃終了フラグ。
-		m_moveVec = Vector3::Zero;
+		m_moveVec = Vector3::Zero;   //! 移動ベクトル。
 	}
 }

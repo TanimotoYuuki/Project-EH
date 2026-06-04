@@ -20,10 +20,8 @@ namespace nsApp
 		class IState
 		{
 		protected:
-			/* 継承先のステートで使う。*/
-			CharacterTemplate* m_owner;
-			/* ステートマシーンへのポインタ。*/ 
-			StateMachine<CharacterTemplate>* m_stateMachine = nullptr;
+			CharacterTemplate* m_owner;									//! ステートを持つ実態へのポインタ。
+			StateMachine<CharacterTemplate>* m_stateMachine = nullptr;  //! ステートマシーンへのポインタ。
 
 
 		public:
@@ -31,10 +29,10 @@ namespace nsApp
 			virtual ~IState() = default;
 
 			/**
-			* @brief                  StateMachineの初期化、ステートの登録処理。
-			* @param owner            ステートを持つ実態。
-			* @param stateMachine     ステ ートマシーンへのポインタ。
-			*/
+			 * @brief                  StateMachineの初期化、ステートの登録処理。
+			 * @param owner            ステートを持つ実態。
+			 * @param stateMachine     ステ ートマシーンへのポインタ。
+			 */
 			inline void Register(CharacterTemplate* owner, StateMachine<CharacterTemplate>* stateMachine)
 			{
 				m_owner = owner;
@@ -42,23 +40,23 @@ namespace nsApp
 			}
 
 			/**
-			* @brief ステートに入った際、呼ばれる処理。
-			*/
+			 * @brief ステートに入った際、呼ばれる処理。
+			 */
 			virtual void Enter() = 0;
 
 			/**
-			* @brief ステート中の場合、毎フレーム更新する処理。
-			*/
+		 	 * @brief ステート中の場合、毎フレーム更新する処理。
+			 */
 			virtual void Update() = 0;
 
 			/**
-			* @brief 別のステートに入る際、切り替わる直前に呼ぶ終了処理。
-			*/
+			 * @brief 別のステートに入る際、切り替わる直前に呼ぶ終了処理。
+			 */
 			virtual void Exit() = 0;
 
 			/**
-			* @brief ステートの状態を切り替え処理。
-			*/
+			 * @brief ステートの状態を切り替え処理。
+			 */
 			virtual bool RequestID(uint8_t& request)
 			{
 				return false;

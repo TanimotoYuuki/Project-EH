@@ -26,6 +26,7 @@ namespace nsApp
 		class NPCTwinGunAttackState : public NPCAttackBaseState
 		{
 		public:
+			/* コンストラクタとデストラクタ。*/
 			NPCTwinGunAttackState() = default;
 			virtual ~NPCTwinGunAttackState() = default;
 

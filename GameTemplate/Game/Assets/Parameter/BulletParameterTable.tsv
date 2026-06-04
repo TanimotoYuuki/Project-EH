@@ -1,0 +1,7 @@
+Type	Speed	LifeTime	Damage	Radius	SpawnOffsetY	SpawnForwardOffset	ScaleX	ScaleY	ScaleZ	AngleX	AngleY	AngleZ	ModelName
+Normal	500	1.0	10.0	15.0	10.0	10.0	1.0	1.0	1.0	0.0	0.0	-90.0	NormalBullet
+Charge	500	1.0	30.0	20.0	10.0	10.0	1.0	1.0	1.0	0.0	0.0	-90.0	ChargeBullet
+Rush	500	1.0	8.0	15.0	10.0	10.0	1.0	1.0	1.0	0.0	0.0	-90.0	NormalBullet
+Explosive	500	1.0	50.0	40.0	20.0	30.0	1.0	1.0	1.0	90.0	0.0	0.0	ExplosionBullet
+Air	500	1.0	10.0	15.0	12.0	22.0	1.0	1.0	1.0	0.0	0.0	-90.0	AirBullet
+Dash	500	1.0	15.0	20.0	8.0	18.0	1.0	1.0	1.0	0.0	0.0	-90.0	DashBullet

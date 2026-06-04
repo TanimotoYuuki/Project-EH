@@ -43,7 +43,7 @@ namespace nsApp
 
 
 	private:
-		nsActor::Player* m_spawnPlayer = nullptr;
+		nsActor::Player* m_spawnPlayer = nullptr;							//! ê∂ê¨ëŒè€ÅB
 
 
 	private:

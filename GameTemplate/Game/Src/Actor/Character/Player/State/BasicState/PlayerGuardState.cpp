@@ -17,19 +17,9 @@ namespace nsApp
 
 		void PlayerGuardState::Update()
 		{
+			/* ガード状態でない場合は、アイドル状態に遷移。*/
 			if (!m_player->GetInputClass().IsGuard())
 				m_stateMachine->ChangeState(new PlayerIdleState());
-		}
-
-
-		void PlayerGuardState::Exit()
-		{
-		}
-
-
-		bool PlayerGuardState::RequestID(uint8_t& id)
-		{
-			return false;
 		}
 	}
 }

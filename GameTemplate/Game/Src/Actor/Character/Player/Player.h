@@ -76,7 +76,7 @@ namespace nsApp
 			 * @brief PlayerGeneratorクラスからデータを受け取る処理。
 			 * @param data: 生成時に必要な構造体のデータを取得する。
 			 */
-			inline virtual void InitializeSpawnData(const PlayerSpawnData& data)
+			virtual void InitializeSpawnData(const PlayerSpawnData& data)
 			{
 				/* 座標をセット。*/
 				m_currentPosition = data.spawnPosition;
@@ -113,14 +113,15 @@ namespace nsApp
 			/* クランプ制限。*/
 			Vector3 ClampBattleAreaMoveVector(const Vector3& moveVector, float frameTime) const;
 
+
 		public:
-			/*
+			/**
 			 * @brief 基本動作用アニメーションを再生。
 			 * @param state 再生する基本動作の列挙型。
 			 */
 			void PlayBasicAnimation(CharacterBasicAnimationList state);
 
-			/*
+			/**
 			 * @brief 攻撃用アニメーションを再生。
 			 * @param attack 再生する攻撃の列挙型。
 			 */
@@ -140,15 +141,12 @@ namespace nsApp
 					/* SEの再生を止める。*/
 					m_currentWeaponSE->Stop();
 
-					/* 破棄。*/
-//					DeleteGO(m_currentWeaponSE);
-
 					/* リモコンを破棄する。*/
 					m_currentWeaponSE = nullptr;
 				}
 			}
 
-			/*
+			/**
 			 * @brief サブウェポンの表示。
 			 * @param type 表示するサブウェポンの種類。
 			 */
@@ -178,7 +176,7 @@ namespace nsApp
 
 			/* セッター。*/
 		public:
-			/*
+			/**
 			 * @brief 座標を設定。
 			 * @param position 設定する座標。
 			 */
@@ -187,7 +185,7 @@ namespace nsApp
 				m_currentPosition = position;
 			}
 
-			/*
+			/**
 			 * @brief 入力判定の切り替えを設定。
 			 * @param isEnable 入力を有効にするかどうか。
 			 */
@@ -208,7 +206,7 @@ namespace nsApp
 				m_attackDamageRate = damageRate;
 			}
 
-			/*
+			/**
 			 * @brief 入力時間を設定。
 			 * @param timer 入力時間。
 			 */
@@ -217,7 +215,7 @@ namespace nsApp
 				m_inputWaitTimer = timer;
 			}
 
-			/*
+			/**
 			 * @brief 角度を設定。
 			 * @param angle 設定する角度。
 			 */
@@ -228,7 +226,7 @@ namespace nsApp
 				m_model.SettRotation(m_angle);
 			}
 
-			/*
+			/**
 			 * @brief 前方向ベクトルを設定。
 			 * @param forward 設定する前方向ベクトル。
 			 */
@@ -237,7 +235,7 @@ namespace nsApp
 				m_forwardVector = forward;
 			}
 
-			/*
+			/**
 			 * @brief ステートから武器の角度をいじれるように設定。
 			 * @param rotDeg 回転軸の角度。
 			 */
@@ -248,7 +246,7 @@ namespace nsApp
 				m_model.SetWeaponAngle(m_weaponAngle);
 			}
 
-			/*
+			/**
 			 * @brief 下速度を設定。
 			 * @param velocity 設定する下速度。
 			 */
@@ -257,7 +255,7 @@ namespace nsApp
 				m_fallVelocity = velocity;
 			}
 
-			/*
+			/**
 			 * @brief チャージレベルを設定する。
 			 * @param chargeLevel 設定するチャージレベル。
 			 */
@@ -352,6 +350,42 @@ namespace nsApp
 				return m_attackDamageRate;
 			}
 
+			/* プレイヤーの移動速度を取得する。*/
+			inline float GetWalkSpeed() const
+			{
+				return m_walkSpeed;
+			}
+
+			/* プレイヤーの走る速度を取得する。*/
+			inline float GetRunSpeed() const
+			{
+				return m_runSpeed;
+			}
+
+			/* プレイヤーのジャンプ力を取得する。*/
+			inline float GetJumpPower() const
+			{
+				return m_jumpPower;
+			}
+
+			/* プレイヤーの空中での移動速度を取得する。*/
+			inline float GetAirMoveSpeed() const
+			{
+				return m_airMoveSpeed;
+			}
+
+			/* プレイヤーの重力を取得する。*/
+			inline float GetGravity() const
+			{
+				return m_gravity;
+			}
+
+			/* プレイヤーの最大落下速度を取得する。*/
+			inline float GetMaxFallVelocity() const
+			{
+				return m_maxFallVelocity;
+			}
+
 			/* エフェクトの大きさを取得する。*/
 			inline int GetEffectScale()
 			{
@@ -424,7 +458,7 @@ namespace nsApp
 			CharacterModelType m_modelType;                                                                        //! プレイヤーのモデルの種類。
 			WeaponHitDetection m_weaponHitDetection;                                                               //! 武器の当たり判定を管理するクラス。
 			WeaponType m_currentWeapon = WeaponType::None;                                                         //! 現在の武器。@TODO 武器の種類を増やす際に要調整。
-			float m_attackDamageRate = 1.0f;                                                              //! 攻撃ダメージ補正率。
+			float m_attackDamageRate = 1.0f;                                                                       //! 攻撃ダメージ補正率。
 			RescueStatusLister m_rescueStatusManager;															   //! 救助状態管理クラス
 
 
@@ -463,9 +497,16 @@ namespace nsApp
 			int m_inputWaitTimer = 0;																			   //! 入力を受け付けるまでの時間。															   
 			int m_chargeLevel = 1;                                                                                 //! チャージレベル。
 
+			float m_walkSpeed = 50.0f;																			   //! プレイヤーの歩く速度。
+			float m_runSpeed = 120.0f;																			   //! プレイヤーの走る速度。
+			float m_jumpPower = 500.0f;																			   //! プレイヤーのジャンプ力。
+			float m_airMoveSpeed = 120.0f;																		   //! プレイヤーの空中での移動速度。
+			float m_gravity = 30.0f;																			   //! プレイヤーの重力。
+			float m_maxFallVelocity = -1200.0f;																	   //! プレイヤーの最大落下速度。
+
 			float m_fallVelocity = 0.0f;                                                                           //! 落下速度。
 
-			bool m_isIgnorePlayerSet = false;
+			bool m_isIgnorePlayerSet = false;																	   //! プレイヤーのセットを無視するかどうかのフラグ。
 			bool m_isDown = false;                                                                                 //! プレイヤー専用のダウン状態。IGameObject側の死亡/削除フラグとは分ける。
 		};
 	}

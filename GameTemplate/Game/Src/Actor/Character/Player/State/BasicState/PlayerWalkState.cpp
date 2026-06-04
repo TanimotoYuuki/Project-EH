@@ -6,8 +6,7 @@
 
 namespace
 {
-	const auto WALK_SPEED = 50;                /* 歩行速度。*/
-	const auto MODEL_ANGLE = 90.0f;            /* モデルの回転角度。*/
+		const auto MODEL_ANGLE = 90.0f;            /* モデルの回転角度。*/
 	const auto MOVE_FRAME_TIME = 1.0f / 60.0f; /* 1フレームあたりの固定時間。*/
 }
 
@@ -34,7 +33,7 @@ namespace nsApp
 			if (inputClass.IsMove())
 			{
 				/* 歩行速度をセット。*/
-				SetWalkSpeed(WALK_SPEED);
+				SetWalkSpeed(m_player->GetWalkSpeed());
 
 				/* 現在の座標を取得する。*/
 				m_currentPosition = m_player->GetPosition();

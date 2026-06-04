@@ -10,21 +10,17 @@ namespace
 
 namespace nsApp
 {
+	/* static変数を初期化。*/
 	DamageIndicatorPool* DamageProcessor::m_damageIndicatorPool = nullptr;
-
-
-	void DamageProcessor::SetDamageIndicatorPool(DamageIndicatorPool* damageIndicatorPool)
-	{
-		m_damageIndicatorPool = damageIndicatorPool;
-	}
 
 
 	bool DamageProcessor::ApplyDamage(const DamageRequest& request)
 	{
+		/* リクエストの内容が有効でない場合、処理を行わない。*/
 		if (!IsValidRequest(request))
 			return false;
 
-		/* ダメージを付与。*/
+		/* ダメージを付与。*/	
 		request.target->ApplyDamage(request.damageAmount);
 
 		/* ダメージフォントの表示を依頼。*/
@@ -36,10 +32,12 @@ namespace nsApp
 
 	DamageRequest DamageProcessor::BuildTargetDamageRequest(nsActor::ICharacter* targetCharacter, int damageAmount)
 	{
+		/* ダメージリクエストを構築。*/
 		DamageRequest request;
 		request.target = targetCharacter;
 		request.damageAmount = damageAmount;
 
+		/* ダメージテキストの表示位置を設定。*/
 		if (targetCharacter != nullptr)
 		{
 			request.hitPosition = targetCharacter->GetPosition();
@@ -63,12 +61,13 @@ namespace nsApp
 		return true;
 	}
 
-
 	void DamageProcessor::SpawnDamageIndicator(int damageValue, const Vector3& position)
 	{
+		/* ダメージ表示用プールが設定されていない場合、処理を行わない。*/
 		if (m_damageIndicatorPool == nullptr)
 			return;
 
+		/* ダメージ表示用プールにダメージテキストの生成を依頼。*/
 		m_damageIndicatorPool->SpawnDamageText(damageValue, position);
 	}
 }

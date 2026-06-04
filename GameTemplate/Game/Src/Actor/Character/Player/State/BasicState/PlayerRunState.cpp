@@ -3,8 +3,7 @@
 
 namespace
 {
-	const auto RUN_SPEED = 120.0;              /* 走行速度。*/
-	const auto MODEL_ANGLE = 90.0f;            /* モデルの回転角度。*/
+		const auto MODEL_ANGLE = 90.0f;            /* モデルの回転角度。*/
 	const auto MOVE_FRAME_TIME = 1.0f / 60.0f; /* 1フレームあたりの固定時間。*/
 }
 
@@ -14,6 +13,7 @@ namespace nsApp
 	{
 		void PlayerRunState::Enter()
 		{
+			/* プレイヤーのポインタを取得。*/
 			m_player = static_cast<nsActor::Player*>(m_owner);
 
 			/* アニメーションを再生。*/
@@ -28,7 +28,7 @@ namespace nsApp
 			if (inputClass.IsMove())
 			{
 				/* 歩行速度より速くする。*/
-				SetRunSpeed(RUN_SPEED);
+				SetRunSpeed(m_player->GetRunSpeed());
 				SetPosition(m_player->GetPosition());
 				SetMoveDirection(inputClass.GetMoveVector());
 
@@ -56,12 +56,14 @@ namespace nsApp
 		{
 			const auto& inputClass = m_player->GetInputClass();
 
+			/* ヘルプ入力があればヘルプ状態に遷移。*/ 
 			if (inputClass.IsHelp())
 			{
 				id = static_cast<uint8_t>(nsActor::PlayerStateID::enHelp);
 				return true;
 			}
 
+			/* 攻撃入力があれば攻撃状態に遷移。*/
 			if (inputClass.IsAttack())
 			{
 				/* 斬り進む状態に。*/
@@ -69,18 +71,21 @@ namespace nsApp
 				return true;
 			}
 
+			/* ジャンプ入力があればジャンプ状態に遷移。*/
 			if (inputClass.IsJump())
 			{
 				id = static_cast<uint8_t>(nsActor::PlayerStateID::enJump);
 				return true;
 			}
 
+			/* 移動入力がなければ待機状態に遷移。*/
 			if(inputClass.IsMove() && !inputClass.IsRun())
 			{
 				id = static_cast<uint8_t>(nsActor::PlayerStateID::enWalk);
 				return true;
 			}
 
+			/* 移動入力がなければ待機状態に遷移。*/
 			if (!inputClass.IsMove())
 			{
 				id = static_cast<uint8_t>(nsActor::PlayerStateID::enIdle);

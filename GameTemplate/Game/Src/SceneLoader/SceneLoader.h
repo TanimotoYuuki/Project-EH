@@ -5,6 +5,9 @@
  * @author Tanimoto。
  * @date 2026/03/05。
  */
+
+#include "Src/AsyncLoad/AsyncLoadManager.h"
+
 namespace nsApp
 {
 	/**
@@ -23,6 +26,7 @@ namespace nsApp
 		{
 			enSceneID_Title,/*タイトルシーン。*/
 			enSceneID_Select,/*選択シーン。*/
+			enSceneID_Loading, //! ローディングシーン。
 			enSceneID_InGame,/*インゲームシーン。*/
 			enSceneID_Result,/*リザルトシーン。*/
 			enSceneID_None,/*シーンなし。*/
@@ -233,6 +237,51 @@ namespace nsApp
 			GameEndSelect* m_gameEndSelect = nullptr;/*ゲーム終了選択用のインスタンス。*/
 		};
 	}
+
+
+	namespace nsLoading
+	{
+		/**
+		 * @brief   ローディングシーンクラス。
+		 * @author  Yamagucghi Hayato。
+		 * @date    2026/06/03: クラス作成日。
+		 * @details シーンの切り替えの際に、次のシーンのリソースを読み込むためのシーン。
+		 */
+		class LoadingScene : public IScene
+		{
+		public:
+			/* コンストラクタとデストラクタ。*/
+			LoadingScene() = default;
+			virtual ~LoadingScene() = default;
+
+
+		public:
+			/**
+			 * @brief 開始処理。
+			 * @return 処理が成功したかどうか。
+			 */
+			bool Start() override;
+
+			/**
+			 * @brief 更新処理。
+			 */
+			void Update() override;
+
+			/**
+			 * @brief 描画処理。
+			 */
+			void Render(RenderContext& rc);
+
+
+		private:
+			AsyncLoadManager m_asyncLoadManager; //! 非同期ロードを管理。
+
+			bool m_isChangesScene = false;		 //! シーン切り替えが完了したかどうか。
+
+			float m_displayProgress = 0.0f;		 //! ローディングの進行度を表示するための変数。
+		};
+	}
+
 
 	namespace nsScene
 	{

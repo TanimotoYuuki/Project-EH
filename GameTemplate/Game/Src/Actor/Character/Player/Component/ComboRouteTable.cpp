@@ -1,6 +1,17 @@
 ﻿#include "stdafx.h"
 #include "ComboRouteTable.h"
 
+namespace
+{
+	const auto GRACE_PERIOD_RUSH_START = 10;		//! 連続攻撃開始の猶予時間。
+	const auto GRACE_PERIOD_RUSH_END = 15;			//! 連続攻撃終了の猶予時間。
+	const auto GRACE_PERIOD_HEAVYATTACK = 10;		//! 重攻撃の猶予時間。
+	const auto GRACE_PERIOD_SLASH_UP = 10;			//! 中継コンボの猶予時間。
+	const auto GRACE_PERIOD_CHARGEATTACK = 0;       //! チャージ攻撃の猶予時間。
+	const auto GRACE_PERIOD_AIRATTACK = 0;          //! 空中攻撃の猶予時間。
+	const auto GRACE_PERIOD_CHARGE = 0;             //! チャージ中の猶予時間
+}
+
 namespace nsApp
 {
 	/* エンプティの実態の作成。*/
@@ -14,11 +25,11 @@ namespace nsApp
 			PLAYER_STATE_ID::enNormalAttack,
 			{
 			    /* 連続攻撃の開始。*/
-				{ ComboInputType::RushB, 10, PLAYER_STATE_ID::enRushStart},
+				{ ComboInputType::RushB, GRACE_PERIOD_RUSH_START, PLAYER_STATE_ID::enRushStart},
 				/* 連続攻撃の終了。*/
-				{ ComboInputType::PressB, 15, PLAYER_STATE_ID::enRushEnd},
+				{ ComboInputType::PressB, GRACE_PERIOD_RUSH_END, PLAYER_STATE_ID::enRushEnd},
 				/* 重攻撃に派生。*/
-		        { ComboInputType::PressX, 10, PLAYER_STATE_ID::enHeavyAttack},
+		        { ComboInputType::PressX, GRACE_PERIOD_HEAVYATTACK, PLAYER_STATE_ID::enHeavyAttack},
 			},
 		},
 		{
@@ -26,7 +37,7 @@ namespace nsApp
 			PLAYER_STATE_ID::enPushForward,
 			{
 			    /* 斬り上げ攻撃への派生。*/
-				{ ComboInputType::PressLB2, 10, PLAYER_STATE_ID::enSlashUp },
+				{ ComboInputType::PressLB2, GRACE_PERIOD_SLASH_UP, PLAYER_STATE_ID::enSlashUp },
 			},
 		},
 		{
@@ -34,7 +45,7 @@ namespace nsApp
 			PLAYER_STATE_ID::enCharging,
 			{
 			    /* Bボタンを離したらチャージ攻撃状態へ。*/
-			    { ComboInputType::PressB, 0, PLAYER_STATE_ID::enChargeAttack},
+			    { ComboInputType::PressB, GRACE_PERIOD_CHARGE, PLAYER_STATE_ID::enChargeAttack},
 		    },
 		},
 	};
@@ -47,7 +58,7 @@ namespace nsApp
 			PLAYER_STATE_ID::enSlashUp,
 			{
 			    /* 空中攻撃に派生。*/
-				{ ComboInputType::PressB, 10, PLAYER_STATE_ID::enAirAttack }
+				{ ComboInputType::PressB, GRACE_PERIOD_AIRATTACK, PLAYER_STATE_ID::enAirAttack }
 			},
 		},
 	};

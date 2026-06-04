@@ -31,7 +31,7 @@ namespace nsApp
 
 		/* セッター。*/
 		public:
-			/* 
+			/** 
 			 * @brief 前進する際の速度を設定。
 			 * @param 前進する速度。
 			 */

@@ -1,0 +1,5 @@
+NPCActionType	MoveSpeed	DashSpeed	SearchRange	AttackRange	HelpRange	CoolTime	Memo
+Help	0.75	1.50	1200	120	5	0	ã~èï
+Chase	1.00	1.40	900	180	2	0	í«ê’
+Attack	1.00	1.20	600	150	3	1	çUåÇ
+Idle	0.50	0.00	0	0	1	0.5	ë“ã@

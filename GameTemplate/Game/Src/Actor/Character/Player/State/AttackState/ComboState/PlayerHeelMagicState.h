@@ -53,27 +53,27 @@ namespace nsApp
 
 
 		private:
-			nsK2EngineLow::EffectEmitter* m_heelEffect = nullptr;
-			nsK2EngineLow::EffectEmitter* m_magicEffect = nullptr;
-			nsK2EngineLow::EffectEmitter* m_particleEffect = nullptr;
+			nsK2EngineLow::EffectEmitter* m_heelEffect = nullptr;     //! 回復魔法エフェクトのインスタンス。
+			nsK2EngineLow::EffectEmitter* m_magicEffect = nullptr;	  //! 回復魔法の発動エフェクトのインスタンス。
+			nsK2EngineLow::EffectEmitter* m_particleEffect = nullptr; //! 回復魔法のパーティクルエフェクトのインスタンス。
 			HeelArea* m_healArea = nullptr;
 
 
 		private:
-			Vector3 m_heelEffectPosition = Vector3::Zero;	     //! 回復魔法エフェクトの位置。
-			Vector3 m_particleEffectPosition = Vector3::Zero;    //! パーティクルエフェクトの位置。
-			Vector3 m_areaPosition = Vector3::Zero;				 //! 回復エリアの位置。
-			Vector3 m_getForward = Vector3::Zero;				 //! プレイヤーの前方ベクトル。
-			Vector3 m_forwardVector = Vector3::Zero;			 //! プレイヤーの前方ベクトル（Y成分を0にしたもの）。
+			Vector3 m_heelEffectPosition = Vector3::Zero;	          //! 回復魔法エフェクトの位置。
+			Vector3 m_particleEffectPosition = Vector3::Zero;         //! パーティクルエフェクトの位置。
+			Vector3 m_areaPosition = Vector3::Zero;				      //! 回復エリアの位置。
+			Vector3 m_getForward = Vector3::Zero;				      //! プレイヤーの前方ベクトル。
+			Vector3 m_forwardVector = Vector3::Zero;			      //! プレイヤーの前方ベクトル（Y成分を0にしたもの）。
 
-			float m_heelEffectScalling = 1.0f;					 //! 回復魔法エフェクトを拡大率。
-			float m_chargeLevel = 0.0f;							 //! チャージ段階。
-			float m_distance = 0.0f;							 //! プレイヤーと回復対象の距離。
+			float m_heelEffectScalling = 1.0f;					      //! 回復魔法エフェクトを拡大率。
+			float m_chargeLevel = 0.0f;							      //! チャージ段階。
+			float m_distance = 0.0f;							      //! プレイヤーと回復対象の距離。
 
-			int m_healAmount = 0;								 //! 回復量を管理する変数。
+			int m_healAmount = 0;								      //! 回復量を管理する変数。
 
-			bool m_hasExecutedHeelMagic = false;				 //! 回復魔法を発動済みか。
-			bool m_canExecuteHeelMagic = false;					 
+			bool m_hasExecutedHeelMagic = false;				      //! 回復魔法を発動済みか。
+			bool m_canExecuteHeelMagic = false;						  //! 回復魔法を発動可能かどうかを管理するフラグ。
 		};
 	}
 }

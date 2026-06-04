@@ -22,6 +22,7 @@ namespace nsApp
 		class WandCharacter : public IWeaponCharacter
 		{
 		public:
+			/* コンストラクタとデストラクタ。*/
 			WandCharacter() = default;
 			virtual ~WandCharacter() = default;
 

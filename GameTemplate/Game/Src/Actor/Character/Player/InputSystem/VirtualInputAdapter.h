@@ -14,10 +14,6 @@ namespace nsApp
 	class VirtualInputAdapter : public IInputDevice
 	{
 	public:
-		/*
-		 * @brief 親クラスからのオーバーライド処理。
-		 */
-
 		/**
 		 * @brief 前フレームの入力を保存する。
 		 */
@@ -59,7 +55,12 @@ namespace nsApp
 			return m_stickY;
 		}
 		
-		void RequestButton(nsK2EngineLow::EnButton button, int holdFrame)
+		/**
+		 * @brief ボタンの入力をリクエストするためのメソッド。
+		 * @param button リクエストするボタン。
+		 * @param holdFrame ボタンをホールドするフレーム数。
+		 */
+		inline void RequestButton(nsK2EngineLow::EnButton button, int holdFrame)
 		{
 			m_buttonIndex = static_cast<int>(button);
 			m_buttonHoldFrames[m_buttonIndex] = holdFrame;
@@ -68,7 +69,7 @@ namespace nsApp
 
 
 	public:
-		/* 
+		/** 
 		 * @brief NPCBrainクラスへの判断を書き込むためのメソッド。
 		 * @param button 判定するボタン。
 		 * @param isPress ボタンが押されているかどうかの状態。

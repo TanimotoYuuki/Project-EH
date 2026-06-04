@@ -1,0 +1,4 @@
+MagicType	Power	HealAmount	Radius	LifeTime	CoolTime	ScaleX	ScaleY	ScaleZ	EffectName
+Heal	0	100	250	180	120	1	1	1	HealEffect
+Laser	15	0	80	90	180	1	1	1	LaserEffect
+AirMagic	10	0	120	60	90	1	1	1	AirMagicEffect
