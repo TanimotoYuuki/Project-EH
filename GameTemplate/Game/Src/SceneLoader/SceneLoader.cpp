@@ -19,7 +19,6 @@
 #include "Src/Scene/InGame/Pause.h"
 #include "Src/Scene/ResultScene/Result.h"
 
-#include "Src/AsyncLoad/ParameterAsyncLoadTask.h"
 namespace nsApp
 {
 	namespace nsTitle
@@ -48,7 +47,7 @@ namespace nsApp
 			}
 			return true;
 		}
-		
+
 		/*更新処理。*/
 		void TitleScene::Update()
 		{
@@ -235,19 +234,16 @@ namespace nsApp
 					for (int i = 0; i < nsApp::nsSelect::MemberSelect::EnCharacterFrameUI::enCharacterFrameUI_Num; i++)
 					{
 						SetPlayerControle(i, m_memberSelect->IsPlayerControle(i));
-						SetCharacterRole(i,m_memberSelect->GetCurrentRole((nsApp::nsSelect::MemberSelect::EnCharacterFrameUI)i));
+						SetCharacterRole(i, m_memberSelect->GetCurrentRole((nsApp::nsSelect::MemberSelect::EnCharacterFrameUI)i));
 					}
 					for (int j = 0; j < nsApp::nsOption::Option::EnGaugeUI::enGaugeUI_Num; j++)
-					{
 						SetVolumeRate(j, m_option->GetVolumeRate((nsApp::nsOption::Option::EnGaugeUI)j));
-					}
 
 					/*フェード処理が終わったらインゲームシーンに遷移する。*/
-					if (nsApp::nsFade::Fade::GetInstance()->IsEnd())
-					{
-						nsApp::nsScene::SceneLoader::GetInstance()->ChangeScene(nsApp::IScene::EnSceneID::enSceneID_InGame);
-					}
+					nsScene::SceneLoader::GetInstance()->ChangeScene(IScene::enSceneID_Loading);
+					return;
 				}
+
 				/*クエスト選択画面が表示されていたら。*/
 				else
 				{
@@ -286,7 +282,7 @@ namespace nsApp
 				else if (m_memberSelect->IsPushHowToPlayButton())
 				{
 					/*前の画面に戻る状態。*/
-					if(m_howToPlay->IsBackSelect())
+					if (m_howToPlay->IsBackSelect())
 					{
 						m_howToPlay->DisableBackSelect();
 						m_memberSelect->Activate();
@@ -323,8 +319,8 @@ namespace nsApp
 						/*選択したときの演出UIアニメーションが終わっていたら確認選択画面を表示する。*/
 						if (m_memberSelect->IsEndSelectEndDirectionUIAnimation(
 							nsApp::nsSelect::MemberSelect::EnSelectDirectionUIAnimationSprite::enSelectDirectionUIAnimationSprite_DeployTextUI
-							)
 						)
+							)
 						{
 							m_memberSelect->DisableDrawingButtonAndTextUI();
 							m_confirmationSelect->Activate();
@@ -525,18 +521,23 @@ namespace nsApp
 		/*開始処理。*/
 		bool InGameScene::Start()
 		{
-			m_game2 = NewGO<Game2>(0, "game");
-			m_game2->SetBossType(GetBossType());
-			for(int i = 0; i < nsApp::nsSelect::MemberSelect::EnCharacterFrameUI::enCharacterFrameUI_Num; i++)
+			m_game2 = FindGO<Game2>("game");
+
+			if (m_game2 == nullptr)
 			{
-				m_game2->SetPlayerControle(i, GetPlayerControle(i));
-				m_game2->SetCharacterRole(i, GetCharacterRole(i));
+				OutputDebugStringA("[InGameScene] Game2 not found.\n");
+				return false;
 			}
+
+			m_game2->ActivateGame();
+
 			m_howToPlay = NewGO<nsApp::nsHowToPlay::HowToPlay>(0, "howToPlay");
 			m_howToPlay->Deactivate();
+
 			return true;
 		}
-		
+
+
 		/*更新処理。*/
 		void InGameScene::Update()
 		{
@@ -574,10 +575,10 @@ namespace nsApp
 						/*ポーズ画面でゲームをやり直すを選択していたら。*/
 						if (m_pause->GetCurrentSelect() == nsApp::nsGame::Pause::EnSelect::enSelect_RestartTheGame)
 						{
-							/*フェード処理が終わったらインゲームシーンに遷移する。*/
+							/*フェード処理が終わったらローディングシーンに遷移する。*/
 							if (nsApp::nsFade::Fade::GetInstance()->IsEnd())
 							{
-								nsApp::nsScene::SceneLoader::GetInstance()->ChangeScene(nsApp::IScene::EnSceneID::enSceneID_InGame);
+								nsApp::nsScene::SceneLoader::GetInstance()->ChangeScene(nsApp::IScene::EnSceneID::enSceneID_Loading);
 							}
 						}
 						/*ポーズ画面でクエスト選択に戻るを選択していたら。*/
@@ -701,10 +702,10 @@ namespace nsApp
 				/*ゲーム終了選択画面でリトライを選択できている状態。*/
 				if (m_gameEndSelect->GetCurrentSelect() == nsApp::GameEndSelect::enSelect_Retry)
 				{
-					/*フェード処理が終わったらインゲームシーンに遷移する。*/
+					/*フェード処理が終わったらローディングシーンに遷移する。*/
 					if (nsApp::nsFade::Fade::GetInstance()->IsEnd())
 					{
-						nsApp::nsScene::SceneLoader::GetInstance()->ChangeScene(nsApp::IScene::EnSceneID::enSceneID_InGame);
+						nsApp::nsScene::SceneLoader::GetInstance()->ChangeScene(nsApp::IScene::EnSceneID::enSceneID_Loading);
 					}
 				}
 				/*ゲーム終了選択画面でクエスト選択に戻るを選択できている状態。*/
@@ -766,10 +767,10 @@ namespace nsApp
 			/*ゲーム終了選択画面でリトライを選択できている状態。*/
 			if (m_gameEndSelect->GetCurrentSelect() == nsApp::GameEndSelect::enSelect_Retry)
 			{
-				/*フェード処理が終わったらインゲームシーンに遷移する。*/
+				/*フェード処理が終わったらローディングシーンに遷移する。*/
 				if (nsApp::nsFade::Fade::GetInstance()->IsEnd())
 				{
-					nsApp::nsScene::SceneLoader::GetInstance()->ChangeScene(nsApp::IScene::EnSceneID::enSceneID_InGame);
+					nsApp::nsScene::SceneLoader::GetInstance()->ChangeScene(nsApp::IScene::EnSceneID::enSceneID_Loading);
 				}
 			}
 			/*ゲーム終了選択画面でクエスト選択に戻るを選択できている状態。*/
@@ -787,16 +788,30 @@ namespace nsApp
 
 	namespace nsLoading
 	{
+		using namespace nsFade;
+
 		bool LoadingScene::Start()
 		{
 			/* フラグをセット。*/
 			m_isChangesScene = false;
 
-			/* 『パラメーターを読み込む』タスクを追加する。*/
-			m_asyncLoadManager.AddTask(std::make_unique<ParameterAsyncLoadTask>());
+			/* ローディング中はフェードを解除する。*/
+			Fade::GetInstance()->ChangeFadeType(Fade::enFadeType_FadeIn);
 
-			/* 非同期ロードを開始する。*/
-			m_asyncLoadManager.Start();
+			/* InGame生成に必要な情報を作成する。*/
+			m_request.bossType = GetBossType();
+
+			/* メンバーの数をセットする。*/
+			for (int i = 0; i < nsApp::nsSelect::MemberSelect::EnCharacterFrameUI::enCharacterFrameUI_Num; i++)
+			{
+				/* キャラクターの役割をセットする。*/
+				m_request.characterRole[i] = GetCharacterRole(i);
+				/* プレイヤーの操作キャラクターかどうかをセットする。*/
+				m_request.isPlayerControle[i] = GetPlayerControle(i);
+			}
+
+			/* ローディング処理を初期化する。*/
+			m_loadingSceneController.Initialize(m_request);
 
 			return true;
 		}
@@ -804,34 +819,37 @@ namespace nsApp
 
 		void LoadingScene::Update()
 		{
-			/* 非同期ロードの状態を更新する。*/
-			m_asyncLoadManager.Update();
+			/* ローディング処理を更新する。*/
+			m_loadingSceneController.Update();
 
-			/* ロードに失敗した場合。*/
-			if(m_asyncLoadManager.IsFailed())
+			/* ローディング処理に失敗した場合。*/
+			if (m_loadingSceneController.IsFailed())
 			{
 				if (!m_isChangesScene)
 				{
-					/* ロードに失敗したことをユーザーに伝えるための処理をここに書く。*/
-					m_isChangesScene = true; 
+					/* ローディングに失敗したときはタイトルシーンに遷移する。*/
+					m_isChangesScene = true;
 
-					std::string errorMessage = m_asyncLoadManager.GetErrorMessage();
-					OutputDebugStringA(errorMessage.c_str());
+					/* エラーメッセージを出力する。*/
+					m_errorMessage = m_loadingSceneController.GetErrorMessage();
+					OutputDebugStringA(m_errorMessage.c_str());
 					OutputDebugStringA("\n");
-					return;
 				}
+				return;
 			}
 
-			/* ロードに成功した場合。*/
-			if (m_asyncLoadManager.IsCompleted())
+
+			/* ローディングに成功した場合。*/
+			if (m_loadingSceneController.IsCompleted())
 			{
 				if (!m_isChangesScene)
 				{
+					/* ローディングに成功したときはインゲームシーンに遷移する。*/
 					m_isChangesScene = true;
-					/* ロードに成功した場合はインゲームシーンに遷移する。*/
-					nsScene::SceneLoader::GetInstance()->ChangeScene(IScene::EnSceneID::enSceneID_InGame);
-				}
 
+					/* ローディング画面に遷移。*/
+					nsApp::nsScene::SceneLoader::GetInstance()->ChangeScene(nsApp::IScene::EnSceneID::enSceneID_InGame);
+				}
 				return;
 			}
 		}
@@ -839,7 +857,8 @@ namespace nsApp
 
 		void LoadingScene::Render(RenderContext& rc)
 		{
-
+			/* 描画。*/
+			m_loadingSceneController.Render(rc);
 		}
 	}
 
@@ -855,29 +874,32 @@ namespace nsApp
 			return true;
 		}
 
+
 		/*更新処理*/
 		void SceneLoader::Update()
 		{
-			if (m_changeSceneID == IScene::enSceneID_None)return;/*切り替えるシーンがなければ処理しない。*/
+			if (m_changeSceneID == IScene::enSceneID_None)
+				return;/*切り替えるシーンがなければ処理しない。*/
 
 			/*シーン用のインスタンスに現在進行中のシーンがあれば破棄する。*/
 			if (m_currentScene)
 			{
 				if (m_currentSceneID == IScene::enSceneID_Title || m_currentSceneID == IScene::enSceneID_Select)
 				{
-					for(int i = 0; i < nsApp::nsOption::Option::EnGaugeUI::enGaugeUI_Num; i++)
-					{
+					for (int i = 0; i < nsApp::nsOption::Option::EnGaugeUI::enGaugeUI_Num; i++)
 						m_volumeRate[i] = m_currentScene->GetVolumeRate((nsApp::nsOption::Option::EnGaugeUI)i);
-					}
 				}
 
-				if (m_currentSceneID == IScene::enSceneID_Select || m_currentSceneID == IScene::enSceneID_InGame)
-				{
+				if (m_currentSceneID == IScene::enSceneID_Select || m_currentSceneID == IScene::enSceneID_Loading || m_currentSceneID == IScene::enSceneID_InGame)
 					m_bossType = m_currentScene->GetBossType();
-				}
 
-				if (m_currentSceneID == IScene::enSceneID_Select)
+
+				/* タイトルシーン、もしくは選択シーンのときは音量の割合を保存する。*/
+				if (m_currentSceneID == IScene::enSceneID_Select ||
+					m_currentSceneID == IScene::enSceneID_Loading ||
+					m_currentSceneID == IScene::enSceneID_InGame)
 				{
+					/* 選択シーン、ローディングシーン、インゲームシーンのときはキャラクター情報を保存する。*/
 					for (int i = 0; i < nsApp::nsSelect::MemberSelect::EnCharacterFrameUI::enCharacterFrameUI_Num; i++)
 					{
 						m_isPlayerControle[i] = m_currentScene->GetPlayerControle(i);
@@ -904,8 +926,18 @@ namespace nsApp
 
 			case IScene::enSceneID_Loading:
 			{
+				/* IDをLoadingに指定。*/
 				m_currentSceneID = IScene::enSceneID_Loading;
-				m_currentScene = NewGO<nsLoading::LoadingScene>(0, "asyncLoading");
+				m_currentScene = NewGO<nsLoading::LoadingScene>(100, "asyncLoading");
+
+				/* Bossの種類をセットする。*/
+				m_currentScene->SetBossType(m_bossType);
+
+				for (int i = 0; i < nsApp::nsSelect::MemberSelect::EnCharacterFrameUI::enCharacterFrameUI_Num; i++)
+				{
+					m_currentScene->SetPlayerControle(i, m_isPlayerControle[i]);
+					m_currentScene->SetCharacterRole(i, m_characterRole[i]);
+				}
 				break;
 			}
 
@@ -938,25 +970,21 @@ namespace nsApp
 			m_bossType = 0;
 			/*キャラクターの役割をデフォルトに戻す。*/
 			for (int i = 0; i < nsApp::nsSelect::MemberSelect::EnCharacterFrameUI::enCharacterFrameUI_Num; i++)
-			{
 				m_characterRole[i] = 0;
-			}
+
 			/*音量の割合をデフォルトに戻す。*/
 			for (int j = 0; j < nsApp::nsOption::Option::EnGaugeUI::enGaugeUI_Num; j++)
-			{
 				m_volumeRate[j] = 100;
-			}
+
 			/*プレイヤーが操作するキャラクターをデフォルトに戻す。*/
 			for (int k = 0; k < nsApp::nsSelect::MemberSelect::EnCharacterFrameUI::enCharacterFrameUI_Num; k++)
 			{
-				if (k == 0) 
-				{ 
+
+				if (k == 0)
 					m_isPlayerControle[k] = true;
-				}
 				else
-				{
 					m_isPlayerControle[k] = false;
-				}
+
 			}
 			/*シーンを切り替えたらIDをデフォルトに戻す。*/
 			m_changeSceneID = IScene::enSceneID_None;
