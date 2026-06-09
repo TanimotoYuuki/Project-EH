@@ -7,12 +7,13 @@
  */
 
 #include "Src/AsyncLoad/AsyncLoadManager.h"
+#include "Src/Scene/Loading/LoadingSceneController.h"
 
 namespace nsApp
 {
 	/**
-	*  @brief シーンベースクラス。
-	*/
+	 * @brief シーンベースクラス。
+	 */
 	class IScene : public IGameObject
 	{
 	public:
@@ -120,6 +121,7 @@ namespace nsApp
 	{
 		class Option;
 	}
+
 	namespace nsTitle
 	{
 		/**
@@ -151,6 +153,7 @@ namespace nsApp
 	{
 		class HowToPlay;
 	}
+
 	class GameEndSelect;
 	namespace nsSelect
 	{
@@ -187,6 +190,7 @@ namespace nsApp
 	{
 		class ConfirmationSelect;
 	}
+
 	namespace nsGame
 	{
 		/**
@@ -238,7 +242,7 @@ namespace nsApp
 		};
 	}
 
-
+	
 	namespace nsLoading
 	{
 		/**
@@ -274,11 +278,12 @@ namespace nsApp
 
 
 		private:
-			AsyncLoadManager m_asyncLoadManager; //! 非同期ロードを管理。
+			LoadingSceneController m_loadingSceneController;  //! ローディングシーンのコントローラー。
+			InGameBuildRequest m_request;					  //! インゲーム生成に必要なリクエスト情報。
 
-			bool m_isChangesScene = false;		 //! シーン切り替えが完了したかどうか。
+			std::string m_errorMessage;						  //! ローディングに失敗したときのエラーメッセージ。
 
-			float m_displayProgress = 0.0f;		 //! ローディングの進行度を表示するための変数。
+			bool m_isChangesScene = false;                    //! シーン切り替えが完了したかどうか。
 		};
 	}
 

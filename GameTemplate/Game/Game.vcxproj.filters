@@ -61,9 +61,6 @@
     <Filter Include="Src\Effect">
       <UniqueIdentifier>{78fd3ad4-6cb5-4064-bc84-63753a7be212}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Src\Fade">
-      <UniqueIdentifier>{ff86a33d-c241-4d31-b374-94969df76508}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Src\Parameter">
       <UniqueIdentifier>{2d925063-25c4-4809-b538-66ad3d736e34}</UniqueIdentifier>
     </Filter>
@@ -165,6 +162,15 @@
     </Filter>
     <Filter Include="Src\Actor\Character\Common\Pool">
       <UniqueIdentifier>{9252f266-46dd-4521-9248-0b26e9200365}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Scene\Loading">
+      <UniqueIdentifier>{c14a7fe2-6af9-4b62-a9a8-adfc61776684}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Build">
+      <UniqueIdentifier>{e5c69e4b-6e9d-4ee3-9c2e-eb5b5f45ef64}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Fade">
+      <UniqueIdentifier>{ff86a33d-c241-4d31-b374-94969df76508}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -530,6 +536,24 @@
     </ClCompile>
     <ClCompile Include="BossRoarState.cpp">
       <Filter>Src\Actor\Character\Boss\State</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Build\InGameBuildHelper.cpp">
+      <Filter>Src\Build</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Scene\Loading\LoadingSceneController.cpp">
+      <Filter>Src\Scene\Loading</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\UI\Loading\LoadingRandomRunnerModel.cpp">
+      <Filter>Src\UI\Loading</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Camera\BattleCameraStrategy.cpp">
+      <Filter>Src\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Camera\LoadingCameraStrategy.cpp">
+      <Filter>Src\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\UI\Loading\LoadingTextUI.cpp">
+      <Filter>Src\UI\Loading</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -942,6 +966,27 @@
     </ClInclude>
     <ClInclude Include="BossRoarState.h">
       <Filter>Src\Actor\Character\Boss\State</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Build\InGameBuildHelper.h">
+      <Filter>Src\Build</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Scene\Loading\LoadingSceneController.h">
+      <Filter>Src\Scene\Loading</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\UI\Loading\LoadingRandomRunnerModel.h">
+      <Filter>Src\UI\Loading</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Camera\BattleCameraStrategy.h">
+      <Filter>Src\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Camera\ICameraStrategy.h">
+      <Filter>Src\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Camera\LoadingCameraStrategy.h">
+      <Filter>Src\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\UI\Loading\LoadingTextUI.h">
+      <Filter>Src\UI\Loading</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

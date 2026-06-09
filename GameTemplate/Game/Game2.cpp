@@ -31,17 +31,6 @@
 
 namespace
 {
-	const auto INIT_CHARACTER_POSITION_Y = 50.0f;
-	const auto INIT_CHARACTER_POSITION_Z = 0.0f;
-
-	const auto INIT_CHARACTER_POSITION_PLAYER1 = Vector3(80.0f, INIT_CHARACTER_POSITION_Y, INIT_CHARACTER_POSITION_Z);
-	const auto INIT_CHARACTER_POSITION_PLAYER2 = Vector3(-80.0f, INIT_CHARACTER_POSITION_Y, INIT_CHARACTER_POSITION_Z);
-	const auto INIT_CHARACTER_POSITION_PLAYER3 = Vector3(-50.0f, INIT_CHARACTER_POSITION_Y, INIT_CHARACTER_POSITION_Z);
-	const auto INIT_CHARACTER_POSITION_PLAYER4 = Vector3(50.0f, INIT_CHARACTER_POSITION_Y, INIT_CHARACTER_POSITION_Z);
-}
-
-namespace
-{
 	bool IsTriggerKey(int keyCode)
 	{
 		static SHORT prevKeyState[256] = { 0 };
@@ -200,7 +189,8 @@ namespace nsApp
 			DeleteGO(m_damageIndicatorPool);
 			m_damageIndicatorPool = nullptr;
 
-		
+			m_players.clear();
+
 			delete m_generator;
 			delete m_playerHub;
 		}
@@ -208,72 +198,40 @@ namespace nsApp
 
 		bool Game2::Start()
 		{
-			/* 乱数の初期化。*/
-			srand(static_cast<unsigned int>(time(nullptr)));
+			/* ゲーム生成処理を実行する。*/
+			m_isGameActive = false;
 
-			/* 音源クラスの設定項目。*/
-			SettingSound();
-
-			/* 初期ステージのセット。*/
-			/* @TODO ステージ選択画面からこの処理を呼ぶようにする。*/
-			nsApp::nsStage::LoadStageData::GetInstance().ChangeStage(nsApp::nsStage::StageID::stage1);
-
-			
-			m_backGround = NewGO<nsStage::BackGround>(0, "BackGround");
-			/* カメラを生成。*/
-			m_camera = NewGO<Camera>(0, "camera");
-
-
-			/* ダメージプールを生成。*/
-			m_damageIndicatorPool = NewGO<DamageIndicatorPool>(0, "damagePool");
-			DamageProcessor::SetDamageIndicatorPool(m_damageIndicatorPool);
-
-			/* Player達を生成。*/
-			SpawnPlayCharacter();
-
-			///*ボスを作成。*/
-			m_boss = NewGO<nsActor::Boss>(0, "boss");
-			/*ボスの種類を設定。*/
-			m_boss->SetBossType((CharacterModelType)GetBossType());
-
-			if(m_boss != nullptr)
-				/*ボスにプレイヤーをターゲットとして教える。*/
-				m_boss->SetTarget(m_player);
-
-
-			m_characterHP = NewGO<CharacterHP>(0, "characterHP");
-			for (int i = 0; i < CharacterHP::EnCharacter::enCharacter_Num; i++)
-			{
-				m_characterHP->SetCharacterRole(i, GetCharacterRole(i));
-			}
-			m_characterHP->Deactivate();
-
-			m_gameTimeLimit = NewGO<GameTimeLimit>(0, "gameTimeLimit");
-			m_gameTimeLimit->SetTimeLimit(180);
-			m_gameTimeLimit->Deactivate();
-
-			m_gameStartDirection = NewGO<GameStartDirection>(2, "gameStartDirection");
-			m_gameStartDirection->Deactivate();
-
-			m_pause = NewGO<Pause>(0, "pause");
-			m_pause->Deactivate();
-
-			/*フェードインに切り替える。*/
-			nsApp::nsFade::Fade::GetInstance()->ChangeFadeType(nsApp::nsFade::Fade::EnFadeType::enFadeType_FadeIn);
-
-			/* コメントの生成。*/
-			SettingCommentaryUI();
 			return true;
 		}
 
 
 		void Game2::Update()
 		{
+			if (!m_isGameActive)
+				return;
+
 			DebugUpdateHealTest();
 
-			if(m_playerHub)
+			static int debugFrame = 0;
+			++debugFrame;
+
+			if (m_playerHub != nullptr)
+			{
+				if (debugFrame % 60 == 0)
+				{
+					OutputDebugStringA("[Game2] PlayerHub Update\n");
+				}
+
 				m_playerHub->Update();
-			
+			}
+			else
+			{
+				if (debugFrame % 60 == 0)
+				{
+					OutputDebugStringA("[Game2] PlayerHub is nullptr in Update\n");
+				}
+			}
+
 			/*ゲーム開始用のインスタンスがnullptrではなければ。*/
 			if (m_gameStartDirection != nullptr)
 			{
@@ -289,10 +247,9 @@ namespace nsApp
 
 				/*フェードが終わっていたらゲーム開始演出を再生する。*/
 				if (nsApp::nsFade::Fade::GetInstance()->IsEnd())
-				{
 					m_gameStartDirection->Activate();
-				}
 			}
+
 			else
 			{
 				/*ポーズ画面が表示していないとき。*/
@@ -391,92 +348,96 @@ namespace nsApp
 			/* 現在のステージの更新を行う。*/
 			nsApp::nsStage::LoadStageData::GetInstance().Update();
 
-			if(m_reboneGaugeUIManager != nullptr)
+			if (m_reboneGaugeUIManager != nullptr)
 				m_reboneGaugeUIManager->Update();
 		}
 
 
-		void Game2::Render(RenderContext &rc)
+		void Game2::Render(RenderContext& rc)
 		{
+			if (!m_isGameActive)
+				return;
+
 			/* 現在のステージを描画する。*/
 			nsApp::nsStage::LoadStageData::GetInstance().Draw(rc);
 
-			if(m_reboneGaugeUIManager != nullptr)
+			if (m_reboneGaugeUIManager != nullptr)
 				m_reboneGaugeUIManager->Render(rc);
 		}
 
 
-		void Game2::SpawnPlayCharacter()
-		{
-			/* 生成システムクラスを生成する。*/
-			m_generator = new PlayerGenerator();
 
-			for (int i = 0; i < 4; i++)
+		void Game2::ApplyBuildResult(const InGameBuildResult& result)
+		{
+			/* 生成結果を適用する。*/
+			m_soundLister = result.soundLister;
+			m_backGround = result.backGround;
+			m_reboneGaugeUIManager = result.reboneGaugeUIManager;
+			m_commentaryUIManager = result.commentaryUIManager;
+			m_camera = result.camera;
+			m_player = result.player;
+			m_players = result.players;
+			m_partyData = result.partyData;
+			m_boss = result.boss;
+			m_damageIndicatorPool = result.damageIndicatorPool;
+			m_characterHP = result.characterHP;
+			m_gameTimeLimit = result.gameTimeLimit;
+			m_gameStartDirection = result.gameStartDirection;
+			m_pause = result.pause;
+			m_generator = result.generator;
+		}
+
+
+		void Game2::ActivateGame()
+		{
+			m_isGameActive = true;
+
+			if (m_backGround != nullptr)
+				m_backGround->Activate();
+
+			if (m_camera != nullptr)
+				m_camera->Activate();
+
+			if (m_damageIndicatorPool != nullptr)
+				m_damageIndicatorPool->Activate();
+
+			if (m_commentaryUIManager != nullptr)
+				m_commentaryUIManager->Activate();
+
+			for (auto* player : m_players)
 			{
-				if (m_isPlayerControle[i])
-				{
-					m_controllerType[i] = (ControllerType)i;
-				}
-				else
-				{
-					m_controllerType[i] = ControllerType::NPC;
-				}
+				if (player != nullptr)
+					player->Activate();
 			}
 
-			/* PlayerGeneratorを用い、プレイアブルキャラを作成する。*/
-			std::vector<PlayerSpawnData> partyData =
+			/* PlayerHubはGame2側で生成・初期化する。*/
+			if (m_playerHub == nullptr)
 			{
-				{"player1", (WeaponType)GetCharacterRole(0), m_controllerType[0], INIT_CHARACTER_POSITION_PLAYER1},
-				{"player2", (WeaponType)GetCharacterRole(1), m_controllerType[1], INIT_CHARACTER_POSITION_PLAYER2},
-				{"player3", (WeaponType)GetCharacterRole(2), m_controllerType[2], INIT_CHARACTER_POSITION_PLAYER3},
-				{"player4", (WeaponType)GetCharacterRole(3), m_controllerType[3], INIT_CHARACTER_POSITION_PLAYER4}
-			};
+				char debugText[256];
+				sprintf_s(
+					debugText,
+					"[Game2] ActivateGame players=%d partyData=%d player=%p boss=%p\n",
+					static_cast<int>(m_players.size()),
+					static_cast<int>(m_partyData.size()),
+					m_player,
+					m_boss
+				);
+				OutputDebugStringA(debugText);
 
-			/* 作成したリストをセットする。*/
-			auto players = m_generator->SpawnPlayers(partyData);
-			if (!players.empty())
-				m_player = players[0];
 
-			/* ReboneUIを登録。*/
-			if (m_reboneGaugeUIManager != nullptr)
-			{
-				for (auto* player : players)
-					m_reboneGaugeUIManager->RegisterPlayer(player);
+				m_playerHub = new PlayerControlerHub();
+				m_playerHub->Initialize(m_players, m_partyData);
 			}
 
-			/* Hubを生成する。*/
-			m_playerHub = new PlayerControlerHub();
-			m_playerHub->Initialize(players, partyData);
-		}
+			/* Bossのターゲットを最終保証する。*/
+			if (m_boss != nullptr && m_player != nullptr)
+				m_boss->SetTarget(m_player);
 
+			if (m_boss != nullptr)
+				m_boss->Activate();
 
-		void Game2::SettingSound()
-		{
-			/* 音源クラスを生成する。*/
-			m_soundLister = FindGO<nsSound::SoundLister>("SoundManager");
-
-			if (m_soundLister == nullptr)
-				m_soundLister = NewGO<nsSound::SoundLister>(0, "SoundManager");
-
-			/* 初期化。*/
-			m_soundLister->InitSound();
-
-			/* BGMを再生。*/ 
-			m_soundLister->GetBGMList().StopBGM();
-
-			/* ステージBGMを再生する。*/
-			m_soundLister->GetBGMList().PlayBGM(nsSound::BGM_ID::Stage1, 1.0f);
-		}
-
-
-		void Game2::SettingCommentaryUI()
-		{
-			/* UIを生成。*/
-			m_reboneGaugeUIManager = new nsUI::ReboneGaugeUIManager();
-			m_reboneGaugeUIManager->Init();
-
-			/* 実況UIを生成。*/
-			m_commentaryUIManager = NewGO<nsUI::CommentaryUIManager>(0, "CommentaryUIManager");
-		}
+			/* フェードを切り替える。*/
+			nsFade::Fade::GetInstance()->ChangeFadeType(nsFade::Fade::enFadeType_FadeIn);
+		}	
 	}
 }

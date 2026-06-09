@@ -26,7 +26,8 @@ namespace nsApp
 	public:
 		/**
 		 * @brief 非同期ロードタスクを追加する。
-		 * @param tast 追加する非同期ロードタスク。タスクはAsyncLoadManagerが所有するため、呼び出し元はタスクの管理を行う必要がない。
+		 * @param tast 追加する非同期ロードタスク。
+		               タスクはAsyncLoadManagerが所有するため、呼び出し元はタスクの管理を行う必要がない。
 		 */
 		void AddTask(std::unique_ptr<AsyncLoadTaskBase> tast);
 
