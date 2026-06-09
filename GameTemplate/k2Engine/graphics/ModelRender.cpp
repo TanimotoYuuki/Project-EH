@@ -450,6 +450,22 @@ namespace nsK2Engine {
 		m_animation.Progress(g_gameTime->GetFrameDeltaTime() * m_animationSpeed);
 
 	}
+
+
+	void ModelRender::UpdateWorldOnly()
+	{
+		if (m_isEnableInstancingDraw)
+			return;
+
+		/* ワールド行列のみ更新。*/
+		UpdateWorldMatrixInModes();
+
+		// スケルトンを更新。
+		if (m_skeleton.IsInited())
+			m_skeleton.Update(m_zprepassModel.GetWorldMatrix());
+	}
+
+
 	void ModelRender::Draw(RenderContext& rc)
 	{
 		if (m_isEnableInstancingDraw) {

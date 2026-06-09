@@ -36,6 +36,14 @@ namespace nsApp
 
 	public:
 		/**
+		 * @brief Playerを1体ずつ生成する。
+		 * @param spawnData　Player生成に必要なデータ。
+		 * @return　生成されたPlayerのポインタ。
+		 */
+		nsActor::Player* SpawnPlayer(const PlayerSpawnData& spawnData);
+
+
+		/**
 		 * @brief 渡されたマップを元にPlayerを生成する。
 		 * @param spawnDataList Player生成に必要なデータのリスト。
 		 */
