@@ -9,6 +9,7 @@
 */
 
 #include "Src/Parameter/ParameterSystem.h"
+#include "Src/Build/InGameBuildHelper.h"
 
 namespace nsApp
 {
@@ -62,19 +63,17 @@ namespace nsApp
 			void Render(RenderContext& rc);
 
 
-		private:
-			/* プレイアブルキャラを生成する。*/
-			void SpawnPlayCharacter();
+		public:
+			/**
+			 * @brief 生成補助クラスで生成した結果をGame2に反映する。
+			 * @param result InGame生成結果。
+			 */
+			void ApplyBuildResult(const InGameBuildResult& result);
 
 			/**
-			 * @brief 音源クラスの初期設定に関する関数群を呼び出す。
+			 * @brief ゲーム本編を有効化する。
 			 */
-			void SettingSound();
-
-			/**
-			 * @brief 実況UIの初期設定に関する関数群を呼び出す。
-			 */
-			void SettingCommentaryUI();
+			void ActivateGame();
 
 
 		public:
@@ -145,7 +144,7 @@ namespace nsApp
 			* @brief 各キャラクターの役割の設定。
 			* @param playerIndex プレイヤーのインデックス。
 			*/
-			inline void SetCharacterRole(int playerIndex,int role)
+			inline void SetCharacterRole(int playerIndex, int role)
 			{
 				m_characterRole[playerIndex] = role;
 			}
@@ -197,17 +196,13 @@ namespace nsApp
 			GameOverDirection* m_gameOverDirection = nullptr;
 			GameEndSelect* m_gameEndSelect = nullptr;
 			Pause* m_pause = nullptr;
-
-			////////////////////////////////////////////////////////
-			//Player生成: メンバ選択クラスに移動をするなら移動して
-			////////////////////////////////////////////////////////
 			PlayerGenerator* m_generator = nullptr;
 			PlayerControlerHub* m_playerHub = nullptr;
+			std::vector<nsActor::Player*> m_players;
+			std::vector<PlayerSpawnData> m_partyData;
 
-			int m_bossType = 0;
-			int m_characterRole[4] = { 0 }; //! キャラクターごとの役割。
-			ControllerType m_controllerType[4] = { ControllerType::Player_1P }; //! キャラクターごとのコントローラーの種類。
-			bool m_isPlayerControle[4] = { true }; //! プレイヤーが操作しているかどうか。
+
+		private:
 
 			/**
 			 * @brief デバッグ用の回復テスト関数。
@@ -220,10 +215,17 @@ namespace nsApp
 			void DebugDamageParty();
 
 			/**
-		     * @brief デバッグ用のHP表示関数。
+			 * @brief デバッグ用のHP表示関数。
 			 */
 			void DebugPrintPartyHP();
 
+
+		private:
+			int m_bossType = 0;
+			int m_characterRole[4] = { 0 };        //! キャラクターごとの役割。
+
+			bool m_isPlayerControle[4] = { true }; //! プレイヤーが操作しているかどうか。
+			bool m_isGameActive = false;		   //! ゲーム本編が有効かどうか。
 		};
 	}
 }

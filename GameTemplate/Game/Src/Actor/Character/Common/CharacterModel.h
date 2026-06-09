@@ -93,6 +93,19 @@ namespace nsApp
 		/* 更新処理。*/
 		void Update();
 
+		/**
+		 * @brief ワールド行列のみを更新する。
+		 */
+		inline void UpdateWorldOnly()
+		{
+			/* キャラモデルが確認できない場合、処理を終了させる。*/
+			if (m_characterModelRender == nullptr)
+				return;
+
+			/* ワールド行列のみ更新。*/
+			m_characterModelRender->UpdateWorldOnly();
+		}
+
 		/* アニメーションが再生終了したか。*/
 		bool IsPlayAnimation()
 		{

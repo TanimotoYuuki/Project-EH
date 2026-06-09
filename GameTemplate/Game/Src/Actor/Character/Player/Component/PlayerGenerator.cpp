@@ -26,6 +26,23 @@ namespace nsApp
 	}
 
 
+	nsActor::Player* PlayerGenerator::SpawnPlayer(const PlayerSpawnData& spawnData)
+	{
+		/* 生成用変数。*/
+		nsActor::Player* player = nullptr;
+
+		/* 武器の種類に対応したキャラクターを生成する。*/
+		if (m_characterFactory.count(spawnData.weaponType) > 0)
+			player = m_characterFactory[spawnData.weaponType](spawnData.playerName);
+
+		/* プレイヤーのnullチェック。*/
+		if (player != nullptr)
+			player->InitializeSpawnData(spawnData);
+
+		return player;
+	}
+
+
 	std::vector<nsActor::Player*> PlayerGenerator::SpawnPlayers(const std::vector<PlayerSpawnData>& spawnDataList)
 	{
 		/* 生成用変数。*/
@@ -34,19 +51,13 @@ namespace nsApp
 		/* 生成データのリストをループして、プレイヤーを生成する。*/
 		for (const auto& data : spawnDataList)
 		{
-			/* 武器の数を調べる。*/
-			if (m_characterFactory.count(data.weaponType) > 0)
-				m_spawnPlayer = m_characterFactory[data.weaponType](data.playerName);
+			/* プレイヤーを生成する。*/
+			nsActor::Player* player = SpawnPlayer(data);
 
 			/* プレイヤーのnullチェック。*/
-			if (m_spawnPlayer != nullptr)
-			{
-				/* 生成したプレイヤーにスポーンデータを渡す。*/
-				m_spawnPlayer->InitializeSpawnData(data);
-
+			if (player != nullptr)
 				/* 生成したプレイヤーをリストに追加する。*/
-				spawnedPlayers.push_back(m_spawnPlayer);
-			}
+				spawnedPlayers.push_back(player);
 		}
 
 		return spawnedPlayers;
