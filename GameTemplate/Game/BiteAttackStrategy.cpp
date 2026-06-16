@@ -1,24 +1,21 @@
-﻿#include "stdafx.h"
+﻿﻿#include "stdafx.h"
 #include "BiteAttackStrategy.h"
-#include "Boss.h"
-
+#include "Src/Actor/Character/Boss/Boss.h"
 #include "Src/Sound/SoundLister.h"
 #include "Src/Sound/SEList.h"
+
 
 namespace nsApp
 {
 	namespace nsAI
 	{
-		void BiteAttackStrategy::Enter(nsActor::Boss *boss)
+		void BiteAttackStrategy::Enter(nsActor::Boss* boss)
 		{
 			/*攻撃時間。*/
 			m_timer = 1.0f;
 
 			/*攻撃フラグ初期化。*/
 			m_isAttack = false;
-
-			/*SEのフラグを初期化。*/
-			m_hasPlayedSound = false;
 
 			/*Y位置をロック。*/
 			boss->LockYPosition(boss->GetPosition().y);
@@ -27,11 +24,10 @@ namespace nsApp
 			boss->PlayAnimation(nsActor::BossAnimationID::BiteAttack);
 		}
 
-		void BiteAttackStrategy::Update(nsActor::Boss *boss)
+		void BiteAttackStrategy::Update(nsActor::Boss* boss)
 		{
 			m_timer -= g_gameTime->GetFrameDeltaTime();
 
-			/*攻撃判定と同時にSEを再生。*/
 			if (!m_isAttack && m_timer <= 0.7f)
 			{
 				boss->AttackBite();
@@ -47,12 +43,10 @@ namespace nsApp
 
 			// 攻撃が終わる頃にロック解除
 			if (m_timer <= 0.1f)
-			{
 				boss->UnlockYPosition();
-			}
 		}
 
-		void BiteAttackStrategy::Exit(nsActor::Boss *boss)
+		void BiteAttackStrategy::Exit(nsActor::Boss* boss)
 		{
 			// 攻撃判定を無効化
 			if (boss)
