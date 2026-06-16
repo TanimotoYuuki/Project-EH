@@ -481,5 +481,29 @@ namespace nsApp
 			/* 助けられ状態。*/
 			m_stateFactory[PlayerStateID::enGetUp] = []() { return new nsState::PlayerGetUpState(); };
 		}
-	}
+
+
+		void Player::ForceBlowAway(float knockbackVelocity, float dirX)
+		{
+			if (m_currentStateID == static_cast<uint8_t>(PlayerStateID::enDeath))
+				return;
+
+			auto* hitState = static_cast<nsState::PlayerHitState*>(
+				m_stateFactory[PlayerStateID::enHit]()
+				);
+			hitState->SetKnockBackVelocity(knockbackVelocity);
+			hitState->SetKnockBackSpeed(Vector3(dirX * 100.0f, 50.0f, 0.0f));
+			hitState->SetHitTimer(90);
+			hitState->SetGetUpFlag(false);  /* 移動させる。*/
+			m_currentStateID = static_cast<uint8_t>(PlayerStateID::enHit);
+			m_stateMachine->ChangeState(hitState);
+		}
+
+		void Player::ForceGetUp()
+		{
+			if (m_currentStateID == static_cast<uint8_t>(PlayerStateID::enDeath))
+				return;
+			m_currentStateID = static_cast<uint8_t>(PlayerStateID::enIdle);
+			m_stateMachine->ChangeState(m_stateFactory[PlayerStateID::enIdle]());
+		}	}
 }

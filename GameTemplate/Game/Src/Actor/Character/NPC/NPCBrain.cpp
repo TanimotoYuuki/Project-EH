@@ -1,6 +1,6 @@
 ﻿#include "stdafx.h"
 #include "NPCBrain.h"
-#include "Boss.h"
+#include "Src/Actor/Character/Boss/Boss.h"
 
 #include "Src/Actor/Character/Player/Player.h"
 #include "Src/Actor/Character/Player/PlayerInput.h"

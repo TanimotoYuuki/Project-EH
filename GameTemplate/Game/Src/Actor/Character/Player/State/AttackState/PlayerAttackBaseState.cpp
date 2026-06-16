@@ -8,7 +8,7 @@
 
 #include "Src/Actor/Character/Status/AttackParameterTable.h"
 #include "Src/Actor/Magic/Factory/MagicFactory.h"
-#include "Boss.h"
+#include "Src/Actor/Character/Boss/Boss.h"
 
 #include <algorithm>
 #include <cstdlib>
