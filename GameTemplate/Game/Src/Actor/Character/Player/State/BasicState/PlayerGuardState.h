@@ -9,13 +9,13 @@ namespace nsApp
 		class PlayerGuardState : public IState<nsActor::Actor>
 		{
 		public:
-			/* ƒRƒ“ƒXƒgƒ‰ƒNƒ^‚ÆƒfƒXƒgƒ‰ƒNƒ^B*/
+			/* ï¿½Rï¿½ï¿½ï¿½Xï¿½gï¿½ï¿½ï¿½Nï¿½^ï¿½Æƒfï¿½Xï¿½gï¿½ï¿½ï¿½Nï¿½^ï¿½B*/
 			PlayerGuardState() = default;
 			~PlayerGuardState() = default;
 
 
 		public:
-			/* ƒ‰ƒCƒtƒTƒCƒNƒ‹B*/
+			/* ï¿½ï¿½ï¿½Cï¿½tï¿½Tï¿½Cï¿½Nï¿½ï¿½ï¿½B*/
 			void Enter() override;
 			void Update() override;
 			void Exit() override {};
@@ -23,7 +23,7 @@ namespace nsApp
 
 
 		private:
-			nsActor::Player* m_player = nullptr; //! ƒvƒŒƒCƒ„[‚Ö‚Ìƒ|ƒCƒ“ƒ^B
+			nsActor::Player* m_player = nullptr; //! ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Ö‚Ìƒ|ï¿½Cï¿½ï¿½ï¿½^ï¿½B
 		};
 	}
 }

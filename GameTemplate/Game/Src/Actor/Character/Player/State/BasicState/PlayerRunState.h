@@ -1,7 +1,7 @@
 #pragma once
 /**
 * @file   PlayerRunState.h
-* @brief  Player‚ÌRunó‘Ô‚ğŠÇ—‚·‚éƒNƒ‰ƒXB
+* @brief  Playerï¿½ï¿½Runï¿½ï¿½Ô‚ï¿½ï¿½Ç—ï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½Xï¿½B
 * @author Yamaguchi Hayato
 * @date   2026/03/15
 */
@@ -21,24 +21,24 @@ namespace nsApp
 		class PlayerRunState : public IState<nsActor::Actor>
 		{ 
 		public:
-			/* ƒRƒ“ƒXƒgƒ‰ƒNƒ^‚ÆƒfƒXƒgƒ‰ƒNƒ^B*/
+			/* ï¿½Rï¿½ï¿½ï¿½Xï¿½gï¿½ï¿½ï¿½Nï¿½^ï¿½Æƒfï¿½Xï¿½gï¿½ï¿½ï¿½Nï¿½^ï¿½B*/
 			PlayerRunState() = default;
 			virtual ~PlayerRunState() = default;
 
 
 		public:
-			/* ƒ‰ƒCƒtƒTƒCƒNƒ‹B*/
+			/* ï¿½ï¿½ï¿½Cï¿½tï¿½Tï¿½Cï¿½Nï¿½ï¿½ï¿½B*/
 			void Enter() override;
 			void Update() override;
 			void Exit() override {};
 			bool RequestID(uint8_t& id) override;
 
 
-		/* ƒZƒbƒ^[B*/
+		/* ï¿½Zï¿½bï¿½^ï¿½[ï¿½B*/
 		public:
 			/**
-			 * @brief ‘–‚é‘¬“x‚ğİ’èB
-			 * @param speed ‘–‚é‘¬“xB
+			 * @brief ï¿½ï¿½ï¿½é‘¬ï¿½xï¿½ï¿½İ’ï¿½B
+			 * @param speed ï¿½ï¿½ï¿½é‘¬ï¿½xï¿½B
 			 */
 			inline void SetRunSpeed(float speed) 
 			{
@@ -46,8 +46,8 @@ namespace nsApp
 			}
 
 			/**
-			 * @brief Œ»İ‚ÌÀ•W‚ğİ’èB
-			 * @param position Œ»İ‚ÌÀ•WB
+			 * @brief ï¿½ï¿½ï¿½İ‚Ìï¿½ï¿½Wï¿½ï¿½İ’ï¿½B
+			 * @param position ï¿½ï¿½ï¿½İ‚Ìï¿½ï¿½Wï¿½B
 			 */
 			inline void SetPosition(const Vector3& position) 
 			{
@@ -55,8 +55,8 @@ namespace nsApp
 			}
 
 			/**
-			 * @brief ˆÚ“®•ûŒü‚ğİ’èB
-			 * @param direction ˆÚ“®•ûŒü‚ÌƒxƒNƒgƒ‹B
+			 * @brief ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½İ’ï¿½B
+			 * @param direction ï¿½Ú“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìƒxï¿½Nï¿½gï¿½ï¿½ï¿½B
 			 */
 			inline void SetMoveDirection(const Vector3& direction) 
 			{
@@ -65,15 +65,15 @@ namespace nsApp
 			
 
 		private:	
-			nsActor::Player* m_player = nullptr;		//! Player‚Ö‚Ìƒ|ƒCƒ“ƒ^B
+			nsActor::Player* m_player = nullptr;		//! Playerï¿½Ö‚Ìƒ|ï¿½Cï¿½ï¿½ï¿½^ï¿½B
 
 
 		private:
-			float m_runSpeed;                           //! ‘–‚é‘¬“xB
+			float m_runSpeed;                           //! ï¿½ï¿½ï¿½é‘¬ï¿½xï¿½B
 
-			Vector3 m_moveVector = Vector3::Zero;       //! ‘–‚éÛ‚ÌˆÚ“®ƒxƒNƒgƒ‹B
-			Vector3 m_currentPosition = Vector3::Zero;  //! Œ»İ‚ÌÀ•WB
-			Vector3 m_moveDirection = Vector3::Zero;    //! ˆÚ“®ƒxƒNƒgƒ‹B
+			Vector3 m_moveVector = Vector3::Zero;       //! ï¿½ï¿½ï¿½ï¿½Û‚ÌˆÚ“ï¿½ï¿½xï¿½Nï¿½gï¿½ï¿½ï¿½B
+			Vector3 m_currentPosition = Vector3::Zero;  //! ï¿½ï¿½ï¿½İ‚Ìï¿½ï¿½Wï¿½B
+			Vector3 m_moveDirection = Vector3::Zero;    //! ï¿½Ú“ï¿½ï¿½xï¿½Nï¿½gï¿½ï¿½ï¿½B
 		};
 	}
 }

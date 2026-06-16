@@ -17,26 +17,26 @@ namespace nsApp
 			if (m_player == nullptr)
 				return;
 
-			/* ‹~•‘ÎÛ‚ğ‰ğŒˆ‚·‚éB*/
+			/* ï¿½~ï¿½ï¿½ï¿½ÎÛ‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B*/
 			ResolveTargetCharacter();
 
-			/* ‹~•‘ÎÛ‚ª‚¢‚È‚¢ê‡AŸ‚ÌƒtƒŒ[ƒ€‚Å–ß‚·B*/
+			/* ï¿½~ï¿½ï¿½ï¿½ÎÛ‚ï¿½ï¿½ï¿½ï¿½È‚ï¿½ï¿½ê‡ï¿½Aï¿½ï¿½ï¿½Ìƒtï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½Å–ß‚ï¿½ï¿½B*/
 			if (!IsValidTargetCharacter())
 			{
 				m_shouldReturnIdle = true;
 				return;
 			}
 
-			/* ‹~•is‚ğŠJn‚·‚éB*/
+			/* ï¿½~ï¿½ï¿½ï¿½iï¿½sï¿½ï¿½ï¿½Jï¿½nï¿½ï¿½ï¿½ï¿½B*/
 			BeginHelpProgress();
 
-			/* ‹~•’†‚Í“ü—Í‚ğ~‚ß‚éB*/
+			/* ï¿½~ï¿½ï¿½ï¿½ï¿½ï¿½Í“ï¿½ï¿½Í‚ï¿½ï¿½~ï¿½ß‚ï¿½B*/
 			m_player->SetInputEnable(false);
 
-			/* ‹~•ƒAƒjƒ[ƒVƒ‡ƒ“‚ğÄ¶B*/
+			/* ï¿½~ï¿½ï¿½ï¿½Aï¿½jï¿½ï¿½ï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Äï¿½ï¿½B*/
 			m_player->PlayBasicAnimation(CharacterBasicAnimationList::Help);
 
-			/* ‹~•s“®‚ğÀ‹µUI‚Ö’Ê’m‚·‚éB*/
+			/* ï¿½~ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½UIï¿½Ö’Ê’mï¿½ï¿½ï¿½ï¿½B*/
 			auto* commentary = FindGO<nsUI::CommentaryUIManager>("CommentaryUIManager");
 			if (commentary != nullptr)
 				commentary->AddActionMessage(m_player->GetCurrentWeapon(), L"Help");
@@ -45,38 +45,38 @@ namespace nsApp
 
 		void PlayerReBoneState::Update()
 		{
-			/* ‹~•ŠJn‘OA‚Ü‚½‚Í‹~•‘ÎÛ‚ª–³Œø‚É‚È‚Á‚½ê‡‚Í‘Ò‹@ƒXƒe[ƒg‚É–ß‚·B*/
+			/* ï¿½~ï¿½ï¿½ï¿½Jï¿½nï¿½Oï¿½Aï¿½Ü‚ï¿½ï¿½Í‹~ï¿½ï¿½ï¿½ÎÛ‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É‚È‚ï¿½ï¿½ï¿½ï¿½ê‡ï¿½Í‘Ò‹@ï¿½Xï¿½eï¿½[ï¿½gï¿½É–ß‚ï¿½ï¿½B*/
 			if (m_shouldReturnIdle)
 			{
 				ChangeIdleState();
 				return;
 			}
 
-			/* ‹~•ŠJn‘O‚Í‘ÎÛ‚Ì—LŒø«‚ğŠm”F‚µ‚È‚¢B*/
+			/* ï¿½~ï¿½ï¿½ï¿½Jï¿½nï¿½Oï¿½Í‘ÎÛ‚Ì—Lï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½mï¿½Fï¿½ï¿½ï¿½È‚ï¿½ï¿½B*/
 			if (m_player == nullptr || m_targetPlayer == nullptr)
 			{
 				ChangeIdleState();
 				return;
 			}
 
-			/* ‹~•ŠJnŒã‚Í‘ÎÛ‚Ì—LŒø«‚ğí‚ÉŠm”F‚·‚éB*/
+			/* ï¿½~ï¿½ï¿½ï¿½Jï¿½nï¿½ï¿½Í‘ÎÛ‚Ì—Lï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÉŠmï¿½Fï¿½ï¿½ï¿½ï¿½B*/
 			if (!IsValidTargetCharacter())
 			{
 				ChangeIdleState();
 				return;
 			}
 
-			/* ‹~•ŠJnŒã‚Í‹~•is‚ğXV‚·‚éB*/
+			/* ï¿½~ï¿½ï¿½ï¿½Jï¿½nï¿½ï¿½Í‹~ï¿½ï¿½ï¿½iï¿½sï¿½ï¿½ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½B*/
 			auto& rescueStatus = m_targetPlayer->GetRescueStatusManager();
 
-			/* ‹~•is‚ÍRescueStatusManager‚É”C‚¹‚éB*/
+			/* ï¿½~ï¿½ï¿½ï¿½iï¿½sï¿½ï¿½RescueStatusManagerï¿½É”Cï¿½ï¿½ï¿½ï¿½B*/
 			if (rescueStatus.UpdateHelpProgress())
 			{
 				CompleteHelp();
 				return;
 			}
 
-			/* •K—v‹~•ŠÔ‚ªƒAƒjƒ[ƒVƒ‡ƒ“‚æ‚è’·‚¢ê‡‚ÍAŒ©‚½–Ú‚¾‚¯Ä¶‚µ’¼‚·B*/
+			/* ï¿½Kï¿½vï¿½~ï¿½ï¿½ï¿½ï¿½ï¿½Ô‚ï¿½ï¿½Aï¿½jï¿½ï¿½ï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½ï¿½è’·ï¿½ï¿½ï¿½ê‡ï¿½ÍAï¿½ï¿½ï¿½ï¿½ï¿½Ú‚ï¿½ï¿½ï¿½ï¿½Äï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B*/
 			if (!m_player->IsPlayAnimation())
 				m_player->PlayBasicAnimation(CharacterBasicAnimationList::Help);
 		}
@@ -84,11 +84,11 @@ namespace nsApp
 
 		void PlayerReBoneState::Exit()
 		{
-			/* ‹~•’†‚Í“ü—Í‚ğ~‚ß‚éB*/
+			/* ï¿½~ï¿½ï¿½ï¿½ï¿½ï¿½Í“ï¿½ï¿½Í‚ï¿½ï¿½~ï¿½ß‚ï¿½B*/
 			if (m_player != nullptr)
 				m_player->SetInputEnable(true);
 
-			/* ‹~•‚ªŠ®—¹‚µ‚Ä‚¢‚È‚¢ê‡‚ÍA‹~•‚ğƒLƒƒƒ“ƒZƒ‹‚·‚éB*/
+			/* ï¿½~ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½È‚ï¿½ï¿½ê‡ï¿½ÍAï¿½~ï¿½ï¿½ï¿½ï¿½ï¿½Lï¿½ï¿½ï¿½ï¿½ï¿½Zï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B*/
 			if (!m_isHelpCompleted && m_targetPlayer != nullptr && IsValidTargetCharacter())
 				m_targetPlayer->GetRescueStatusManager().CancelHelp();
 
@@ -105,15 +105,15 @@ namespace nsApp
 			if (m_player == nullptr)
 				return;
 
-			/* SetTargetCharacter‚ÅŠO‚©‚çw’èÏ‚İ‚È‚çA‚»‚ê‚ğÅ—Dæ‚·‚éB*/
+			/* SetTargetCharacterï¿½ÅŠOï¿½ï¿½ï¿½ï¿½wï¿½ï¿½Ï‚İ‚È‚ï¿½Aï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å—Dï¿½æ‚·ï¿½ï¿½B*/
 			if (m_targetPlayer != nullptr)
 				return;
 
-			/* NPC‹~•‚Ìê‡‚ÍANPCHelpState/NPCBrain‚ªŒˆ‚ß‚½‘ÎÛ‚ğ—Dæ‚·‚éB*/
+			/* NPCï¿½~ï¿½ï¿½ï¿½Ìê‡ï¿½ÍANPCHelpState/NPCBrainï¿½ï¿½ï¿½ï¿½ï¿½ß‚ï¿½ï¿½ÎÛ‚ï¿½Dï¿½æ‚·ï¿½ï¿½B*/
 			if (m_player->GetBrain() != nullptr)
 				m_targetPlayer = m_player->GetBrain()->GetHelpTarget();
 
-			/* ƒvƒŒƒCƒ„[‘€ì‚Ì‹~•A‚Ü‚½‚ÍNPC‘¤‚É‘ÎÛ‚ª–³‚¢ê‡‚ÍüˆÍŒŸõ‚·‚éB*/
+			/* ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½Ì‹~ï¿½ï¿½ï¿½Aï¿½Ü‚ï¿½ï¿½ï¿½NPCï¿½ï¿½ï¿½É‘ÎÛ‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ê‡ï¿½Íï¿½ï¿½ÍŒï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B*/
 			if (m_targetPlayer == nullptr)
 				m_targetPlayer = m_player->SearchCharacter();
 		}
@@ -121,15 +121,15 @@ namespace nsApp
 
 		bool PlayerReBoneState::IsValidTargetCharacter() const
 		{
-			/* ‘ÎÛ‚ª‘¶İ‚µ‚È‚¢A‚Ü‚½‚Í©•ª©g‚ğ‘ÎÛ‚É‚µ‚Ä‚¢‚éê‡‚Í–³ŒøB*/
+			/* ï¿½ÎÛ‚ï¿½ï¿½ï¿½ï¿½İ‚ï¿½ï¿½È‚ï¿½ï¿½Aï¿½Ü‚ï¿½ï¿½Íï¿½ï¿½ï¿½ï¿½ï¿½ï¿½gï¿½ï¿½ÎÛ‚É‚ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ê‡ï¿½Í–ï¿½ï¿½ï¿½ï¿½B*/
 			if (m_player == nullptr || m_targetPlayer == nullptr)
 				return false;
 
-			/* ©•ª©g‚ğ‘ÎÛ‚É‚·‚é‚±‚Æ‚Í‚Å‚«‚È‚¢B*/
+			/* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½gï¿½ï¿½ÎÛ‚É‚ï¿½ï¿½é‚±ï¿½Æ‚Í‚Å‚ï¿½ï¿½È‚ï¿½ï¿½B*/
 			if (m_targetPlayer == m_player)
 				return false;
 
-			/* ‘ÎÛ‚ª€–S‚µ‚Ä‚¢‚éA‚Ü‚½‚ÍHP‚ª0ˆÈ‰º‚Ìê‡‚Í–³ŒøB*/
+			/* ï¿½ÎÛ‚ï¿½ï¿½ï¿½ï¿½Sï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½Aï¿½Ü‚ï¿½ï¿½ï¿½HPï¿½ï¿½0ï¿½È‰ï¿½ï¿½Ìê‡ï¿½Í–ï¿½ï¿½ï¿½ï¿½B*/
 			return m_targetPlayer->IsDeath() ||
 				m_targetPlayer->GetCharacterStatus().hp.currentHP <= 0;
 		}
@@ -137,11 +137,11 @@ namespace nsApp
 
 		void PlayerReBoneState::BeginHelpProgress()
 		{
-			/* ‹~•ŠJn‘OA‚Ü‚½‚Í‹~•‘ÎÛ‚ª–³Œø‚É‚È‚Á‚½ê‡‚Í‹~•‚ğŠJn‚µ‚È‚¢B*/
+			/* ï¿½~ï¿½ï¿½ï¿½Jï¿½nï¿½Oï¿½Aï¿½Ü‚ï¿½ï¿½Í‹~ï¿½ï¿½ï¿½ÎÛ‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É‚È‚ï¿½ï¿½ï¿½ï¿½ê‡ï¿½Í‹~ï¿½ï¿½ï¿½ï¿½ï¿½Jï¿½nï¿½ï¿½ï¿½È‚ï¿½ï¿½B*/
 			if (m_player == nullptr || m_targetPlayer == nullptr || m_isHelpStarted)
 				return;
 
-			/* ‹~•ŠJnB*/
+			/* ï¿½~ï¿½ï¿½ï¿½Jï¿½nï¿½B*/
 			m_targetPlayer->GetRescueStatusManager().BeginHelp(m_player->GetCurrentWeapon());
 			m_isHelpStarted = true;
 		}
@@ -151,22 +151,22 @@ namespace nsApp
 		{
 			if (m_targetPlayer != nullptr)
 			{
-				/* ‹~•Š®—¹B*/
+				/* ï¿½~ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B*/
 				m_isHelpCompleted = true;
 
-				/* ‹~•‘ÎÛ‚ğ•œŠˆ‚³‚¹‚éB*/
+				/* ï¿½~ï¿½ï¿½ï¿½ÎÛ‚ğ•œŠï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B*/
 				m_targetPlayer->ReceiveHelp();
 				m_targetPlayer->GetRescueStatusManager().ResetRescueStatus();
 			}
 
-			/* ‘Ò‹@ƒXƒe[ƒg‚É–ß‚·B*/
+			/* ï¿½Ò‹@ï¿½Xï¿½eï¿½[ï¿½gï¿½É–ß‚ï¿½ï¿½B*/
 			ChangeIdleState();
 		}
 
 
 		void PlayerReBoneState::ChangeIdleState()
 		{
-			/* ‹~•ŠJn‘OA‚Ü‚½‚Í‹~•‘ÎÛ‚ª–³Œø‚É‚È‚Á‚½ê‡‚Í‘Ò‹@ƒXƒe[ƒg‚É–ß‚·B*/
+			/* ï¿½~ï¿½ï¿½ï¿½Jï¿½nï¿½Oï¿½Aï¿½Ü‚ï¿½ï¿½Í‹~ï¿½ï¿½ï¿½ÎÛ‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É‚È‚ï¿½ï¿½ï¿½ï¿½ê‡ï¿½Í‘Ò‹@ï¿½Xï¿½eï¿½[ï¿½gï¿½É–ß‚ï¿½ï¿½B*/
 			if (m_stateMachine != nullptr)
 				m_stateMachine->ChangeState(new PlayerIdleState());
 		}

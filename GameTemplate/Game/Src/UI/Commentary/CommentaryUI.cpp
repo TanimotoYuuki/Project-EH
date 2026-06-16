@@ -18,6 +18,7 @@ namespace nsApp
 
 			for (auto& fontRender : m_fontRender)
 			{
+				fontRender.SetText(L"");
 				fontRender.SetScale(0.8f);
 				fontRender.SetColor(1.0f, 1.0f, 1.0f, 1.0f);
 				fontRender.SetPivot(0.0f, 0.5f);

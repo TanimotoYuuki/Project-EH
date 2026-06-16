@@ -1,7 +1,7 @@
 ﻿#include "stdafx.h"
 #include "MagicProjectotile.h"
 #include "Src/Actor/Character/Common/Damage/DamageProcessor.h"
-#include "Boss.h"
+#include "Src/Actor/Character/Boss/Boss.h"
 
 #include "Src/Effect/EffectList.h"
 

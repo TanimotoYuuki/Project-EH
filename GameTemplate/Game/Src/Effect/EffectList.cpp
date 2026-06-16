@@ -3,7 +3,7 @@
 
 namespace
 {
-	static constexpr int MAX_EFFECT_COUNT = 64;   //! “¯‚ÉÄ¶‚Å‚«‚éƒGƒtƒFƒNƒg”B
+	static constexpr int MAX_EFFECT_COUNT = 64;   //! ï¿½ï¿½ï¿½ï¿½ï¿½ÉÄï¿½ï¿½Å‚ï¿½ï¿½ï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½ï¿½ï¿½B
 }
 
 namespace nsApp
@@ -12,24 +12,27 @@ namespace nsApp
 	{
 		EffectList::~EffectList()
 		{
-			/* ƒGƒtƒFƒNƒg‚ğ‰ğ•ú‚·‚éB*/
+			/* ï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B*/
 			Clear();
 		}
 
 
 		void EffectList::Init()
 		{
-			/* ‘åŒ•‚ÌƒGƒtƒFƒNƒgƒpƒX‚ğ“o˜^‚·‚éB*/
+			/* ï¿½åŒ•ï¿½ÌƒGï¿½tï¿½Fï¿½Nï¿½gï¿½pï¿½Xï¿½ï¿½oï¿½^ï¿½ï¿½ï¿½ï¿½B*/
 			StorageGreatSwordEffect();
 
-			/* ƒnƒ“ƒ}[‚ÌƒGƒtƒFƒNƒgƒpƒX‚ğ“o˜^‚·‚éB*/
+			/* ï¿½nï¿½ï¿½ï¿½}ï¿½[ï¿½ÌƒGï¿½tï¿½Fï¿½Nï¿½gï¿½pï¿½Xï¿½ï¿½oï¿½^ï¿½ï¿½ï¿½ï¿½B*/
 			StorageHammerEffect();
 
-			/* ñ‚ÌƒGƒtƒFƒNƒg‚ÌƒpƒX‚ğ“o˜^‚·‚éB*/
+			/* ï¿½ï¿½ÌƒGï¿½tï¿½Fï¿½Nï¿½gï¿½Ìƒpï¿½Xï¿½ï¿½oï¿½^ï¿½ï¿½ï¿½ï¿½B*/
 			StorageWandEffect();
 
-			/* ‘oe‚ÌƒGƒtƒFƒNƒg‚ÌƒpƒX‚ğ“o˜^‚·‚éB*/
+			/* ï¿½oï¿½eï¿½ÌƒGï¿½tï¿½Fï¿½Nï¿½gï¿½Ìƒpï¿½Xï¿½ï¿½oï¿½^ï¿½ï¿½ï¿½ï¿½B*/
 			StorageTwinGunEffect();
+
+			/* Bossï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½B*/
+			StorageBossEffect();
 		}
 
 
@@ -37,14 +40,14 @@ namespace nsApp
 		{
 			for (auto iterator = m_playingEffects.begin(); iterator != m_playingEffects.end();)
 			{
-				/* 0ˆÈ‰º‚Ìê‡‚Í•`‰æ‚ğ‚µ‚È‚¢B*/
+				/* 0ï¿½È‰ï¿½ï¿½Ìê‡ï¿½Í•`ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È‚ï¿½ï¿½B*/
 				if (iterator->currentTime >= iterator->lifeTime)
 				{
 					++iterator;
 					continue;
 				}
 
-				/* ƒ^ƒCƒ}[‚Ì‰ÁZB*/
+				/* ï¿½^ï¿½Cï¿½}ï¿½[ï¿½Ì‰ï¿½ï¿½Zï¿½B*/
 				iterator->currentTime += deltaTime;
 
 				if (iterator->currentTime >= iterator->lifeTime)
@@ -84,25 +87,25 @@ namespace nsApp
 			if (m_playingEffects.size() >= MAX_EFFECT_COUNT)
 				return nullptr;
 
-			/* ƒGƒtƒFƒNƒgƒNƒ‰ƒX‚Ì¶¬B*/
+			/* ï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½Nï¿½ï¿½ï¿½Xï¿½Ìï¿½ï¿½ï¿½ï¿½B*/
 			m_effectEmitter = NewGO<nsK2EngineLow::EffectEmitter>(0, "effect");
 
-			/* ƒGƒtƒFƒNƒg‚ğ‰Šú‰»‚·‚éB*/
+			/* ï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B*/
 			m_effectEmitter->Init(id);
 
-			/* ƒGƒtƒFƒNƒg‚ÌÀ•W‚ğƒZƒbƒg‚·‚éB*/
+			/* ï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½Ìï¿½ï¿½Wï¿½ï¿½ï¿½Zï¿½bï¿½gï¿½ï¿½ï¿½ï¿½B*/
 			m_effectEmitter->SetPosition(position);
 
-			/* ƒGƒtƒFƒNƒg‚ÌŠp“x‚ğƒZƒbƒg‚·‚éB*/
+			/* ï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½ÌŠpï¿½xï¿½ï¿½ï¿½Zï¿½bï¿½gï¿½ï¿½ï¿½ï¿½B*/
 			m_effectEmitter->SetRotation(angle);
 
-			/* ƒGƒtƒFƒNƒg‚Ì‘å‚«‚³‚ğƒZƒbƒg‚·‚éB*/
+			/* ï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½Ì‘å‚«ï¿½ï¿½ï¿½ï¿½ï¿½Zï¿½bï¿½gï¿½ï¿½ï¿½ï¿½B*/
 			m_effectEmitter->SetScale(scale);
 
-			/* ƒGƒtƒFƒNƒg‚ğÄ¶‚·‚éB*/
+			/* ï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½ï¿½ï¿½Äï¿½ï¿½ï¿½ï¿½ï¿½B*/
 			m_effectEmitter->Play();
 
-			/* Ä¶’†‚ÌƒŠƒXƒg‚É“o˜^B*/
+			/* ï¿½Äï¿½ï¿½ï¿½ï¿½Ìƒï¿½ï¿½Xï¿½gï¿½É“oï¿½^ï¿½B*/
 			m_info.emitter = m_effectEmitter;
 			m_info.lifeTime = lifeTime;
 			m_info.currentTime = 0.0f;
@@ -130,7 +133,7 @@ namespace nsApp
 				}
 			}
 
-			/* ƒŠƒXƒg‚É‚È‚¢ê‡‚à”O‚Ì‚½‚ßíœ‚·‚éB*/
+			/* ï¿½ï¿½ï¿½Xï¿½gï¿½É‚È‚ï¿½ï¿½ê‡ï¿½ï¿½ï¿½Oï¿½Ì‚ï¿½ï¿½ßíœï¿½ï¿½ï¿½ï¿½B*/
 			DeleteGO(effect);
 			effect = nullptr;
 		}	
@@ -138,23 +141,23 @@ namespace nsApp
 
 		void EffectList::StorageGreatSwordEffect()
 		{
-			/* ƒ`ƒƒ[ƒW‚ÌƒGƒtƒFƒNƒgB*/
+			/* ï¿½`ï¿½ï¿½ï¿½[ï¿½Wï¿½ï¿½ï¿½ÌƒGï¿½tï¿½Fï¿½Nï¿½gï¿½B*/
 			m_effectPathList[Effect_ID::Charge] = GetEffectFilePath(u"chargeAttackEffect");
 
-			/* ƒGƒtƒFƒNƒg‚ğ“o˜^B*/
+			/* ï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½ï¿½oï¿½^ï¿½B*/
 			EffectEngine::GetInstance()->ResistEffect(Effect_ID::Charge, m_effectPathList[Effect_ID::Charge].c_str());
 		}
 
 
 		void EffectList::StorageHammerEffect()
 		{
-			/* ƒ`ƒƒ[ƒW‚ÌHammer‚É•t—^‚·‚éƒGƒtƒFƒNƒgB*/
+			/* ï¿½`ï¿½ï¿½ï¿½[ï¿½Wï¿½ï¿½ï¿½ï¿½Hammerï¿½É•tï¿½^ï¿½ï¿½ï¿½ï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½B*/
 			m_effectPathList[Effect_ID::Fire] = GetEffectFilePath(u"fire");
 
-			/* ‹ó’†UŒ‚‚Ì’…’n‚É•t—^‚·‚éƒGƒtƒFƒNƒgB*/
+			/* ï¿½ó’†Uï¿½ï¿½ï¿½ï¿½ï¿½Ì’ï¿½ï¿½nï¿½ï¿½ï¿½É•tï¿½^ï¿½ï¿½ï¿½ï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½B*/
 			m_effectPathList[Effect_ID::ShockWave] = GetEffectFilePath(u"airAttack");
 
-			/* ƒGƒtƒFƒNƒg‚ğ“o˜^B*/
+			/* ï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½ï¿½oï¿½^ï¿½B*/
 			EffectEngine::GetInstance()->ResistEffect(Effect_ID::Fire, m_effectPathList[Effect_ID::Fire].c_str());
 
 			EffectEngine::GetInstance()->ResistEffect(Effect_ID::ShockWave, m_effectPathList[Effect_ID::ShockWave].c_str());
@@ -164,40 +167,53 @@ namespace nsApp
 
 		void EffectList::StorageWandEffect()
 		{
-			/* ‰ñ•œ–‚–@(‰ñ•œ•”•ª)‚ğ“o˜^B*/
+			/* ï¿½ñ•œ–ï¿½ï¿½@(ï¿½ñ•œ•ï¿½ï¿½ï¿½)ï¿½ï¿½oï¿½^ï¿½B*/
 			m_effectPathList[Effect_ID::HeelMagic] = GetEffectFilePath(u"heelEffect_Heel");
 
-			/* ‰ñ•œ–‚–@(ƒp[ƒeƒBƒNƒ‹)‚ğ“o˜^B*/
+			/* ï¿½ñ•œ–ï¿½ï¿½@(ï¿½pï¿½[ï¿½eï¿½Bï¿½Nï¿½ï¿½)ï¿½ï¿½oï¿½^ï¿½B*/
 			m_effectPathList[Effect_ID::HeelMagic_Particle] = GetEffectFilePath(u"heelEffect_Particle");
 
-			/* –‚–@UŒ‚‚ğ“o˜^B*/
+			/* ï¿½ï¿½ï¿½@ï¿½Uï¿½ï¿½ï¿½ï¿½oï¿½^ï¿½B*/
 			m_effectPathList[Effect_ID::MagicAttack] = GetEffectFilePath(u"magicAttack");
 
-			/* ƒqƒbƒgƒGƒtƒFƒNƒg‚ğ“o˜^B*/
+			/* ï¿½qï¿½bï¿½gï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½ï¿½oï¿½^ï¿½B*/
 			m_effectPathList[Effect_ID::Hit] = GetEffectFilePath(u"Hit");
 
-			/* ƒGƒtƒFƒNƒg‚ğ“o˜^B*/
-			/* ‰ñ•œƒGƒtƒFƒNƒgB*/
+			/* ï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½ï¿½oï¿½^ï¿½B*/
+			/* ï¿½ñ•œƒGï¿½tï¿½Fï¿½Nï¿½gï¿½B*/
 			EffectEngine::GetInstance()->ResistEffect(Effect_ID::HeelMagic, m_effectPathList[Effect_ID::HeelMagic].c_str());
 
-			/* ‰ñ•œƒGƒtƒFƒNƒg‚Ìƒp[ƒeƒBƒNƒ‹•”•ªB*/
+			/* ï¿½ñ•œƒGï¿½tï¿½Fï¿½Nï¿½gï¿½Ìƒpï¿½[ï¿½eï¿½Bï¿½Nï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B*/
 			EffectEngine::GetInstance()->ResistEffect(Effect_ID::HeelMagic_Particle, m_effectPathList[Effect_ID::HeelMagic_Particle].c_str());
 
-			/* –‚–@UŒ‚ƒGƒtƒFƒNƒgB*/
+			/* ï¿½ï¿½ï¿½@ï¿½Uï¿½ï¿½ï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½B*/
 			EffectEngine::GetInstance()->ResistEffect(Effect_ID::MagicAttack, m_effectPathList[Effect_ID::MagicAttack].c_str());
 
-			/* ƒqƒbƒgƒGƒtƒFƒNƒgB*/ 
+			/* ï¿½qï¿½bï¿½gï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½B*/ 
 			EffectEngine::GetInstance()->ResistEffect(Effect_ID::Hit, m_effectPathList[Effect_ID::Hit].c_str());
 		}
 
 
 		void EffectList::StorageTwinGunEffect()
 		{
-			/* ƒVƒ‡ƒbƒg‚ÌƒGƒtƒFƒNƒg‚ğ“o˜^B*/
+			/* ï¿½Vï¿½ï¿½ï¿½bï¿½gï¿½ÌƒGï¿½tï¿½Fï¿½Nï¿½gï¿½ï¿½oï¿½^ï¿½B*/
 			m_effectPathList[Effect_ID::Shot] = GetEffectFilePath(u"Shot");
 
-			/* ƒGƒtƒFƒNƒg‚ğ“o˜^B*/
+			/* ï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½ï¿½oï¿½^ï¿½B*/
 			EffectEngine::GetInstance()->ResistEffect(Effect_ID::Shot, m_effectPathList[Effect_ID::Shot].c_str());
+		}
+
+
+		void EffectList::StorageBossEffect()
+		{
+			/*ï¿½{ï¿½Xï¿½tï¿½@ï¿½Cï¿½Aï¿½{ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ÄƒGï¿½tï¿½Fï¿½Nï¿½gï¿½B*/
+			m_effectPathList[Effect_ID::FireBall] = GetEffectFilePath(u"fireBall");
+
+			/*ï¿½{ï¿½Xï¿½ï¿½ï¿½ï¿½ï¿½eï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½iï¿½ï¿½ï¿½ï¿½ï¿½jï¿½B*/
+			m_effectPathList[Effect_ID::BossFireAttack] = GetEffectFilePath(u"fireAttack");
+
+			EffectEngine::GetInstance()->ResistEffect(Effect_ID::FireBall, m_effectPathList[Effect_ID::FireBall].c_str());
+			EffectEngine::GetInstance()->ResistEffect(Effect_ID::BossFireAttack, m_effectPathList[Effect_ID::BossFireAttack].c_str());
 		}
 	}
 }

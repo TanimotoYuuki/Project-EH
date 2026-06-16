@@ -1,9 +1,9 @@
 #pragma once
 /**
  * @file   PlayerDethState.h
- * @brief  ƒvƒŒƒCƒ„[‚Ì€–Só‘Ô‚ğŠÇ—‚·‚éƒNƒ‰ƒXB
- * @author Yamaguchi HayatoB
- * @date   2026/06/03:ÅIXV“ú
+ * @brief  ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Ìï¿½ï¿½Sï¿½ï¿½Ô‚ï¿½ï¿½Ç—ï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½Xï¿½B
+ * @author Yamaguchi Hayatoï¿½B
+ * @date   2026/06/03:ï¿½ÅIï¿½Xï¿½Vï¿½ï¿½
  */
 
 #include "Src/Actor/Character/Common/IState.h"
@@ -16,7 +16,7 @@ namespace nsApp
 		class PlayerDethState : public IState<nsActor::Actor>
 		{
 		public:
-			/* ƒRƒ“ƒXƒgƒ‰ƒNƒ^‚ÆƒfƒXƒgƒ‰ƒNƒ^B*/
+			/* ï¿½Rï¿½ï¿½ï¿½Xï¿½gï¿½ï¿½ï¿½Nï¿½^ï¿½Æƒfï¿½Xï¿½gï¿½ï¿½ï¿½Nï¿½^ï¿½B*/
 			PlayerDethState() = default;
 
 			explicit PlayerDethState(const Vector3& desathPos)
@@ -27,7 +27,7 @@ namespace nsApp
 
 
 		public:
-		    /* ƒ‰ƒCƒtƒTƒCƒNƒ‹B*/
+		    /* ï¿½ï¿½ï¿½Cï¿½tï¿½Tï¿½Cï¿½Nï¿½ï¿½ï¿½B*/
 			void Enter() override;
 			void Update() override {};
 			void Exit() override {};
@@ -35,14 +35,14 @@ namespace nsApp
 
 
 		private:
-			nsActor::Player* m_player = nullptr;	   //! ƒvƒŒƒCƒ„[‚ÌÀ‘Ô‚Ö‚Ìƒ|ƒCƒ“ƒ^B
+			nsActor::Player* m_player = nullptr;	   //! ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Ìï¿½ï¿½Ô‚Ö‚Ìƒ|ï¿½Cï¿½ï¿½ï¿½^ï¿½B
 
 
 		private:
-			Vector3 m_fallSpeed;					   //! —‰º‘¬“xB
-			Vector3 m_dethPosition = Vector3::Zero;    //! €–S‚µ‚½ˆÊ’uB
+			Vector3 m_fallSpeed;					   //! ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½xï¿½B
+			Vector3 m_dethPosition = Vector3::Zero;    //! ï¿½ï¿½ï¿½Sï¿½ï¿½ï¿½ï¿½ï¿½Ê’uï¿½B
 
-			bool m_hasDeathPosition = false;		   //! €–SˆÊ’u‚ªİ’è‚³‚ê‚½‚©‚Ç‚¤‚©‚Ìƒtƒ‰ƒOB
+			bool m_hasDeathPosition = false;		   //! ï¿½ï¿½ï¿½Sï¿½Ê’uï¿½ï¿½ï¿½İ’è‚³ï¿½ê‚½ï¿½ï¿½ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½Ìƒtï¿½ï¿½ï¿½Oï¿½B
 
 		};
 	}

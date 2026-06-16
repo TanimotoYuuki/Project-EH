@@ -2,7 +2,7 @@
 #include "InGameBuildHelper.h"
 
 #include <time.h>
-
+#include "Src/Actor/Character/Boss/Status/BossParameterTable.h"
 #include "Src/Actor/Stage/LoadStageData.h"
 #include "Src/Actor/Stage/BackGround.h"
 #include "Src/Camera/Camera.h"
@@ -12,7 +12,7 @@
 #include "Src/Actor/Character/Player/Component/PlayerGenerator.h"
 #include "Src/Actor/Character/Player/InputSystem/PlayerControlerHub.h"
 #include "Src/Actor/Character/Player/Player.h"
-#include "Boss.h"
+#include "Src/Actor/Character/Boss/Boss.h"
 #include "CharacterHP.h"
 #include "GameTimeLimit.h"
 #include "Src/Direction/GameStartDirection.h"
@@ -38,30 +38,30 @@ namespace nsApp
 
 	void InGameBuildHelper::Initialize(const InGameBuildRequest& request)
 	{
-		/* ¶¬‚É•K—v‚Èî•ñ‚ğ•Û‘¶‚·‚éB*/
+		/* ï¿½ï¿½ï¿½ï¿½ï¿½É•Kï¿½vï¿½Èï¿½ï¿½ï¿½Û‘ï¿½ï¿½ï¿½ï¿½ï¿½B*/
 		m_request = request;
 		m_result = InGameBuildResult();
 
-		/* ¶¬‚É•K—v‚Èƒf[ƒ^‚ğ‰Šú‰»‚·‚éB*/
+		/* ï¿½ï¿½ï¿½ï¿½ï¿½É•Kï¿½vï¿½Èƒfï¿½[ï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B*/
 		m_partyData.clear();
 		m_players.clear();
 		m_buildFunctions.clear();
 
-		/* ¶¬‚Ìisó‹µ‚ğ‰Šú‰»‚·‚éB*/
+		/* ï¿½ï¿½ï¿½ï¿½ï¿½Ìiï¿½sï¿½ó‹µ‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B*/
 		m_currentBuildIndex = 0;
 		m_isFinished = false;
 
-		/* ¶¬ŠÖ”‚Ì‰Šú‰»B*/
+		/* ï¿½ï¿½ï¿½ï¿½ï¿½Öï¿½ï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B*/
 		InitializeBuildFunctions();
 	}
 
 
 	void InGameBuildHelper::InitializeBuildFunctions()
 	{
-		/* ¶¬ŠÖ”‚Ì‰Šú‰»B*/
+		/* ï¿½ï¿½ï¿½ï¿½ï¿½Öï¿½ï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B*/
 		m_buildFunctions.clear();
 
-		/* ¶¬ŠÖ”‚Ì’Ç‰ÁB*/
+		/* ï¿½ï¿½ï¿½ï¿½ï¿½Öï¿½ï¿½Ì’Ç‰ï¿½ï¿½B*/
 		m_buildFunctions.push_back([this]() { BuildRandom(); });
 		m_buildFunctions.push_back([this]() { BuildSound(); });
 		m_buildFunctions.push_back([this]() { BuildStage(); });
@@ -87,11 +87,11 @@ namespace nsApp
 
 	void InGameBuildHelper::ExecuteNextBuildFunction()
 	{
-		/* ¶¬‚ªŠ®—¹‚µ‚Ä‚¢‚éê‡‚Í‰½‚à‚µ‚È‚¢B*/
+		/* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ê‡ï¿½Í‰ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È‚ï¿½ï¿½B*/
 		if (m_isFinished)
 			return;
 
-		/* Ÿ‚Ì¶¬ŠÖ”‚ª‘¶İ‚µ‚È‚¢ê‡‚Í¶¬Š®—¹‚Æ‚·‚éB*/
+		/* ï¿½ï¿½ï¿½Ìï¿½ï¿½ï¿½ï¿½Öï¿½ï¿½ï¿½ï¿½ï¿½ï¿½İ‚ï¿½ï¿½È‚ï¿½ï¿½ê‡ï¿½Íï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ‚ï¿½ï¿½ï¿½B*/
 		if (m_currentBuildIndex >= static_cast<int>(m_buildFunctions.size()))
 		{
 			m_isFinished = true;
@@ -106,7 +106,7 @@ namespace nsApp
 		);
 		OutputDebugStringA(text);
 
-		/* Ÿ‚Ì¶¬ŠÖ”‚ğÀs‚·‚éB*/
+		/* ï¿½ï¿½ï¿½Ìï¿½ï¿½ï¿½ï¿½Öï¿½ï¿½ï¿½ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½ï¿½B*/
 		m_buildFunctions[m_currentBuildIndex]();
 
 		sprintf_s(
@@ -116,48 +116,48 @@ namespace nsApp
 		);
 		OutputDebugStringA(text);
 
-		/* Ÿ‚Ì¶¬ŠÖ”‚Éi‚ŞB*/
+		/* ï¿½ï¿½ï¿½Ìï¿½ï¿½ï¿½ï¿½Öï¿½ï¿½Éiï¿½ŞB*/
 		++m_currentBuildIndex;
 	}
 
 
 	void InGameBuildHelper::BuildRandom()
 	{
-		/* —”‚Ì‰Šú‰»B*/
+		/* ï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B*/
 		srand(static_cast<unsigned int>(time(nullptr)));
 	}
 
 
 	void InGameBuildHelper::BuildSound()
 	{
-		/* ‰¹Œ¹ŠÇ—ƒNƒ‰ƒX‚Ì¶¬B*/
+		/* ï¿½ï¿½ï¿½ï¿½ï¿½Ç—ï¿½ï¿½Nï¿½ï¿½ï¿½Xï¿½Ìï¿½ï¿½ï¿½ï¿½B*/
 		m_result.soundLister = FindGO<nsSound::SoundLister>("SoundManager");
 
-		/* ‰¹Œ¹ŠÇ—ƒNƒ‰ƒX‚ª‘¶İ‚µ‚È‚¢ê‡‚Í¶¬‚·‚éB*/
+		/* ï¿½ï¿½ï¿½ï¿½ï¿½Ç—ï¿½ï¿½Nï¿½ï¿½ï¿½Xï¿½ï¿½ï¿½ï¿½ï¿½İ‚ï¿½ï¿½È‚ï¿½ï¿½ê‡ï¿½Íï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B*/
 		if (m_result.soundLister == nullptr)
 			m_result.soundLister = NewGO<nsSound::SoundLister>(0, "SoundManager");
 
-		/* ‰¹Œ¹ŠÇ—ƒNƒ‰ƒX‚Ì‰Šú‰»B*/
+		/* ï¿½ï¿½ï¿½ï¿½ï¿½Ç—ï¿½ï¿½Nï¿½ï¿½ï¿½Xï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B*/
 		m_result.soundLister->InitSound();
 
-		/* BGM‚ÌÄ¶B*/
+		/* BGMï¿½ÌÄï¿½ï¿½B*/
 		m_result.soundLister->GetBGMList().StopBGM();
 
-		/* ƒXƒe[ƒW1‚ÌBGM‚ğÄ¶‚·‚éB*/
+		/* ï¿½Xï¿½eï¿½[ï¿½W1ï¿½ï¿½BGMï¿½ï¿½ï¿½Äï¿½ï¿½ï¿½ï¿½ï¿½B*/
 		m_result.soundLister->GetBGMList().PlayBGM(nsSound::BGM_ID::Stage1, 1.0f);
 	}
 
 
 	void InGameBuildHelper::BuildStage()
 	{
-		/* ƒXƒe[ƒW1‚ÉØ‚è‘Ö‚¦‚éB*/
+		/* ï¿½Xï¿½eï¿½[ï¿½W1ï¿½ÉØ‚ï¿½Ö‚ï¿½ï¿½ï¿½B*/
 		LoadStageData::GetInstance().ChangeStage(StageID::stage1);
 	}
 
 
 	void InGameBuildHelper::BuildBackGround()
 	{
-		/* ”wŒi‚Ì¶¬B*/
+		/* ï¿½wï¿½iï¿½Ìï¿½ï¿½ï¿½ï¿½B*/
 		m_result.backGround = NewGO<BackGround>(0, "BackGround");
 	}
 
@@ -173,26 +173,26 @@ namespace nsApp
 
 	void InGameBuildHelper::BuildDamagePool()
 	{
-		/* ƒ_ƒ[ƒWƒCƒ“ƒWƒP[ƒ^[‚Ìƒv[ƒ‹‚Ì¶¬B*/
+		/* ï¿½_ï¿½ï¿½ï¿½[ï¿½Wï¿½Cï¿½ï¿½ï¿½Wï¿½Pï¿½[ï¿½^ï¿½[ï¿½Ìƒvï¿½[ï¿½ï¿½ï¿½Ìï¿½ï¿½ï¿½ï¿½B*/
 		m_result.damageIndicatorPool = NewGO<DamageIndicatorPool>(0, "damagePool");
 
-		/* ƒ_ƒ[ƒWƒCƒ“ƒWƒP[ƒ^[‚Ìƒv[ƒ‹‚ğDamageProcessor‚Éİ’è‚·‚éB*/
+		/* ï¿½_ï¿½ï¿½ï¿½[ï¿½Wï¿½Cï¿½ï¿½ï¿½Wï¿½Pï¿½[ï¿½^ï¿½[ï¿½Ìƒvï¿½[ï¿½ï¿½ï¿½ï¿½DamageProcessorï¿½Éİ’è‚·ï¿½ï¿½B*/
 		DamageProcessor::SetDamageIndicatorPool(m_result.damageIndicatorPool);
 	}
 
 
 	void InGameBuildHelper::BuildCommentaryUI()
 	{
-		/* ƒŠƒ{[ƒ“ƒQ[ƒWUI‚Ì¶¬B*/
+		/* ï¿½ï¿½ï¿½{ï¿½[ï¿½ï¿½ï¿½Qï¿½[ï¿½WUIï¿½Ìï¿½ï¿½ï¿½ï¿½B*/
 		m_result.reboneGaugeUIManager = new nsUI::ReboneGaugeUIManager();
 
-		/* ƒŠƒ{[ƒ“ƒQ[ƒWUI‚Ì‰Šú‰»B*/
+		/* ï¿½ï¿½ï¿½{ï¿½[ï¿½ï¿½ï¿½Qï¿½[ï¿½WUIï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B*/
 		m_result.reboneGaugeUIManager->Init();
 
-		/* À‹µUI‚Ì¶¬B*/
+		/* ï¿½ï¿½ï¿½ï¿½UIï¿½Ìï¿½ï¿½ï¿½ï¿½B*/
 		m_result.commentaryUIManager = NewGO<nsUI::CommentaryUIManager>(0, "CommentaryUIManager");
 
-		/* ƒ[ƒh’†‚Í•`‰æ‚µ‚È‚¢B*/
+		/* ï¿½ï¿½ï¿½[ï¿½hï¿½ï¿½ï¿½Í•`ï¿½æ‚µï¿½È‚ï¿½ï¿½B*/
 		if (m_result.commentaryUIManager != nullptr)
 			m_result.commentaryUIManager->Deactivate();
 	}
@@ -200,29 +200,29 @@ namespace nsApp
 
 	void InGameBuildHelper::BuildPlayerGenerator()
 	{
-		/* PlayerGenerator‚Ì¶¬B*/
+		/* PlayerGeneratorï¿½Ìï¿½ï¿½ï¿½ï¿½B*/
 		m_result.generator = new PlayerGenerator();
 	}
 
 
 	void InGameBuildHelper::CreatePartyData()
 	{
-		/* ƒp[ƒeƒB[ƒf[ƒ^‚Ì‰Šú‰»B*/
+		/* ï¿½pï¿½[ï¿½eï¿½Bï¿½[ï¿½fï¿½[ï¿½^ï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B*/
 		m_partyData.clear();
 
-		/* ƒRƒ“ƒgƒ[ƒ‰[ƒ^ƒCƒv‚Ìİ’èB*/
+		/* ï¿½Rï¿½ï¿½ï¿½gï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½[ï¿½^ï¿½Cï¿½vï¿½Ìİ’ï¿½B*/
 		for (int i = 0; i < 4; i++)
 		{
-			/* ƒvƒŒƒCƒ„[‚ª‘€ì‚µ‚Ä‚¢‚é‚©‚Ç‚¤‚©‚ÅƒRƒ“ƒgƒ[ƒ‰[ƒ^ƒCƒv‚ğİ’è‚·‚éB*/
+			/* ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ì‚µï¿½Ä‚ï¿½ï¿½é‚©ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ÅƒRï¿½ï¿½ï¿½gï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½[ï¿½^ï¿½Cï¿½vï¿½ï¿½İ’è‚·ï¿½ï¿½B*/
 			if (m_request.isPlayerControle[i])
 				m_controllerType[i] = static_cast<ControllerType>(i);
 
-			/* ƒvƒŒƒCƒ„[‚ª‘€ì‚µ‚Ä‚¢‚È‚¢ê‡‚ÍNPC‚Éİ’è‚·‚éB*/
+			/* ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ì‚µï¿½Ä‚ï¿½ï¿½È‚ï¿½ï¿½ê‡ï¿½ï¿½NPCï¿½Éİ’è‚·ï¿½ï¿½B*/
 			else
 				m_controllerType[i] = ControllerType::NPC;
 		}
 
-		/* ƒp[ƒeƒB[ƒf[ƒ^‚Ìì¬B*/
+		/* ï¿½pï¿½[ï¿½eï¿½Bï¿½[ï¿½fï¿½[ï¿½^ï¿½Ìì¬ï¿½B*/
 		m_partyData =
 		{
 			{
@@ -255,40 +255,40 @@ namespace nsApp
 
 	void InGameBuildHelper::SpawnPlayer(int playerIndex)
 	{
-		/* PlayerGenerator‚ª¶¬‚³‚ê‚Ä‚¢‚È‚¢ê‡‚Í¶¬‚µ‚È‚¢B*/
+		/* PlayerGeneratorï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½È‚ï¿½ï¿½ê‡ï¿½Íï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È‚ï¿½ï¿½B*/
 		if (m_result.generator == nullptr)
 			return;
 
-		/* ƒvƒŒƒCƒ„[‚Ì¶¬‚É•K—v‚Èƒf[ƒ^‚ª‘¶İ‚·‚é‚©B*/
+		/* ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Ìï¿½ï¿½ï¿½ï¿½É•Kï¿½vï¿½Èƒfï¿½[ï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½İ‚ï¿½ï¿½é‚©ï¿½B*/
 		if (playerIndex < 0 || playerIndex >= static_cast<int>(m_partyData.size()))
 			return;
 
-		/* ƒvƒŒƒCƒ„[‚Ì¶¬B*/
+		/* ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Ìï¿½ï¿½ï¿½ï¿½B*/
 		nsActor::Player* player = m_result.generator->SpawnPlayer(m_partyData[playerIndex]);
 
-		/* ƒvƒŒƒCƒ„[‚Ì¶¬‚É¬Œ÷‚µ‚½‚©B*/
+		/* ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Ìï¿½ï¿½ï¿½ï¿½Éï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B*/
 		if (player == nullptr)
 			return;
 
-		/* ƒvƒŒƒCƒ„[‚Ì“o˜^B*/
+		/* ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Ì“oï¿½^ï¿½B*/
 		m_players.push_back(player);
 
-		/* ‘ã•\ƒvƒŒƒCƒ„[‚ğ“o˜^‚·‚éB*/
+		/* ï¿½ï¿½\ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ï¿½oï¿½^ï¿½ï¿½ï¿½ï¿½B*/
 		if (m_result.player == nullptr)
 			m_result.player = player;
 
-		/* ƒ[ƒh’†‚Í•`‰æ‚µ‚È‚¢B*/
+		/* ï¿½ï¿½ï¿½[ï¿½hï¿½ï¿½ï¿½Í•`ï¿½æ‚µï¿½È‚ï¿½ï¿½B*/
 		player->Deactivate();
 	}
 
 
 	void InGameBuildHelper::RegisterPlayersToReboneGauge()
 	{
-		/* ƒŠƒ{[ƒ“ƒQ[ƒWUI‚ª¶¬‚³‚ê‚Ä‚¢‚È‚¢ê‡‚Í“o˜^‚µ‚È‚¢B*/
+		/* ï¿½ï¿½ï¿½{ï¿½[ï¿½ï¿½ï¿½Qï¿½[ï¿½WUIï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½È‚ï¿½ï¿½ê‡ï¿½Í“oï¿½^ï¿½ï¿½ï¿½È‚ï¿½ï¿½B*/
 		if (m_result.reboneGaugeUIManager == nullptr)
 			return;
 
-		/* ¶¬Ï‚İ‚ÌƒvƒŒƒCƒ„[‚ğƒŠƒ{[ƒ“ƒQ[ƒWUI‚É“o˜^‚·‚éB*/
+		/* ï¿½ï¿½ï¿½ï¿½ï¿½Ï‚İ‚Ìƒvï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½{ï¿½[ï¿½ï¿½ï¿½Qï¿½[ï¿½WUIï¿½É“oï¿½^ï¿½ï¿½ï¿½ï¿½B*/
 		for (auto* player : m_players)
 			m_result.reboneGaugeUIManager->RegisterPlayer(player);
 	}
@@ -296,30 +296,32 @@ namespace nsApp
 
 	void InGameBuildHelper::BuildPlayerHub()
 	{
-		/* PlayerHub‚Ì¶¬B*/
+		/* PlayerHubï¿½Ìï¿½ï¿½ï¿½ï¿½B*/
 		m_result.playerHub = new PlayerControlerHub();
 
-		/* PlayerHub‚Ì‰Šú‰»B*/
+		/* PlayerHubï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B*/
 		m_result.playerHub->Initialize(m_players, m_partyData);
 	}
 
 
 	void InGameBuildHelper::BuildBoss()
 	{
-		/* ƒ{ƒX‚Ì¶¬B*/
+		nsAI::BossParameterTable::LoadTSVFile("Assets/Parameter/BossType.tsv");
+
+		/* ï¿½{ï¿½Xï¿½Ìï¿½ï¿½ï¿½ï¿½B*/
 		m_result.boss = NewGO<nsActor::Boss>(0, "boss");
 
-		/* ƒ{ƒX‚Ìİ’èB*/
+		/* ï¿½{ï¿½Xï¿½Ìİ’ï¿½B*/
 		if (m_result.boss == nullptr)
 			return;
 
-		/* ƒ{ƒXƒ^ƒCƒv‚Ìİ’èB*/
-		m_result.boss->SetBossType(static_cast<CharacterModelType>(m_request.bossType + 5));
+		/* ï¿½{ï¿½Xï¿½^ï¿½Cï¿½vï¿½Ìİ’ï¿½B*/
+		m_result.boss->SetBossType(static_cast<CharacterModelType>(m_request.bossType + 4));
 
-		/* ƒ^[ƒQƒbƒg‚Ìİ’èB*/
+		/* ï¿½^ï¿½[ï¿½Qï¿½bï¿½gï¿½Ìİ’ï¿½B*/
 		m_result.boss->SetTarget(m_result.player);
 
-		/* ƒ[ƒh’†‚Í•`‰æ‚µ‚È‚¢B*/
+		/* ï¿½ï¿½ï¿½[ï¿½hï¿½ï¿½ï¿½Í•`ï¿½æ‚µï¿½È‚ï¿½ï¿½B*/
 		m_result.boss->Deactivate();
 
 	}
@@ -327,46 +329,46 @@ namespace nsApp
 
 	void InGameBuildHelper::BuildCharacterHP()
 	{
-		/* ƒLƒƒƒ‰ƒNƒ^[HP‚Ì¶¬B*/
+		/* ï¿½Lï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½^ï¿½[HPï¿½Ìï¿½ï¿½ï¿½ï¿½B*/
 		m_result.characterHP = NewGO<nsGame::CharacterHP>(0, "characterHP");
 
-		/* ƒLƒƒƒ‰ƒNƒ^[HP‚Ìİ’èB*/
+		/* ï¿½Lï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½^ï¿½[HPï¿½Ìİ’ï¿½B*/
 		if (m_result.characterHP == nullptr)
 			return;
 
-		/* ƒLƒƒƒ‰ƒNƒ^[‚²‚Æ‚Ì–ğŠ„‚ğİ’èB*/
+		/* ï¿½Lï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½^ï¿½[ï¿½ï¿½ï¿½Æ‚Ì–ï¿½ï¿½ï¿½ï¿½ï¿½İ’ï¿½B*/
 		for (int i = 0; i < nsGame::CharacterHP::EnCharacter::enCharacter_Num; i++)
 			m_result.characterHP->SetCharacterRole(i, m_request.characterRole[i]);
 
-		/* ƒLƒƒƒ‰ƒNƒ^[HP‚Ì”ñƒAƒNƒeƒBƒu‰»B*/
+		/* ï¿½Lï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½^ï¿½[HPï¿½Ì”ï¿½Aï¿½Nï¿½eï¿½Bï¿½uï¿½ï¿½ï¿½B*/
 		m_result.characterHP->Deactivate();
 	}
 
 
 	void InGameBuildHelper::BuildGameTimeLimit()
 	{
-		/* ƒQ[ƒ€ŠÔ§ŒÀ‚Ì¶¬B*/
+		/* ï¿½Qï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Ôï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½ï¿½ï¿½B*/
 		m_result.gameTimeLimit = NewGO<nsGame::GameTimeLimit>(0, "gameTimeLimit");
 
-		/* ƒQ[ƒ€ŠÔ§ŒÀ‚Ìİ’èB*/
+		/* ï¿½Qï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Ôï¿½ï¿½ï¿½ï¿½Ìİ’ï¿½B*/
 		if (m_result.gameTimeLimit == nullptr)
 			return;
 
-		/* ƒQ[ƒ€ŠÔ§ŒÀ‚ÌŠÔ‚ğİ’èB*/
+		/* ï¿½Qï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Ôï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½Ô‚ï¿½İ’ï¿½B*/
 		m_result.gameTimeLimit->SetTimeLimit(180);
 
-		/* ƒQ[ƒ€ŠÔ§ŒÀ‚Ì”ñƒAƒNƒeƒBƒu‰»B*/
+		/* ï¿½Qï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Ôï¿½ï¿½ï¿½ï¿½Ì”ï¿½Aï¿½Nï¿½eï¿½Bï¿½uï¿½ï¿½ï¿½B*/
 		m_result.gameTimeLimit->Deactivate();
 	}
 
 
 	void InGameBuildHelper::BuildGameStartDirection()
 	{
-		/* ƒQ[ƒ€ŠJn‰‰o‚Ì¶¬B*/
+		/* ï¿½Qï¿½[ï¿½ï¿½ï¿½Jï¿½nï¿½ï¿½ï¿½oï¿½Ìï¿½ï¿½ï¿½ï¿½B*/
 		m_result.gameStartDirection =
 			NewGO<nsGame::GameStartDirection>(2, "gameStartDirection");
 
-		/* ”ñƒAƒNƒeƒBƒu‰»‚·‚éB*/
+		/* ï¿½ï¿½Aï¿½Nï¿½eï¿½Bï¿½uï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B*/
 		if (m_result.gameStartDirection != nullptr)
 			m_result.gameStartDirection->Deactivate();
 	}
@@ -374,10 +376,10 @@ namespace nsApp
 
 	void InGameBuildHelper::BuildPause()
 	{
-		/* ƒ|[ƒY‰æ–Ê‚Ì¶¬B*/
+		/* ï¿½|ï¿½[ï¿½Yï¿½ï¿½Ê‚Ìï¿½ï¿½ï¿½ï¿½B*/
 		m_result.pause = NewGO<nsGame::Pause>(0, "pause");
 
-		/* ”ñƒAƒNƒeƒBƒu‰»‚·‚éB*/
+		/* ï¿½ï¿½Aï¿½Nï¿½eï¿½Bï¿½uï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B*/
 		if (m_result.pause != nullptr)
 			m_result.pause->Deactivate();
 	}
@@ -385,13 +387,13 @@ namespace nsApp
 
 	void InGameBuildHelper::FinishBuild()
 	{
-		/* ¶¬Ï‚İƒvƒŒƒCƒ„[‚ğŒ‹‰Ê‚É“n‚·B*/
+		/* ï¿½ï¿½ï¿½ï¿½ï¿½Ï‚İƒvï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Ê‚É“nï¿½ï¿½ï¿½B*/
 		m_result.players = m_players;
 
-		/* ¶¬‚Ég—p‚µ‚½ƒp[ƒeƒB[ƒf[ƒ^‚ğ“n‚·B*/
+		/* ï¿½ï¿½ï¿½ï¿½ï¿½Égï¿½pï¿½ï¿½ï¿½ï¿½ï¿½pï¿½[ï¿½eï¿½Bï¿½[ï¿½fï¿½[ï¿½^ï¿½ï¿½nï¿½ï¿½ï¿½B*/
 		m_result.partyData = m_partyData;
 
-		/* ¶¬Š®—¹B*/
+		/* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B*/
 		m_isFinished = true;
 	}
 

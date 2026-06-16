@@ -178,6 +178,17 @@ namespace nsApp
 			 */
 			void CheckDeth();
 
+			/**
+			 * @brief ボスの攻撃を受けてノックバックする。
+			 * @param knockbackVelocity 吹っ飛びの初速。
+			 * @param dirX             吹っ飛ぶX方向（+1.0fで右、-1.0fで左）。
+			 */
+			void ForceBlowAway(float knockbackVelocity, float dirX = -1.0f);
+
+			/**
+			 * @brief 外部から強制的に起き上がり状態へ遷移させる。
+			 */
+			void ForceGetUp();
 
 			/* セッター。*/
 		public:
