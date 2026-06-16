@@ -2,12 +2,13 @@
 #include "Camera.h"
 
 #include "Src/Camera/ICameraStrategy.h"
+#include "Src/Camera/BattleCameraStrategy.h"  // ï¿½ï¿½ .cpp ï¿½ï¿½ï¿½ÅƒCï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½[ï¿½h
 
 namespace nsApp
 {
 	bool Camera::Start()
 	{
-		/* ‰Šúó‘Ô‚Íí“¬—pƒJƒƒ‰‚É‚µ‚Ä‚¨‚­B*/
+		/* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô‚Íí“¬ï¿½pï¿½Jï¿½ï¿½ï¿½ï¿½ï¿½É‚ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ï¿½B*/
 		if (m_strategy == nullptr)
 			ChangeToBattle();
 
@@ -17,33 +18,42 @@ namespace nsApp
 
 	void Camera::Update()
 	{
-		/* í“¬—pƒJƒƒ‰‚àƒ[ƒh—pƒJƒƒ‰‚àA—¼•û‚Æ‚àUpdate()‚ğŒÄ‚Ño‚·•K—v‚ª‚ ‚éB */
 		if (m_strategy == nullptr)
 			return;
 
-		/* í“¬—pƒJƒƒ‰‚àƒ[ƒh—pƒJƒƒ‰‚àA—¼•û‚Æ‚àUpdate()‚ğŒÄ‚Ño‚·•K—v‚ª‚ ‚éB */
 		m_strategy->Update();
 	}
 
 
 	void Camera::ChangeToLoading()
 	{
+		/* ï¿½í“¬ï¿½Jï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½|ï¿½Cï¿½ï¿½ï¿½^ï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½Strategyï¿½ï¿½Ø‚ï¿½Ö‚ï¿½ï¿½ï¿½B*/
+		m_battleCameraStrategy = nullptr;
 		ChangeStrategy(std::make_unique<LoadingCameraStrategy>());
 	}
 
 
 	void Camera::ChangeToBattle()
 	{
-		ChangeStrategy(std::make_unique<BattleCameraStrategy>());
+		/* ï¿½ï¿½ï¿½|ï¿½Cï¿½ï¿½ï¿½^ï¿½ï¿½Ûï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½unique_ptrï¿½Ìï¿½ï¿½Lï¿½ï¿½ï¿½ï¿½ï¿½Úï¿½ï¿½ï¿½ï¿½ï¿½B*/
+		auto strategy = std::make_unique<BattleCameraStrategy>();
+		m_battleCameraStrategy = strategy.get();
+		ChangeStrategy(std::move(strategy));
+	}
+
+
+	void Camera::StartShake(float duration, float intensity)
+	{
+		if (m_battleCameraStrategy != nullptr)
+			m_battleCameraStrategy->StartShake(duration, intensity);
 	}
 
 
 	void Camera::ChangeStrategy(std::unique_ptr<ICameraStrategy> strategy)
 	{
-		/* V‚µ‚¢Strategy‚ÉØ‚è‘Ö‚¦‚éB*/
 		m_strategy = std::move(strategy);
 
-		/* Ø‚è‘Ö‚¦‚½uŠÔ‚É‘¦”½‰f‚·‚éB*/
+		/* ï¿½Ø‚ï¿½Ö‚ï¿½ï¿½ï¿½ï¿½uï¿½Ô‚É‘ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½fï¿½ï¿½ï¿½ï¿½B*/
 		if (m_strategy != nullptr)
 			m_strategy->Update();
 	}

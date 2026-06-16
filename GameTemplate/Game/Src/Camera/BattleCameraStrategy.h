@@ -2,29 +2,64 @@
 
 /**
  * @file   BattleCameraStrategy.h
- * @brief  í“¬’†‚ÌƒJƒƒ‰‚ğ’S“–‚·‚éƒJƒƒ‰B
- * @autor  Yamaguchi Hayato
- * @date   2026/06/08: ƒNƒ‰ƒXì¬“úB
- * @detail StrategyPattern‚ÅİŒvB
+ * @brief  ï¿½í“¬ï¿½ï¿½ï¿½ÌƒJï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç—ï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½Xï¿½B
+ * @author Yamaguchi Hayato
+ * @date   2026/06/08: ï¿½Nï¿½ï¿½ï¿½Xï¿½ì¬ï¿½B
+ * @detail StrategyPatternï¿½ÅİŒvï¿½Bï¿½Jï¿½ï¿½ï¿½ï¿½ï¿½Vï¿½Fï¿½Cï¿½Nï¿½@ï¿½\ï¿½ï¿½ï¿½ï¿½ï¿½ÂB
  */
 
-#include "Src/Camera/Camera.h"
 #include "Src/Camera/ICameraStrategy.h"
+
 
 namespace nsApp
 {
+	/**
+	 * @class BattleCameraStrategy
+	 * @brief ï¿½í“¬ï¿½Vï¿½[ï¿½ï¿½ï¿½ï¿½pï¿½Jï¿½ï¿½ï¿½ï¿½ï¿½í—ªï¿½Bï¿½Å’ï¿½Ê’uï¿½Ç]ï¿½ÆƒJï¿½ï¿½ï¿½ï¿½ï¿½Vï¿½Fï¿½Cï¿½Nï¿½ï¿½ï¿½Tï¿½|ï¿½[ï¿½gï¿½ï¿½ï¿½ï¿½B
+	 */
 	class BattleCameraStrategy : public ICameraStrategy
 	{
 	public:
-		/* ƒRƒ“ƒXƒgƒ‰ƒNƒ^‚ÆƒfƒXƒgƒ‰ƒNƒ^B*/
+		/* ï¿½Rï¿½ï¿½ï¿½Xï¿½gï¿½ï¿½ï¿½Nï¿½^ï¿½Æƒfï¿½Xï¿½gï¿½ï¿½ï¿½Nï¿½^ï¿½B*/
 		BattleCameraStrategy() = default;
 		virtual ~BattleCameraStrategy() = default;
 
 
 	public:
 		/**
-		 * @brief XVˆ—B
+		 * @brief ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½B
 		 */
 		void Update() override;
+
+		/**
+		 * @brief ï¿½Jï¿½ï¿½ï¿½ï¿½ï¿½Vï¿½Fï¿½Cï¿½Nï¿½ï¿½ï¿½Jï¿½nï¿½ï¿½ï¿½ï¿½B
+		 * @param duration  ï¿½Vï¿½Fï¿½Cï¿½Nï¿½ï¿½ï¿½éï¿½Ôiï¿½bï¿½jï¿½B
+		 * @param intensity ï¿½Vï¿½Fï¿½Cï¿½Nï¿½Ì‹ï¿½ï¿½ï¿½ï¿½B
+		 */
+		void StartShake(float duration, float intensity);
+
+
+	public:
+		/**
+		 * @brief ï¿½Vï¿½Fï¿½Cï¿½Nï¿½ï¿½ï¿½ï¿½ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½Ô‚ï¿½ï¿½B
+		 * @return ï¿½Vï¿½Fï¿½Cï¿½Nï¿½ï¿½ï¿½Ìê‡ trueï¿½B
+		 */
+		inline bool IsShaking() const
+		{
+			return m_shakeDuration > 0.0f;
+		}
+
+
+	private:
+		static constexpr float SHAKE_FREQUENCY_X = 35.0f; //! Xï¿½ï¿½ï¿½Vï¿½Fï¿½Cï¿½Nï¿½Ìï¿½ï¿½gï¿½ï¿½ï¿½B
+		static constexpr float SHAKE_FREQUENCY_Y = 28.0f; //! Yï¿½ï¿½ï¿½Vï¿½Fï¿½Cï¿½Nï¿½Ìï¿½ï¿½gï¿½ï¿½ï¿½B
+		static constexpr float SHAKE_Y_RATIO = 0.6f; //! Yï¿½ï¿½ï¿½Vï¿½Fï¿½Cï¿½Nï¿½ÌUï¿½ï¿½ï¿½ä—¦ï¿½B
+		static constexpr float TARGET_DAMP_RATIO = 0.3f; //! ï¿½ï¿½ï¿½ï¿½ï¿½_ï¿½Ö‚ÌƒVï¿½Fï¿½Cï¿½Nï¿½`ï¿½dï¿½ï¿½ï¿½B
+
+
+	private:
+		float m_shakeDuration = 0.0f; //! ï¿½cï¿½ï¿½Vï¿½Fï¿½Cï¿½Nï¿½ï¿½ï¿½Ôiï¿½bï¿½jï¿½B
+		float m_shakeIntensity = 0.0f; //! ï¿½Vï¿½Fï¿½Cï¿½Nï¿½Ì‹ï¿½ï¿½ï¿½ï¿½B
+		float m_shakeTimer = 0.0f; //! ï¿½Vï¿½Fï¿½Cï¿½Nï¿½oï¿½ßï¿½ï¿½Ôisinï¿½vï¿½Zï¿½pï¿½jï¿½B
 	};
 }

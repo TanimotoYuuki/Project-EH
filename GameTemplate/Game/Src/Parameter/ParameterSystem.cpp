@@ -35,36 +35,6 @@ namespace nsApp
 		/* 救助時間テーブルを読み込む。*/
 		m_isSuccess &= RescueTimeTable::LoadTSVFile(MakeParameterPath("RescueTimeTable.tsv").c_str());
 
-		//bool result = false;
-
-		//result = BulletParameterTable::LoadTSVFile(MakeParameterPath("BulletParameterTable.tsv").c_str());
-		//OutputDebugStringA(result ? "[Parameter] Bullet OK\n" : "[Parameter] Bullet FAILED\n");
-		//m_isSuccess &= result;
-
-		//result = MagicParameterTable::LoadTSVFile(MakeParameterPath("MagicParameterTable.tsv").c_str());
-		//OutputDebugStringA(result ? "[Parameter] Magic OK\n" : "[Parameter] Magic FAILED\n");
-		//m_isSuccess &= result;
-
-		//result = NPCActionParameterTable::LoadTSVFile(MakeParameterPath("NPCActionParameter.tsv").c_str());
-		//OutputDebugStringA(result ? "[Parameter] NPCAction OK\n" : "[Parameter] NPCAction FAILED\n");
-		//m_isSuccess &= result;
-
-		//result = NPCStatusParameterTable::LoadTSVFile(MakeParameterPath("NPCStatusParameter.tsv").c_str());
-		//OutputDebugStringA(result ? "[Parameter] NPCStatus OK\n" : "[Parameter] NPCStatus FAILED\n");
-		//m_isSuccess &= result;
-
-		//result = AttackParameterTable::LoadTSVFile(MakeParameterPath("PlayerAttackParameterTable.tsv").c_str());
-		//OutputDebugStringA(result ? "[Parameter] PlayerAttack OK\n" : "[Parameter] PlayerAttack FAILED\n");
-		//m_isSuccess &= result;
-
-		//result = PlayerStatusParameterTable::LoadTSVFile(MakeParameterPath("PlayerStatusParameter.tsv").c_str());
-		//OutputDebugStringA(result ? "[Parameter] PlayerStatus OK\n" : "[Parameter] PlayerStatus FAILED\n");
-		//m_isSuccess &= result;
-
-		//result = RescueTimeTable::LoadTSVFile(MakeParameterPath("RescueTimeTable.tsv").c_str());
-		//OutputDebugStringA(result ? "[Parameter] RescueTime OK\n" : "[Parameter] RescueTime FAILED\n");
-		//m_isSuccess &= result;
-
 		return m_isSuccess;
 	}
 

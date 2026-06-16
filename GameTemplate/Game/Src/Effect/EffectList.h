@@ -1,8 +1,8 @@
 #pragma once
 /**
 * @file   EffectList.h
-* @brief  ƒGƒtƒFƒNƒg‚ğŠÇ—‚·‚éƒŠƒXƒgƒNƒ‰ƒXB
-* @author YamaguchiHayatoB
+* @brief  ï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½ï¿½ï¿½Ç—ï¿½ï¿½ï¿½ï¿½éƒŠï¿½Xï¿½gï¿½Nï¿½ï¿½ï¿½Xï¿½B
+* @author YamaguchiHayatoï¿½B
 * @date   2026/03/23
 */
 
@@ -12,82 +12,86 @@ namespace nsApp
 	namespace nsEffect 
 	{
 		/*
-		 * @struct EffectInfoB
-		 * @brief Ä¶‚·‚éƒGƒtƒFƒNƒg‚Ìî•ñ‚ğŠÇ—‚·‚éB
+		 * @struct EffectInfoï¿½B
+		 * @brief ï¿½Äï¿½ï¿½ï¿½ï¿½ï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½Ìï¿½ï¿½ï¿½ï¿½Ç—ï¿½ï¿½ï¿½ï¿½ï¿½B
 	     */
 		struct EffectInfo
 		{
-			nsK2EngineLow::EffectEmitter* emitter;	//! ƒGƒtƒFƒNƒg‚ÌƒGƒ~ƒbƒ^B
-			float lifeTime;						    //! ƒGƒtƒFƒNƒg‚Ìõ–½B
-			float currentTime;						//! ƒGƒtƒFƒNƒg‚ÌŒ»İ‚ÌŒo‰ßŠÔB
+			nsK2EngineLow::EffectEmitter* emitter;	//! ï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½ÌƒGï¿½~ï¿½bï¿½^ï¿½B
+			float lifeTime;						    //! ï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½Ìï¿½ï¿½ï¿½ï¿½B
+			float currentTime;						//! ï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½ÌŒï¿½ï¿½İ‚ÌŒoï¿½ßï¿½ï¿½ÔB
 		};
 
 
 		/**
-		* @enum  EffectIDB
-		* @brief ƒGƒtƒFƒNƒg‚ğ¯•Êq‚ÅŠÇ—‚·‚é—p‚Ì—ñ‹“Œ^B
+		* @enum  EffectIDï¿½B
+		* @brief ï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½ï¿½ï¿½ï¿½ï¿½Êqï¿½ÅŠÇ—ï¿½ï¿½ï¿½ï¿½ï¿½pï¿½Ì—ñ‹“Œ^ï¿½B
 		*/
 		enum Effect_ID : uint8_t
 		{
-			Attack,				//! UŒ‚ƒGƒtƒFƒNƒgB
-			Charge,				//! ƒ`ƒƒ[ƒWƒGƒtƒFƒNƒgB
-			Fire,				//! ‰ŠƒGƒtƒFƒNƒgB
-			ShockWave,			//! ÕŒ‚”gƒGƒtƒFƒNƒgB
-			Hit,				//! ’…’eƒGƒtƒFƒNƒgB
+			Attack,              //! ï¿½Uï¿½ï¿½ï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½B
+			Charge,              //! ï¿½`ï¿½ï¿½ï¿½[ï¿½Wï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½B
+			Fire,                //! ï¿½{ï¿½Xï¿½ï¿½ï¿½ï¿½ï¿½eï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½B
+			ShockWave,           //! ï¿½ÕŒï¿½ï¿½gï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½B
+			Hit,                 //! ï¿½ï¿½eï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½B
 
-			NormalMagic,		//! ’Êí–‚–@ƒGƒtƒFƒNƒgB
-			RushMagic,			//! ˜A‘Å–‚–@ƒGƒtƒFƒNƒgB
-			AirMagic,			//! ‹ó’†–‚–@ƒGƒtƒFƒNƒgB
-			HeelMagic,			//! ‰ñ•œƒGƒtƒFƒNƒgB
-			HeelMagic_Particle, //! ‰ñ•œƒGƒtƒFƒNƒg‚Ìƒp[ƒeƒBƒNƒ‹B
-			MagicAttack,		//! –‚–@UŒ‚ƒGƒtƒFƒNƒgB
-			Shot,				//! eŒ‚ƒGƒtƒFƒNƒgB
+			NormalMagic,         //! ï¿½Êí–‚ï¿½@ï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½B
+			RushMagic,           //! ï¿½Aï¿½Å–ï¿½ï¿½@ï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½B
+			AirMagic,            //! ï¿½ó’†–ï¿½ï¿½@ï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½B
+			HeelMagic,           //! ï¿½ñ•œƒGï¿½tï¿½Fï¿½Nï¿½gï¿½B
+			HeelMagic_Particle,  //! ï¿½ñ•œƒGï¿½tï¿½Fï¿½Nï¿½gï¿½Ìƒpï¿½[ï¿½eï¿½Bï¿½Nï¿½ï¿½ï¿½B
+			MagicAttack,         //! ï¿½ï¿½ï¿½@ï¿½Uï¿½ï¿½ï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½B
+			Shot,                //! ï¿½eï¿½ÛƒGï¿½tï¿½Fï¿½Nï¿½gï¿½B
+
+			FireBall,            //! ï¿½{ï¿½Xï¿½tï¿½@ï¿½Cï¿½Aï¿½{ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ÄƒGï¿½tï¿½Fï¿½Nï¿½gï¿½B
+			BossFireAttack,      //! ï¿½{ï¿½Xï¿½ï¿½ï¿½ï¿½ï¿½eï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½iï¿½ï¿½ï¿½ï¿½ï¿½jï¿½B
 		};
+
 
 		class EffectList
 		{
 		public:
-			/* ƒRƒ“ƒXƒgƒ‰ƒNƒ^‚ÆƒfƒXƒgƒ‰ƒNƒ^B*/
+			/* ï¿½Rï¿½ï¿½ï¿½Xï¿½gï¿½ï¿½ï¿½Nï¿½^ï¿½Æƒfï¿½Xï¿½gï¿½ï¿½ï¿½Nï¿½^ï¿½B*/
 			EffectList() = default;
 			virtual ~EffectList();
 
 
 		public:
-			/* ƒGƒtƒFƒNƒg‚ğ‰Šú‰»B*/
+			/* ï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B*/
 			void Init();
 
 			/*
-			 * @brief ƒGƒtƒFƒNƒg‚ğXV‚·‚éB
-			 * @param deltaTime: ‘OƒtƒŒ[ƒ€‚©‚ç‚ÌŒo‰ßŠÔB
+			 * @brief ï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½ï¿½ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½B
+			 * @param deltaTime: ï¿½Oï¿½tï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÌŒoï¿½ßï¿½ï¿½ÔB
 			 */
 			void Update(float deltaTime);
 
 			/*
-			 * @brief@ƒGƒtƒFƒNƒg‚ÌƒLƒƒƒbƒVƒ…‚ğ‰ğ•ú‚·‚éB 
+			 * @briefï¿½@ï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½ÌƒLï¿½ï¿½ï¿½bï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B 
 			 */
 			void Clear();
 
 			/*
-			 * @brief w’è‚µ‚½ƒGƒtƒFƒNƒg‚ğ’â~/íœ‚·‚éB
-			 * @param effect: ’â~/íœ‚·‚éƒGƒtƒFƒNƒg‚ÌƒCƒ“ƒXƒ^ƒ“ƒXB
+			 * @brief ï¿½wï¿½è‚µï¿½ï¿½ï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½ï¿½ï¿½~/ï¿½íœï¿½ï¿½ï¿½ï¿½B
+			 * @param effect: ï¿½ï¿½~/ï¿½íœï¿½ï¿½ï¿½ï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½ÌƒCï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Xï¿½B
 			 */
 			void StopEffect(nsK2EngineLow::EffectEmitter* effect);
 
 			/* 
-			 * @def ƒGƒtƒFƒNƒg‚ğÄ¶B
-			 * @param id: ƒGƒtƒFƒNƒg‚Ì¯•ÊqB
-			 * @param position: ƒGƒtƒFƒNƒg‚ÌoŒ»ˆÊ’uB
-			 * @param angle: ƒGƒtƒFƒNƒg‚Ì‰ñ“]Šp“xB
-			 * @param scale: ƒGƒtƒFƒNƒg‚ÌŠg‘å—¦B
-			 * @param lifeTime: ƒGƒtƒFƒNƒg‚ğ‰½•b•`‰æ‚·‚é‚©B
+			 * @def ï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½ï¿½ï¿½Äï¿½ï¿½B
+			 * @param id: ï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½Ìï¿½ï¿½Êqï¿½B
+			 * @param position: ï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½Ìoï¿½ï¿½ï¿½Ê’uï¿½B
+			 * @param angle: ï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½Ì‰ï¿½]ï¿½pï¿½xï¿½B
+			 * @param scale: ï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½ÌŠgï¿½å—¦ï¿½B
+			 * @param lifeTime: ï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½ï¿½ï¿½ï¿½ï¿½bï¿½`ï¿½æ‚·ï¿½é‚©ï¿½B
 			 */
 			nsK2EngineLow::EffectEmitter* PlayEffect(Effect_ID id, const Vector3& position, const Quaternion& angle = Quaternion::Identity, const Vector3& scale = Vector3::One, float lifeTime = 2.0f);
 
 
 		public:
 			/*
-			 * @def ƒtƒ@ƒCƒ‹ƒpƒX‚ğ“o˜^B
-			 * @pararm name: ƒGƒtƒFƒNƒg‚Ìƒtƒ@ƒCƒ‹–¼B
+			 * @def ï¿½tï¿½@ï¿½Cï¿½ï¿½ï¿½pï¿½Xï¿½ï¿½oï¿½^ï¿½B
+			 * @pararm name: ï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½Ìƒtï¿½@ï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½B
 			 */
 			inline const std::u16string GetEffectFilePath(const std::u16string name)
 			{
@@ -97,30 +101,33 @@ namespace nsApp
 
 
 		private:
-			/* •Ší‚²‚Æ‚ÉƒGƒtƒFƒNƒg‚ğ“o˜^ˆ—‚ğ•ª‚¯‚éB*/
-			/* SwordB*/
+			/* ï¿½ï¿½ï¿½í‚²ï¿½Æ‚ÉƒGï¿½tï¿½Fï¿½Nï¿½gï¿½ï¿½oï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½ğ•ª‚ï¿½ï¿½ï¿½B*/
+			/* Swordï¿½B*/
 			void StorageGreatSwordEffect();
 
-			/* HammerB*/
+			/* Hammerï¿½B*/
 			void StorageHammerEffect();
 
-			/* WandB*/
+			/* Wandï¿½B*/
 			void StorageWandEffect();
 
-			/* TwinGunB*/
+			/* TwinGunï¿½B*/
 			void StorageTwinGunEffect();
 
+			/* Bossï¿½B*/
+			void StorageBossEffect();
+
 
 		private:
-			nsK2EngineLow::EffectEmitter* m_effectEmitter;					//! ƒGƒtƒFƒNƒg‚ÌƒGƒ~ƒbƒ^‚ÌƒCƒ“ƒXƒ^ƒ“ƒXB
+			nsK2EngineLow::EffectEmitter* m_effectEmitter;					//! ï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½ÌƒGï¿½~ï¿½bï¿½^ï¿½ÌƒCï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Xï¿½B
 
 
 		private:
-			std::unordered_map<Effect_ID, std::u16string> m_effectPathList; //! ƒGƒtƒFƒNƒg‚Ì¯•Êq‚Æƒtƒ@ƒCƒ‹ƒpƒX‚ğŠÇ—‚·‚éƒ}ƒbƒvB
+			std::unordered_map<Effect_ID, std::u16string> m_effectPathList; //! ï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½Ìï¿½ï¿½Êqï¿½Æƒtï¿½@ï¿½Cï¿½ï¿½ï¿½pï¿½Xï¿½ï¿½ï¿½Ç—ï¿½ï¿½ï¿½ï¿½ï¿½}ï¿½bï¿½vï¿½B
 
-			std::vector<EffectInfo> m_playingEffects;					    //! Œ»İÄ¶’†‚ÌƒGƒtƒFƒNƒg‚Ìî•ñ‚ğŠÇ—‚·‚éƒŠƒXƒgB
+			std::vector<EffectInfo> m_playingEffects;					    //! ï¿½ï¿½ï¿½İÄï¿½ï¿½ï¿½ï¿½ÌƒGï¿½tï¿½Fï¿½Nï¿½gï¿½Ìï¿½ï¿½ï¿½ï¿½Ç—ï¿½ï¿½ï¿½ï¿½éƒŠï¿½Xï¿½gï¿½B
 
-			EffectInfo m_info;												//! ƒGƒtƒFƒNƒg‚Ìî•ñ‚ğŠÇ—‚·‚éƒCƒ“ƒXƒ^ƒ“ƒXB
+			EffectInfo m_info;												//! ï¿½Gï¿½tï¿½Fï¿½Nï¿½gï¿½Ìï¿½ï¿½ï¿½ï¿½Ç—ï¿½ï¿½ï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Xï¿½B
 		};
 	}
 }
