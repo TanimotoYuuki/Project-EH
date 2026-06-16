@@ -2,10 +2,10 @@
 
 /**
  * @file   InGameBuildHelper.h
- * @brief  InGame¶¬•â•ƒNƒ‰ƒXB
- * @author Yamaguchi HayatoB
+ * @brief  InGameï¿½ï¿½ï¿½ï¿½ï¿½â•ï¿½Nï¿½ï¿½ï¿½Xï¿½B
+ * @author Yamaguchi Hayatoï¿½B
  * @date   2026/06/05
- * @detail Game2‚Å•K—v‚È¶¬ˆ—‚ğ1ƒXƒeƒbƒv‚¸‚ÂÀs‚·‚éB
+ * @detail Game2ï¿½Å•Kï¿½vï¿½Èï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½1ï¿½Xï¿½eï¿½bï¿½vï¿½ï¿½ï¿½Âï¿½ï¿½sï¿½ï¿½ï¿½ï¿½B
  */
 
 #include <vector>
@@ -48,7 +48,7 @@ namespace nsApp
 
 	/**
 	 * @struct InGameBuildRequest
-	 * @brief InGame¶¬‚É•K—v‚ÈƒŠƒNƒGƒXƒgî•ñB
+	 * @brief InGameï¿½ï¿½ï¿½ï¿½ï¿½É•Kï¿½vï¿½Èƒï¿½ï¿½Nï¿½Gï¿½Xï¿½gï¿½ï¿½ï¿½B
 	 */
 	struct InGameBuildRequest
 	{
@@ -60,7 +60,7 @@ namespace nsApp
 
 	/**
 	 * @struct InGameBuildResult
-	 * @brief InGame¶¬Œ‹‰ÊB
+	 * @brief InGameï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÊB
 	 */
 	struct InGameBuildResult
 	{
@@ -84,7 +84,7 @@ namespace nsApp
 
 
 	/**
-	 * @brief InGame¶¬•â•ƒNƒ‰ƒXB
+	 * @brief InGameï¿½ï¿½ï¿½ï¿½ï¿½â•ï¿½Nï¿½ï¿½ï¿½Xï¿½B
 	 */
 	class InGameBuildHelper
 	{
@@ -95,26 +95,26 @@ namespace nsApp
 
 	public:
 		/**
-		 * @brief ‰Šú‰»ˆ—B
-		 * @param request ¶¬‚É•K—v‚Èî•ñB
+		 * @brief ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
+		 * @param request ï¿½ï¿½ï¿½ï¿½ï¿½É•Kï¿½vï¿½Èï¿½ï¿½B
 		 */
 		void Initialize(const InGameBuildRequest& request);
 
 		/**
-		 * @brief XVˆ—B
+		 * @brief ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½B
 		 */
 		void Update()
 		{
-			/* ¶¬‚ªŠ®—¹‚µ‚Ä‚¢‚éê‡‚Í‰½‚à‚µ‚È‚¢B*/
+			/* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ê‡ï¿½Í‰ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È‚ï¿½ï¿½B*/
 			ExecuteNextBuildFunction();
 		}
 
 
-		/* ƒQƒbƒ^[B*/
+		/* ï¿½Qï¿½bï¿½^ï¿½[ï¿½B*/
 	public:
 		/**
-		 * @brief ¶¬‚ªŠ®—¹‚µ‚Ä‚¢‚é‚©B
-		 * @return ¶¬‚ªŠ®—¹‚µ‚Ä‚¢‚éê‡‚ÍtrueB
+		 * @brief ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½é‚©ï¿½B
+		 * @return ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ê‡ï¿½ï¿½trueï¿½B
 		 */
 		inline bool IsFinished() const
 		{
@@ -122,8 +122,8 @@ namespace nsApp
 		}
 
 		/**
-		 * @brief ¶¬Œ‹‰Ê‚ğæ“¾‚·‚éB
-		 * @return ¶¬Œ‹‰ÊB
+		 * @brief ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê‚ï¿½ï¿½æ“¾ï¿½ï¿½ï¿½ï¿½B
+		 * @return ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÊB
 		 */
 		inline const InGameBuildResult& GetResult() const
 		{
@@ -131,7 +131,7 @@ namespace nsApp
 		}
 
 		/**
-		 * @brief i’»—¦‚ğæ“¾‚·‚éB
+		 * @brief ï¿½iï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½æ“¾ï¿½ï¿½ï¿½ï¿½B
 		 */
 		float GetProgress() const;
 
@@ -142,119 +142,119 @@ namespace nsApp
 
 	private:
 		/**
-		 * @brief ¶¬ŠÖ”‚ğ“o˜^‚·‚éB
+		 * @brief ï¿½ï¿½ï¿½ï¿½ï¿½Öï¿½ï¿½ï¿½oï¿½^ï¿½ï¿½ï¿½ï¿½B
 		 */
 		void InitializeBuildFunctions();
 
 		/**
-		 * @brief Ÿ‚Ì¶¬ŠÖ”‚ğ1‚ÂÀs‚·‚éB
+		 * @brief ï¿½ï¿½ï¿½Ìï¿½ï¿½ï¿½ï¿½Öï¿½ï¿½ï¿½1ï¿½Âï¿½ï¿½sï¿½ï¿½ï¿½ï¿½B
 		 */
 		void ExecuteNextBuildFunction();
 
 		/**
-		 * @brief —”‚Ì¶¬B
+		 * @brief ï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½ï¿½ï¿½B
 		 */
 		void BuildRandom();
 
 		/**
-		 * @brief ‰¹Œ¹‚Ì¶¬B
+		 * @brief ï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½ï¿½ï¿½B
 		 */
 		void BuildSound();
 
 		/**
-		 * @brief ƒXƒe[ƒW‚Ì¶¬B
+		 * @brief ï¿½Xï¿½eï¿½[ï¿½Wï¿½Ìï¿½ï¿½ï¿½ï¿½B
 		 */
 		void BuildStage();
 
 		/**
-		 * @brief ”wŒi‚Ì¶¬B
+		 * @brief ï¿½wï¿½iï¿½Ìï¿½ï¿½ï¿½ï¿½B
 		 */
 		void BuildBackGround();
 
 		/**
-		 * @brief ƒJƒƒ‰‚Ì¶¬B
+		 * @brief ï¿½Jï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½ï¿½ï¿½B
 		 */
 		void BuildCamera();
 
 		/**
-		 * @brief ƒ_ƒ[ƒWƒCƒ“ƒWƒP[ƒ^[‚Ìƒv[ƒ‹‚Ì¶¬B
+		 * @brief ï¿½_ï¿½ï¿½ï¿½[ï¿½Wï¿½Cï¿½ï¿½ï¿½Wï¿½Pï¿½[ï¿½^ï¿½[ï¿½Ìƒvï¿½[ï¿½ï¿½ï¿½Ìï¿½ï¿½ï¿½ï¿½B
 		 */
 		void BuildDamagePool();
 
 		/**
-		 * @brief À‹µUI‚Ì¶¬B
+		 * @brief ï¿½ï¿½ï¿½ï¿½UIï¿½Ìï¿½ï¿½ï¿½ï¿½B
 		 */
 		void BuildCommentaryUI();
 
 		/**
-		 * @brief PlayerGenerator‚Ì¶¬B
+		 * @brief PlayerGeneratorï¿½Ìï¿½ï¿½ï¿½ï¿½B
 		 */
 		void BuildPlayerGenerator();
 
 		/**
-		 * @brief ƒvƒŒƒCƒ„[‚Ì¶¬‚É•K—v‚Èƒf[ƒ^‚Ìì¬B
+		 * @brief ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Ìï¿½ï¿½ï¿½ï¿½É•Kï¿½vï¿½Èƒfï¿½[ï¿½^ï¿½Ìì¬ï¿½B
 		 */
 		void CreatePartyData();
 
 		/**
-		 * @brief ƒvƒŒƒCƒ„[‚Ì¶¬B
-		 * @param playerIndex ƒvƒŒƒCƒ„[‚ÌƒCƒ“ƒfƒbƒNƒXB
+		 * @brief ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Ìï¿½ï¿½ï¿½ï¿½B
+		 * @param playerIndex ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ÌƒCï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½B
 		 */
 		void SpawnPlayer(int playerIndex);
 
 		/**
-		 * @brief ƒvƒŒƒCƒ„[‚ğƒŠƒ{[ƒ“ƒQ[ƒW‚É“o˜^‚·‚éB
+		 * @brief ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½{ï¿½[ï¿½ï¿½ï¿½Qï¿½[ï¿½Wï¿½É“oï¿½^ï¿½ï¿½ï¿½ï¿½B
 		 */
 		void RegisterPlayersToReboneGauge();
 
 		/**
-		 * @brief PlayerHub‚Ì¶¬B
+		 * @brief PlayerHubï¿½Ìï¿½ï¿½ï¿½ï¿½B
 		 */
 		void BuildPlayerHub();
 
 		/**
-		 * @brief Boss‚Ì¶¬B
+		 * @brief Bossï¿½Ìï¿½ï¿½ï¿½ï¿½B
 		 */
 		void BuildBoss();
 
 		/**
-		 * @brief CharacterHP‚Ì¶¬B
+		 * @brief CharacterHPï¿½Ìï¿½ï¿½ï¿½ï¿½B
 		 */
 		void BuildCharacterHP();
 
 		/**
-		 * @brief ƒQ[ƒ€ŠÔ§ŒÀ‚Ì¶¬B
+		 * @brief ï¿½Qï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Ôï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½ï¿½ï¿½B
 		 */
 		void BuildGameTimeLimit();
 
 		/**
-		 * @brief ƒQ[ƒ€ŠJn‰‰o‚Ì¶¬B
+		 * @brief ï¿½Qï¿½[ï¿½ï¿½ï¿½Jï¿½nï¿½ï¿½ï¿½oï¿½Ìï¿½ï¿½ï¿½ï¿½B
 		 */
 		void BuildGameStartDirection();
 
 		/**
-		 * @brief ƒ|[ƒY‚Ì¶¬B
+		 * @brief ï¿½|ï¿½[ï¿½Yï¿½Ìï¿½ï¿½ï¿½ï¿½B
 		 */
 		void BuildPause();
 
 		/**
-		 * @brief ¶¬Š®—¹ˆ—B
+		 * @brief ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
 		 */
 		void FinishBuild();
 
 
 	private:
-		InGameBuildRequest m_request;//! ¶¬‚É•K—v‚Èî•ñB
-		InGameBuildResult m_result;  //! ¶¬Œ‹‰ÊB
+		InGameBuildRequest m_request;//! ï¿½ï¿½ï¿½ï¿½ï¿½É•Kï¿½vï¿½Èï¿½ï¿½B
+		InGameBuildResult m_result;  //! ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÊB
 
-		std::vector<BuildFunction> m_buildFunctions; //! ¶¬ŠÖ”‚ÌƒŠƒXƒgB
-		std::vector<PlayerSpawnData> m_partyData;    //! ƒvƒŒƒCƒ„[‚Ì¶¬‚É•K—v‚Èƒf[ƒ^‚ÌƒŠƒXƒgB
-		std::vector<nsActor::Player*> m_players;     //! ¶¬‚³‚ê‚½ƒvƒŒƒCƒ„[‚ÌƒŠƒXƒgB
+		std::vector<BuildFunction> m_buildFunctions; //! ï¿½ï¿½ï¿½ï¿½ï¿½Öï¿½ï¿½Ìƒï¿½ï¿½Xï¿½gï¿½B
+		std::vector<PlayerSpawnData> m_partyData;    //! ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Ìï¿½ï¿½ï¿½ï¿½É•Kï¿½vï¿½Èƒfï¿½[ï¿½^ï¿½Ìƒï¿½ï¿½Xï¿½gï¿½B
+		std::vector<nsActor::Player*> m_players;     //! ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ê‚½ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Ìƒï¿½ï¿½Xï¿½gï¿½B
 
-		ControllerType m_controllerType[4] = { ControllerType::Player_1P }; //! ƒLƒƒƒ‰ƒNƒ^[‚²‚Æ‚ÌƒRƒ“ƒgƒ[ƒ‰[‚Ìí—ŞB
+		ControllerType m_controllerType[4] = { ControllerType::Player_1P }; //! ï¿½Lï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½^ï¿½[ï¿½ï¿½ï¿½Æ‚ÌƒRï¿½ï¿½ï¿½gï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½[ï¿½Ìï¿½ŞB
 
-		bool m_isFinished = false; //! ¶¬‚ªŠ®—¹‚µ‚Ä‚¢‚é‚©B 
+		bool m_isFinished = false; //! ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½é‚©ï¿½B 
 			
-		int m_currentBuildIndex = 0; //! Œ»İÀs‚·‚é¶¬ŠÖ”‚ÌƒCƒ“ƒfƒbƒNƒXB
+		int m_currentBuildIndex = 0; //! ï¿½ï¿½ï¿½İï¿½ï¿½sï¿½ï¿½ï¿½é¶ï¿½ï¿½ï¿½Öï¿½ï¿½ÌƒCï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½B
 	};
 }

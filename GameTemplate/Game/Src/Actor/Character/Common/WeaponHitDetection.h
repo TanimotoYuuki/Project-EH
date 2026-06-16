@@ -1,7 +1,7 @@
 #pragma once
 /**
 * @file   WeaponHitDetection.h
-* @brief  •Ší‚Ì“–‚½‚è”»’è‚ğŠÇ—‚·‚éƒNƒ‰ƒXB
+* @brief  ï¿½ï¿½ï¿½ï¿½Ì“ï¿½ï¿½ï¿½ï¿½è”»ï¿½ï¿½ï¿½ï¿½Ç—ï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½Xï¿½B
 * @author Yamaguchi Hayato
 * @date   2026/05/29
 */
@@ -13,38 +13,38 @@ namespace nsApp
 	class WeaponHitDetection
 	{
 	public:
-		/* ƒRƒ“ƒXƒgƒ‰ƒNƒ^‚ÆƒfƒXƒgƒ‰ƒNƒ^B*/
+		/* ï¿½Rï¿½ï¿½ï¿½Xï¿½gï¿½ï¿½ï¿½Nï¿½^ï¿½Æƒfï¿½Xï¿½gï¿½ï¿½ï¿½Nï¿½^ï¿½B*/
 		WeaponHitDetection() = default;
 		virtual ~WeaponHitDetection() = default;
 
 
 	public:
 		/** 
-		 * @brief“–‚½‚è”»’è‚Ì‰Šú‰»ˆ—B
-		 * @param radius •Ší‚Ì“–‚½‚è”»’è‚Ì”¼ŒaB
+		 * @briefï¿½ï¿½ï¿½ï¿½ï¿½è”»ï¿½ï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
+		 * @param radius ï¿½ï¿½ï¿½ï¿½Ì“ï¿½ï¿½ï¿½ï¿½è”»ï¿½ï¿½Ì”ï¿½ï¿½aï¿½B
 		 **/
 		void Init(float radius);
 
 		/**
-		 * @brief“–‚½‚è”»’è‚ÌXVˆ—B
-		 * @param weaponPosition •Ší‚ÌŒ»İ‚ÌÀ•WB
+		 * @briefï¿½ï¿½ï¿½ï¿½ï¿½è”»ï¿½ï¿½ÌXï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½B
+		 * @param weaponPosition ï¿½ï¿½ï¿½ï¿½ÌŒï¿½ï¿½İ‚Ìï¿½ï¿½Wï¿½B
 		 */
 		inline void Update(const Vector3& weaponPosition)
 		{
-			/* À•W‚ğ•Û‚·‚éB*/
+			/* ï¿½ï¿½ï¿½Wï¿½ï¿½Ûï¿½ï¿½ï¿½ï¿½ï¿½B*/
 			m_position = weaponPosition;
 		}
 
 		/**
-		 * @brief•`‰æˆ—B
-		 * @param rc ƒŒƒ“ƒ_ƒŠƒ“ƒOƒRƒ“ƒeƒLƒXƒgB
+		 * @briefï¿½`ï¿½æˆï¿½ï¿½ï¿½B
+		 * @param rc ï¿½ï¿½ï¿½ï¿½ï¿½_ï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½Rï¿½ï¿½ï¿½eï¿½Lï¿½Xï¿½gï¿½B
 		 */
 		void Render(RenderContext& rc);
 
 
 	public:
 		/**
-		 * @brief “–‚½‚è”»’è‚ğƒIƒ“B
+		 * @brief ï¿½ï¿½ï¿½ï¿½ï¿½è”»ï¿½ï¿½ï¿½ï¿½Iï¿½ï¿½ï¿½B
 		 */
 		inline void Enable()
 		{
@@ -52,7 +52,7 @@ namespace nsApp
 		}
 
 		/**
-		 * @brief “–‚½‚è”»’è‚ğƒIƒtB
+		 * @brief ï¿½ï¿½ï¿½ï¿½ï¿½è”»ï¿½ï¿½ï¿½ï¿½Iï¿½tï¿½B
 		 */
 		inline void Disable()
 		{
@@ -61,11 +61,11 @@ namespace nsApp
 		}
 
 
-	/* ƒZƒbƒ^[B*/
+	/* ï¿½Zï¿½bï¿½^ï¿½[ï¿½B*/
 	public:
 		/**
-		 * @brief “–‚½‚è”»’è‚Ì”¼Œa‚ğİ’èB
-		 * @param radius “–‚½‚è”»’è‚Ì”¼ŒaB
+		 * @brief ï¿½ï¿½ï¿½ï¿½ï¿½è”»ï¿½ï¿½Ì”ï¿½ï¿½aï¿½ï¿½İ’ï¿½B
+		 * @param radius ï¿½ï¿½ï¿½ï¿½ï¿½è”»ï¿½ï¿½Ì”ï¿½ï¿½aï¿½B
 		 */
 		inline void SetRadius(float radius)
 		{
@@ -73,18 +73,18 @@ namespace nsApp
 		}
 
 
-	/* ƒQƒbƒ^[B*/
+	/* ï¿½Qï¿½bï¿½^ï¿½[ï¿½B*/
 	public:
         /**
-		 * @brief w’è‚µ‚½ƒ^[ƒQƒbƒg‚ª“–‚½‚è”»’è‚Éƒqƒbƒg‚µ‚Ä‚¢‚é‚©‚Ç‚¤‚©‚ğ”»’èB
-		 * @param target ”»’è‘ÎÛ‚ÌƒLƒƒƒ‰ƒNƒ^[B
-		 * @return ƒ^[ƒQƒbƒg‚ª“–‚½‚è”»’è‚Éƒqƒbƒg‚µ‚Ä‚¢‚éê‡‚ÍtrueA‚»‚¤‚Å‚È‚¢ê‡‚ÍfalseB
+		 * @brief ï¿½wï¿½è‚µï¿½ï¿½ï¿½^ï¿½[ï¿½Qï¿½bï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½è”»ï¿½ï¿½Éƒqï¿½bï¿½gï¿½ï¿½ï¿½Ä‚ï¿½ï¿½é‚©ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ğ”»’ï¿½B
+		 * @param target ï¿½ï¿½ï¿½ï¿½ÎÛ‚ÌƒLï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½^ï¿½[ï¿½B
+		 * @return ï¿½^ï¿½[ï¿½Qï¿½bï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½è”»ï¿½ï¿½Éƒqï¿½bï¿½gï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ê‡ï¿½ï¿½trueï¿½Aï¿½ï¿½ï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½ê‡ï¿½ï¿½falseï¿½B
          */
         bool IsHit(nsActor::ICharacter* target);
 
 		/**
-		 * @brief “–‚½‚è”»’è‚Ì’†SÀ•W‚ğæ“¾B
-		 * @return “–‚½‚è”»’è‚Ì’†SÀ•WB
+		 * @brief ï¿½ï¿½ï¿½ï¿½ï¿½è”»ï¿½ï¿½Ì’ï¿½ï¿½Sï¿½ï¿½ï¿½Wï¿½ï¿½ï¿½æ“¾ï¿½B
+		 * @return ï¿½ï¿½ï¿½ï¿½ï¿½è”»ï¿½ï¿½Ì’ï¿½ï¿½Sï¿½ï¿½ï¿½Wï¿½B
 		 */
 		inline const Vector3& GetPosition()
 		{
@@ -93,18 +93,18 @@ namespace nsApp
 
 
 	private:
-		std::vector<nsActor::ICharacter*> m_hitTargets; //! “–‚½‚Á‚½‘ÎÛ‚ÌƒŠƒXƒgB
+		std::vector<nsActor::ICharacter*> m_hitTargets; //! ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÎÛ‚Ìƒï¿½ï¿½Xï¿½gï¿½B
 
 
 	private:
-		Vector3 m_position = Vector3::Zero;             //! “–‚½‚è”»’è‚Ì’†SÀ•WB
-		Vector3 m_targetPosition = Vector3::Zero;       //! ƒ^[ƒQƒbƒg‚ÌÀ•WB
-		Vector3 m_diffVector = Vector3::Zero;           //! •Ší‚Æƒ^[ƒQƒbƒg‚Ì‹——£ƒxƒNƒgƒ‹B
+		Vector3 m_position = Vector3::Zero;             //! ï¿½ï¿½ï¿½ï¿½ï¿½è”»ï¿½ï¿½Ì’ï¿½ï¿½Sï¿½ï¿½ï¿½Wï¿½B
+		Vector3 m_targetPosition = Vector3::Zero;       //! ï¿½^ï¿½[ï¿½Qï¿½bï¿½gï¿½Ìï¿½ï¿½Wï¿½B
+		Vector3 m_diffVector = Vector3::Zero;           //! ï¿½ï¿½ï¿½ï¿½Æƒ^ï¿½[ï¿½Qï¿½bï¿½gï¿½Ì‹ï¿½ï¿½ï¿½ï¿½xï¿½Nï¿½gï¿½ï¿½ï¿½B
 
-		float m_radius = 0.0f;                          //! “–‚½‚è”»’è‚Ì”¼ŒaB
-		float m_diff = 0.0f;                            //! •Ší‚Æƒ^[ƒQƒbƒg‚Ì‹——£B
+		float m_radius = 0.0f;                          //! ï¿½ï¿½ï¿½ï¿½ï¿½è”»ï¿½ï¿½Ì”ï¿½ï¿½aï¿½B
+		float m_diff = 0.0f;                            //! ï¿½ï¿½ï¿½ï¿½Æƒ^ï¿½[ï¿½Qï¿½bï¿½gï¿½Ì‹ï¿½ï¿½ï¿½ï¿½B
 
-		bool m_isActive = false;                        //! “–‚½‚è”»’è‚ª—LŒø‚©‚Ç‚¤‚©B
+		bool m_isActive = false;                        //! ï¿½ï¿½ï¿½ï¿½ï¿½è”»ï¿½è‚ªï¿½Lï¿½ï¿½ï¿½ï¿½ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½B
 	};
 }
 

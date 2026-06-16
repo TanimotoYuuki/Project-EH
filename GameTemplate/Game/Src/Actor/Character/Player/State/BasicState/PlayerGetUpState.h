@@ -1,9 +1,9 @@
 #pragma once
 /**
  * @file   PlayerGetUpState.h
- * @brief  ƒvƒŒƒCƒ„[‚Ì‹N‚«ã‚ª‚èó‘Ô‚ğŠÇ—‚·‚éƒNƒ‰ƒXB
+ * @brief  ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Ì‹Nï¿½ï¿½ï¿½ã‚ªï¿½ï¿½ï¿½Ô‚ï¿½ï¿½Ç—ï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½Xï¿½B
  * @author Yamaguchi Hayato
- * @date   2026/06/03: ÅIXV“úB
+ * @date   2026/06/03: ï¿½ÅIï¿½Xï¿½Vï¿½ï¿½ï¿½B
  */
 
 #include "Src/Actor/Character/Common/IState.h"
@@ -16,13 +16,13 @@ namespace nsApp
 		class PlayerGetUpState : public IState<nsActor::Actor>
 		{
 		public:
-			/* ƒRƒ“ƒXƒgƒ‰ƒNƒ^‚ÆƒfƒXƒgƒ‰ƒNƒ^B*/
+			/* ï¿½Rï¿½ï¿½ï¿½Xï¿½gï¿½ï¿½ï¿½Nï¿½^ï¿½Æƒfï¿½Xï¿½gï¿½ï¿½ï¿½Nï¿½^ï¿½B*/
 			PlayerGetUpState() = default;
 			virtual ~PlayerGetUpState() = default;
 
 
 		public:
-			/* ƒ‰ƒCƒtƒTƒCƒNƒ‹B*/
+			/* ï¿½ï¿½ï¿½Cï¿½tï¿½Tï¿½Cï¿½Nï¿½ï¿½ï¿½B*/
 			void Enter() override;
 			void Update() override;
 			void Exit() override {};
@@ -30,7 +30,7 @@ namespace nsApp
 
 
 		private:
-			nsActor::Player* m_player = nullptr; //! ƒvƒŒƒCƒ„[‚Ìƒ|ƒCƒ“ƒ^B
+			nsActor::Player* m_player = nullptr; //! ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Ìƒ|ï¿½Cï¿½ï¿½ï¿½^ï¿½B
 		};
 	}
 }

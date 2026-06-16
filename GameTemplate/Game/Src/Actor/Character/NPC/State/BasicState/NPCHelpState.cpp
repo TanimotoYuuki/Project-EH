@@ -9,12 +9,12 @@
 
 namespace
 {
-	const auto INPUT_STICK_VALUE_X = 1.0f; //! ‹~•‘ÎÛ‚É‹ß‚Ã‚­‚½‚ß‚ÌƒXƒeƒBƒbƒN“ü—Í‚ÌX’lB
-	const auto INPUT_STICK_VALUE_Y = 1.0f; //! ‹~•‘ÎÛ‚É‹ß‚Ã‚­‚½‚ß‚ÌƒXƒeƒBƒbƒN“ü—Í‚ÌY’lB
+	const auto INPUT_STICK_VALUE_X = 1.0f; //! ï¿½~ï¿½ï¿½ï¿½ÎÛ‚É‹ß‚Ã‚ï¿½ï¿½ï¿½ï¿½ß‚ÌƒXï¿½eï¿½Bï¿½bï¿½Nï¿½ï¿½ï¿½Í‚ï¿½Xï¿½lï¿½B
+	const auto INPUT_STICK_VALUE_Y = 1.0f; //! ï¿½~ï¿½ï¿½ï¿½ÎÛ‚É‹ß‚Ã‚ï¿½ï¿½ï¿½ï¿½ß‚ÌƒXï¿½eï¿½Bï¿½bï¿½Nï¿½ï¿½ï¿½Í‚ï¿½Yï¿½lï¿½B
 											   
-	const auto INPUT_HOLD_FRAME = 3;	   //! ‹~•“ü—Í‚ð‰Ÿ‚µ‘±‚¯‚éƒtƒŒ[ƒ€”B
-	const auto VOLUME = 1.0f;			   //! ‹~•SE‚Ì‰¹—ÊB
-	const auto LIFE_TIME = 2.0f;		   //! ‹~•SE‚ÌŽõ–½B
+	const auto INPUT_HOLD_FRAME = 3;	   //! ï¿½~ï¿½ï¿½ï¿½ï¿½ï¿½Í‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½B
+	const auto VOLUME = 1.0f;			   //! ï¿½~ï¿½ï¿½SEï¿½Ì‰ï¿½ï¿½ÊB
+	const auto LIFE_TIME = 2.0f;		   //! ï¿½~ï¿½ï¿½SEï¿½ÌŽï¿½ï¿½ï¿½ï¿½B
 }
 
 namespace nsApp
@@ -26,23 +26,23 @@ namespace nsApp
 
 		void NPCHelpState::Enter()
 		{
-			/* ƒLƒƒƒXƒgB*/
+			/* ï¿½Lï¿½ï¿½ï¿½Xï¿½gï¿½B*/
 			m_brain = static_cast<NPCBrain*>(m_owner);
 			if (m_brain == nullptr)
 				return;
 
-			/* Brain‚©‚ç•K—v‚ÈƒRƒ“ƒ|[ƒlƒ“ƒg‚ðŽæ“¾‚·‚éB*/
+			/* Brainï¿½ï¿½ï¿½ï¿½Kï¿½vï¿½ÈƒRï¿½ï¿½ï¿½|ï¿½[ï¿½lï¿½ï¿½ï¿½gï¿½ï¿½ï¿½æ“¾ï¿½ï¿½ï¿½ï¿½B*/
 			m_body = m_brain->GetBody();
 			m_vInput = m_brain->GetVirtualInputAdapter();
 
-			/* “ü—Íî•ñ‚ðƒŠƒZƒbƒg‚·‚éB*/
+			/* ï¿½ï¿½ï¿½Íï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Zï¿½bï¿½gï¿½ï¿½ï¿½ï¿½B*/
 			if (m_vInput != nullptr)
 				m_vInput->Reset();
 
-			/* ‹~•—v‹‚Í‚Ü‚¾s‚Á‚Ä‚¢‚È‚¢B*/
+			/* ï¿½~ï¿½ï¿½ï¿½vï¿½ï¿½ï¿½Í‚Ü‚ï¿½ï¿½sï¿½ï¿½ï¿½Ä‚ï¿½ï¿½È‚ï¿½ï¿½B*/
 			m_hasRequestedHelp = false;
 
-			/* ƒRƒ“ƒXƒgƒ‰ƒNƒ^‚Å“n‚³‚ê‚½‹~•‘ÎÛ‚ðŽg‚¤B*/ 
+			/* ï¿½Rï¿½ï¿½ï¿½Xï¿½gï¿½ï¿½ï¿½Nï¿½^ï¿½Å“nï¿½ï¿½ï¿½ê‚½ï¿½~ï¿½ï¿½ï¿½ÎÛ‚ï¿½ï¿½gï¿½ï¿½ï¿½B*/ 
 			if (m_helpTarget == nullptr)
 				m_helpTarget = m_brain->GetHelpTarget();
 		}
@@ -50,59 +50,59 @@ namespace nsApp
 
 		void NPCHelpState::Update()
 		{
-			/* ‹~•‘ÎÛ‚ª—LŒø‚Å‚È‚¢ê‡A“ü—Í‚ðƒŠƒZƒbƒg‚µ‚Ä’Ç‚¢‚©‚¯ó‘Ô‚É‘JˆÚ‚·‚éB*/
+			/* ï¿½~ï¿½ï¿½ï¿½ÎÛ‚ï¿½ï¿½Lï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½ê‡ï¿½Aï¿½ï¿½ï¿½Í‚ï¿½ï¿½ï¿½ï¿½Zï¿½bï¿½gï¿½ï¿½ï¿½Ä’Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô‚É‘Jï¿½Ú‚ï¿½ï¿½ï¿½B*/
 			if (m_brain == nullptr || m_body == nullptr || m_vInput == nullptr)
 				return;
 
-			/* –ˆƒtƒŒ[ƒ€ƒ^ƒOŒŸõ‚Åã‘‚«‚µ‚È‚¢B*/ 
-			/* ƒ^[ƒQƒbƒg‚ª–¢Ý’è‚Ì‚Æ‚«‚¾‚¯ABrain‚ªŒ©‚Â‚¯‚½‹~•‘ÎÛ‚ðŽg‚¤B*/ 
+			/* ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½^ï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½Åã‘ï¿½ï¿½ï¿½ï¿½ï¿½È‚ï¿½ï¿½B*/ 
+			/* ï¿½^ï¿½[ï¿½Qï¿½bï¿½gï¿½ï¿½ï¿½ï¿½ï¿½Ý’ï¿½Ì‚Æ‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ABrainï¿½ï¿½ï¿½ï¿½ï¿½Â‚ï¿½ï¿½ï¿½ï¿½~ï¿½ï¿½ï¿½ÎÛ‚ï¿½ï¿½gï¿½ï¿½ï¿½B*/ 
 			if (m_helpTarget == nullptr)
 				m_helpTarget = m_brain->GetHelpTarget();
 
-			/* ‹~•‘ÎÛ‚ª—LŒø‚Å‚È‚¢ê‡A“ü—Í‚ðƒŠƒZƒbƒg‚µ‚Ä’Ç‚¢‚©‚¯ó‘Ô‚É‘JˆÚ‚·‚éB*/
+			/* ï¿½~ï¿½ï¿½ï¿½ÎÛ‚ï¿½ï¿½Lï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½ê‡ï¿½Aï¿½ï¿½ï¿½Í‚ï¿½ï¿½ï¿½ï¿½Zï¿½bï¿½gï¿½ï¿½ï¿½Ä’Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô‚É‘Jï¿½Ú‚ï¿½ï¿½ï¿½B*/
 			if (!IsValidHelpTarget())
 			{
-				/* “ü—Íî•ñ‚ðƒŠƒZƒbƒg‚·‚éB*/
+				/* ï¿½ï¿½ï¿½Íï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Zï¿½bï¿½gï¿½ï¿½ï¿½ï¿½B*/
 				m_vInput->Reset();
 
-				/* ’Ç‚¢‚©‚¯ó‘Ô‚É‘JˆÚ‚·‚éB*/
+				/* ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô‚É‘Jï¿½Ú‚ï¿½ï¿½ï¿½B*/
 				if (m_stateMachine != nullptr)
 					m_stateMachine->ChangeState(new NPCChaseState());
 
 				return;
 			}
 
-			/* ‹~•‘ÎÛ‚Æ‚Ì‹——£‚ðŒvŽZ‚·‚éB*/
+			/* ï¿½~ï¿½ï¿½ï¿½ÎÛ‚Æ‚Ì‹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½vï¿½Zï¿½ï¿½ï¿½ï¿½B*/
 			m_difference = m_helpTarget->GetPosition() - m_body->GetPosition();
 			m_difference.y = 0.0f;
 
-			/* ‹——£‚ðŒvŽZ‚·‚éB*/
+			/* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½vï¿½Zï¿½ï¿½ï¿½ï¿½B*/
 			m_distance = m_difference.Length();
 
-			/* ˆê’è‚Ì‹——£ˆÈã—£‚ê‚½ê‡A‹~•‘ÎÛ‚É‹ß‚Ã‚­B*/
+			/* ï¿½ï¿½ï¿½Ì‹ï¿½ï¿½ï¿½ï¿½Èã—£ï¿½ê‚½ï¿½ê‡ï¿½Aï¿½~ï¿½ï¿½ï¿½ÎÛ‚É‹ß‚Ã‚ï¿½ï¿½B*/
 			if (m_distance > m_helpRange)
 			{
-				/* ‹ß‚Ã‚­B*/
+				/* ï¿½ß‚Ã‚ï¿½ï¿½B*/
 				MoveToHelpTarget();
 				return;
 			}
 
-			/* ‹~•‘ÎÛ‚É‹ß‚Ã‚¢‚Ä‚¢‚éê‡AHelp“ü—Í‚ðŽÀs‚·‚éB*/
+			/* ï¿½~ï¿½ï¿½ï¿½ÎÛ‚É‹ß‚Ã‚ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ê‡ï¿½AHelpï¿½ï¿½ï¿½Í‚ï¿½ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½ï¿½B*/
 			ExecuteHelp();
 		}
 
 
 		void NPCHelpState::Exit()
 		{
-			/* “ü—Íî•ñ‚ðƒŠƒZƒbƒg‚·‚éB*/
+			/* ï¿½ï¿½ï¿½Íï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Zï¿½bï¿½gï¿½ï¿½ï¿½ï¿½B*/
 			if (m_vInput != nullptr)
 				m_vInput->Reset();
 
-			/* ‹~•‘ÎÛ‚Ìó‘Ô‚ðƒŠƒZƒbƒg‚·‚éB*/
+			/* ï¿½~ï¿½ï¿½ï¿½ÎÛ‚Ìï¿½Ô‚ï¿½ï¿½ï¿½ï¿½Zï¿½bï¿½gï¿½ï¿½ï¿½ï¿½B*/
 			if (m_helpTarget != nullptr && m_helpTarget != m_body)
 				m_helpTarget->GetRescueStatusManager().SetBeingHelped(false);
 
-			/* SE‚ð’âŽ~‚·‚éB*/
+			/* SEï¿½ï¿½ï¿½~ï¿½ï¿½ï¿½ï¿½B*/
 			StopHelpSE();
 
 			m_brain = nullptr;
@@ -116,20 +116,20 @@ namespace nsApp
 
 		void NPCHelpState::MoveToHelpTarget()
 		{
-			/* ‹~•‘ÎÛ‚ª—LŒø‚Å‚È‚¢ê‡A“ü—Í‚ðƒŠƒZƒbƒg‚µ‚Ä’Ç‚¢‚©‚¯ó‘Ô‚É‘JˆÚ‚·‚éB*/
+			/* ï¿½~ï¿½ï¿½ï¿½ÎÛ‚ï¿½ï¿½Lï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½ê‡ï¿½Aï¿½ï¿½ï¿½Í‚ï¿½ï¿½ï¿½ï¿½Zï¿½bï¿½gï¿½ï¿½ï¿½Ä’Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô‚É‘Jï¿½Ú‚ï¿½ï¿½ï¿½B*/
 			if (m_vInput == nullptr)
 				return;
 
-			/* ˆê’è‚Ì‹——£ˆÈã—£‚ê‚½ê‡A‹~•‘ÎÛ‚É‹ß‚Ã‚­B*/
+			/* ï¿½ï¿½ï¿½Ì‹ï¿½ï¿½ï¿½ï¿½Èã—£ï¿½ê‚½ï¿½ê‡ï¿½Aï¿½~ï¿½ï¿½ï¿½ÎÛ‚É‹ß‚Ã‚ï¿½ï¿½B*/
 			if (m_distance <= 0.001f)
 			{
-				/* ‹~•‘ÎÛ‚É”ñí‚É‹ß‚¢ê‡Aƒjƒ…[ƒgƒ‰ƒ‹‚ÈƒXƒeƒBƒbƒN“ü—Í‚ðÝ’è‚·‚éB*/
+				/* ï¿½~ï¿½ï¿½ï¿½ÎÛ‚É”ï¿½ï¿½É‹ß‚ï¿½ï¿½ê‡ï¿½Aï¿½jï¿½ï¿½ï¿½[ï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ÈƒXï¿½eï¿½Bï¿½bï¿½Nï¿½ï¿½ï¿½Í‚ï¿½Ý’è‚·ï¿½ï¿½B*/
 				m_vInput->SetLStick(INPUT_STICK_VALUE_X, INPUT_STICK_VALUE_Y);
 				m_vInput->SetButton(enButtonLB1, false);
 				return;
 			}
 
-			/* ‹~•‘ÎÛ‚É‹ß‚Ã‚­‚½‚ß‚ÌƒXƒeƒBƒbƒN“ü—Í‚ðÝ’è‚·‚éB*/
+			/* ï¿½~ï¿½ï¿½ï¿½ÎÛ‚É‹ß‚Ã‚ï¿½ï¿½ï¿½ï¿½ß‚ÌƒXï¿½eï¿½Bï¿½bï¿½Nï¿½ï¿½ï¿½Í‚ï¿½Ý’è‚·ï¿½ï¿½B*/
 			m_difference.Normalize();
 			m_vInput->SetLStick(m_difference.x, m_difference.z);
 			m_vInput->SetButton(enButtonLB1, true);
@@ -138,23 +138,23 @@ namespace nsApp
 
 		void NPCHelpState::ExecuteHelp()
 		{
-			/* ‹~•‘ÎÛ‚ª—LŒø‚Å‚È‚¢ê‡A“ü—Í‚ðƒŠƒZƒbƒg‚µ‚Ä’Ç‚¢‚©‚¯ó‘Ô‚É‘JˆÚ‚·‚éB*/
+			/* ï¿½~ï¿½ï¿½ï¿½ÎÛ‚ï¿½ï¿½Lï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½ê‡ï¿½Aï¿½ï¿½ï¿½Í‚ï¿½ï¿½ï¿½ï¿½Zï¿½bï¿½gï¿½ï¿½ï¿½Ä’Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô‚É‘Jï¿½Ú‚ï¿½ï¿½ï¿½B*/
 			if (m_helpTarget == nullptr || m_body == nullptr || m_vInput == nullptr)
 				return;
 
-			/* “ü—Íî•ñ‚ðƒŠƒZƒbƒg‚·‚éB*/
+			/* ï¿½ï¿½ï¿½Íï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Zï¿½bï¿½gï¿½ï¿½ï¿½ï¿½B*/
 			m_vInput->SetLStick(INPUT_STICK_VALUE_X, INPUT_STICK_VALUE_Y);
 
-			/* SE‚ÌÄ¶B*/
+			/* SEï¿½ÌÄï¿½ï¿½B*/
 			StartHelpSE();
 
-			/* ‘–‚è‰ðœB*/
+			/* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B*/
 			m_vInput->SetButton(enButtonLB1, false);
 
-			/* ‹~•—v‹‚Íˆê“x‚¾‚¯s‚¤B*/ 
+			/* ï¿½~ï¿½ï¿½ï¿½vï¿½ï¿½ï¿½Íˆï¿½xï¿½ï¿½ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½B*/ 
 			if (!m_helpTarget->GetRescueStatusManager().IsBeingHelped())
 			{
-				/* Help“ü—ÍB*/
+				/* Helpï¿½ï¿½ï¿½ÍB*/
 				m_vInput->RequestButton(enButtonY, INPUT_HOLD_FRAME);
 			}
 		}
@@ -162,11 +162,11 @@ namespace nsApp
 
 		bool NPCHelpState::IsValidHelpTarget() const
 		{
-			/* ‹~•‘ÎÛ‚ª—LŒø‚Å‚È‚¢ê‡A“ü—Í‚ðƒŠƒZƒbƒg‚µ‚Ä’Ç‚¢‚©‚¯ó‘Ô‚É‘JˆÚ‚·‚éB*/
+			/* ï¿½~ï¿½ï¿½ï¿½ÎÛ‚ï¿½ï¿½Lï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½ê‡ï¿½Aï¿½ï¿½ï¿½Í‚ï¿½ï¿½ï¿½ï¿½Zï¿½bï¿½gï¿½ï¿½ï¿½Ä’Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô‚É‘Jï¿½Ú‚ï¿½ï¿½ï¿½B*/
 			if (m_helpTarget == nullptr)
 				return false;
 
-			/* ‹~•‘ÎÛ‚ªŽ©•ªŽ©g‚Ìê‡‚ÍAŽ€–Só‘Ô‚©HP0ˆÈ‰º‚Ìó‘Ô‚ð—LŒø‚È‹~•‘ÎÛ‚Æ‚·‚éB*/
+			/* ï¿½~ï¿½ï¿½ï¿½ÎÛ‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½gï¿½Ìê‡ï¿½ÍAï¿½ï¿½ï¿½Sï¿½ï¿½Ô‚ï¿½HP0ï¿½È‰ï¿½ï¿½Ìï¿½Ô‚ï¿½Lï¿½ï¿½ï¿½È‹~ï¿½ï¿½ï¿½ÎÛ‚Æ‚ï¿½ï¿½ï¿½B*/
 			if (m_helpTarget == m_body)
 				return false;
 
@@ -176,32 +176,32 @@ namespace nsApp
 
 		void NPCHelpState::StartHelpSE()
 		{
-			/* ‚·‚Å‚ÉSE‚ªÄ¶‚³‚ê‚Ä‚¢‚éê‡‚ÍAÄ“xÄ¶‚µ‚È‚¢B*/
+			/* ï¿½ï¿½ï¿½Å‚ï¿½SEï¿½ï¿½ï¿½Äï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ê‡ï¿½ÍAï¿½Ä“xï¿½Äï¿½ï¿½ï¿½ï¿½È‚ï¿½ï¿½B*/
 			if (m_helpSE != nullptr)
 				return;
 			
-			/* ‰¹Œ¹ŠÇ—ƒNƒ‰ƒX‚ð’Tõ‚·‚éB*/
+			/* ï¿½ï¿½ï¿½ï¿½ï¿½Ç—ï¿½ï¿½Nï¿½ï¿½ï¿½Xï¿½ï¿½Tï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B*/
 			auto* se = FindGO<nsSound::SoundLister>("SoundManager");
 
-			/* ‰¹Œ¹ŠÇ—ƒNƒ‰ƒX‚ªŒ©‚Â‚©‚ç‚È‚¢ê‡‚Íˆ—‚ð’†’f‚·‚éB*/
+			/* ï¿½ï¿½ï¿½ï¿½ï¿½Ç—ï¿½ï¿½Nï¿½ï¿½ï¿½Xï¿½ï¿½ï¿½ï¿½ï¿½Â‚ï¿½ï¿½ï¿½È‚ï¿½ï¿½ê‡ï¿½Íï¿½ï¿½ï¿½ï¿½ð’†’fï¿½ï¿½ï¿½ï¿½B*/
 			if (se == nullptr)
 				return;
 
-			/* SE‚ðÄ¶‚·‚éB*/
+			/* SEï¿½ï¿½ï¿½Äï¿½ï¿½ï¿½ï¿½ï¿½B*/
 			m_helpSE = se->GetSEList().PlaySE(nsSound::SE_ID::Rescue, VOLUME, true, LIFE_TIME);
 		}
 
 
 		void NPCHelpState::StopHelpSE()
 		{
-			/* SE‚ªÄ¶‚³‚ê‚Ä‚¢‚È‚¢ê‡‚ÍAˆ—‚ð’†’f‚·‚éB*/
+			/* SEï¿½ï¿½ï¿½Äï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½È‚ï¿½ï¿½ê‡ï¿½ÍAï¿½ï¿½ï¿½ï¿½ï¿½ð’†’fï¿½ï¿½ï¿½ï¿½B*/
 			if (m_helpSE == nullptr)
 				return;
 
-			/* ‰¹Œ¹ŠÇ—ƒNƒ‰ƒX‚ð’Tõ‚·‚éB*/
+			/* ï¿½ï¿½ï¿½ï¿½ï¿½Ç—ï¿½ï¿½Nï¿½ï¿½ï¿½Xï¿½ï¿½Tï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B*/
 			auto* se = FindGO<nsSound::SoundLister>("SoundManager");
 
-			/* ‰¹Œ¹ŠÇ—ƒNƒ‰ƒX‚ªŒ©‚Â‚©‚ç‚È‚¢ê‡‚Íˆ—‚ð’†’f‚·‚éB*/
+			/* ï¿½ï¿½ï¿½ï¿½ï¿½Ç—ï¿½ï¿½Nï¿½ï¿½ï¿½Xï¿½ï¿½ï¿½ï¿½ï¿½Â‚ï¿½ï¿½ï¿½È‚ï¿½ï¿½ê‡ï¿½Íï¿½ï¿½ï¿½ï¿½ð’†’fï¿½ï¿½ï¿½ï¿½B*/
 			if (se == nullptr)
 				return;
 
@@ -211,7 +211,7 @@ namespace nsApp
 				return;
 			}
 
-			/* SE‚ð’âŽ~‚·‚éB*/
+			/* SEï¿½ï¿½ï¿½~ï¿½ï¿½ï¿½ï¿½B*/
 			se->GetSEList().StopSE(m_helpSE);
 		}
 	}

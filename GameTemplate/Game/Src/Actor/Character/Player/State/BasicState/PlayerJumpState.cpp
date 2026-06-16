@@ -6,7 +6,7 @@
 
 namespace
 {
-		const auto MOVE_FRAME_SPEED = 1.0 / 60.0f; /* ‘Oi‚·‚éƒtƒŒ[ƒ€”B*/
+		const auto MOVE_FRAME_SPEED = 1.0 / 60.0f; /* ï¿½Oï¿½iï¿½ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½B*/
 }
 
 namespace nsApp
@@ -15,13 +15,13 @@ namespace nsApp
 	{
 		void PlayerJumpState::Enter()
 		{
-			/* ƒvƒŒƒCƒ„[‚Ìƒ|ƒCƒ“ƒ^‚ğæ“¾‚·‚éB */
+			/* ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Ìƒ|ï¿½Cï¿½ï¿½ï¿½^ï¿½ï¿½ï¿½æ“¾ï¿½ï¿½ï¿½ï¿½B */
 			m_player = static_cast<nsActor::Player*>(m_owner);
 
-			/* ƒWƒƒƒ“ƒvƒAƒjƒ[ƒVƒ‡ƒ“‚ğÄ¶‚·‚éB */
+			/* ï¿½Wï¿½ï¿½ï¿½ï¿½ï¿½vï¿½Aï¿½jï¿½ï¿½ï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Äï¿½ï¿½ï¿½ï¿½ï¿½B */
 			m_player->PlayBasicAnimation(CharacterBasicAnimationList::Jump);
 
-			/* ’…’n‚µ‚Ä‚¢‚éê‡AƒWƒƒƒ“ƒv‚Ì‰‘¬‚ğŒˆ‚ß‚éB*/
+			/* ï¿½ï¿½ï¿½nï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ê‡ï¿½Aï¿½Wï¿½ï¿½ï¿½ï¿½ï¿½vï¿½ï¿½ï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß‚ï¿½B*/
 			if (m_player->GetCharacterController().IsOnGround())
 				m_jumpVelocity = m_player->GetJumpPower();
 		}
@@ -29,12 +29,12 @@ namespace nsApp
 
 		void PlayerJumpState::Update()
 		{
-			/* –ˆƒtƒŒ[ƒ€AˆÚ“®‘¬“x‚ğƒ[ƒ‚ÉƒŠƒZƒbƒg‚·‚éB */
+			/* ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½Aï¿½Ú“ï¿½ï¿½ï¿½ï¿½xï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½Éƒï¿½ï¿½Zï¿½bï¿½gï¿½ï¿½ï¿½ï¿½B */
 			m_moveSpeed = Vector3::Zero;
-			/* “ü—Íî•ñ‚ğæ“¾‚·‚éB */
+			/* ï¿½ï¿½ï¿½Íï¿½ï¿½ï¿½ï¿½æ“¾ï¿½ï¿½ï¿½ï¿½B */
 			const auto& inputClass = m_player->GetInputClass();
 
-			/* ‹ó’†‚Å‚Ìƒ{ƒ^ƒ“ƒAƒNƒVƒ‡ƒ“‚ÅUŒ‚ó‘Ô‚É‘JˆÚB*/
+			/* ï¿½ó’†‚Å‚Ìƒ{ï¿½^ï¿½ï¿½ï¿½Aï¿½Nï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½ÅUï¿½ï¿½ï¿½ï¿½Ô‚É‘Jï¿½ÚB*/
 			if (inputClass.IsAirAttack())
 			{
 				auto airAttack = new PlayerAirAttackState();
@@ -44,44 +44,44 @@ namespace nsApp
 			}
 
 
-			/* ƒXƒeƒBƒbƒN“ü—Í‚ª‚ ‚ê‚ÎA‹ó’†‚ÌXEZ²‚ÌˆÚ“®—Ê‚ğŒvZ‚·‚éB */
+			/* ï¿½Xï¿½eï¿½Bï¿½bï¿½Nï¿½ï¿½ï¿½Í‚ï¿½ï¿½ï¿½ï¿½ï¿½ÎAï¿½ó’†‚ï¿½Xï¿½EZï¿½ï¿½ï¿½ÌˆÚ“ï¿½ï¿½Ê‚ï¿½ï¿½vï¿½Zï¿½ï¿½ï¿½ï¿½B */
 			if (inputClass.IsMove())
 			{
 				m_moveSpeed.x = inputClass.GetMoveVector().x * m_player->GetAirMoveSpeed();
 				m_moveSpeed.z = inputClass.GetMoveVector().y * m_player->GetAirMoveSpeed();
 			}
 
-			/* ‹ó’†‚ÅƒXƒeƒBƒbƒNã + A‚ğ‰Ÿ‚µ‚½a‚èã‚°ó‘Ô‚É*/
+			/* ï¿½ó’†‚ÅƒXï¿½eï¿½Bï¿½bï¿½Nï¿½ï¿½ + Aï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½aï¿½ï¿½ã‚°ï¿½ï¿½Ô‚ï¿½*/
 			if (inputClass.IsSlashUp())
 			{
 				m_stateMachine->ChangeState(new PlayerSlashUpState());
 				return;
 			}
 
-			/* d—ÍŒvZi–ˆƒtƒŒ[ƒ€ŒÅ’è‚Ì—Í‚Å‰º‚Öˆø‚Á’£‚éjB */
+			/* ï¿½dï¿½ÍŒvï¿½Zï¿½iï¿½ï¿½ï¿½tï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½Å’ï¿½Ì—Í‚Å‰ï¿½ï¿½Öˆï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½jï¿½B */
 			m_jumpVelocity -= m_player->GetGravity();
 
-			/* —‰ºƒXƒs[ƒh‚ÌŒÀŠE‚ğİ’èi‚·‚è”²‚¯‚È‚Ç‚ÌƒoƒO–h~jB */
+			/* ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½sï¿½[ï¿½hï¿½ÌŒï¿½ï¿½Eï¿½ï¿½İ’ï¿½iï¿½ï¿½ï¿½è”²ï¿½ï¿½ï¿½È‚Ç‚Ìƒoï¿½Oï¿½hï¿½~ï¿½jï¿½B */
 			if (m_jumpVelocity < m_player->GetMaxFallVelocity())
 				m_jumpVelocity = m_player->GetMaxFallVelocity();
 
-			/* ŒvZ‚µ‚½Y²‚Ì‘¬“x‚ğˆÚ“®‘¬“xƒxƒNƒgƒ‹‚Éİ’è‚·‚éB */
+			/* ï¿½vï¿½Zï¿½ï¿½ï¿½ï¿½Yï¿½ï¿½ï¿½Ì‘ï¿½ï¿½xï¿½ï¿½ï¿½Ú“ï¿½ï¿½ï¿½ï¿½xï¿½xï¿½Nï¿½gï¿½ï¿½ï¿½Éİ’è‚·ï¿½ï¿½B */
 			m_moveSpeed.y = m_jumpVelocity;
 
-			/* ƒLƒƒƒ‰ƒNƒ^[ƒRƒ“ƒgƒ[ƒ‰[‚ğg‚Á‚ÄˆÚ“®ˆ—‚ğÀs‚·‚éB */
+			/* ï¿½Lï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½^ï¿½[ï¿½Rï¿½ï¿½ï¿½gï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½gï¿½ï¿½ï¿½ÄˆÚ“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½ï¿½B */
 			m_player->GetCharacterController().Execute(m_moveSpeed, MOVE_FRAME_SPEED);
 
-			/* ŒvZŒ‹‰Ê‚ÌˆÀ‘S‚ÈÀ•W‚ğƒvƒŒƒCƒ„[–{‘Ì‚Éİ’è‚·‚éB */
+			/* ï¿½vï¿½Zï¿½ï¿½ï¿½Ê‚Ìˆï¿½ï¿½Sï¿½Èï¿½ï¿½Wï¿½ï¿½ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½{ï¿½Ì‚Éİ’è‚·ï¿½ï¿½B */
 			m_player->SetPosition(m_player->GetCharacterController().GetPosition());
 
-			/* ’…’n‚È‚Ç‚ÉƒLƒƒƒ‰ƒRƒ“‚ªŒvZ‚µ‚½Y²‚Ì‘¬“x‚ğ•Ï”‚É”½‰f‚·‚éB */
+			/* ï¿½ï¿½ï¿½nï¿½ï¿½ï¿½È‚Ç‚ÉƒLï¿½ï¿½ï¿½ï¿½ï¿½Rï¿½ï¿½ï¿½ï¿½ï¿½vï¿½Zï¿½ï¿½ï¿½ï¿½Yï¿½ï¿½ï¿½Ì‘ï¿½ï¿½xï¿½ï¿½Ïï¿½ï¿½É”ï¿½ï¿½fï¿½ï¿½ï¿½ï¿½B */
 			m_jumpVelocity = m_moveSpeed.y;
 		}
 
 
 		bool PlayerJumpState::RequestID(uint8_t& id)
 		{
-			/* ’…’n‚µ‚½‚çIdle‚É–ß‚éB*/
+			/* ï¿½ï¿½ï¿½nï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Idleï¿½É–ß‚ï¿½B*/
 			if (m_player->GetCharacterController().IsOnGround())
 			{
 				id = static_cast<uint8_t>(nsActor::PlayerStateID::enIdle);

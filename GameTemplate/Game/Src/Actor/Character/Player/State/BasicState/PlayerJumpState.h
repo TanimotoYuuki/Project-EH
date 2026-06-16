@@ -1,7 +1,7 @@
 #pragma once
 /**
  * @file   PlayerJumpState.h
- * @brief  Player‚ÌJumpó‘Ô‚ğŠÇ—‚·‚éƒNƒ‰ƒXB
+ * @brief  Playerï¿½ï¿½Jumpï¿½ï¿½Ô‚ï¿½ï¿½Ç—ï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½Xï¿½B
  * @author Yamaguchi Hayato
  * @date   2026/03/15
  */
@@ -14,51 +14,51 @@ namespace nsApp
 	namespace nsState
 	{
 		/**
-		 * @brief ƒvƒŒƒCƒ„[‚ÌƒWƒƒƒ“ƒvó‘Ô‚ğˆ—‚·‚éƒXƒe[ƒgƒNƒ‰ƒX
+		 * @brief ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ÌƒWï¿½ï¿½ï¿½ï¿½ï¿½vï¿½ï¿½Ô‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½eï¿½[ï¿½gï¿½Nï¿½ï¿½ï¿½X
 		 */
 		class PlayerJumpState : public IState<nsActor::Actor>
 		{
 		public:
 			/**
-			 * @brief ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+			 * @brief ï¿½Rï¿½ï¿½ï¿½Xï¿½gï¿½ï¿½ï¿½Nï¿½^
 			 */
 			PlayerJumpState() = default;
 
 			/**
-			 * @brief ƒfƒXƒgƒ‰ƒNƒ^
+			 * @brief ï¿½fï¿½Xï¿½gï¿½ï¿½ï¿½Nï¿½^
 			 */
 			virtual ~PlayerJumpState() = default;
 
 		public:
 			/**
-			 * @brief ƒXƒe[ƒg‚É“ü‚Á‚½‚Ì‰Šú‰»ˆ—
+			 * @brief ï¿½Xï¿½eï¿½[ï¿½gï¿½É“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			 */
 			void Enter() override;
 
 			/**
-			 * @brief –ˆƒtƒŒ[ƒ€‚ÌXVˆ—
+			 * @brief ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ÌXï¿½Vï¿½ï¿½ï¿½ï¿½
 			 */
 			void Update() override;
 
 			/**
-			 * @brief ƒXƒe[ƒg‚ğ”²‚¯‚é‚ÌI—¹ˆ—
+			 * @brief ï¿½Xï¿½eï¿½[ï¿½gï¿½ğ”²‚ï¿½ï¿½éï¿½ÌIï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			 */
 			void Exit() override {};
 
 			/**
-			 * @brief Ÿ‚ÌƒXƒe[ƒg‚Ö‚Ì‘JˆÚğŒ‚ğ”»’è‚·‚é
-			 * @param[out] id Ÿ‚ÌƒXƒe[ƒgID
-			 * @retval true ‘JˆÚƒŠƒNƒGƒXƒg‚ ‚è
-			 * @retval false ‘JˆÚƒŠƒNƒGƒXƒg‚È‚µ
+			 * @brief ï¿½ï¿½ï¿½ÌƒXï¿½eï¿½[ï¿½gï¿½Ö‚Ì‘Jï¿½Úï¿½ï¿½ï¿½ï¿½ğ”»’è‚·ï¿½ï¿½
+			 * @param[out] id ï¿½ï¿½ï¿½ÌƒXï¿½eï¿½[ï¿½gID
+			 * @retval true ï¿½Jï¿½Úƒï¿½ï¿½Nï¿½Gï¿½Xï¿½gï¿½ï¿½ï¿½ï¿½
+			 * @retval false ï¿½Jï¿½Úƒï¿½ï¿½Nï¿½Gï¿½Xï¿½gï¿½È‚ï¿½
 			 */
 			bool RequestID(uint8_t& id) override;
 
 
-		/* ƒZƒbƒ^[B*/
+		/* ï¿½Zï¿½bï¿½^ï¿½[ï¿½B*/
 		public:
 			/**
-			 * @brief ƒWƒƒƒ“ƒv’†‚ÌˆÚ“®‘¬“x‚ğİ’è‚·‚éB
-			 * @param velocity ˆÚ“®‘¬“xB
+			 * @brief ï¿½Wï¿½ï¿½ï¿½ï¿½ï¿½vï¿½ï¿½ï¿½ÌˆÚ“ï¿½ï¿½ï¿½ï¿½xï¿½ï¿½İ’è‚·ï¿½ï¿½B
+			 * @param velocity ï¿½Ú“ï¿½ï¿½ï¿½ï¿½xï¿½B
 			 */
 			inline void SetJumpVelocity(float velocity) 
 			{
@@ -67,13 +67,13 @@ namespace nsApp
 
 
 		private:
-			nsActor::Player* m_player = nullptr;    //!ƒvƒŒƒCƒ„[‚ÌÀ‘Ì‚Ö‚Ìƒ|ƒCƒ“ƒ^B
+			nsActor::Player* m_player = nullptr;    //!ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Ìï¿½ï¿½Ì‚Ö‚Ìƒ|ï¿½Cï¿½ï¿½ï¿½^ï¿½B
 
 
 		private:
-			Vector3 m_moveSpeed = Vector3::Zero;    //! ƒWƒƒƒ“ƒv’†‚ÌˆÚ“®‘¬“xB
+			Vector3 m_moveSpeed = Vector3::Zero;    //! ï¿½Wï¿½ï¿½ï¿½ï¿½ï¿½vï¿½ï¿½ï¿½ÌˆÚ“ï¿½ï¿½ï¿½ï¿½xï¿½B
 
-			float m_jumpVelocity = 0.0f;            //! ƒWƒƒƒ“ƒv‚Ì‰‘¬B 
+			float m_jumpVelocity = 0.0f;            //! ï¿½Wï¿½ï¿½ï¿½ï¿½ï¿½vï¿½Ìï¿½ï¿½ï¿½ï¿½B 
 		};
 	}
 }

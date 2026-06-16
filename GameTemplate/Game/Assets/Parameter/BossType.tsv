@@ -1,0 +1,7 @@
+
+        BossType personalitmoveSpeed   moveStopDistanceidleTimemoveDuration  roarCooldown biteChance     tailChance  fireChance   baseHP  hpMultiphasSpecialAbilitycanRoar dashSpeesideStepChance  useAirReposition
+        GrayDragoAggressive          12              50     1.5           2.5           12             70          20           10    5000       1      FALSE        TRUE         2               0    FALSE
+        RedDragonBalanced            10              60       2             3           15             20          30           50    6000     1.2      TRUE         TRUE       1.2             0.2    FALSE
+        GreenDragTricky              14              40       1             4           10             15          70           15    4500     0.9      FALSE       FALSE       1.5             0.5     TRUE
+       TutorialBDefensive            8              55     2.5             2           20             34          33           33    3000     0.6      FALSE       FALSE       0.8             0.1    FALSE
+        

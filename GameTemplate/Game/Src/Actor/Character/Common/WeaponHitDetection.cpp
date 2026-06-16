@@ -3,7 +3,7 @@
 
 namespace
 {
-	const auto HIT_RADIUS = 30.0f; //! •Ší‚Ì“–‚½‚è”»’è‚Ì”¼ŒaB
+	const auto HIT_RADIUS = 30.0f; //! ï¿½ï¿½ï¿½ï¿½Ì“ï¿½ï¿½ï¿½ï¿½è”»ï¿½ï¿½Ì”ï¿½ï¿½aï¿½B
 }
 
 
@@ -11,36 +11,36 @@ namespace nsApp
 {
 	void WeaponHitDetection::Init(float radius)
 	{
-		/* “–‚½‚è”»’è‚ğƒZƒbƒg‚·‚éB*/
+		/* ï¿½ï¿½ï¿½ï¿½ï¿½è”»ï¿½ï¿½ï¿½ï¿½Zï¿½bï¿½gï¿½ï¿½ï¿½ï¿½B*/
 		m_radius = radius;
-		/* ‡‚Á‚½‚è”»’è‚ğƒZƒbƒg‚·‚éB*/
+		/* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½è”»ï¿½ï¿½ï¿½ï¿½Zï¿½bï¿½gï¿½ï¿½ï¿½ï¿½B*/
 		SetRadius(m_radius);
 	}
 
 
 	bool WeaponHitDetection::IsHit(nsActor::ICharacter* target)
 	{
-		/* •Ší‚ª—LŒø‚Å‚È‚¢A‚à‚µ‚­‚Í“G‚ª‚¢‚È‚¢ê‡‚Í“–‚½‚ç‚È‚¢B*/
+		/* ï¿½ï¿½ï¿½í‚ªï¿½Lï¿½ï¿½ï¿½Å‚È‚ï¿½ï¿½Aï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í“Gï¿½ï¿½ï¿½ï¿½ï¿½È‚ï¿½ï¿½ê‡ï¿½Í“ï¿½ï¿½ï¿½ï¿½ï¿½È‚ï¿½ï¿½B*/
 		if(!m_isActive || !target)
 			return false;
 
-		/* ‚·‚Å‚Éa‚Á‚½ƒŠƒXƒg‚Ì“G‚ª‚¢‚é‚©ƒ`ƒFƒbƒNB*/
+		/* ï¿½ï¿½ï¿½Å‚Éaï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½gï¿½Ì“Gï¿½ï¿½ï¿½ï¿½ï¿½é‚©ï¿½`ï¿½Fï¿½bï¿½Nï¿½B*/
 		for (auto hitTarget : m_hitTargets)
 		{
 			if (hitTarget == target)
 				return false;
 		}
 
-		/* “G‚ÌÀ•W‚Æ•Ší‚ÌÀ•W‚ğ}‚éB*/
+		/* ï¿½Gï¿½Ìï¿½ï¿½Wï¿½Æ•ï¿½ï¿½ï¿½Ìï¿½ï¿½Wï¿½ï¿½}ï¿½ï¿½B*/
 		m_targetPosition = target->GetPosition();
 		m_diffVector = m_position - m_targetPosition;
 
-		/* ‹——£‚ğŒv‚éB*/
+		/* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½vï¿½ï¿½B*/
 		m_diff = m_diffVector.Length();
 
 		if (m_diff < (m_radius + 30.0f))
 		{
-			/* “–‚½‚Á‚½“G‚ğƒŠƒXƒg‚É“o˜^B*/
+			/* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Gï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½gï¿½É“oï¿½^ï¿½B*/
 			m_hitTargets.push_back(target);
 			return true;
 		}

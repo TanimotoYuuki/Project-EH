@@ -16,7 +16,8 @@
 #include "Src/Camera/Camera.h"
 #include "Src/Actor/Character/Player/Player.h"
 #include "Src/Sound/SoundLister.h"
-#include "Boss.h"
+#include "Src/Actor/Character/Boss/Boss.h"
+#include "Src/Actor/Character/Boss/Status/BossPhaseEventController.h"
 #include "Src/Actor/Stage/BackGround.h"
 #include "Src/Actor/Character/Player/Component/PlayerGenerator.h"
 #include "Src/Actor/Character/Player/InputSystem/PlayerControlerHub.h"
@@ -49,113 +50,6 @@ namespace nsApp
 {
 	namespace nsGame
 	{
-
-		void Game2::DebugUpdateHealTest()
-		{
-			/* 1ƒL[‚Å–¡•û‘Sˆõ‚ÉƒfƒoƒbƒOƒ_ƒ[ƒW‚ğ—^‚¦‚éB*/
-			if (IsTriggerKey('1'))
-			{
-				OutputDebugStringA("[DEBUG] 1 DamageParty\n");
-				DebugDamageParty();
-			}
-
-			/* 2ƒL[‚Å–¡•û‘Sˆõ‚ÌHP‚ğ•\¦‚·‚éB*/
-			if (IsTriggerKey('2'))
-			{
-				OutputDebugStringA("[DEBUG] 2 PrintPartyHP\n");
-				DebugPrintPartyHP();
-			}
-		}
-
-		void Game2::DebugDamageParty()
-		{
-			constexpr int DEBUG_DAMAGE = 300;
-
-			const char* playerNames[] =
-			{
-				"player1",
-				"player2",
-				"player3",
-				"player4"
-			};
-
-			for (const char* name : playerNames)
-			{
-				auto player = FindGO<nsActor::Player>(name);
-
-				if (player == nullptr)
-				{
-					char debugText[256];
-					sprintf_s(
-						debugText,
-						"[DEBUG DAMAGE] %s not found\n",
-						name
-					);
-
-					OutputDebugStringA(debugText);
-					continue;
-				}
-
-				player->ApplyDamage(DEBUG_DAMAGE);
-
-				const auto& hp = player->GetCharacterStatus().hp;
-
-				char debugText[256];
-				sprintf_s(
-					debugText,
-					"[DEBUG DAMAGE] %s HP: %d / %d\n",
-					name,
-					hp.currentHP,
-					hp.maxHP
-				);
-
-				OutputDebugStringA(debugText);
-			}
-		}
-
-		void Game2::DebugPrintPartyHP()
-		{
-			const char* playerNames[] =
-			{
-				"player1",
-				"player2",
-				"player3",
-				"player4"
-			};
-
-			for (const char* name : playerNames)
-			{
-				auto player = FindGO<nsActor::Player>(name);
-
-				if (player == nullptr)
-				{
-					char debugText[256];
-					sprintf_s(
-						debugText,
-						"[DEBUG HP] %s not found\n",
-						name
-					);
-
-					OutputDebugStringA(debugText);
-					continue;
-				}
-
-				const auto& hp = player->GetCharacterStatus().hp;
-
-				char debugText[256];
-				sprintf_s(
-					debugText,
-					"[DEBUG HP] %s HP: %d / %d\n",
-					name,
-					hp.currentHP,
-					hp.maxHP
-				);
-
-				OutputDebugStringA(debugText);
-			}
-		}
-
-
 		Game2::~Game2()
 		{
 			if (m_reboneGaugeUIManager != nullptr)
@@ -193,12 +87,13 @@ namespace nsApp
 
 			delete m_generator;
 			delete m_playerHub;
+			delete m_bossPhaseController;
 		}
 
 
 		bool Game2::Start()
 		{
-			/* ƒQ[ƒ€¶¬ˆ—‚ğÀs‚·‚éB*/
+			/* ï¿½Qï¿½[ï¿½ï¿½ï¿½Í”ñŠˆï¿½ï¿½ï¿½ï¿½ï¿½Ô‚ÅŠJï¿½nï¿½ï¿½ï¿½ï¿½B*/
 			m_isGameActive = false;
 
 			return true;
@@ -210,32 +105,10 @@ namespace nsApp
 			if (!m_isGameActive)
 				return;
 
-			DebugUpdateHealTest();
-
-			static int debugFrame = 0;
-			++debugFrame;
-
-			if (m_playerHub != nullptr)
-			{
-				if (debugFrame % 60 == 0)
-				{
-					OutputDebugStringA("[Game2] PlayerHub Update\n");
-				}
-
-				m_playerHub->Update();
-			}
-			else
-			{
-				if (debugFrame % 60 == 0)
-				{
-					OutputDebugStringA("[Game2] PlayerHub is nullptr in Update\n");
-				}
-			}
-
-			/*ƒQ[ƒ€ŠJn—p‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚ªnullptr‚Å‚Í‚È‚¯‚ê‚ÎB*/
+			/* ï¿½Qï¿½[ï¿½ï¿½ï¿½Jï¿½nï¿½ï¿½ï¿½oï¿½ï¿½ï¿½Ìï¿½ï¿½ï¿½ï¿½B*/
 			if (m_gameStartDirection != nullptr)
 			{
-				/*ƒQ[ƒ€ŠJnˆ—‚ªI‚í‚Á‚Ä‚¢‚½‚çƒCƒ“ƒXƒ^ƒ“ƒX‚ğíœ‚·‚éB*/
+				/* ï¿½Qï¿½[ï¿½ï¿½ï¿½Jï¿½nï¿½ï¿½ï¿½oï¿½ï¿½ï¿½Iï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Xï¿½ï¿½ï¿½íœï¿½ï¿½ï¿½ï¿½B*/
 				if (m_gameStartDirection->IsDirectionFinished())
 				{
 					DeleteGO(m_gameStartDirection);
@@ -245,23 +118,21 @@ namespace nsApp
 					return;
 				}
 
-				/*ƒtƒF[ƒh‚ªI‚í‚Á‚Ä‚¢‚½‚çƒQ[ƒ€ŠJn‰‰o‚ğÄ¶‚·‚éB*/
+				/* ï¿½tï¿½Fï¿½[ï¿½hï¿½ï¿½ï¿½Iï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Qï¿½[ï¿½ï¿½ï¿½Jï¿½nï¿½ï¿½ï¿½oï¿½ï¿½ï¿½Äï¿½ï¿½ï¿½ï¿½ï¿½B*/
 				if (nsApp::nsFade::Fade::GetInstance()->IsEnd())
 					m_gameStartDirection->Activate();
 			}
-
 			else
 			{
-				/*ƒ|[ƒY‰æ–Ê‚ª•\¦‚µ‚Ä‚¢‚È‚¢‚Æ‚«B*/
+				/* ï¿½|ï¿½[ï¿½Yï¿½ï¿½Ê‚ï¿½\ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½È‚ï¿½ï¿½Æ‚ï¿½ï¿½B*/
 				if (!m_pause->IsActive())
 				{
-					/*‰‰o‚ª—¬‚ê‚Ä‚¢‚È‚¯‚ê‚Îˆ—‚·‚é*/
-					if (m_gameClearDirection == nullptr &&/*ƒQ[ƒ€ƒNƒŠƒA‰‰o*/
-						m_gameOverDirection == nullptr &&/*ƒQ[ƒ€ƒI[ƒo[‰‰o*/
-						m_gameTimeUpDirection == nullptr/*ŠÔØ‚ê‰‰o*/
-						)
+					/* ï¿½ï¿½ï¿½oï¿½ï¿½ï¿½oï¿½Ä‚ï¿½ï¿½È‚ï¿½ï¿½Æ‚ï¿½ï¿½Ì‚İ‘ï¿½ï¿½ï¿½ï¿½ï¿½ó‚¯•tï¿½ï¿½ï¿½ï¿½B*/
+					if (m_gameClearDirection == nullptr &&
+						m_gameOverDirection == nullptr &&
+						m_gameTimeUpDirection == nullptr)
 					{
-						/*Selectƒ{ƒ^ƒ“‚ğ‰Ÿ‚·‚Æƒ|[ƒY‰æ–Ê‚ğ•\¦‚·‚éB*/
+						/* Selectï¿½{ï¿½^ï¿½ï¿½ï¿½Åƒ|ï¿½[ï¿½Yï¿½ï¿½Ê‚ï¿½\ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B*/
 						if (g_pad[0]->IsTrigger(enButtonSelect))
 						{
 							m_pause->Activate();
@@ -269,17 +140,32 @@ namespace nsApp
 							return;
 						}
 
-						/*ƒQ[ƒ€ŠJn‰‰o‚ªI—¹‚µ‚Ä‚¢‚é‚Æ‚«‚Éˆ—‚·‚éB*/
+						/* ï¿½tï¿½Fï¿½[ï¿½Yï¿½Cï¿½xï¿½ï¿½ï¿½gï¿½Rï¿½ï¿½ï¿½gï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½B*/
+						if (m_bossPhaseController != nullptr)
+							m_bossPhaseController->Update();
+
+						/* ï¿½Cï¿½xï¿½ï¿½ï¿½gï¿½ï¿½ï¿½ï¿½ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ğ”»’è‚·ï¿½ï¿½B*/
+						bool isEventActive =
+							m_bossPhaseController != nullptr &&
+							m_bossPhaseController->IsEventActive();
+
+						/* ï¿½Qï¿½[ï¿½ï¿½ï¿½Jï¿½nï¿½ï¿½ï¿½oï¿½ï¿½ï¿½Iï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½Æ‚ï¿½ï¿½Éï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B*/
 						if (m_gameStartDirection == nullptr)
 						{
 							m_characterHP->Activate();
-							m_gameTimeLimit->Activate();
+
+							/* ï¿½Cï¿½xï¿½ï¿½ï¿½gï¿½ï¿½ï¿½Íƒ^ï¿½Cï¿½}ï¿½[ï¿½ï¿½ï¿½ÄŠJï¿½ï¿½ï¿½È‚ï¿½ï¿½B*/
+							if (!isEventActive)
+								m_gameTimeLimit->Activate();
 						}
+
+						/* ï¿½ï¿½ï¿½Kï¿½Cï¿½xï¿½ï¿½ï¿½gï¿½ï¿½ï¿½Íƒvï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[/NPCï¿½Ì“ï¿½ï¿½ÍXï¿½Vï¿½ï¿½ï¿½~ï¿½ï¿½ï¿½ï¿½B*/
+						if (m_playerHub != nullptr && !isEventActive)
+							m_playerHub->Update();
 					}
 
-					/*ƒQ[ƒ€ƒNƒŠƒA‰‰oB*/
-					/*Œ»İ‚Í¶‚ğ“ü—Í‚·‚é‚±‚Æ‚Å‰‰o‚ğ—¬‚·‚æ‚¤‚É‚µ‚Ä‚¢‚éB*/
-					/*TODO:¡Œã‚Íƒ{ƒX‚ÌHP‚ª0‚É‚È‚Á‚½‚ç‰‰o‚ğ—¬‚·‚æ‚¤‚É‚·‚éB*/
+					/* ï¿½Qï¿½[ï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½oï¿½B*/
+					/* TODO: ï¿½{ï¿½Xï¿½ï¿½HPï¿½ï¿½0ï¿½É‚È‚ï¿½ï¿½ï¿½ï¿½ç‰‰ï¿½oï¿½ğ—¬‚ï¿½ï¿½æ‚¤ï¿½É‚ï¿½ï¿½ï¿½B*/
 					if (m_gameClearDirection == nullptr)
 					{
 						if (g_pad[0]->IsTrigger(enButtonLeft))
@@ -290,7 +176,7 @@ namespace nsApp
 						}
 					}
 
-					/*ŠÔØ‚ê‰‰oB*/
+					/* ï¿½ï¿½ï¿½ÔØ‚ê‰‰ï¿½oï¿½B*/
 					if (m_gameTimeUpDirection == nullptr)
 					{
 						if (m_gameTimeLimit->IsTimeUp())
@@ -312,31 +198,9 @@ namespace nsApp
 						}
 					}
 
-					/*ƒQ[ƒ€ƒI[ƒo[‰‰oB*/
-					/*Œ»İ‚Í¶‚ğ“ü—Í‚·‚é‚±‚Æ‚Å‰‰o‚ğ—¬‚·‚æ‚¤‚É‚µ‚Ä‚¢‚éB*/
-					/*TODO:¡Œã‚ÍƒLƒƒƒ‰ƒNƒ^[‘Sˆõ‚ÌHP‚ª0‚É‚È‚Á‚½‚ç‰‰o‚ğ—¬‚·‚æ‚¤‚É‚·‚éB*/
-					//if (m_gameOverDirection == nullptr)
-					//{
-					//	if (g_pad[0]->IsTrigger(enButtonLeft))
-					//	{
-					//		m_gameOverDirection = NewGO<GameOverDirection>(2, "gameOverDirection");
-					//		m_characterHP->Deactivate();
-					//		m_gameTimeLimit->Deactivate();
-					//	}
-					//}
-					//else
-					//{
-					//	if (m_gameEndSelect == nullptr)
-					//	{
-					//		if (m_gameOverDirection->IsDirectionFinished())
-					//		{
-					//			m_gameOverDirection->Deactivate();
-					//			m_gameEndSelect = NewGO<GameEndSelect>(2, "gameEndSelect");
-					//		}
-					//	}
-					//}
+					/* TODO: ï¿½Lï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½^ï¿½[ï¿½Sï¿½ï¿½ï¿½ï¿½HPï¿½ï¿½0ï¿½É‚È‚ï¿½ï¿½ï¿½ï¿½ç‰‰ï¿½oï¿½ğ—¬‚ï¿½ï¿½æ‚¤ï¿½É‚ï¿½ï¿½ï¿½B*/
 				}
-				/*ƒ|[ƒY‰æ–Ê‚ª•\¦‚µ‚Ä‚¢‚é‚Æ‚«B*/
+				/* ï¿½|ï¿½[ï¿½Yï¿½ï¿½Ê‚ï¿½\ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½Æ‚ï¿½ï¿½B*/
 				else
 				{
 					m_characterHP->Deactivate();
@@ -344,8 +208,7 @@ namespace nsApp
 				}
 			}
 
-
-			/* Œ»İ‚ÌƒXƒe[ƒW‚ÌXV‚ğs‚¤B*/
+			/* ï¿½ï¿½ï¿½İ‚ÌƒXï¿½eï¿½[ï¿½Wï¿½ÌXï¿½Vï¿½ï¿½ï¿½sï¿½ï¿½ï¿½B*/
 			nsApp::nsStage::LoadStageData::GetInstance().Update();
 
 			if (m_reboneGaugeUIManager != nullptr)
@@ -358,7 +221,7 @@ namespace nsApp
 			if (!m_isGameActive)
 				return;
 
-			/* Œ»İ‚ÌƒXƒe[ƒW‚ğ•`‰æ‚·‚éB*/
+			/* ï¿½ï¿½ï¿½İ‚ÌƒXï¿½eï¿½[ï¿½Wï¿½ï¿½`ï¿½æ‚·ï¿½ï¿½B*/
 			nsApp::nsStage::LoadStageData::GetInstance().Draw(rc);
 
 			if (m_reboneGaugeUIManager != nullptr)
@@ -366,10 +229,9 @@ namespace nsApp
 		}
 
 
-
 		void Game2::ApplyBuildResult(const InGameBuildResult& result)
 		{
-			/* ¶¬Œ‹‰Ê‚ğ“K—p‚·‚éB*/
+			/* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê‚ğ”½‰fï¿½ï¿½ï¿½ï¿½B*/
 			m_soundLister = result.soundLister;
 			m_backGround = result.backGround;
 			m_reboneGaugeUIManager = result.reboneGaugeUIManager;
@@ -410,34 +272,44 @@ namespace nsApp
 					player->Activate();
 			}
 
-			/* PlayerHub‚ÍGame2‘¤‚Å¶¬E‰Šú‰»‚·‚éB*/
+			/* PlayerHub ï¿½ï¿½ Game2 ï¿½ï¿½ï¿½Åï¿½ï¿½ï¿½ï¿½Eï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B*/
 			if (m_playerHub == nullptr)
 			{
-				char debugText[256];
-				sprintf_s(
-					debugText,
-					"[Game2] ActivateGame players=%d partyData=%d player=%p boss=%p\n",
-					static_cast<int>(m_players.size()),
-					static_cast<int>(m_partyData.size()),
-					m_player,
-					m_boss
-				);
-				OutputDebugStringA(debugText);
-
-
 				m_playerHub = new PlayerControlerHub();
 				m_playerHub->Initialize(m_players, m_partyData);
 			}
 
-			/* Boss‚Ìƒ^[ƒQƒbƒg‚ğÅI•ÛØ‚·‚éB*/
+			m_bossPhaseController = new BossPhaseEventController();
+			m_bossPhaseController->Initialize(
+				m_boss,
+				m_camera,
+				m_commentaryUIManager,
+				m_gameTimeLimit,
+				m_playerHub,
+				m_players        
+			);
+
+
+			/* Bossï¿½Ìƒ^ï¿½[ï¿½Qï¿½bï¿½gï¿½ï¿½ï¿½ÅIï¿½ÛØ‚ï¿½ï¿½ï¿½B*/
 			if (m_boss != nullptr && m_player != nullptr)
 				m_boss->SetTarget(m_player);
+
+			/* ï¿½{ï¿½Xï¿½É‘Sï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ï¿½oï¿½^ï¿½ï¿½ï¿½ï¿½B*/
+			if (m_boss != nullptr && !m_players.empty())
+			{
+				std::vector<nsActor::ICharacter*> allTargets(m_players.begin(), m_players.end());
+				m_boss->SetAllTargets(allTargets);
+			}
+
+			/* CharacterHP ï¿½Éƒvï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ï¿½oï¿½^ï¿½ï¿½ï¿½ï¿½B*/
+			if (m_characterHP != nullptr)
+				m_characterHP->SetPlayers(m_players);
 
 			if (m_boss != nullptr)
 				m_boss->Activate();
 
-			/* ƒtƒF[ƒh‚ğØ‚è‘Ö‚¦‚éB*/
+			/* ï¿½tï¿½Fï¿½[ï¿½hï¿½ï¿½Ø‚ï¿½Ö‚ï¿½ï¿½ï¿½B*/
 			nsFade::Fade::GetInstance()->ChangeFadeType(nsFade::Fade::enFadeType_FadeIn);
-		}	
+		}
 	}
 }

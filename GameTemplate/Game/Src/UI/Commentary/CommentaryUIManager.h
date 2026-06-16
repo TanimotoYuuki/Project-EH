@@ -32,151 +32,159 @@ namespace nsApp
 
 
 		/**
-		 * @brief À‹µUI‚ğŠÇ—‚·‚éƒNƒ‰ƒXB
+		 * @brief ï¿½Rï¿½ï¿½ï¿½ï¿½ï¿½gUIï¿½ï¿½ï¿½Ç—ï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½Xï¿½B
 		 */
 		class CommentaryUIManager : public IGameObject
 		{
 		private:
 			/**
-			 * @brief •\¦‘Ò‚¿À‹µƒƒbƒZ[ƒWB
+			 * @brief ï¿½\ï¿½ï¿½ï¿½Ò‚ï¿½ï¿½Lï¿½ï¿½ï¿½[ï¿½Ìƒï¿½ï¿½bï¿½Zï¿½[ï¿½Wï¿½B
 			 */
 			struct QueuedCommentaryMessage
 			{
-				CommentaryMessage message;                 //! À‹µƒƒbƒZ[ƒW–{‘ÌB
-				CommentaryMessagePriority priority;        //! ƒƒbƒZ[ƒW—Dæ“xB
+				CommentaryMessage         message;  //! ï¿½ï¿½ï¿½bï¿½Zï¿½[ï¿½Wï¿½{ï¿½ÌB
+				CommentaryMessagePriority priority; //! ï¿½ï¿½ï¿½bï¿½Zï¿½[ï¿½Wï¿½Dï¿½ï¿½xï¿½B
 			};
 
 		public:
 			/**
-			 * @brief ŠJnˆ—B
-			 * @return ‰Šú‰»‚É¬Œ÷‚µ‚½ê‡trueB
+			 * @brief ï¿½Jï¿½nï¿½ï¿½ï¿½ï¿½ï¿½B
+			 * @return ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Éï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ê‡trueï¿½B
 			 */
 			bool Start() override;
 
 			/**
-			 * @brief XVˆ—B
+			 * @brief ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½B
 			 */
 			void Update() override;
 
 			/**
-			 * @brief •`‰æˆ—B
-			 * @param rc •`‰æƒRƒ“ƒeƒLƒXƒgB
+			 * @brief ï¿½`ï¿½æˆï¿½ï¿½ï¿½B
+			 * @param rc ï¿½`ï¿½ï¿½Rï¿½ï¿½ï¿½eï¿½Lï¿½Xï¿½gï¿½B
 			 */
 			void Render(RenderContext& rc) override;
 
 
 		public:
 			/**
-			 * @brief ƒRƒƒ“ƒg‚ğ’Ç‰Á‚·‚éB
-			 * @param text ’Ç‰Á‚·‚éƒRƒƒ“ƒgB
+			 * @brief ï¿½Rï¿½ï¿½ï¿½ï¿½ï¿½gï¿½ï¿½Ç‰ï¿½ï¿½ï¿½ï¿½ï¿½B
+			 * @param text ï¿½Ç‰ï¿½ï¿½ï¿½ï¿½ï¿½Rï¿½ï¿½ï¿½ï¿½ï¿½gï¿½B
 			 */
 			void AddMessage(const std::wstring& text);
 
 			/**
-			 * @brief —Dæ“x•t‚«‚ÅƒRƒƒ“ƒg‚ğ’Ç‰Á‚·‚éB
-			 * @param text ’Ç‰Á‚·‚éƒRƒƒ“ƒgB
-			 * @param priority ƒƒbƒZ[ƒW—Dæ“xB
+			 * @brief ï¿½Dï¿½ï¿½xï¿½tï¿½ï¿½ï¿½ÅƒRï¿½ï¿½ï¿½ï¿½ï¿½gï¿½ï¿½Ç‰ï¿½ï¿½ï¿½ï¿½ï¿½B
+			 * @param text     ï¿½Ç‰ï¿½ï¿½ï¿½ï¿½ï¿½Rï¿½ï¿½ï¿½ï¿½ï¿½gï¿½B
+			 * @param priority ï¿½ï¿½ï¿½bï¿½Zï¿½[ï¿½Wï¿½Dï¿½ï¿½xï¿½B
 			 */
 			void AddMessage(const std::wstring& text, CommentaryMessagePriority priority);
 
 			/**
-			 * @brief •Ší‚Æs“®–¼‚©‚çƒRƒƒ“ƒg‚ğ’Ç‰Á‚·‚éB
-			 * @param weapon •Ší‚Ìí—ŞB
-			 * @param actionName s“®–¼B
+			 * @brief ï¿½ï¿½ï¿½ï¿½Æsï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Rï¿½ï¿½ï¿½ï¿½ï¿½gï¿½ï¿½Ç‰ï¿½ï¿½ï¿½ï¿½ï¿½B
+			 * @param weapon     ï¿½ï¿½ï¿½ï¿½Ìï¿½ŞB
+			 * @param actionName ï¿½sï¿½ï¿½ï¿½ï¿½ï¿½B
 			 */
 			void AddActionMessage(WeaponType weapon, const std::wstring& actionName);
 
 			/**
-			 * @brief •Ší‚Æs“®ƒ^ƒCƒv‚©‚çƒRƒƒ“ƒg‚ğ’Ç‰Á‚·‚éB
-			 * @param weapon •Ší‚Ìí—ŞB
-			 * @param actionType s“®‚Ìí—ŞB
+			 * @brief ï¿½ï¿½ï¿½ï¿½Æsï¿½ï¿½ï¿½^ï¿½Cï¿½vï¿½ï¿½ï¿½ï¿½Rï¿½ï¿½ï¿½ï¿½ï¿½gï¿½ï¿½Ç‰ï¿½ï¿½ï¿½ï¿½ï¿½B
+			 * @param weapon     ï¿½ï¿½ï¿½ï¿½Ìï¿½ŞB
+			 * @param actionType ï¿½sï¿½ï¿½ï¿½Ìï¿½ŞB
 			 */
 			void AddActionMessage(WeaponType weapon, CommentaryActionType actionType);
+
+			/**
+			 * @brief ï¿½Lï¿½ï¿½ï¿½[ï¿½ï¿½\ï¿½ï¿½ï¿½ï¿½ï¿½ğ–³ï¿½ï¿½ï¿½ï¿½Ä‘ï¿½ï¿½ï¿½ï¿½É‹ï¿½ï¿½ï¿½ï¿½\ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
+			 * @param text        ï¿½\ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Rï¿½ï¿½ï¿½ï¿½ï¿½gï¿½B
+			 * @param displayTime ï¿½\ï¿½ï¿½ï¿½ï¿½ï¿½Ôiï¿½bï¿½jï¿½Bï¿½È—ï¿½ï¿½ï¿½ï¿½Íƒfï¿½tï¿½Hï¿½ï¿½ï¿½gï¿½lï¿½ï¿½2ï¿½{ï¿½B
+			 */
+			void ForceShowMessage(const std::wstring& text, float displayTime = MESSAGE_DISPLAY_TIME * 2.0f);
 
 
 		private:
 			/**
-			 * @brief •\¦ŠÔ‚ğ‰ß‚¬‚½ƒƒbƒZ[ƒW‚ğíœ‚·‚éB
+			 * @brief ï¿½\ï¿½ï¿½ï¿½ï¿½ï¿½Ô‚ğ’´‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½bï¿½Zï¿½[ï¿½Wï¿½ï¿½ï¿½íœï¿½ï¿½ï¿½ï¿½B
 			 */
 			void RemoveExpiredMessages();
 
 			/**
-			 * @brief •\¦’†‚ÌƒƒbƒZ[ƒW‚ª‚È‚¯‚ê‚ÎA‘Ò‹@—ñ‚©‚çŸ‚ÌƒƒbƒZ[ƒW‚ğ•\¦‚·‚éB
+			 * @brief ï¿½\ï¿½ï¿½ï¿½ï¿½ï¿½Ìƒï¿½ï¿½bï¿½Zï¿½[ï¿½Wï¿½ï¿½ï¿½È‚ï¿½ï¿½ï¿½ÎAï¿½Ò‹@ï¿½ñ‚©‚çŸï¿½Ìƒï¿½ï¿½bï¿½Zï¿½[ï¿½Wï¿½ï¿½\ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
 			 */
 			void StartNextMessageIfNeeded();
 
 			/**
-			 * @brief ƒƒbƒZ[ƒW‚ğ’Ç‰Á‚µ‚Ä‚æ‚¢‚©”»’è‚·‚éB
-			 * @param text ’²‚×‚éƒRƒƒ“ƒgB
-			 * @param priority ƒƒbƒZ[ƒW—Dæ“xB
-			 * @retval true ’Ç‰Á‚µ‚Ä‚æ‚¢B
-			 * @retval false ’Ç‰Á‚µ‚È‚¢B
+			 * @brief ï¿½ï¿½ï¿½bï¿½Zï¿½[ï¿½Wï¿½ï¿½Ç‰ï¿½ï¿½ï¿½ï¿½Ä‚æ‚¢ï¿½ï¿½ï¿½ï¿½ï¿½è‚·ï¿½ï¿½B
+			 * @param text     ï¿½ï¿½ï¿½×‚ï¿½Rï¿½ï¿½ï¿½ï¿½ï¿½gï¿½B
+			 * @param priority ï¿½ï¿½ï¿½bï¿½Zï¿½[ï¿½Wï¿½Dï¿½ï¿½xï¿½B
+			 * @retval true  ï¿½Ç‰ï¿½ï¿½ï¿½ï¿½Ä‚æ‚¢ï¿½B
+			 * @retval false ï¿½Ç‰ï¿½ï¿½ï¿½ï¿½È‚ï¿½ï¿½B
 			 */
 			bool CanAcceptMessage(const std::wstring& text, CommentaryMessagePriority priority) const;
 
 			/**
-			 * @brief ’¼‹ß‚ÌƒƒbƒZ[ƒW‚Æ“¯‚¶“à—e‚©’²‚×‚éB
-			 * @param text ’²‚×‚éƒRƒƒ“ƒgB
-			 * @retval true ’¼‹ß‚Æ“¯‚¶“à—eB
-			 * @retval false ’¼‹ß‚ÆˆÙ‚È‚é“à—eB
+			 * @brief ï¿½ï¿½ï¿½Oï¿½Ìƒï¿½ï¿½bï¿½Zï¿½[ï¿½Wï¿½Æ“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½eï¿½ï¿½ï¿½ï¿½ï¿½×‚ï¿½B
+			 * @param text ï¿½ï¿½ï¿½×‚ï¿½Rï¿½ï¿½ï¿½ï¿½ï¿½gï¿½B
+			 * @retval true  ï¿½ï¿½ï¿½Oï¿½Æ“ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½eï¿½B
+			 * @retval false ï¿½ï¿½ï¿½Oï¿½ÆˆÙ‚È‚ï¿½ï¿½ï¿½eï¿½B
 			 */
 			bool IsSameAsLatestMessage(const std::wstring& text) const;
 
 			/**
-			 * @brief ‘Ò‹@—ñ‚ª‹l‚Ü‚è‚·‚¬‚È‚¢‚æ‚¤‚É®—‚·‚éB
-			 * @param priority ’Ç‰Á—\’èƒƒbƒZ[ƒW‚Ì—Dæ“xB
+			 * @brief ï¿½Ò‹@ï¿½ñ‚ª‹lï¿½Ü‚è‚·ï¿½ï¿½ï¿½È‚ï¿½ï¿½æ‚¤ï¿½Éï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
+			 * @param priority ï¿½Ç‰ï¿½ï¿½\ï¿½èƒï¿½bï¿½Zï¿½[ï¿½Wï¿½Ì—Dï¿½ï¿½xï¿½B
 			 */
 			void TrimWaitingMessages(CommentaryMessagePriority priority);
 
 			/**
-			 * @brief ‘Ò‹@—ñ‚©‚çŒÃ‚¢’á—Dæ“xƒƒbƒZ[ƒW‚ğ1Œíœ‚·‚éB
-			 * @retval true íœ‚µ‚½B
-			 * @retval false íœ‘ÎÛ‚ª‚È‚¢B
+			 * @brief ï¿½Ò‹@ï¿½ñ‚©‚ï¿½Ã‚ï¿½ï¿½ï¿½Dï¿½ï¿½xï¿½ï¿½ï¿½bï¿½Zï¿½[ï¿½Wï¿½ï¿½1ï¿½ï¿½ï¿½íœï¿½ï¿½ï¿½ï¿½B
+			 * @retval true  ï¿½íœï¿½ï¿½ï¿½ï¿½ï¿½B
+			 * @retval false ï¿½íœï¿½ÎÛ‚ï¿½ï¿½È‚ï¿½ï¿½B
 			 */
 			bool RemoveOldestLowPriorityWaitingMessage();
 
 			/**
-			 * @brief •Ší–¼‚ğæ“¾‚·‚éB
-			 * @param weapon •Ší‚Ìí—ŞB
-			 * @return •\¦—p‚Ì•Ší–¼B
+			 * @brief ï¿½ï¿½ï¿½í–¼ï¿½ï¿½ï¿½æ“¾ï¿½ï¿½ï¿½ï¿½B
+			 * @param weapon ï¿½ï¿½ï¿½ï¿½Ìï¿½ŞB
+			 * @return ï¿½\ï¿½ï¿½ï¿½pï¿½Ì•ï¿½ï¿½í–¼ï¿½B
 			 */
 			std::wstring GetWeaponName(WeaponType weapon) const;
 
 			/**
-			 * @brief s“®ƒ^ƒCƒv‚©‚ç•\¦—p‚Ìs“®–¼‚ğæ“¾‚·‚éB
-			 * @param actionType s“®‚Ìí—ŞB
-			 * @return •\¦—p‚Ìs“®–¼B
+			 * @brief ï¿½sï¿½ï¿½ï¿½^ï¿½Cï¿½vï¿½ï¿½ï¿½ï¿½\ï¿½ï¿½ï¿½pï¿½Ìsï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½æ“¾ï¿½ï¿½ï¿½ï¿½B
+			 * @param actionType ï¿½sï¿½ï¿½ï¿½Ìï¿½ŞB
+			 * @return ï¿½\ï¿½ï¿½ï¿½pï¿½Ìsï¿½ï¿½ï¿½ï¿½ï¿½B
 			 */
 			std::wstring GetActionName(CommentaryActionType actionType) const;
 
 			/**
-			 * @brief s“®ƒ^ƒCƒv‚©‚ç—Dæ“x‚ğæ“¾‚·‚éB
-			 * @param actionType s“®‚Ìí—ŞB
-			 * @return ƒƒbƒZ[ƒW—Dæ“xB
+			 * @brief ï¿½sï¿½ï¿½ï¿½^ï¿½Cï¿½vï¿½ï¿½ï¿½ï¿½Dï¿½ï¿½xï¿½ï¿½ï¿½æ“¾ï¿½ï¿½ï¿½ï¿½B
+			 * @param actionType ï¿½sï¿½ï¿½ï¿½Ìï¿½ŞB
+			 * @return ï¿½ï¿½ï¿½bï¿½Zï¿½[ï¿½Wï¿½Dï¿½ï¿½xï¿½B
 			 */
 			CommentaryMessagePriority GetPriorityFromActionType(CommentaryActionType actionType) const;
 
 			/**
-			 * @brief s“®–¼‚©‚ç—Dæ“x‚ğæ“¾‚·‚éB
-			 * @param actionName s“®–¼B
-			 * @return ƒƒbƒZ[ƒW—Dæ“xB
+			 * @brief ï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Dï¿½ï¿½xï¿½ï¿½ï¿½æ“¾ï¿½ï¿½ï¿½ï¿½B
+			 * @param actionName ï¿½sï¿½ï¿½ï¿½ï¿½ï¿½B
+			 * @return ï¿½ï¿½ï¿½bï¿½Zï¿½[ï¿½Wï¿½Dï¿½ï¿½xï¿½B
 			 */
 			CommentaryMessagePriority GetPriorityFromActionName(const std::wstring& actionName) const;
 
 
 		private:
-			static const size_t MAX_QUEUE_COUNT;                 //! Å‘å‘Ò‹@ƒƒbƒZ[ƒW”B
-			static const float MESSAGE_DISPLAY_TIME;             //! 1ƒƒbƒZ[ƒW‚Ì•\¦ŠÔB
-			static const float SAME_MESSAGE_COOLDOWN;            //! “¯ˆêƒƒbƒZ[ƒW—}§ŠÔB
-			static const float LOW_PRIORITY_COOLDOWN;            //! ’á—Dæ“xƒƒbƒZ[ƒW—}§ŠÔB
+			static const size_t MAX_QUEUE_COUNT;      //! ï¿½Å‘ï¿½Ò‹@ï¿½ï¿½ï¿½bï¿½Zï¿½[ï¿½Wï¿½ï¿½ï¿½B
+			static const float  MESSAGE_DISPLAY_TIME; //! 1ï¿½ï¿½ï¿½bï¿½Zï¿½[ï¿½Wï¿½Ì•\ï¿½ï¿½ï¿½ï¿½ï¿½ÔB
+			static const float  SAME_MESSAGE_COOLDOWN;   //! ï¿½ï¿½ï¿½êƒï¿½bï¿½Zï¿½[ï¿½Wï¿½ÔŠuï¿½ï¿½ï¿½ÔB
+			static const float  LOW_PRIORITY_COOLDOWN;   //! ï¿½ï¿½Dï¿½ï¿½xï¿½ï¿½ï¿½bï¿½Zï¿½[ï¿½Wï¿½ÔŠuï¿½ï¿½ï¿½ÔB
 
-			std::vector<CommentaryMessage> m_messages;           //! •\¦’†‚ÌÀ‹µƒƒbƒZ[ƒWBí‚É0Œ‚Ü‚½‚Í1Œ‚É‚·‚éB
-			std::deque<QueuedCommentaryMessage> m_waitingMessages; //! •\¦‘Ò‚¿‚ÌÀ‹µƒƒbƒZ[ƒWB
-			CommentaryUI m_commentaryUI;                         //! À‹µUI•`‰æƒNƒ‰ƒXB
+			std::vector<CommentaryMessage>          m_messages;        //! ï¿½\ï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½Ìƒï¿½ï¿½bï¿½Zï¿½[ï¿½Wï¿½Bï¿½ï¿½ï¿½0ï¿½ï¿½ï¿½Ü‚ï¿½ï¿½ï¿½1ï¿½ï¿½ï¿½É‚ï¿½ï¿½ï¿½B
+			std::deque<QueuedCommentaryMessage>     m_waitingMessages; //! ï¿½\ï¿½ï¿½ï¿½Ò‚ï¿½ï¿½Ìï¿½ï¿½Ìƒï¿½ï¿½bï¿½Zï¿½[ï¿½Wï¿½B
 
-			std::wstring m_latestAcceptedText;                   //! ÅŒã‚Éó—‚µ‚½À‹µƒeƒLƒXƒgB
-			float m_sameMessageCooldownTimer;                    //! “¯ˆêƒƒbƒZ[ƒW—}§—pƒ^ƒCƒ}[B
-			float m_lowPriorityCooldownTimer;                    //! ’á—Dæ“xƒƒbƒZ[ƒW—}§—pƒ^ƒCƒ}[B
+			CommentaryUI m_commentaryUI; //! ï¿½Rï¿½ï¿½ï¿½ï¿½ï¿½gUIï¿½`ï¿½ï¿½Nï¿½ï¿½ï¿½Xï¿½B
+
+			std::wstring m_latestAcceptedText;       //! ï¿½ÅŒï¿½Éó—‚ï¿½ï¿½ï¿½ï¿½eï¿½Lï¿½Xï¿½gï¿½B
+			float        m_sameMessageCooldownTimer; //! ï¿½ï¿½ï¿½êƒï¿½bï¿½Zï¿½[ï¿½Wï¿½ÔŠuï¿½pï¿½^ï¿½Cï¿½}ï¿½[ï¿½B
+			float        m_lowPriorityCooldownTimer; //! ï¿½ï¿½Dï¿½ï¿½xï¿½ï¿½ï¿½bï¿½Zï¿½[ï¿½Wï¿½ÔŠuï¿½pï¿½^ï¿½Cï¿½}ï¿½[ï¿½B
 		};
 	}
 }

@@ -49,9 +49,6 @@
     <Filter Include="Src\Actor\Character\Boss">
       <UniqueIdentifier>{be4b2ca9-0734-4f99-b20b-a39e6acf329c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Src\Actor\Character\Boss\State">
-      <UniqueIdentifier>{6c9d9ef2-f516-4c04-b093-71b4b9b9a8db}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Src\AsyncLoad">
       <UniqueIdentifier>{e5e6ab58-0fbc-4b6b-ac84-88ce3fdc0a43}</UniqueIdentifier>
     </Filter>
@@ -172,6 +169,18 @@
     <Filter Include="Src\Fade">
       <UniqueIdentifier>{ff86a33d-c241-4d31-b374-94969df76508}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Src\Actor\Character\Boss\Strategy">
+      <UniqueIdentifier>{6c9d9ef2-f516-4c04-b093-71b4b9b9a8db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Actor\Character\Boss\Status">
+      <UniqueIdentifier>{be719fb9-98ff-4587-a2c2-48ba3769a77a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Actor\Character\Boss\AI">
+      <UniqueIdentifier>{e78bf9be-bfdb-4844-8c70-4ffdb369578e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Src\Actor\Character\Boss\State">
+      <UniqueIdentifier>{4e3cdd31-9aff-4dcc-b445-a205c1c119fc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />
@@ -256,41 +265,8 @@
       <Filter>Src\Camera</Filter>
     </ClCompile>
     <ClCompile Include="Src\Actor\Stage\BackGround.cpp" />
-    <ClCompile Include="BossIdleState.cpp">
-      <Filter>Src\Actor\Character\Boss\State</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Actor\Character\Player\State\BasicState\PlayerDethState.cpp">
       <Filter>Src\Actor\Character\Player\State\BasicState</Filter>
-    </ClCompile>
-    <ClCompile Include="Boss.cpp">
-      <Filter>Src\Actor\Character\Boss</Filter>
-    </ClCompile>
-    <ClCompile Include="BossMoveState.cpp">
-      <Filter>Src\Actor\Character\Boss\State</Filter>
-    </ClCompile>
-    <ClCompile Include="BossAttackState.cpp">
-      <Filter>Src\Actor\Character\Boss\State</Filter>
-    </ClCompile>
-    <ClCompile Include="BossAnimation.cpp">
-      <Filter>Src\Actor\Character\Boss</Filter>
-    </ClCompile>
-    <ClCompile Include="BossDamageState.cpp">
-      <Filter>Src\Actor\Character\Boss\State</Filter>
-    </ClCompile>
-    <ClCompile Include="BossDethState.cpp">
-      <Filter>Src\Actor\Character\Boss\State</Filter>
-    </ClCompile>
-    <ClCompile Include="IBossAttackStrategy.cpp">
-      <Filter>Src\Actor\Character\Boss\State</Filter>
-    </ClCompile>
-    <ClCompile Include="TailAttackStrategy.cpp">
-      <Filter>Src\Actor\Character\Boss\State</Filter>
-    </ClCompile>
-    <ClCompile Include="BiteAttackStrategy.cpp">
-      <Filter>Src\Actor\Character\Boss\State</Filter>
-    </ClCompile>
-    <ClCompile Include="FireAttackStrategy.cpp">
-      <Filter>Src\Actor\Character\Boss\State</Filter>
     </ClCompile>
     <ClCompile Include="CharacterHP.cpp" />
     <ClCompile Include="GameTimeLimit.cpp" />
@@ -534,9 +510,6 @@
     <ClCompile Include="Src\Actor\Character\Common\Damage\PresentDamageIndicator.cpp">
       <Filter>Src\Actor\Character\Common\Damage</Filter>
     </ClCompile>
-    <ClCompile Include="BossRoarState.cpp">
-      <Filter>Src\Actor\Character\Boss\State</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Build\InGameBuildHelper.cpp">
       <Filter>Src\Build</Filter>
     </ClCompile>
@@ -555,6 +528,57 @@
     <ClCompile Include="Src\UI\Loading\LoadingTextUI.cpp">
       <Filter>Src\UI\Loading</Filter>
     </ClCompile>
+    <ClCompile Include="BossParameterTable.cpp">
+      <Filter>Src\Actor\Character\Boss\Status</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\Boss\AI\BossAIConfigFactory.cpp">
+      <Filter>Src\Actor\Character\Boss\AI</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\Boss\Boss.cpp">
+      <Filter>Src\Actor\Character\Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\Boss\BossAnimation.cpp">
+      <Filter>Src\Actor\Character\Boss</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\Boss\Status\BossManager.cpp">
+      <Filter>Src\Actor\Character\Boss\Status</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\Boss\Status\BossPhaseEventController.cpp">
+      <Filter>Src\Actor\Character\Boss\Status</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\Boss\State\BossDethState.cpp">
+      <Filter>Src\Actor\Character\Boss\State</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\Boss\State\BossIdleState.cpp">
+      <Filter>Src\Actor\Character\Boss\State</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\Boss\State\BossMoveState.cpp">
+      <Filter>Src\Actor\Character\Boss\State</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\Boss\Strategy\BiteAttackStrategy.cpp">
+      <Filter>Src\Actor\Character\Boss\Strategy</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\Boss\Strategy\BossAttackState.cpp">
+      <Filter>Src\Actor\Character\Boss\Strategy</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\Boss\Strategy\BossRoarState.cpp">
+      <Filter>Src\Actor\Character\Boss\Strategy</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\Boss\Strategy\ChargeAttackStrategy.cpp">
+      <Filter>Src\Actor\Character\Boss\Strategy</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\Boss\Strategy\FireAttackStrategy.cpp">
+      <Filter>Src\Actor\Character\Boss\Strategy</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\Boss\Strategy\TailAttackStrategy.cpp">
+      <Filter>Src\Actor\Character\Boss\Strategy</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\Boss\Combat\BossFireCombatSystem.cpp" />
+    <ClCompile Include="Src\Actor\Character\Boss\Combat\BossMeleeCombatSystem.cpp" />
+    <ClCompile Include="Src\Actor\Character\Boss\Combat\BossTornadoSystem.cpp" />
+    <ClCompile Include="Src\Actor\Character\Boss\Combat\BossDamageHandler.cpp" />
+    <ClCompile Include="Src\Actor\Character\Boss\Combat\BossPhaseController.cpp" />
+    <ClCompile Include="Src\Actor\Character\Boss\State\BossDamageState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -652,39 +676,6 @@
       <Filter>Src\Camera</Filter>
     </ClInclude>
     <ClInclude Include="Src\Actor\Stage\BackGround.h" />
-    <ClInclude Include="BossIdleState.h">
-      <Filter>Src\Actor\Character\Boss\State</Filter>
-    </ClInclude>
-    <ClInclude Include="Boss.h">
-      <Filter>Src\Actor\Character\Boss</Filter>
-    </ClInclude>
-    <ClInclude Include="BossMoveState.h">
-      <Filter>Src\Actor\Character\Boss\State</Filter>
-    </ClInclude>
-    <ClInclude Include="BossAttackState.h">
-      <Filter>Src\Actor\Character\Boss\State</Filter>
-    </ClInclude>
-    <ClInclude Include="BossAnimation.h">
-      <Filter>Src\Actor\Character\Boss</Filter>
-    </ClInclude>
-    <ClInclude Include="BossDamageState.h">
-      <Filter>Src\Actor\Character\Boss\State</Filter>
-    </ClInclude>
-    <ClInclude Include="BossDethState.h">
-      <Filter>Src\Actor\Character\Boss\State</Filter>
-    </ClInclude>
-    <ClInclude Include="IBossAttackStrategy.h">
-      <Filter>Src\Actor\Character\Boss\State</Filter>
-    </ClInclude>
-    <ClInclude Include="TailAttackStrategy.h">
-      <Filter>Src\Actor\Character\Boss\State</Filter>
-    </ClInclude>
-    <ClInclude Include="BiteAttackStrategy.h">
-      <Filter>Src\Actor\Character\Boss\State</Filter>
-    </ClInclude>
-    <ClInclude Include="FireAttackStrategy.h">
-      <Filter>Src\Actor\Character\Boss\State</Filter>
-    </ClInclude>
     <ClInclude Include="CharacterHP.h" />
     <ClInclude Include="GameTimeLimit.h" />
     <ClInclude Include="Game2.h" />
@@ -964,9 +955,6 @@
     <ClInclude Include="Src\Actor\Character\Common\Pool\GameObjectPool.h">
       <Filter>Src\Actor\Character\Common\Pool</Filter>
     </ClInclude>
-    <ClInclude Include="BossRoarState.h">
-      <Filter>Src\Actor\Character\Boss\State</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Build\InGameBuildHelper.h">
       <Filter>Src\Build</Filter>
     </ClInclude>
@@ -988,6 +976,65 @@
     <ClInclude Include="Src\UI\Loading\LoadingTextUI.h">
       <Filter>Src\UI\Loading</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="BossParameterTable.h">
+      <Filter>Src\Actor\Character\Boss\Status</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Boss\AI\BossAIConfigFactory.h">
+      <Filter>Src\Actor\Character\Boss\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Boss\Boss.h">
+      <Filter>Src\Actor\Character\Boss</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Boss\BossAnimation.h">
+      <Filter>Src\Actor\Character\Boss</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Boss\Status\BossManager.h">
+      <Filter>Src\Actor\Character\Boss\Status</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Boss\Status\BossPhaseEventController.h">
+      <Filter>Src\Actor\Character\Boss\Status</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Boss\AI\BossAIConfig.h">
+      <Filter>Src\Actor\Character\Boss\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Boss\State\BossDethState.h">
+      <Filter>Src\Actor\Character\Boss\State</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Boss\State\BossIdleState.h">
+      <Filter>Src\Actor\Character\Boss\State</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Boss\State\BossMoveState.h">
+      <Filter>Src\Actor\Character\Boss\State</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Boss\Strategy\BiteAttackStrategy.h">
+      <Filter>Src\Actor\Character\Boss\Strategy</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Boss\Strategy\BossAttackState.h">
+      <Filter>Src\Actor\Character\Boss\Strategy</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Boss\Strategy\BossRoarState.h">
+      <Filter>Src\Actor\Character\Boss\Strategy</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Boss\Strategy\ChargeAttackStrategy.h">
+      <Filter>Src\Actor\Character\Boss\Strategy</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Boss\Strategy\FireAttackStrategy.h">
+      <Filter>Src\Actor\Character\Boss\Strategy</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Boss\Strategy\IBossAttackStrategy.h">
+      <Filter>Src\Actor\Character\Boss\Strategy</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Boss\Strategy\TailAttackStrategy.h">
+      <Filter>Src\Actor\Character\Boss\Strategy</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Boss\Combat\BossCombatConfig.h" />
+    <ClInclude Include="Src\Actor\Character\Boss\Combat\BossFireCombatSystem.h" />
+    <ClInclude Include="Src\Actor\Character\Boss\Combat\BossMeleeCombatSystem.h" />
+    <ClInclude Include="Src\Actor\Character\Boss\Combat\BossTornadoSystem.h" />
+    <ClInclude Include="Src\Actor\Character\Boss\Combat\BossDamageHandler.h" />
+    <ClInclude Include="Src\Actor\Character\Boss\Combat\BossPhaseController.h" />
+    <ClInclude Include="Src\Actor\Character\Boss\State\BossDamageState.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Src\Utilty\TSVTableLoder.inl">
@@ -996,5 +1043,8 @@
     <None Include="Src\Actor\Character\Common\Pool\GameObjectPool.inl">
       <Filter>Src\Actor\Character\Common\Pool</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Game.rc" />
   </ItemGroup>
 </Project>
