@@ -1,13 +1,15 @@
 #include "stdafx.h"
 #include "BossRoarState.h"
-#include "Src/Actor/Character/Boss/Boss.h"
+#include "Boss.h"
 #include <random>
+
 #include "Src/Sound/SoundLister.h"
 #include "Src/Sound/SEList.h"
 
 namespace
 {
-	const float ROAR_DURATION = 5.0f;
+	const float ROAR_DURATION = 1.5f;
+
 	std::mt19937 g_randomGen(std::random_device{}());
 }
 
@@ -17,8 +19,10 @@ namespace nsApp
 	{
 		void BossRoarState::Enter()
 		{
-			m_boss = static_cast<nsActor::Boss*>(m_owner);
+			m_boss = static_cast<nsActor::Boss *>(m_owner);
 			m_timer = ROAR_DURATION;
+
+			/*アニメーション再生。*/
 			m_boss->PlayAnimation(nsActor::BossAnimationID::Scream);
 
 			/*SE再生。*/
@@ -34,8 +38,11 @@ namespace nsApp
 			m_timer -= g_gameTime->GetFrameDeltaTime();
 		}
 
+		void BossRoarState::Exit()
+		{
+		}
 
-		bool BossRoarState::RequestID(uint8_t& id)
+		bool BossRoarState::RequestID(uint8_t &id)
 		{
 			if (m_timer <= 0.0f)
 			{
@@ -74,4 +81,3 @@ namespace nsApp
 		}
 	}
 }
-
