@@ -19,9 +19,9 @@ namespace nsApp
 			static constexpr float HIGH_HP_RATIO = 0.7f;
 			static constexpr float LOW_HP_RATIO = 0.3f;
 
-			static constexpr int FLINCH_DAMAGE_THRESHOLD = 500; // 怯むのに必要なダメージ。
-			static constexpr float DAMAGE_RESET_TIME = 5.0f;	// 累計値がリセットされる時間。
-			static constexpr float FLINCH_COOLDOWN = 2.0f;		// 一度怯んだら次怯むまでの猶予。
+			static constexpr int FLINCH_DAMAGE_THRESHOLD = 200; // 怯むのに必要なダメージ。
+			static constexpr float DAMAGE_RESET_TIME = 8.0f;	// 累計値がリセットされる時間。
+			static constexpr float FLINCH_COOLDOWN = 0.5f;		// 一度怯んだら次怯むまでの猶予。
 
 			struct AttackDistanceTable
 			{

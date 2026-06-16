@@ -8,6 +8,15 @@
 #include "BossAnimation.h"
 #include "BossAIConfig.h"
 
+/*前方宣言。*/
+namespace nsApp
+{
+	namespace nsSound
+	{
+		class SoundLister;
+	}
+}
+
 namespace nsApp
 {
 	namespace nsActor
@@ -227,6 +236,8 @@ namespace nsApp
 				return m_FireHit;
 			}
 
+			nsSound::SoundLister *GetSoundLister() const { return m_soundLister; }
+
 		private:
 			/*ステートの登録。*/
 			void RegisterState();
@@ -278,6 +289,9 @@ namespace nsApp
 			/*ステート。*/
 			std::unordered_map<BossStateID, std::function<StateType *()>> m_stateFactory;
 			uint8_t m_currentStateID = 0;
+
+			/*SoundListerのポインタ*/
+			nsSound::SoundLister *m_soundLister = nullptr;
 		};
 	}
 }

@@ -1,59 +1,62 @@
 #include "stdafx.h"
 #include "TitleSelect.h"
 #include "Src/Fade/Fade.h"
+#include "UIInput.h"
+#include "Src/Sound/SoundLister.h"
 
-namespace {
+namespace
+{
 	/*オフセット。*/
-	const float OFFSET = -1080.0f;/*オフセット。*/
+	const float OFFSET = -1080.0f; /*オフセット。*/
 
 	/*選択UI。*/
-	const float SELECT_UI_WIDTH = 512;/*選択UIの幅。*/
+	const float SELECT_UI_WIDTH = 512; /*選択UIの幅。*/
 
-	const float SELECT_UI_HEIGHT = 512;/*選択UIの高さ。*/
+	const float SELECT_UI_HEIGHT = 512; /*選択UIの高さ。*/
 
-	const Vector3 SELECT_UI_INIT_POSITION = { 0.0f,225.0f + OFFSET,0.0f };/*選択UIの初期位置。*/
+	const Vector3 SELECT_UI_INIT_POSITION = {0.0f, 225.0f + OFFSET, 0.0f}; /*選択UIの初期位置。*/
 
-	const float SELECT_UI_ROTATION_DEGREE = -90.0f;/*選択UIの回転角度。*/
+	const float SELECT_UI_ROTATION_DEGREE = -90.0f; /*選択UIの回転角度。*/
 
-	const Vector3 SELECT_UI_INIT_SCALE = Vector3(0.3f, 0.3f, 1.0f);/*選択UIの初期大きさ。*/
+	const Vector3 SELECT_UI_INIT_SCALE = Vector3(0.3f, 0.3f, 1.0f); /*選択UIの初期大きさ。*/
 
 	/*選択肢テキストUI(「ゲームスタート」のテキストをベースに)。*/
-	const float OPTION_TEXT_UI_WIDTH = 1024;/*選択肢テキストUIの幅。*/
+	const float OPTION_TEXT_UI_WIDTH = 1024; /*選択肢テキストUIの幅。*/
 
-	const float OPTION_TEXT_UI_HEIGHT = 256;/*選択肢テキストUIの高さ。*/
+	const float OPTION_TEXT_UI_HEIGHT = 256; /*選択肢テキストUIの高さ。*/
 
-	const Vector3 OPTION_TEXT_UI_INIT_POSITION = { 0.0f,225.0f + OFFSET,0.0f };/*選択肢テキストUIの初期位置。*/
+	const Vector3 OPTION_TEXT_UI_INIT_POSITION = {0.0f, 225.0f + OFFSET, 0.0f}; /*選択肢テキストUIの初期位置。*/
 
-	const float OPTION_TEXT_UI_POSITION_INTERVAL = 200.0f;/*選択肢テキストUIの位置の間隔。*/
+	const float OPTION_TEXT_UI_POSITION_INTERVAL = 200.0f; /*選択肢テキストUIの位置の間隔。*/
 
-	const Vector3 OPTION_TEXT_UI_INIT_SCALE = { 1.3f,1.3f,1.0f };/*テキストUIの初期大きさ。*/
+	const Vector3 OPTION_TEXT_UI_INIT_SCALE = {1.3f, 1.3f, 1.0f}; /*テキストUIの初期大きさ。*/
 
 	/*ボタンUI。*/
-	const float BUTTON_UI_WIDTH = 1024;/*ボタンUIの幅。*/
+	const float BUTTON_UI_WIDTH = 1024; /*ボタンUIの幅。*/
 
-	const float BUTTON_UI_HEIGHT = 1024;/*ボタンUIの高さ。*/
+	const float BUTTON_UI_HEIGHT = 1024; /*ボタンUIの高さ。*/
 
-	const Vector3 BUTTON_UI_INIT_POSITION[nsApp::nsTitle::TitleSelect::EnButtonUI::enButtonUI_Num] = { 
-		Vector3{-600.0f,-450.0f + OFFSET,0.0f},/*Aボタン。*/
-		Vector3{-850.0f,-450.0f + OFFSET,0.0f}/*Bボタン。*/
-	};/*ボタンUIの初期位置。*/
+	const Vector3 BUTTON_UI_INIT_POSITION[nsApp::nsTitle::TitleSelect::EnButtonUI::enButtonUI_Num] = {
+		Vector3{-600.0f, -450.0f + OFFSET, 0.0f}, /*Aボタン。*/
+		Vector3{-850.0f, -450.0f + OFFSET, 0.0f}  /*Bボタン。*/
+	}; /*ボタンUIの初期位置。*/
 
-	const Vector3 BUTTON_UI_INIT_SCALE = { 0.1f,0.1f,1.0f };/*ボタンUIの初期大きさ。*/
+	const Vector3 BUTTON_UI_INIT_SCALE = {0.1f, 0.1f, 1.0f}; /*ボタンUIの初期大きさ。*/
 
 	/*テキストUI。*/
-	const float TEXT_UI_WIDTH = 1024;/*テキストUIの幅。*/
+	const float TEXT_UI_WIDTH = 1024; /*テキストUIの幅。*/
 
-	const float TEXT_UI_HEIGHT = 256;/*テキストUIの高さ。*/
+	const float TEXT_UI_HEIGHT = 256; /*テキストUIの高さ。*/
 
 	const Vector3 TEXT_UI_INIT_POSITION[nsApp::nsTitle::TitleSelect::EnTextUI::enTextUI_Num] = {
-		Vector3{-475.0f,-450.0f + OFFSET,0.0f},/*決定。*/
-		Vector3{-725.0f,-450.0f + OFFSET,0.0f}/*戻る。*/
-	};/*テキストUIの初期位置。*/
+		Vector3{-475.0f, -450.0f + OFFSET, 0.0f}, /*決定。*/
+		Vector3{-725.0f, -450.0f + OFFSET, 0.0f}  /*戻る。*/
+	}; /*テキストUIの初期位置。*/
 
-	const Vector3 TEXT_UI_INIT_SCALE = { 1.0f,1.0f,1.0f };/*テキストUIの初期大きさ。*/
+	const Vector3 TEXT_UI_INIT_SCALE = {1.0f, 1.0f, 1.0f}; /*テキストUIの初期大きさ。*/
 
 	/*UIアニメーション。*/
-	const float SLIDE_UI_ANIMATION_PLAY_SPEED = 1.0f;/*UIをスライドさせるアニメーションの再生速度。*/
+	const float SLIDE_UI_ANIMATION_PLAY_SPEED = 1.0f; /*UIをスライドさせるアニメーションの再生速度。*/
 }
 
 namespace nsApp
@@ -76,8 +79,8 @@ namespace nsApp
 		void TitleSelect::Update()
 		{
 			/*選択できていない　かつ
-			* 上にスライド演出中ではないとき　かつ
-			* 下にスライド演出中ではないときは選択できる。*/
+			 * 上にスライド演出中ではないとき　かつ
+			 * 下にスライド演出中ではないときは選択できる。*/
 			if (!DidSelect() && !IsSlideUpDirection() && !IsSlideDownDirection())
 			{
 				/*選択。*/
@@ -92,12 +95,12 @@ namespace nsApp
 		}
 
 		/*描画処理。*/
-		void TitleSelect::Render(RenderContext& rc)
-		{	
+		void TitleSelect::Render(RenderContext &rc)
+		{
 			/*選択UIの描画。*/
 			m_selectUI.Draw(rc);
 
-			for(int i = 0; i < enOptionTextUI_Num; i++)
+			for (int i = 0; i < enOptionTextUI_Num; i++)
 			{
 				/*選択肢テキストUIの描画。*/
 				m_optionTextUI[i].Draw(rc);
@@ -140,55 +143,55 @@ namespace nsApp
 				InitTextUI((EnTextUI)k);
 			}
 		}
-		
+
 		/*選択UIの初期化。*/
 		void TitleSelect::InitSelectUI()
 		{
-			m_selectUI.Init(m_selectUIFilePath.c_str(), SELECT_UI_WIDTH, SELECT_UI_HEIGHT);/*初期化。*/
-			m_selectUI.SetPosition(SELECT_UI_INIT_POSITION);/*位置設定。*/
+			m_selectUI.Init(m_selectUIFilePath.c_str(), SELECT_UI_WIDTH, SELECT_UI_HEIGHT); /*初期化。*/
+			m_selectUI.SetPosition(SELECT_UI_INIT_POSITION);								/*位置設定。*/
 			Quaternion rotation;
 			rotation.SetRotationDegZ(SELECT_UI_ROTATION_DEGREE);
-			m_selectUI.SetRotation(rotation);/*回転設定。*/
-			m_selectUI.SetScale(SELECT_UI_INIT_SCALE);/*大きさ設定。*/
-			m_selectUI.Update();/*更新処理。*/
+			m_selectUI.SetRotation(rotation);		   /*回転設定。*/
+			m_selectUI.SetScale(SELECT_UI_INIT_SCALE); /*大きさ設定。*/
+			m_selectUI.Update();					   /*更新処理。*/
 
-			m_slideUIAnimationSprite.push_back(&m_selectUI);/*選択UIをスライドUIアニメーションのスプライトに追加。*/
+			m_slideUIAnimationSprite.push_back(&m_selectUI); /*選択UIをスライドUIアニメーションのスプライトに追加。*/
 		}
 
 		/*選択肢テキストUIの初期化。*/
 		void TitleSelect::InitOptionTextUI(EnOptionTextUI optionTextUI, int optionTextIndex)
 		{
-			Vector3 initPosition = OPTION_TEXT_UI_INIT_POSITION;/*初期位置。*/
-			initPosition.y -= OPTION_TEXT_UI_POSITION_INTERVAL * optionTextIndex;/*位置の間隔を減算。*/
+			Vector3 initPosition = OPTION_TEXT_UI_INIT_POSITION;				  /*初期位置。*/
+			initPosition.y -= OPTION_TEXT_UI_POSITION_INTERVAL * optionTextIndex; /*位置の間隔を減算。*/
 
-			m_optionTextUI[optionTextUI].Init(m_optionTextUIFilePath[optionTextUI].c_str(), OPTION_TEXT_UI_WIDTH, OPTION_TEXT_UI_HEIGHT);/*初期化。*/
-			m_optionTextUI[optionTextUI].SetPosition(initPosition);/*位置設定。*/
-			m_optionTextUI[optionTextUI].SetScale(OPTION_TEXT_UI_INIT_SCALE);/*大きさ設定。*/
-			m_optionTextUI[optionTextUI].Update();/*更新処理。*/
+			m_optionTextUI[optionTextUI].Init(m_optionTextUIFilePath[optionTextUI].c_str(), OPTION_TEXT_UI_WIDTH, OPTION_TEXT_UI_HEIGHT); /*初期化。*/
+			m_optionTextUI[optionTextUI].SetPosition(initPosition);																		  /*位置設定。*/
+			m_optionTextUI[optionTextUI].SetScale(OPTION_TEXT_UI_INIT_SCALE);															  /*大きさ設定。*/
+			m_optionTextUI[optionTextUI].Update();																						  /*更新処理。*/
 
-			m_slideUIAnimationSprite.push_back(&m_optionTextUI[optionTextUI]);/*選択肢テキストUIをスライドUIアニメーションのスプライトに追加。*/
+			m_slideUIAnimationSprite.push_back(&m_optionTextUI[optionTextUI]); /*選択肢テキストUIをスライドUIアニメーションのスプライトに追加。*/
 		}
 
 		/*ボタンUIの初期化。*/
 		void TitleSelect::InitButtonUI(EnButtonUI buttonUI)
 		{
-			m_buttonUI[buttonUI].Init(m_buttonUIFilePath[buttonUI].c_str(), BUTTON_UI_WIDTH, BUTTON_UI_HEIGHT);/*初期化。*/
-			m_buttonUI[buttonUI].SetPosition(BUTTON_UI_INIT_POSITION[buttonUI]);/*位置設定。*/
-			m_buttonUI[buttonUI].SetScale(BUTTON_UI_INIT_SCALE);/*大きさ設定。*/
-			m_buttonUI[buttonUI].Update();/*更新処理。*/
+			m_buttonUI[buttonUI].Init(m_buttonUIFilePath[buttonUI].c_str(), BUTTON_UI_WIDTH, BUTTON_UI_HEIGHT); /*初期化。*/
+			m_buttonUI[buttonUI].SetPosition(BUTTON_UI_INIT_POSITION[buttonUI]);								/*位置設定。*/
+			m_buttonUI[buttonUI].SetScale(BUTTON_UI_INIT_SCALE);												/*大きさ設定。*/
+			m_buttonUI[buttonUI].Update();																		/*更新処理。*/
 
-			m_slideUIAnimationSprite.push_back(&m_buttonUI[buttonUI]);/*ボタンUIをスライドUIアニメーションのスプライトに追加。*/
+			m_slideUIAnimationSprite.push_back(&m_buttonUI[buttonUI]); /*ボタンUIをスライドUIアニメーションのスプライトに追加。*/
 		}
 
 		/*テキストUIの初期化。*/
 		void TitleSelect::InitTextUI(EnTextUI textUI)
 		{
-			m_textUI[textUI].Init(m_textUIFilePath[textUI].c_str(), TEXT_UI_WIDTH, TEXT_UI_HEIGHT);/*初期化。*/
-			m_textUI[textUI].SetPosition(TEXT_UI_INIT_POSITION[textUI]);/*位置設定。*/
-			m_textUI[textUI].SetScale(TEXT_UI_INIT_SCALE);/*大きさ設定。*/
-			m_textUI[textUI].Update();/*更新処理。*/
-			
-			m_slideUIAnimationSprite.push_back(&m_textUI[textUI]);/*テキストUIをスライドUIアニメーションのスプライトに追加。*/
+			m_textUI[textUI].Init(m_textUIFilePath[textUI].c_str(), TEXT_UI_WIDTH, TEXT_UI_HEIGHT); /*初期化。*/
+			m_textUI[textUI].SetPosition(TEXT_UI_INIT_POSITION[textUI]);							/*位置設定。*/
+			m_textUI[textUI].SetScale(TEXT_UI_INIT_SCALE);											/*大きさ設定。*/
+			m_textUI[textUI].Update();																/*更新処理。*/
+
+			m_slideUIAnimationSprite.push_back(&m_textUI[textUI]); /*テキストUIをスライドUIアニメーションのスプライトに追加。*/
 		}
 
 		/*UIアニメーションの初期化。*/
@@ -205,59 +208,55 @@ namespace nsApp
 		}
 
 		/*UIを上にスライドさせるアニメーションの初期化。*/
-		void TitleSelect::InitSlideUpUIAnimation(SpriteRender* spriteData, int spriteIndex)
+		void TitleSelect::InitSlideUpUIAnimation(SpriteRender *spriteData, int spriteIndex)
 		{
 			/*UIを上にスライドさせるアニメーションの値の設定。*/
-			Vector3 basePosition = spriteData->GetPosition();/*元の位置。*/
+			Vector3 basePosition = spriteData->GetPosition(); /*元の位置。*/
 
-			Vector3 currentSpritePosition = spriteData->GetPosition();/*現在のスプライトの位置。*/
+			Vector3 currentSpritePosition = spriteData->GetPosition(); /*現在のスプライトの位置。*/
 			currentSpritePosition.y -= OFFSET;
 
-			Vector3 targetPosition = currentSpritePosition;/*ターゲットの位置。*/
+			Vector3 targetPosition = currentSpritePosition; /*ターゲットの位置。*/
 
 			m_slideUpUIAnimation.push_back(std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				spriteData,/*アニメーションをさせるスプライト。*/
-				1.0f,/*ターゲットの割合。*/
-				SLIDE_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
-				false,/*ループするか？*/
-				0.0f,/*アニメーションを開始する前の遅延時間。*/
-				0.0f,/*アニメーションを終了した後の遅延時間。*/
-				basePosition,/*元の位置。*/
-				targetPosition/*ターゲットの位置。*/)
-			);
+				spriteData,					   /*アニメーションをさせるスプライト。*/
+				1.0f,						   /*ターゲットの割合。*/
+				SLIDE_UI_ANIMATION_PLAY_SPEED, /*アニメーションの再生速度。*/
+				false,						   /*ループするか？*/
+				0.0f,						   /*アニメーションを開始する前の遅延時間。*/
+				0.0f,						   /*アニメーションを終了した後の遅延時間。*/
+				basePosition,				   /*元の位置。*/
+				targetPosition /*ターゲットの位置。*/));
 
 			m_slideUpUIAnimation[spriteIndex]->SetEasingFunction([](float t)
-			{
+																 {
 				float t_minus_1 = t - 1.0f;
-				return 1.0f + (t_minus_1 * t_minus_1 * t_minus_1);
-			});
+				return 1.0f + (t_minus_1 * t_minus_1 * t_minus_1); });
 		}
 
 		/*UIを下にスライドさせるアニメーションの初期化。*/
-		void TitleSelect::InitSlideDownUIAnimation(SpriteRender* spriteData, int spriteIndex)
+		void TitleSelect::InitSlideDownUIAnimation(SpriteRender *spriteData, int spriteIndex)
 		{
 			/*UIを下にスライドさせるアニメーションの値の設定。*/
-			Vector3 currentSpritePosition = spriteData->GetPosition();/*現在のスプライトの位置。*/
+			Vector3 currentSpritePosition = spriteData->GetPosition(); /*現在のスプライトの位置。*/
 			currentSpritePosition.y -= OFFSET;
-			Vector3 basePosition = currentSpritePosition;/*元の位置。*/
-			Vector3 targetPosition = spriteData->GetPosition();/*ターゲットの位置。*/
+			Vector3 basePosition = currentSpritePosition;		/*元の位置。*/
+			Vector3 targetPosition = spriteData->GetPosition(); /*ターゲットの位置。*/
 
 			m_slideDownUIAnimation.push_back(std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				spriteData,/*アニメーションをさせるスプライト。*/
-				1.0f,/*ターゲットの割合。*/
-				SLIDE_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
-				false,/*ループするか？*/
-				0.0f,/*アニメーションを開始する前の遅延時間。*/
-				0.0f,/*アニメーションを終了した後の遅延時間。*/
-				basePosition,/*元の位置。*/
-				targetPosition/*ターゲットの位置。*/)
-			);
+				spriteData,					   /*アニメーションをさせるスプライト。*/
+				1.0f,						   /*ターゲットの割合。*/
+				SLIDE_UI_ANIMATION_PLAY_SPEED, /*アニメーションの再生速度。*/
+				false,						   /*ループするか？*/
+				0.0f,						   /*アニメーションを開始する前の遅延時間。*/
+				0.0f,						   /*アニメーションを終了した後の遅延時間。*/
+				basePosition,				   /*元の位置。*/
+				targetPosition /*ターゲットの位置。*/));
 
 			m_slideDownUIAnimation[spriteIndex]->SetEasingFunction([](float t)
-			{
+																   {
 				float t_minus_1 = t - 1.0f;
-				return 1.0f + (t_minus_1 * t_minus_1 * t_minus_1);
-			});
+				return 1.0f + (t_minus_1 * t_minus_1 * t_minus_1); });
 		}
 
 		/*UIを上にスライドさせるアニメーションのリセット処理。*/
@@ -281,14 +280,27 @@ namespace nsApp
 		/*選択の更新処理。*/
 		void TitleSelect::UpdateSelect()
 		{
+			/*サウンドマネージャーの検索。*/
+			auto *SoundManager = FindGO<nsSound::SoundLister>("SoundManager");
 			/*上を入力したら。*/
 			if (g_pad[0]->IsTrigger(enButtonUp))
 			{
 				/*現在の選択が「ゲームスタート」を選択していたら。*/
-				if (m_currentSelect == enSelect_Start) { m_currentSelect = enSelect_ExitGame; return; }
+				if (m_currentSelect == enSelect_Start)
+				{
+					m_currentSelect = enSelect_ExitGame;
+				}
+				else
+				{
+					/*上を選択する。*/
+					m_currentSelect--;
+				}
 
-				/*上を選択する。*/
-				m_currentSelect--;
+				/*カーソルの音を鳴らす。*/
+				if (SoundManager)
+				{
+					SoundManager->GetSEList().PlaySE(nsSound::SE_ID::Cursor, 1.0f, false, 1.0f);
+				}
 				return;
 			}
 
@@ -296,10 +308,21 @@ namespace nsApp
 			if (g_pad[0]->IsTrigger(enButtonDown))
 			{
 				/*現在の選択が「ゲーム終了」を選択していたら。*/
-				if (m_currentSelect == enSelect_ExitGame) { m_currentSelect = enSelect_Start; return; }
+				if (m_currentSelect == enSelect_ExitGame)
+				{
+					m_currentSelect = enSelect_Start;
+				}
+				else
+				{
+					/*下を選択する。*/
+					m_currentSelect++;
+				}
 
-				/*下を選択する。*/
-				m_currentSelect++;
+				/*カーソルの音を鳴らす。*/
+				if (SoundManager)
+				{
+					SoundManager->GetSEList().PlaySE(nsSound::SE_ID::Cursor, 1.0f, false, 1.0f);
+				}
 				return;
 			}
 
@@ -311,6 +334,12 @@ namespace nsApp
 					/*フェードアウトに切り替え。*/
 					nsApp::nsFade::Fade::GetInstance()->ChangeFadeType(nsApp::nsFade::Fade::EnFadeType::enFadeType_FadeOut);
 				}
+
+				/*決定音を鳴らす。*/
+				if (SoundManager)
+				{
+					SoundManager->GetSEList().PlaySE(nsSound::SE_ID::Enter, 1.0f, false, 1.0f);
+				}
 				EnableSelect();
 				return;
 			}
@@ -318,6 +347,11 @@ namespace nsApp
 			/*Bボタンを押したら下にスライドする演出を流すようにする。*/
 			if (g_pad[0]->IsTrigger(enButtonB))
 			{
+				if (SoundManager)
+				{
+					SoundManager->GetSEList().PlaySE(nsSound::SE_ID::Exit, 1.0f, false, 1.0f);
+				}
+
 				EnableBackScene();
 				EnableSlideDownDirection();
 			}
@@ -348,9 +382,9 @@ namespace nsApp
 		void TitleSelect::UpdateSprite()
 		{
 			/*選択UI。*/
-			float offsetX = -500.0f;/*選択UIをX軸にずらす用のオフセット。*/
-			Vector3 currentSelectUIPosition = m_optionTextUI[m_currentSelect].GetPosition();/*現在の選択UIの位置。*/
-			currentSelectUIPosition.x += offsetX;/*選択UIをX軸にずらす。*/
+			float offsetX = -500.0f;														 /*選択UIをX軸にずらす用のオフセット。*/
+			Vector3 currentSelectUIPosition = m_optionTextUI[m_currentSelect].GetPosition(); /*現在の選択UIの位置。*/
+			currentSelectUIPosition.x += offsetX;											 /*選択UIをX軸にずらす。*/
 
 			m_selectUI.SetPosition(currentSelectUIPosition);
 			m_selectUI.Update();

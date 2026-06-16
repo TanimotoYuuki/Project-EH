@@ -1,65 +1,68 @@
 #include "stdafx.h"
 #include "ConfirmationSelect.h"
 #include "Src/Fade/Fade.h"
+#include "Src/Sound/SoundLister.h"
+#include "UIInput.h"
 
-namespace {
+namespace
+{
 	/*確認UI。*/
-	const float CONFIRMATION_UI_WIDTH = 1980;/*確認UIの幅。*/
+	const float CONFIRMATION_UI_WIDTH = 1980; /*確認UIの幅。*/
 
-	const float CONFIRMATION_UI_HEIGHT = 1080;/*確認UIの高さ。*/
+	const float CONFIRMATION_UI_HEIGHT = 1080; /*確認UIの高さ。*/
 
-	const Vector3 CONFIRMATION_UI_INIT_POSITION = { 0.0f,0.0f,0.0f };/*確認UIの初期位置。*/
+	const Vector3 CONFIRMATION_UI_INIT_POSITION = {0.0f, 0.0f, 0.0f}; /*確認UIの初期位置。*/
 
-	const Vector3 CONFIRMATION_UI_INIT_SCALE = { 1.0f,1.0f,1.0f };/*確認UIの初期大きさ。*/
+	const Vector3 CONFIRMATION_UI_INIT_SCALE = {1.0f, 1.0f, 1.0f}; /*確認UIの初期大きさ。*/
 
 	/*確認選択UI。*/
-	const float CONFIRMATION_SELECT_UI_WIDTH = 1024;/*確認選択UIの幅。*/
+	const float CONFIRMATION_SELECT_UI_WIDTH = 1024; /*確認選択UIの幅。*/
 
-	const float CONFIRMATION_SELECT_UI_HEIGHT = 256;/*確認選択UIの高さ。*/
+	const float CONFIRMATION_SELECT_UI_HEIGHT = 256; /*確認選択UIの高さ。*/
 
-	const Vector3 CONFIRMATION_SELECT_UI_INIT_POSITION = { -325.0f,-150.0f,0.0f };/*確認選択UIの初期位置。*/
+	const Vector3 CONFIRMATION_SELECT_UI_INIT_POSITION = {-325.0f, -150.0f, 0.0f}; /*確認選択UIの初期位置。*/
 
-	const Vector3 CONFIRMATION_SELECT_UI_INIT_SCALE = { 1.04f,1.23f,1.0f };/*確認選択UIの初期大きさ。*/
+	const Vector3 CONFIRMATION_SELECT_UI_INIT_SCALE = {1.04f, 1.23f, 1.0f}; /*確認選択UIの初期大きさ。*/
 
-	const Vector4 CONFIRMATION_SELECT_UI_INIT_MUL_COLOR = { 1.0f,1.0f,1.0f,0.6f };/*確認選択選択UIの初期乗算色。*/
+	const Vector4 CONFIRMATION_SELECT_UI_INIT_MUL_COLOR = {1.0f, 1.0f, 1.0f, 0.6f}; /*確認選択選択UIの初期乗算色。*/
 
 	/*確認選択テキストUI。*/
-	const float CONFIRMATION_SELECT_TEXT_UI_WIDTH = 1024;/*確認選択テキストUIの幅。*/
+	const float CONFIRMATION_SELECT_TEXT_UI_WIDTH = 1024; /*確認選択テキストUIの幅。*/
 
-	const float CONFIRMATION_SELECT_TEXT_UI_HEIGHT = 256;/*確認選択テキストUIの高さ。*/
+	const float CONFIRMATION_SELECT_TEXT_UI_HEIGHT = 256; /*確認選択テキストUIの高さ。*/
 
-	const Vector3 CONFIRMATION_SELECT_TEXT_UI_INIT_POSITION = { -325.0f,-150.0f,0.0f };/*確認選択テキストUIの初期位置。*/
+	const Vector3 CONFIRMATION_SELECT_TEXT_UI_INIT_POSITION = {-325.0f, -150.0f, 0.0f}; /*確認選択テキストUIの初期位置。*/
 
-	const float CONFIRMATION_SELECT_TEXT_UI_POSITION_INTERVAL = 600.0f;/*確認選択テキストUIの位置の間隔。*/
+	const float CONFIRMATION_SELECT_TEXT_UI_POSITION_INTERVAL = 600.0f; /*確認選択テキストUIの位置の間隔。*/
 
-	const Vector3 CONFIRMATION_SELECT_TEXT_UI_INIT_SCALE = { 1.0f,1.0f,1.0f };/*確認選択テキストUIの初期大きさ。*/
+	const Vector3 CONFIRMATION_SELECT_TEXT_UI_INIT_SCALE = {1.0f, 1.0f, 1.0f}; /*確認選択テキストUIの初期大きさ。*/
 
 	/*ボタンUI。*/
-	const float BUTTON_UI_WIDTH = 1024;/*ボタンUIの幅。*/
+	const float BUTTON_UI_WIDTH = 1024; /*ボタンUIの幅。*/
 
-	const float BUTTON_UI_HEIGHT = 1024;/*ボタンUIの高さ。*/
+	const float BUTTON_UI_HEIGHT = 1024; /*ボタンUIの高さ。*/
 
-	const Vector3 BUTTON_UI_INIT_POSITION = {-850.0f,-450.0f,0.0f};/*ボタンUIの初期位置。*/
+	const Vector3 BUTTON_UI_INIT_POSITION = {-850.0f, -450.0f, 0.0f}; /*ボタンUIの初期位置。*/
 
-	const Vector3 BUTTON_UI_INIT_SCALE = { 0.1f,0.1f,1.0f };/*ボタンUIの初期大きさ。*/
+	const Vector3 BUTTON_UI_INIT_SCALE = {0.1f, 0.1f, 1.0f}; /*ボタンUIの初期大きさ。*/
 
 	/*テキストUI。*/
-	const float TEXT_UI_WIDTH = 1024;/*テキストUIの幅。*/
+	const float TEXT_UI_WIDTH = 1024; /*テキストUIの幅。*/
 
-	const float TEXT_UI_HEIGHT = 256;/*テキストUIの高さ。*/
+	const float TEXT_UI_HEIGHT = 256; /*テキストUIの高さ。*/
 
-	const Vector3 TEXT_UI_INIT_POSITION = {-725.0f,-450.0f,0.0f};/*テキストUIの初期位置。*/
+	const Vector3 TEXT_UI_INIT_POSITION = {-725.0f, -450.0f, 0.0f}; /*テキストUIの初期位置。*/
 
-	const Vector3 TEXT_UI_INIT_SCALE = { 1.0f,1.0f,1.0f };/*テキストUIの初期大きさ。*/
+	const Vector3 TEXT_UI_INIT_SCALE = {1.0f, 1.0f, 1.0f}; /*テキストUIの初期大きさ。*/
 
 	/*UIアニメーション。*/
-	const float ALPHA_UI_ANIMATION_PLAY_SPEED = 1.2f;/*UIの透明度を変えるアニメーションの再生速度。*/
+	const float ALPHA_UI_ANIMATION_PLAY_SPEED = 1.2f; /*UIの透明度を変えるアニメーションの再生速度。*/
 
-	const float SELECT_DIRECTION_UI_ANIMATION_PLAY_SPEED = 7.0f;/*選択したときの演出UIアニメーションの再生速度。*/
+	const float SELECT_DIRECTION_UI_ANIMATION_PLAY_SPEED = 7.0f; /*選択したときの演出UIアニメーションの再生速度。*/
 
-	const float AFTER_UI_ANIMATION_ALPHA = 0.2f;/*UIの透明度を変えるアニメーション後の透明度。*/
+	const float AFTER_UI_ANIMATION_ALPHA = 0.2f; /*UIの透明度を変えるアニメーション後の透明度。*/
 
-	const float DOWN_POSITION_OFFSET = 25.0f;/*選択したときの演出UIアニメーション時に下降する位置のオフセット。*/
+	const float DOWN_POSITION_OFFSET = 25.0f; /*選択したときの演出UIアニメーション時に下降する位置のオフセット。*/
 }
 
 namespace nsApp
@@ -71,9 +74,16 @@ namespace nsApp
 		{
 			/*スプライトの初期化。*/
 			InitSprite();
-			
+
 			/*UIアニメーションの初期化。*/
 			InitUIAnimation();
+
+			auto *SoundManager = FindGO<nsSound::SoundLister>("SoundManager");
+			if (SoundManager)
+			{
+				SoundManager = NewGO<nsSound::SoundLister>(0, "SoundManager");
+				SoundManager->InitSound();
+			}
 
 			return true;
 		}
@@ -96,7 +106,7 @@ namespace nsApp
 		}
 
 		/*描画処理。*/
-		void ConfirmationSelect::Render(RenderContext& rc)
+		void ConfirmationSelect::Render(RenderContext &rc)
 		{
 			/*UIを描画しない状態なら処理しない。*/
 			if (!IsDrawingUI())
@@ -151,50 +161,50 @@ namespace nsApp
 		/*確認UIの初期化。*/
 		void ConfirmationSelect::InitConfirmationUI(EnConfirmationUI confirmationUI)
 		{
-			m_confirmationUI[confirmationUI].Init(m_confirmationUIFilePath[confirmationUI].c_str(), CONFIRMATION_UI_WIDTH, CONFIRMATION_UI_HEIGHT);/*初期化。*/
-			m_confirmationUI[confirmationUI].SetPosition(CONFIRMATION_UI_INIT_POSITION);/*位置設定。*/
-			m_confirmationUI[confirmationUI].SetScale(CONFIRMATION_UI_INIT_SCALE);/*大きさ設定。*/
-			m_confirmationUI[confirmationUI].Update();/*更新処理。*/
+			m_confirmationUI[confirmationUI].Init(m_confirmationUIFilePath[confirmationUI].c_str(), CONFIRMATION_UI_WIDTH, CONFIRMATION_UI_HEIGHT); /*初期化。*/
+			m_confirmationUI[confirmationUI].SetPosition(CONFIRMATION_UI_INIT_POSITION);															/*位置設定。*/
+			m_confirmationUI[confirmationUI].SetScale(CONFIRMATION_UI_INIT_SCALE);																	/*大きさ設定。*/
+			m_confirmationUI[confirmationUI].Update();																								/*更新処理。*/
 		}
 
 		/*確認選択UIの初期化。*/
 		void ConfirmationSelect::InitConfirmationSelectUI()
 		{
-			m_confirmationSelectUI.Init(m_confirmationSelectUIFilePath.c_str(), CONFIRMATION_SELECT_UI_WIDTH, CONFIRMATION_SELECT_UI_HEIGHT);/*初期化。*/
-			m_confirmationSelectUI.SetPosition(CONFIRMATION_SELECT_UI_INIT_POSITION);/*位置設定。*/
-			m_confirmationSelectUI.SetScale(CONFIRMATION_SELECT_UI_INIT_SCALE);/*大きさ設定。*/
-			m_confirmationSelectUI.SetMulColor(CONFIRMATION_SELECT_UI_INIT_MUL_COLOR);/*乗算色設定。*/
-			m_confirmationSelectUI.Update();/*更新処理。*/
+			m_confirmationSelectUI.Init(m_confirmationSelectUIFilePath.c_str(), CONFIRMATION_SELECT_UI_WIDTH, CONFIRMATION_SELECT_UI_HEIGHT); /*初期化。*/
+			m_confirmationSelectUI.SetPosition(CONFIRMATION_SELECT_UI_INIT_POSITION);														  /*位置設定。*/
+			m_confirmationSelectUI.SetScale(CONFIRMATION_SELECT_UI_INIT_SCALE);																  /*大きさ設定。*/
+			m_confirmationSelectUI.SetMulColor(CONFIRMATION_SELECT_UI_INIT_MUL_COLOR);														  /*乗算色設定。*/
+			m_confirmationSelectUI.Update();																								  /*更新処理。*/
 		}
 
 		/*確認選択テキストUIの初期化。*/
 		void ConfirmationSelect::InitConfirmationSelectTextUI(EnConfirmationSelectTextUI confirmationSelectTextUI, int confirmationSelectTextIndex)
 		{
-			Vector3 initPosition = CONFIRMATION_SELECT_TEXT_UI_INIT_POSITION;/*初期位置。*/
-			initPosition.x += CONFIRMATION_SELECT_TEXT_UI_POSITION_INTERVAL * confirmationSelectTextIndex;/*位置の間隔を加算。*/
+			Vector3 initPosition = CONFIRMATION_SELECT_TEXT_UI_INIT_POSITION;							   /*初期位置。*/
+			initPosition.x += CONFIRMATION_SELECT_TEXT_UI_POSITION_INTERVAL * confirmationSelectTextIndex; /*位置の間隔を加算。*/
 
-			m_confirmationSelectTextUI[confirmationSelectTextUI].Init(m_confirmationSelectTextFilePath[confirmationSelectTextUI].c_str(), CONFIRMATION_SELECT_TEXT_UI_WIDTH, CONFIRMATION_SELECT_TEXT_UI_HEIGHT);/*初期化。*/
-			m_confirmationSelectTextUI[confirmationSelectTextUI].SetPosition(initPosition);/*位置設定。*/
-			m_confirmationSelectTextUI[confirmationSelectTextUI].SetScale(CONFIRMATION_SELECT_TEXT_UI_INIT_SCALE);/*大きさ設定。*/
-			m_confirmationSelectTextUI[confirmationSelectTextUI].Update();/*更新処理。*/
+			m_confirmationSelectTextUI[confirmationSelectTextUI].Init(m_confirmationSelectTextFilePath[confirmationSelectTextUI].c_str(), CONFIRMATION_SELECT_TEXT_UI_WIDTH, CONFIRMATION_SELECT_TEXT_UI_HEIGHT); /*初期化。*/
+			m_confirmationSelectTextUI[confirmationSelectTextUI].SetPosition(initPosition);																														  /*位置設定。*/
+			m_confirmationSelectTextUI[confirmationSelectTextUI].SetScale(CONFIRMATION_SELECT_TEXT_UI_INIT_SCALE);																								  /*大きさ設定。*/
+			m_confirmationSelectTextUI[confirmationSelectTextUI].Update();																																		  /*更新処理。*/
 		}
 
 		/*ボタンUIの初期化。*/
 		void ConfirmationSelect::InitButtonUI()
 		{
-			m_buttonUI.Init(m_buttonUIFilePath.c_str(), BUTTON_UI_WIDTH, BUTTON_UI_HEIGHT);/*初期化。*/
-			m_buttonUI.SetPosition(BUTTON_UI_INIT_POSITION);/*位置設定。*/
-			m_buttonUI.SetScale(BUTTON_UI_INIT_SCALE);/*大きさ設定。*/
-			m_buttonUI.Update();/*更新処理。*/
+			m_buttonUI.Init(m_buttonUIFilePath.c_str(), BUTTON_UI_WIDTH, BUTTON_UI_HEIGHT); /*初期化。*/
+			m_buttonUI.SetPosition(BUTTON_UI_INIT_POSITION);								/*位置設定。*/
+			m_buttonUI.SetScale(BUTTON_UI_INIT_SCALE);										/*大きさ設定。*/
+			m_buttonUI.Update();															/*更新処理。*/
 		}
 
 		/*テキストUIの初期化。*/
 		void ConfirmationSelect::InitTextUI()
 		{
-			m_textUI.Init(m_textUIFilePath.c_str(), TEXT_UI_WIDTH, TEXT_UI_HEIGHT);/*初期化。*/
-			m_textUI.SetPosition(TEXT_UI_INIT_POSITION);/*位置設定。*/
-			m_textUI.SetScale(TEXT_UI_INIT_SCALE);/*大きさ設定。*/
-			m_textUI.Update();/*更新処理。*/
+			m_textUI.Init(m_textUIFilePath.c_str(), TEXT_UI_WIDTH, TEXT_UI_HEIGHT); /*初期化。*/
+			m_textUI.SetPosition(TEXT_UI_INIT_POSITION);							/*位置設定。*/
+			m_textUI.SetScale(TEXT_UI_INIT_SCALE);									/*大きさ設定。*/
+			m_textUI.Update();														/*更新処理。*/
 		}
 
 		/*UIアニメーションの初期化。*/
@@ -211,19 +221,19 @@ namespace nsApp
 		void ConfirmationSelect::InitAlphaUIAnimation()
 		{
 			/*UIの透明度を変えるアニメーションの値の設定。*/
-			float baseAlpha = m_confirmationSelectUI.GetMulColor().a;/*元の透明度。*/
-			float targetAlpha = AFTER_UI_ANIMATION_ALPHA;/*ターゲットの透明度。*/
+			float baseAlpha = m_confirmationSelectUI.GetMulColor().a; /*元の透明度。*/
+			float targetAlpha = AFTER_UI_ANIMATION_ALPHA;			  /*ターゲットの透明度。*/
 
 			/*初期化。*/
 			m_alphaUIAnimation = std::make_unique<nsApp::nsUI::AlphaUIAnimation>(
-				&m_confirmationSelectUI,/*アニメーションをさせるスプライト。*/
-				1.0f,/*ターゲットの割合。*/
-				ALPHA_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
-				true,/*ループするか？*/
-				0.0f,/*アニメーションを開始する前の遅延時間。*/
-				0.0f,/*アニメーションを終了した後の遅延時間。*/
-				baseAlpha,/*元の透明度。*/
-				targetAlpha/*ターゲットの透明度。*/
+				&m_confirmationSelectUI,	   /*アニメーションをさせるスプライト。*/
+				1.0f,						   /*ターゲットの割合。*/
+				ALPHA_UI_ANIMATION_PLAY_SPEED, /*アニメーションの再生速度。*/
+				true,						   /*ループするか？*/
+				0.0f,						   /*アニメーションを開始する前の遅延時間。*/
+				0.0f,						   /*アニメーションを終了した後の遅延時間。*/
+				baseAlpha,					   /*元の透明度。*/
+				targetAlpha					   /*ターゲットの透明度。*/
 			);
 		}
 
@@ -231,105 +241,105 @@ namespace nsApp
 		void ConfirmationSelect::InitSelectDirectionUIAnimation()
 		{
 			/*選択したときの演出UIアニメーションの値の設定。*/
-			Vector3 basePosition = m_confirmationSelectTextUI[enConfirmationSelectTextUI_No].GetPosition();/*元の位置。*/
-			Vector3 targetPosition = m_confirmationSelectTextUI[enConfirmationSelectTextUI_No].GetPosition();/*ターゲットの位置。*/
+			Vector3 basePosition = m_confirmationSelectTextUI[enConfirmationSelectTextUI_No].GetPosition();	  /*元の位置。*/
+			Vector3 targetPosition = m_confirmationSelectTextUI[enConfirmationSelectTextUI_No].GetPosition(); /*ターゲットの位置。*/
 			targetPosition.y -= DOWN_POSITION_OFFSET;
 
 			/*初期化。*/
 			m_selectDirectionUIAnimation[enPosition_Down][enSelectDirectionUIAnimationSprite_NoTextUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				&m_confirmationSelectTextUI[enConfirmationSelectTextUI_No],/*アニメーションをさせるスプライト。*/
-				1.0f,/*ターゲットの割合。*/
-				SELECT_DIRECTION_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
-				false,/*ループするか？*/
-				0.0f,/*アニメーションを開始する前の遅延時間。*/
-				0.0f,/*アニメーションを終了した後の遅延時間。*/
-				basePosition,/*元の位置。*/
-				targetPosition/*ターゲットの位置。*/
+				&m_confirmationSelectTextUI[enConfirmationSelectTextUI_No], /*アニメーションをさせるスプライト。*/
+				1.0f,														/*ターゲットの割合。*/
+				SELECT_DIRECTION_UI_ANIMATION_PLAY_SPEED,					/*アニメーションの再生速度。*/
+				false,														/*ループするか？*/
+				0.0f,														/*アニメーションを開始する前の遅延時間。*/
+				0.0f,														/*アニメーションを終了した後の遅延時間。*/
+				basePosition,												/*元の位置。*/
+				targetPosition												/*ターゲットの位置。*/
 			);
 
 			/*選択したときの演出UIアニメーションの値の設定。*/
-			basePosition = m_confirmationSelectTextUI[enConfirmationSelectTextUI_Yes].GetPosition();/*元の位置。*/
-			targetPosition = m_confirmationSelectTextUI[enConfirmationSelectTextUI_Yes].GetPosition();/*ターゲットの位置。*/
+			basePosition = m_confirmationSelectTextUI[enConfirmationSelectTextUI_Yes].GetPosition();   /*元の位置。*/
+			targetPosition = m_confirmationSelectTextUI[enConfirmationSelectTextUI_Yes].GetPosition(); /*ターゲットの位置。*/
 			targetPosition.y -= DOWN_POSITION_OFFSET;
 
 			/*初期化。*/
 			m_selectDirectionUIAnimation[enPosition_Down][enSelectDirectionUIAnimationSprite_YesTextUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				&m_confirmationSelectTextUI[enConfirmationSelectTextUI_Yes],/*アニメーションをさせるスプライト。*/
-				1.0f,/*ターゲットの割合。*/
-				SELECT_DIRECTION_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
-				false,/*ループするか？*/
-				0.0f,/*アニメーションを開始する前の遅延時間。*/
-				0.0f,/*アニメーションを終了した後の遅延時間。*/
-				basePosition,/*元の位置。*/
-				targetPosition/*ターゲットの位置。*/
+				&m_confirmationSelectTextUI[enConfirmationSelectTextUI_Yes], /*アニメーションをさせるスプライト。*/
+				1.0f,														 /*ターゲットの割合。*/
+				SELECT_DIRECTION_UI_ANIMATION_PLAY_SPEED,					 /*アニメーションの再生速度。*/
+				false,														 /*ループするか？*/
+				0.0f,														 /*アニメーションを開始する前の遅延時間。*/
+				0.0f,														 /*アニメーションを終了した後の遅延時間。*/
+				basePosition,												 /*元の位置。*/
+				targetPosition												 /*ターゲットの位置。*/
 			);
 
 			/*選択したときの演出UIアニメーションの値の設定。*/
-			basePosition = m_confirmationSelectUI.GetPosition();/*元の位置。*/
-			targetPosition = m_confirmationSelectUI.GetPosition();/*ターゲットの位置。*/
+			basePosition = m_confirmationSelectUI.GetPosition();   /*元の位置。*/
+			targetPosition = m_confirmationSelectUI.GetPosition(); /*ターゲットの位置。*/
 			targetPosition.y -= DOWN_POSITION_OFFSET;
 
 			/*初期化。*/
 			m_selectDirectionUIAnimation[enPosition_Down][enSelectDirectionUIAnimationSprite_SelectUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				&m_confirmationSelectUI,/*アニメーションをさせるスプライト。*/
-				1.0f,/*ターゲットの割合。*/
-				SELECT_DIRECTION_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
-				false,/*ループするか？*/
-				0.0f,/*アニメーションを開始する前の遅延時間。*/
-				0.0f,/*アニメーションを終了した後の遅延時間。*/
-				basePosition,/*元の位置。*/
-				targetPosition/*ターゲットの位置。*/
+				&m_confirmationSelectUI,				  /*アニメーションをさせるスプライト。*/
+				1.0f,									  /*ターゲットの割合。*/
+				SELECT_DIRECTION_UI_ANIMATION_PLAY_SPEED, /*アニメーションの再生速度。*/
+				false,									  /*ループするか？*/
+				0.0f,									  /*アニメーションを開始する前の遅延時間。*/
+				0.0f,									  /*アニメーションを終了した後の遅延時間。*/
+				basePosition,							  /*元の位置。*/
+				targetPosition							  /*ターゲットの位置。*/
 			);
 
 			/*選択したときの演出UIアニメーションの値の設定。*/
-			basePosition = m_confirmationSelectTextUI[enConfirmationSelectTextUI_No].GetPosition();/*元の位置。*/
+			basePosition = m_confirmationSelectTextUI[enConfirmationSelectTextUI_No].GetPosition(); /*元の位置。*/
 			basePosition.y -= DOWN_POSITION_OFFSET;
-			targetPosition = m_confirmationSelectTextUI[enConfirmationSelectTextUI_No].GetPosition();/*ターゲットの位置。*/
+			targetPosition = m_confirmationSelectTextUI[enConfirmationSelectTextUI_No].GetPosition(); /*ターゲットの位置。*/
 
 			/*初期化。*/
 			m_selectDirectionUIAnimation[enPosition_Up][enSelectDirectionUIAnimationSprite_NoTextUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				&m_confirmationSelectTextUI[enConfirmationSelectTextUI_No],/*アニメーションをさせるスプライト。*/
-				1.0f,/*ターゲットの割合。*/
-				SELECT_DIRECTION_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
-				false,/*ループするか？*/
-				0.0f,/*アニメーションを開始する前の遅延時間。*/
-				0.0f,/*アニメーションを終了した後の遅延時間。*/
-				basePosition,/*元の位置。*/
-				targetPosition/*ターゲットの位置。*/
+				&m_confirmationSelectTextUI[enConfirmationSelectTextUI_No], /*アニメーションをさせるスプライト。*/
+				1.0f,														/*ターゲットの割合。*/
+				SELECT_DIRECTION_UI_ANIMATION_PLAY_SPEED,					/*アニメーションの再生速度。*/
+				false,														/*ループするか？*/
+				0.0f,														/*アニメーションを開始する前の遅延時間。*/
+				0.0f,														/*アニメーションを終了した後の遅延時間。*/
+				basePosition,												/*元の位置。*/
+				targetPosition												/*ターゲットの位置。*/
 			);
 
 			/*選択したときの演出UIアニメーションの値の設定。*/
-			basePosition = m_confirmationSelectTextUI[enConfirmationSelectTextUI_Yes].GetPosition();/*元の位置。*/
+			basePosition = m_confirmationSelectTextUI[enConfirmationSelectTextUI_Yes].GetPosition(); /*元の位置。*/
 			basePosition.y -= DOWN_POSITION_OFFSET;
-			targetPosition = m_confirmationSelectTextUI[enConfirmationSelectTextUI_Yes].GetPosition();/*ターゲットの位置。*/
+			targetPosition = m_confirmationSelectTextUI[enConfirmationSelectTextUI_Yes].GetPosition(); /*ターゲットの位置。*/
 
 			/*初期化。*/
 			m_selectDirectionUIAnimation[enPosition_Up][enSelectDirectionUIAnimationSprite_YesTextUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				&m_confirmationSelectTextUI[enConfirmationSelectTextUI_Yes],/*アニメーションをさせるスプライト。*/
-				1.0f,/*ターゲットの割合。*/
-				SELECT_DIRECTION_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
-				false,/*ループするか？*/
-				0.0f,/*アニメーションを開始する前の遅延時間。*/
-				0.0f,/*アニメーションを終了した後の遅延時間。*/
-				basePosition,/*元の位置。*/
-				targetPosition/*ターゲットの位置。*/
+				&m_confirmationSelectTextUI[enConfirmationSelectTextUI_Yes], /*アニメーションをさせるスプライト。*/
+				1.0f,														 /*ターゲットの割合。*/
+				SELECT_DIRECTION_UI_ANIMATION_PLAY_SPEED,					 /*アニメーションの再生速度。*/
+				false,														 /*ループするか？*/
+				0.0f,														 /*アニメーションを開始する前の遅延時間。*/
+				0.0f,														 /*アニメーションを終了した後の遅延時間。*/
+				basePosition,												 /*元の位置。*/
+				targetPosition												 /*ターゲットの位置。*/
 			);
 
 			/*選択したときの演出UIアニメーションの値の設定。*/
-			basePosition = m_confirmationSelectUI.GetPosition();/*元の位置。*/
+			basePosition = m_confirmationSelectUI.GetPosition(); /*元の位置。*/
 			basePosition.y -= DOWN_POSITION_OFFSET;
-			targetPosition = m_confirmationSelectUI.GetPosition();/*ターゲットの位置。*/
+			targetPosition = m_confirmationSelectUI.GetPosition(); /*ターゲットの位置。*/
 
 			/*初期化。*/
 			m_selectDirectionUIAnimation[enPosition_Up][enSelectDirectionUIAnimationSprite_SelectUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				&m_confirmationSelectUI,/*アニメーションをさせるスプライト。*/
-				1.0f,/*ターゲットの割合。*/
-				SELECT_DIRECTION_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
-				false,/*ループするか？*/
-				0.0f,/*アニメーションを開始する前の遅延時間。*/
-				0.0f,/*アニメーションを終了した後の遅延時間。*/
-				basePosition,/*元の位置。*/
-				targetPosition/*ターゲットの位置。*/
+				&m_confirmationSelectUI,				  /*アニメーションをさせるスプライト。*/
+				1.0f,									  /*ターゲットの割合。*/
+				SELECT_DIRECTION_UI_ANIMATION_PLAY_SPEED, /*アニメーションの再生速度。*/
+				false,									  /*ループするか？*/
+				0.0f,									  /*アニメーションを開始する前の遅延時間。*/
+				0.0f,									  /*アニメーションを終了した後の遅延時間。*/
+				basePosition,							  /*元の位置。*/
+				targetPosition							  /*ターゲットの位置。*/
 			);
 		}
 
@@ -348,12 +358,24 @@ namespace nsApp
 		/*選択の更新処理。*/
 		void ConfirmationSelect::UpdateSelect()
 		{
+			auto *SoundManager = FindGO<nsSound::SoundLister>("SoundManager");
+
 			/*左を入力したら。*/
 			if (g_pad[0]->IsTrigger(enButtonLeft))
 			{
+				/*カーソル音。*/
+				if (SoundManager)
+				{
+					SoundManager->GetSEList().PlaySE(nsSound::SE_ID::Cursor, 1.0f, false, 1.0f);
+				}
+
 				ResetAlphaUIAnimation();
 				/*現在の選択が「いいえ」を選択していたら。*/
-				if (m_currentSelect == enSelect_No) { m_currentSelect = enSelect_Yes; return; }
+				if (m_currentSelect == enSelect_No)
+				{
+					m_currentSelect = enSelect_Yes;
+					return;
+				}
 
 				/*「いいえ」を選択する。*/
 				m_currentSelect--;
@@ -363,9 +385,18 @@ namespace nsApp
 			/*右を入力したら。*/
 			if (g_pad[0]->IsTrigger(enButtonRight))
 			{
+				/*カーソル音。*/
+				if (SoundManager)
+				{
+					SoundManager->GetSEList().PlaySE(nsSound::SE_ID::Cursor, 1.0f, false, 1.0f);
+				}
 				ResetAlphaUIAnimation();
 				/*現在の選択が「はい」を選択していたら。*/
-				if (m_currentSelect == enSelect_Yes) { m_currentSelect = enSelect_No; return; }
+				if (m_currentSelect == enSelect_Yes)
+				{
+					m_currentSelect = enSelect_No;
+					return;
+				}
 
 				/*「はい」を選択する。*/
 				m_currentSelect++;
@@ -375,6 +406,11 @@ namespace nsApp
 			/*Aボタンを押したら選択したときの演出を流すようにする。*/
 			if (g_pad[0]->IsTrigger(enButtonA))
 			{
+				/*決定音。*/
+				if (SoundManager)
+				{
+					SoundManager->GetSEList().PlaySE(nsSound::SE_ID::Enter, 1.0f, false, 1.0f);
+				}
 				EnableDirection();
 			}
 		}
@@ -442,7 +478,7 @@ namespace nsApp
 
 			/*ボタンUI。*/
 			m_buttonUI.Update();
-			
+
 			/*テキストUI。*/
 			m_textUI.Update();
 		}

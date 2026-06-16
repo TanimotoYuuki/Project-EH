@@ -2,6 +2,9 @@
 #include "BiteAttackStrategy.h"
 #include "Boss.h"
 
+#include "Src/Sound/SoundLister.h"
+#include "Src/Sound/SEList.h"
+
 namespace nsApp
 {
 	namespace nsAI
@@ -14,6 +17,9 @@ namespace nsApp
 			/*攻撃フラグ初期化。*/
 			m_isAttack = false;
 
+			/*SEのフラグを初期化。*/
+			m_hasPlayedSound = false;
+
 			/*Y位置をロック。*/
 			boss->LockYPosition(boss->GetPosition().y);
 
@@ -25,10 +31,18 @@ namespace nsApp
 		{
 			m_timer -= g_gameTime->GetFrameDeltaTime();
 
+			/*攻撃判定と同時にSEを再生。*/
 			if (!m_isAttack && m_timer <= 0.7f)
 			{
 				boss->AttackBite();
 				m_isAttack = true;
+
+				/*SE再生。*/
+				auto soundManager = FindGO<nsSound::SoundLister>("SoundManager");
+				if (soundManager != nullptr && reinterpret_cast<uintptr_t>(soundManager) != 0xFFFFFFFFFFFFFFFF)
+				{
+					soundManager->GetSEList().PlaySE(nsSound::SE_ID::BiteSoft, 2.0f, false, 100.0f);
+				}
 			}
 
 			// 攻撃が終わる頃にロック解除

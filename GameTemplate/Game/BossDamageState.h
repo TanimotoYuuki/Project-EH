@@ -4,20 +4,23 @@
 
 namespace nsApp
 {
-	namespace nsActor { class Boss; }
+	namespace nsActor
+	{
+		class Boss;
+	}
 
 	namespace nsState
 	{
-		class BossDamageState :public IState<nsActor::Actor>
+		class BossDamageState : public IState<nsActor::Actor>
 		{
 		public:
 			void Enter() override;
 			void Update() override;
 			void Exit() override;
-			bool RequestID(uint8_t& id) override;
+			bool RequestID(uint8_t &id) override;
 
 		private:
-			nsActor::Boss* m_boss = nullptr;
+			nsActor::Boss *m_boss = nullptr;
 			float m_timer = 0.5f;
 		};
 	}

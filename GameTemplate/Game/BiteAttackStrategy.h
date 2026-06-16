@@ -21,6 +21,7 @@ namespace nsApp
 		private:
 			float m_timer = 0.0f;
 			bool m_isAttack = false;
+			bool m_hasPlayedSound = false;
 		};
 	}
 }

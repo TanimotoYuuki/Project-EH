@@ -3,6 +3,9 @@
 #include "Boss.h"
 #include <random>
 
+#include "Src/Sound/SoundLister.h"
+#include "Src/Sound/SEList.h"
+
 namespace
 {
 	const float ROAR_DURATION = 1.5f;
@@ -16,9 +19,18 @@ namespace nsApp
 	{
 		void BossRoarState::Enter()
 		{
-			m_boss = static_cast<nsActor::Boss*>(m_owner);
+			m_boss = static_cast<nsActor::Boss *>(m_owner);
 			m_timer = ROAR_DURATION;
+
+			/*アニメーション再生。*/
 			m_boss->PlayAnimation(nsActor::BossAnimationID::Scream);
+
+			/*SE再生。*/
+			auto soundManager = FindGO<nsSound::SoundLister>("SoundManager");
+			if (soundManager != nullptr && reinterpret_cast<int8_t>(soundManager) != 0xFFFFFFFFFFFFFFFF)
+			{
+				soundManager->GetSEList().PlaySE(nsSound::SE_ID::Roar, 1.0f, false, 100.0f);
+			}
 		}
 
 		void BossRoarState::Update()
@@ -30,7 +42,7 @@ namespace nsApp
 		{
 		}
 
-		bool BossRoarState::RequestID(uint8_t& id)
+		bool BossRoarState::RequestID(uint8_t &id)
 		{
 			if (m_timer <= 0.0f)
 			{
@@ -69,4 +81,3 @@ namespace nsApp
 		}
 	}
 }
-

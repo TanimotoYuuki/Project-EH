@@ -1,133 +1,135 @@
 #include "stdafx.h"
 #include "Option.h"
 #include "Src/Sound/SoundLister.h"
+#include "UIInput.h"
 
-namespace {
+namespace
+{
 	/*背景。*/
-	const float BACK_GROUND_WIDTH = 1754;/*背景の幅。*/
+	const float BACK_GROUND_WIDTH = 1754; /*背景の幅。*/
 
-	const float BACK_GROUND_HEIGHT = 1011;/*背景の高さ。*/
+	const float BACK_GROUND_HEIGHT = 1011; /*背景の高さ。*/
 
 	/*バーUI。*/
-	const float BAR_UI_WIDTH = 915;/*バーUIの幅。*/
+	const float BAR_UI_WIDTH = 915; /*バーUIの幅。*/
 
-	const float BAR_UI_HEIGHT = 85;/*バーUIの高さ。*/
+	const float BAR_UI_HEIGHT = 85; /*バーUIの高さ。*/
 
 	const Vector3 BAR_UI_INIT_POSITION[nsApp::nsOption::Option::enBarUI_Num] = {
-		Vector3{235.0f,275.0f,0.0f},/*マスターボリューム。*/
-		Vector3{235.0f,95.0f,0.0f},/*BGM。*/
-		Vector3{235.0f,-85.0f,0.0f},/*SE。*/
-	};/*バーUIの初期位置。*/
+		Vector3{235.0f, 275.0f, 0.0f}, /*マスターボリューム。*/
+		Vector3{235.0f, 95.0f, 0.0f},  /*BGM。*/
+		Vector3{235.0f, -85.0f, 0.0f}, /*SE。*/
+	}; /*バーUIの初期位置。*/
 
-	const Vector3 BAR_UI_INIT_SCALE = {0.7f,0.7f,1.0f};/*バーUIの初期大きさ。*/
+	const Vector3 BAR_UI_INIT_SCALE = {0.7f, 0.7f, 1.0f}; /*バーUIの初期大きさ。*/
 
 	/*ゲージUI。*/
-	const float GAUGE_UI_WIDTH = 908;/*ゲージUIの幅。*/
+	const float GAUGE_UI_WIDTH = 908; /*ゲージUIの幅。*/
 
-	const float GAUGE_UI_HEIGHT = 79;/*ゲージUIの高さ。*/
+	const float GAUGE_UI_HEIGHT = 79; /*ゲージUIの高さ。*/
 
 	const Vector3 GAUGE_UI_INIT_POSITION[nsApp::nsOption::Option::enGaugeUI_Num] = {
-		Vector3{-83.25f,275.0f,0.0f},/*マスターボリューム。*/
-		Vector3{-83.25f,95.0f,0.0f},/*BGM。*/
-		Vector3{-83.25f,-85.0f,0.0f},/*SE。*/
-	};/*ゲージUIの初期位置。*/
+		Vector3{-83.25f, 275.0f, 0.0f}, /*マスターボリューム。*/
+		Vector3{-83.25f, 95.0f, 0.0f},	/*BGM。*/
+		Vector3{-83.25f, -85.0f, 0.0f}, /*SE。*/
+	}; /*ゲージUIの初期位置。*/
 
-	const Vector3 GAUGE_UI_INIT_SCALE = {0.7f,0.7f,1.0f};/*ゲージUIの初期大きさ。*/
+	const Vector3 GAUGE_UI_INIT_SCALE = {0.7f, 0.7f, 1.0f}; /*ゲージUIの初期大きさ。*/
 
-	const Vector2 GAUGE_UI_INIT_PIVOT = { 0.0f,0.5f };/*ゲージUIの初期ピボット。*/
+	const Vector2 GAUGE_UI_INIT_PIVOT = {0.0f, 0.5f}; /*ゲージUIの初期ピボット。*/
 
 	/*音量の数字UI。*/
-	const float VOLUME_NUMBER_UI_WIDTH = 1024;/*音量の数字UIの幅。*/
+	const float VOLUME_NUMBER_UI_WIDTH = 1024; /*音量の数字UIの幅。*/
 
-	const float VOLUME_NUMBER_UI_HEIGHT = 128;/*音量の数字UIの高さ。*/
+	const float VOLUME_NUMBER_UI_HEIGHT = 128; /*音量の数字UIの高さ。*/
 
 	const Vector3 VOLUME_NUMBER_UI_INIT_POSITION[nsApp::nsOption::Option::enGaugeUI_Num] = {
-		Vector3{645.0f, 275.0f, 0.0f},/*マスターボリューム。*/
-		Vector3{645.0f, 95.0f, 0.0f},/*BGM。*/
-		Vector3{645.0f, -85.0f, 0.0f},/*SE。*/
-	};/*音量の数字UIの初期位置。*/
+		Vector3{645.0f, 275.0f, 0.0f}, /*マスターボリューム。*/
+		Vector3{645.0f, 95.0f, 0.0f},  /*BGM。*/
+		Vector3{645.0f, -85.0f, 0.0f}, /*SE。*/
+	}; /*音量の数字UIの初期位置。*/
 
-	const float VOLUME_NUMBER_UI_POSITION_INTERVAL = 50.0f;/*音量の数字UIの位置の間隔。*/
+	const float VOLUME_NUMBER_UI_POSITION_INTERVAL = 50.0f; /*音量の数字UIの位置の間隔。*/
 
-	const Vector3 VOLUME_NUMBER_UI_INIT_SCALE = Vector3(0.6f, 0.6f, 1.0f);/*音量の数字UIの初期大きさ。*/
+	const Vector3 VOLUME_NUMBER_UI_INIT_SCALE = Vector3(0.6f, 0.6f, 1.0f); /*音量の数字UIの初期大きさ。*/
 
 	/*円選択UI。*/
-	const float CIRCLE_SELECT_UI_WIDTH = 128;/*円選択UIの幅。*/
+	const float CIRCLE_SELECT_UI_WIDTH = 128; /*円選択UIの幅。*/
 
-	const float CIRCLE_SELECT_UI_HEIGHT = 127;/*円選択UIの高さ。*/
+	const float CIRCLE_SELECT_UI_HEIGHT = 127; /*円選択UIの高さ。*/
 
-	const Vector3 CIRCLE_SELECT_UI_INIT_POSITION = { 555.0f,215.0f,0.0f };/*円選択UIの初期位置。*/
+	const Vector3 CIRCLE_SELECT_UI_INIT_POSITION = {555.0f, 215.0f, 0.0f}; /*円選択UIの初期位置。*/
 
-	const Vector3 CIRCLE_SELECT_UI_INIT_SCALE = { 0.9f,0.9f,1.0f };/*円選択UIの初期大きさ。*/
+	const Vector3 CIRCLE_SELECT_UI_INIT_SCALE = {0.9f, 0.9f, 1.0f}; /*円選択UIの初期大きさ。*/
 
 	/*円UI。*/
-	const float CIRCLE_UI_WIDTH = 128;/*円UIの幅。*/
+	const float CIRCLE_UI_WIDTH = 128; /*円UIの幅。*/
 
-	const float CIRCLE_UI_HEIGHT = 127;/*円UIの高さ。*/
+	const float CIRCLE_UI_HEIGHT = 127; /*円UIの高さ。*/
 
 	const Vector3 CIRCLE_UI_INIT_POSITION[nsApp::nsOption::Option::EnCircleUI::enCircleUI_Num] = {
-		Vector3{555.0f,275.0f,0.0f},/*マスターボリューム。*/
-		Vector3{555.0f,95.0f,0.0f},/*BGM。*/
-		Vector3{555.0f,-85.0f,0.0f},/*SE。*/
-	};/*円UIの初期位置。*/
+		Vector3{555.0f, 275.0f, 0.0f}, /*マスターボリューム。*/
+		Vector3{555.0f, 95.0f, 0.0f},  /*BGM。*/
+		Vector3{555.0f, -85.0f, 0.0f}, /*SE。*/
+	}; /*円UIの初期位置。*/
 
 	const Vector3 CIRCLE_UI_POSITION_MIN[nsApp::nsOption::Option::EnCircleUI::enCircleUI_Num] = {
-		Vector3{-83.5f,275.0f,0.0f},/*マスターボリューム。*/
-		Vector3{-83.5f,95.0f,0.0f },/*BGM。*/
-		Vector3{-83.5f,-85.0f,0.0f },/*SE。*/
-	};/*円UIの位置の下限。*/
+		Vector3{-83.5f, 275.0f, 0.0f}, /*マスターボリューム。*/
+		Vector3{-83.5f, 95.0f, 0.0f},  /*BGM。*/
+		Vector3{-83.5f, -85.0f, 0.0f}, /*SE。*/
+	}; /*円UIの位置の下限。*/
 
-	const Vector3 CIRCLE_UI_INIT_SCALE = { 0.7f,0.7f,1.0f };/*円UIの初期大きさ。*/
+	const Vector3 CIRCLE_UI_INIT_SCALE = {0.7f, 0.7f, 1.0f}; /*円UIの初期大きさ。*/
 
 	/*「OK」テキスト選択UI。*/
-	const float OK_TEXT_SELECT_UI_WIDTH = 549;/*「OK」テキスト選択UIの幅。*/
+	const float OK_TEXT_SELECT_UI_WIDTH = 549; /*「OK」テキスト選択UIの幅。*/
 
-	const float OK_TEXT_SELECT_UI_HEIGHT = 81;/*「OK」テキスト選択UIの高さ。*/
+	const float OK_TEXT_SELECT_UI_HEIGHT = 81; /*「OK」テキスト選択UIの高さ。*/
 
-	const Vector3 OK_TEXT_SELECT_UI_INIT_POSITION = { 0.0f,-300.0f,0.0f };/*「OK」テキスト選択UIの初期位置。*/
+	const Vector3 OK_TEXT_SELECT_UI_INIT_POSITION = {0.0f, -300.0f, 0.0f}; /*「OK」テキスト選択UIの初期位置。*/
 
-	const Vector3 OK_TEXT_SELECT_UI_INIT_SCALE = { 1.04f,1.23f,1.0f };/*「OK」テキスト選択UIの初期大きさ。*/
+	const Vector3 OK_TEXT_SELECT_UI_INIT_SCALE = {1.04f, 1.23f, 1.0f}; /*「OK」テキスト選択UIの初期大きさ。*/
 
 	/*選択肢テキストUI。*/
 	const float OPTION_TEXT_UI_WIDTH[nsApp::nsOption::Option::EnOptionTextUI::enOptionTextUI_Num] = {
-		940,/*マスターボリューム。*/
-		297,/*BGM。*/
-		170,/*SE。*/
-		549,/*OK。*/
-	};/*選択肢テキストUIの幅。*/
+		940, /*マスターボリューム。*/
+		297, /*BGM。*/
+		170, /*SE。*/
+		549, /*OK。*/
+	}; /*選択肢テキストUIの幅。*/
 
 	const float OPTION_TEXT_UI_HEIGHT[nsApp::nsOption::Option::EnOptionTextUI::enOptionTextUI_Num] = {
-		113,/*マスターボリューム。*/
-		114,/*BGM。*/
-		114,/*SE。*/
-		81,/*OK。*/
-	};/*選択肢テキストUIの高さ。*/
+		113, /*マスターボリューム。*/
+		114, /*BGM。*/
+		114, /*SE。*/
+		81,	 /*OK。*/
+	}; /*選択肢テキストUIの高さ。*/
 
 	const Vector3 OPTION_TEXT_UI_INIT_POSITION[nsApp::nsOption::Option::EnOptionTextUI::enOptionTextUI_Num] = {
-		Vector3{-445.0f,275.0f,0.0f},/*マスターボリューム。*/
-		Vector3{-445.0f,95.0f,0.0f},/*BGM。*/
-		Vector3{-445.0f,-85.0f,0.0f},/*SE。*/
-		Vector3{0.0f,-300.0f,0.0f},/*OK。*/
-	};/*選択肢テキストUIの初期位置。*/
+		Vector3{-445.0f, 275.0f, 0.0f}, /*マスターボリューム。*/
+		Vector3{-445.0f, 95.0f, 0.0f},	/*BGM。*/
+		Vector3{-445.0f, -85.0f, 0.0f}, /*SE。*/
+		Vector3{0.0f, -300.0f, 0.0f},	/*OK。*/
+	}; /*選択肢テキストUIの初期位置。*/
 
 	const Vector3 OPTION_TEXT_UI_INIT_SCALE[nsApp::nsOption::Option::EnOptionTextUI::enOptionTextUI_Num] = {
-		Vector3{0.6f,0.6f,1.0f},/*マスターボリューム。*/
-		Vector3{0.6f,0.6f,1.0f},/*BGM。*/
-		Vector3{0.6f,0.6f,1.0f},/*SE。*/
-		Vector3{1.0f,1.0f,1.0f},/*OK。*/
-	};/*選択肢テキストUIの初期大きさ。*/
+		Vector3{0.6f, 0.6f, 1.0f}, /*マスターボリューム。*/
+		Vector3{0.6f, 0.6f, 1.0f}, /*BGM。*/
+		Vector3{0.6f, 0.6f, 1.0f}, /*SE。*/
+		Vector3{1.0f, 1.0f, 1.0f}, /*OK。*/
+	}; /*選択肢テキストUIの初期大きさ。*/
 
 	/*音量。*/
-	const int VOLUME_MAX = 100;/*音量の最大値。*/
+	const int VOLUME_MAX = 100; /*音量の最大値。*/
 
 	/*UIアニメーション。*/
-	const float ALPHA_UI_ANIMATION_PLAY_SPEED = 1.2f;/*UIの透明度を変えるアニメーションの再生速度。*/
+	const float ALPHA_UI_ANIMATION_PLAY_SPEED = 1.2f; /*UIの透明度を変えるアニメーションの再生速度。*/
 
-	const float SELECT_DIRECTION_UI_ANIMATION_PLAY_SPEED = 7.0f;/*選択したときの演出UIアニメーションの再生速度。*/
+	const float SELECT_DIRECTION_UI_ANIMATION_PLAY_SPEED = 7.0f; /*選択したときの演出UIアニメーションの再生速度。*/
 
-	const float AFTER_UI_ANIMATION_ALPHA = 0.2f;/*UIの透明度を変えるアニメーション後の透明度。*/
+	const float AFTER_UI_ANIMATION_ALPHA = 0.2f; /*UIの透明度を変えるアニメーション後の透明度。*/
 
-	const float DOWN_POSITION_OFFSET = 25.0f;/*選択したときの演出UIアニメーション時に下降する位置のオフセット。*/
+	const float DOWN_POSITION_OFFSET = 25.0f; /*選択したときの演出UIアニメーション時に下降する位置のオフセット。*/
 }
 
 namespace nsApp
@@ -150,21 +152,28 @@ namespace nsApp
 				m_volumeNumverDisplayManager[i].reserve(6);
 
 				/*ゲージUI。*/
-				float volumeRate = (float)m_volumeRate[i] / (float)m_volumeMaxRate[i];/*音量の割合を計算。*/
-				Vector3 gaugeScale = m_gaugeUIBaseScale[i];/*ゲージUIの大きさを取得。*/
-				gaugeScale.x *= volumeRate;/*音量の割合を乗算。*/
-				m_gaugeUI[i].SetScale(gaugeScale);/*ゲージUIの大きさを設定。*/
-				CalcVolumeNumverDisplayData((EnGaugeUI)i, volumeRate);/*音量の数字UIに表示するためのデータの計算。*/
+				float volumeRate = (float)m_volumeRate[i] / (float)m_volumeMaxRate[i]; /*音量の割合を計算。*/
+				Vector3 gaugeScale = m_gaugeUIBaseScale[i];							   /*ゲージUIの大きさを取得。*/
+				gaugeScale.x *= volumeRate;											   /*音量の割合を乗算。*/
+				m_gaugeUI[i].SetScale(gaugeScale);									   /*ゲージUIの大きさを設定。*/
+				CalcVolumeNumverDisplayData((EnGaugeUI)i, volumeRate);				   /*音量の数字UIに表示するためのデータの計算。*/
 
 				/*円UI。*/
-				float maxLength = CIRCLE_UI_INIT_POSITION[i].x - CIRCLE_UI_POSITION_MIN[i].x;/*円UIの移動できる距離の最大値。*/
-				float moveLength = maxLength * (1.0f - volumeRate);/*円UIの移動距離。*/
-				Vector3 circlePosition = m_circleUIBasePosition[i];/*円UIの位置を取得。*/
-				circlePosition.x = CIRCLE_UI_INIT_POSITION[i].x - moveLength;/*円UIの位置を設定。*/
-				m_circleUI[i].SetPosition(circlePosition);/*円UIの位置を設定。*/
+				float maxLength = CIRCLE_UI_INIT_POSITION[i].x - CIRCLE_UI_POSITION_MIN[i].x; /*円UIの移動できる距離の最大値。*/
+				float moveLength = maxLength * (1.0f - volumeRate);							  /*円UIの移動距離。*/
+				Vector3 circlePosition = m_circleUIBasePosition[i];							  /*円UIの位置を取得。*/
+				circlePosition.x = CIRCLE_UI_INIT_POSITION[i].x - moveLength;				  /*円UIの位置を設定。*/
+				m_circleUI[i].SetPosition(circlePosition);									  /*円UIの位置を設定。*/
 			}
 
 			m_soundListerInstance = FindGO<nsApp::nsSound::SoundLister>("SoundManager");
+
+			auto *SoundManager = FindGO<nsSound::SoundLister>("SoundManager");
+			if (SoundManager == nullptr)
+			{
+				SoundManager = NewGO<nsSound::SoundLister>(0, "SoundManager");
+				SoundManager->InitSound();
+			}
 
 			return true;
 		}
@@ -187,7 +196,10 @@ namespace nsApp
 			/*スプライト。*/
 			UpdateSprite();
 
-			if (!m_soundListerInstance) { return; }
+			if (!m_soundListerInstance)
+			{
+				return;
+			}
 			/*割合を考慮した計算ができるように各割合を設定。。*/
 			m_soundListerInstance->SetBGMVolumeRate(m_volumeRate[enGaugeUI_BGM]);
 			m_soundListerInstance->SetSEVolumeRate(m_volumeRate[enGaugeUI_SE]);
@@ -195,7 +207,7 @@ namespace nsApp
 		}
 
 		/*描画処理。*/
-		void Option::Render(RenderContext& rc)
+		void Option::Render(RenderContext &rc)
 		{
 			/*UIを描画しない状態なら処理しない。*/
 			if (!IsDrawingUI())
@@ -304,72 +316,72 @@ namespace nsApp
 		/*「OK」テキスト選択UIの初期化。*/
 		void Option::InitOkTextSelectUI()
 		{
-			m_okTextSelectUI.Init(m_okTextSelectUIFilePath.c_str(), OK_TEXT_SELECT_UI_WIDTH, OK_TEXT_SELECT_UI_HEIGHT);/*初期化。*/
-			m_okTextSelectUI.SetPosition(OK_TEXT_SELECT_UI_INIT_POSITION);/*位置設定。*/
-			m_okTextSelectUI.SetScale(OK_TEXT_SELECT_UI_INIT_SCALE);/*大きさ設定。*/
-			m_okTextSelectUI.Update();/*更新処理。*/
+			m_okTextSelectUI.Init(m_okTextSelectUIFilePath.c_str(), OK_TEXT_SELECT_UI_WIDTH, OK_TEXT_SELECT_UI_HEIGHT); /*初期化。*/
+			m_okTextSelectUI.SetPosition(OK_TEXT_SELECT_UI_INIT_POSITION);												/*位置設定。*/
+			m_okTextSelectUI.SetScale(OK_TEXT_SELECT_UI_INIT_SCALE);													/*大きさ設定。*/
+			m_okTextSelectUI.Update();																					/*更新処理。*/
 		}
 
 		/*テキストUIの初期化。*/
 		void Option::InitOptionTextUI(EnOptionTextUI optionTextUI)
 		{
-			m_optionTextUI[optionTextUI].Init(m_optionTextUIFilePath[optionTextUI].c_str(), OPTION_TEXT_UI_WIDTH[optionTextUI], OPTION_TEXT_UI_HEIGHT[optionTextUI]);/*初期化。*/
-			m_optionTextUI[optionTextUI].SetPosition(OPTION_TEXT_UI_INIT_POSITION[optionTextUI]);/*位置設定。*/
-			m_optionTextUI[optionTextUI].SetScale(OPTION_TEXT_UI_INIT_SCALE[optionTextUI]);/*大きさ設定。*/
-			m_optionTextUI[optionTextUI].Update();/*更新処理。*/
+			m_optionTextUI[optionTextUI].Init(m_optionTextUIFilePath[optionTextUI].c_str(), OPTION_TEXT_UI_WIDTH[optionTextUI], OPTION_TEXT_UI_HEIGHT[optionTextUI]); /*初期化。*/
+			m_optionTextUI[optionTextUI].SetPosition(OPTION_TEXT_UI_INIT_POSITION[optionTextUI]);																	  /*位置設定。*/
+			m_optionTextUI[optionTextUI].SetScale(OPTION_TEXT_UI_INIT_SCALE[optionTextUI]);																			  /*大きさ設定。*/
+			m_optionTextUI[optionTextUI].Update();																													  /*更新処理。*/
 		}
 
 		/*バーUIの初期化。*/
 		void Option::InitBarUI(EnBarUI barUI)
 		{
-			m_barUI[barUI].Init(m_barUIFilePath[barUI].c_str(), BAR_UI_WIDTH, BAR_UI_HEIGHT);/*初期化。*/
-			m_barUI[barUI].SetPosition(BAR_UI_INIT_POSITION[barUI]);/*位置設定。*/
-			m_barUI[barUI].SetScale(BAR_UI_INIT_SCALE);/*大きさ設定。*/
-			m_barUI[barUI].Update();/*更新処理。*/
+			m_barUI[barUI].Init(m_barUIFilePath[barUI].c_str(), BAR_UI_WIDTH, BAR_UI_HEIGHT); /*初期化。*/
+			m_barUI[barUI].SetPosition(BAR_UI_INIT_POSITION[barUI]);						  /*位置設定。*/
+			m_barUI[barUI].SetScale(BAR_UI_INIT_SCALE);										  /*大きさ設定。*/
+			m_barUI[barUI].Update();														  /*更新処理。*/
 		}
 
 		/*ゲージUIの初期化。*/
 		void Option::InitGaugeUI(EnGaugeUI gaugeUI)
 		{
-			m_gaugeUI[gaugeUI].Init(m_gaugeUIFilePath[gaugeUI].c_str(), GAUGE_UI_WIDTH, GAUGE_UI_HEIGHT);/*初期化。*/
-			m_gaugeUI[gaugeUI].SetPosition(GAUGE_UI_INIT_POSITION[gaugeUI]);/*位置設定。*/
-			m_gaugeUI[gaugeUI].SetScale(GAUGE_UI_INIT_SCALE);/*大きさ設定。*/
-			m_gaugeUI[gaugeUI].SetPivot(GAUGE_UI_INIT_PIVOT);/*ピボット設定。*/
-			m_gaugeUI[gaugeUI].Update();/*更新処理。*/
+			m_gaugeUI[gaugeUI].Init(m_gaugeUIFilePath[gaugeUI].c_str(), GAUGE_UI_WIDTH, GAUGE_UI_HEIGHT); /*初期化。*/
+			m_gaugeUI[gaugeUI].SetPosition(GAUGE_UI_INIT_POSITION[gaugeUI]);							  /*位置設定。*/
+			m_gaugeUI[gaugeUI].SetScale(GAUGE_UI_INIT_SCALE);											  /*大きさ設定。*/
+			m_gaugeUI[gaugeUI].SetPivot(GAUGE_UI_INIT_PIVOT);											  /*ピボット設定。*/
+			m_gaugeUI[gaugeUI].Update();																  /*更新処理。*/
 
-			m_gaugeUIBaseScale[gaugeUI] = m_gaugeUI[gaugeUI].GetScale();/*基準の大きさ設定。*/
+			m_gaugeUIBaseScale[gaugeUI] = m_gaugeUI[gaugeUI].GetScale(); /*基準の大きさ設定。*/
 		}
 
 		/*音量の数字UIの初期化。*/
 		void Option::InitVolumeNumberUI(EnGaugeUI gaugeUI, EnVolume volume, EnVolumeNumberDisplayUI volumeNumberDisplaUI, int volumeIndex)
 		{
-			Vector3 initPosition = VOLUME_NUMBER_UI_INIT_POSITION[gaugeUI];/*初期位置。*/
-			initPosition.x += VOLUME_NUMBER_UI_POSITION_INTERVAL * volumeIndex;/*位置の間隔を加算。*/
+			Vector3 initPosition = VOLUME_NUMBER_UI_INIT_POSITION[gaugeUI];		/*初期位置。*/
+			initPosition.x += VOLUME_NUMBER_UI_POSITION_INTERVAL * volumeIndex; /*位置の間隔を加算。*/
 
-			m_volumeNumberUI[gaugeUI][volume][volumeNumberDisplaUI].Init(m_volumeNumberUIFilePath[volumeNumberDisplaUI].c_str(),VOLUME_NUMBER_UI_WIDTH,VOLUME_NUMBER_UI_HEIGHT);/*初期化。*/
-			m_volumeNumberUI[gaugeUI][volume][volumeNumberDisplaUI].SetPosition(initPosition);/*位置設定。*/
-			m_volumeNumberUI[gaugeUI][volume][volumeNumberDisplaUI].SetScale(VOLUME_NUMBER_UI_INIT_SCALE);/*大きさ設定。*/
-			m_volumeNumberUI[gaugeUI][volume][volumeNumberDisplaUI].Update();/*更新処理。*/
+			m_volumeNumberUI[gaugeUI][volume][volumeNumberDisplaUI].Init(m_volumeNumberUIFilePath[volumeNumberDisplaUI].c_str(), VOLUME_NUMBER_UI_WIDTH, VOLUME_NUMBER_UI_HEIGHT); /*初期化。*/
+			m_volumeNumberUI[gaugeUI][volume][volumeNumberDisplaUI].SetPosition(initPosition);																					   /*位置設定。*/
+			m_volumeNumberUI[gaugeUI][volume][volumeNumberDisplaUI].SetScale(VOLUME_NUMBER_UI_INIT_SCALE);																		   /*大きさ設定。*/
+			m_volumeNumberUI[gaugeUI][volume][volumeNumberDisplaUI].Update();																									   /*更新処理。*/
 		}
 
 		/*円選択UIの初期化。*/
 		void Option::InitCircleSelectUI()
 		{
-			m_circleSelectUI.Init(m_circleSelectUIFilePath.c_str(), CIRCLE_SELECT_UI_WIDTH, CIRCLE_SELECT_UI_HEIGHT);/*初期化。*/
-			m_circleSelectUI.SetPosition(CIRCLE_SELECT_UI_INIT_POSITION);/*位置設定。*/
-			m_circleSelectUI.SetScale(CIRCLE_SELECT_UI_INIT_SCALE);/*大きさ設定。*/
-			m_circleSelectUI.Update();/*更新処理。*/
+			m_circleSelectUI.Init(m_circleSelectUIFilePath.c_str(), CIRCLE_SELECT_UI_WIDTH, CIRCLE_SELECT_UI_HEIGHT); /*初期化。*/
+			m_circleSelectUI.SetPosition(CIRCLE_SELECT_UI_INIT_POSITION);											  /*位置設定。*/
+			m_circleSelectUI.SetScale(CIRCLE_SELECT_UI_INIT_SCALE);													  /*大きさ設定。*/
+			m_circleSelectUI.Update();																				  /*更新処理。*/
 		}
 
 		/*円UIの初期化。*/
 		void Option::InitCircleUI(EnCircleUI circleUI)
 		{
-			m_circleUI[circleUI].Init(m_circleUIFilePath[circleUI].c_str(), CIRCLE_UI_WIDTH, CIRCLE_UI_HEIGHT);/*初期化。*/
-			m_circleUI[circleUI].SetPosition(CIRCLE_UI_INIT_POSITION[circleUI]);/*位置設定。*/
-			m_circleUI[circleUI].SetScale(CIRCLE_UI_INIT_SCALE);/*大きさ設定。*/
-			m_circleUI[circleUI].Update();/*更新処理。*/
+			m_circleUI[circleUI].Init(m_circleUIFilePath[circleUI].c_str(), CIRCLE_UI_WIDTH, CIRCLE_UI_HEIGHT); /*初期化。*/
+			m_circleUI[circleUI].SetPosition(CIRCLE_UI_INIT_POSITION[circleUI]);								/*位置設定。*/
+			m_circleUI[circleUI].SetScale(CIRCLE_UI_INIT_SCALE);												/*大きさ設定。*/
+			m_circleUI[circleUI].Update();																		/*更新処理。*/
 
-			m_circleUIBasePosition[circleUI] = m_circleUI[circleUI].GetPosition();/*基準の位置設定。*/
+			m_circleUIBasePosition[circleUI] = m_circleUI[circleUI].GetPosition(); /*基準の位置設定。*/
 		}
 
 		/*UIアニメーションの初期化。*/
@@ -386,35 +398,35 @@ namespace nsApp
 		void Option::InitAlphaUIAnimation()
 		{
 			/*UIの透明度を変えるアニメーションの値の設定。*/
-			float baseAlpha = m_circleSelectUI.GetMulColor().a;/*元の透明度。*/
-			float targetAlpha = AFTER_UI_ANIMATION_ALPHA;/*ターゲットの透明度。*/
+			float baseAlpha = m_circleSelectUI.GetMulColor().a; /*元の透明度。*/
+			float targetAlpha = AFTER_UI_ANIMATION_ALPHA;		/*ターゲットの透明度。*/
 
 			/*初期化。*/
 			m_alphaUIAnimation[enAlphaUIAnimationSprite_Circle] = std::make_unique<nsApp::nsUI::AlphaUIAnimation>(
-				&m_circleSelectUI,/*アニメーションをさせるスプライト。*/
-				1.0f,/*ターゲットの割合。*/
-				ALPHA_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
-				true,/*ループするか？*/
-				0.0f,/*アニメーションを開始する前の遅延時間。*/
-				0.0f,/*アニメーションを終了した後の遅延時間。*/
-				baseAlpha,/*元の透明度。*/
-				targetAlpha/*ターゲットの透明度。*/
+				&m_circleSelectUI,			   /*アニメーションをさせるスプライト。*/
+				1.0f,						   /*ターゲットの割合。*/
+				ALPHA_UI_ANIMATION_PLAY_SPEED, /*アニメーションの再生速度。*/
+				true,						   /*ループするか？*/
+				0.0f,						   /*アニメーションを開始する前の遅延時間。*/
+				0.0f,						   /*アニメーションを終了した後の遅延時間。*/
+				baseAlpha,					   /*元の透明度。*/
+				targetAlpha					   /*ターゲットの透明度。*/
 			);
 
 			/*UIの透明度を変えるアニメーションの値の設定。*/
-			baseAlpha = m_okTextSelectUI.GetMulColor().a;/*元の透明度。*/
-			targetAlpha = AFTER_UI_ANIMATION_ALPHA;/*ターゲットの透明度。*/
+			baseAlpha = m_okTextSelectUI.GetMulColor().a; /*元の透明度。*/
+			targetAlpha = AFTER_UI_ANIMATION_ALPHA;		  /*ターゲットの透明度。*/
 
 			/*初期化。*/
 			m_alphaUIAnimation[enAlphaUIAnimationSprite_Ok] = std::make_unique<nsApp::nsUI::AlphaUIAnimation>(
-				&m_okTextSelectUI,/*アニメーションをさせるスプライト。*/
-				1.0f,/*ターゲットの割合。*/
-				ALPHA_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
-				true,/*ループするか？*/
-				0.0f,/*アニメーションを開始する前の遅延時間。*/
-				0.0f,/*アニメーションを終了した後の遅延時間。*/
-				baseAlpha,/*元の透明度。*/
-				targetAlpha/*ターゲットの透明度。*/
+				&m_okTextSelectUI,			   /*アニメーションをさせるスプライト。*/
+				1.0f,						   /*ターゲットの割合。*/
+				ALPHA_UI_ANIMATION_PLAY_SPEED, /*アニメーションの再生速度。*/
+				true,						   /*ループするか？*/
+				0.0f,						   /*アニメーションを開始する前の遅延時間。*/
+				0.0f,						   /*アニメーションを終了した後の遅延時間。*/
+				baseAlpha,					   /*元の透明度。*/
+				targetAlpha					   /*ターゲットの透明度。*/
 			);
 		}
 
@@ -422,71 +434,71 @@ namespace nsApp
 		void Option::InitSelectDirectionUIAnimation()
 		{
 			/*選択したときの演出UIアニメーションの値の設定。*/
-			Vector3 basePosition = m_optionTextUI[enOptionTextUI_OK].GetPosition();/*元の位置。*/
-			Vector3 targetPosition = m_optionTextUI[enOptionTextUI_OK].GetPosition();/*ターゲットの位置。*/
+			Vector3 basePosition = m_optionTextUI[enOptionTextUI_OK].GetPosition();	  /*元の位置。*/
+			Vector3 targetPosition = m_optionTextUI[enOptionTextUI_OK].GetPosition(); /*ターゲットの位置。*/
 			targetPosition.y -= DOWN_POSITION_OFFSET;
 
 			/*初期化。*/
 			m_selectDirectionUIAnimation[enPosition_Down][enSelectDirectionUIAnimationSprite_OKTextUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				&m_optionTextUI[enOptionTextUI_OK],/*アニメーションをさせるスプライト。*/
-				1.0f,/*ターゲットの割合。*/
-				SELECT_DIRECTION_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
-				false,/*ループするか？*/
-				0.0f,/*アニメーションを開始する前の遅延時間。*/
-				0.0f,/*アニメーションを終了した後の遅延時間。*/
-				basePosition,/*元の位置。*/
-				targetPosition/*ターゲットの位置。*/
+				&m_optionTextUI[enOptionTextUI_OK],		  /*アニメーションをさせるスプライト。*/
+				1.0f,									  /*ターゲットの割合。*/
+				SELECT_DIRECTION_UI_ANIMATION_PLAY_SPEED, /*アニメーションの再生速度。*/
+				false,									  /*ループするか？*/
+				0.0f,									  /*アニメーションを開始する前の遅延時間。*/
+				0.0f,									  /*アニメーションを終了した後の遅延時間。*/
+				basePosition,							  /*元の位置。*/
+				targetPosition							  /*ターゲットの位置。*/
 			);
 
 			/*選択したときの演出UIアニメーションの値の設定。*/
-			basePosition = m_okTextSelectUI.GetPosition();/*元の位置。*/
-			targetPosition = m_okTextSelectUI.GetPosition();/*ターゲットの位置。*/
+			basePosition = m_okTextSelectUI.GetPosition();	 /*元の位置。*/
+			targetPosition = m_okTextSelectUI.GetPosition(); /*ターゲットの位置。*/
 			targetPosition.y -= DOWN_POSITION_OFFSET;
 
 			/*初期化。*/
 			m_selectDirectionUIAnimation[enPosition_Down][enSelectDirectionUIAnimationSprite_SelectUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				&m_okTextSelectUI,/*アニメーションをさせるスプライト。*/
-				1.0f,/*ターゲットの割合。*/
-				SELECT_DIRECTION_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
-				false,/*ループするか？*/
-				0.0f,/*アニメーションを開始する前の遅延時間。*/
-				0.0f,/*アニメーションを終了した後の遅延時間。*/
-				basePosition,/*元の位置。*/
-				targetPosition/*ターゲットの位置。*/
+				&m_okTextSelectUI,						  /*アニメーションをさせるスプライト。*/
+				1.0f,									  /*ターゲットの割合。*/
+				SELECT_DIRECTION_UI_ANIMATION_PLAY_SPEED, /*アニメーションの再生速度。*/
+				false,									  /*ループするか？*/
+				0.0f,									  /*アニメーションを開始する前の遅延時間。*/
+				0.0f,									  /*アニメーションを終了した後の遅延時間。*/
+				basePosition,							  /*元の位置。*/
+				targetPosition							  /*ターゲットの位置。*/
 			);
 
 			/*選択したときの演出UIアニメーションの値の設定。*/
-			basePosition = m_optionTextUI[enOptionTextUI_OK].GetPosition();/*元の位置。*/
+			basePosition = m_optionTextUI[enOptionTextUI_OK].GetPosition(); /*元の位置。*/
 			basePosition.y -= DOWN_POSITION_OFFSET;
-			targetPosition = m_optionTextUI[enOptionTextUI_OK].GetPosition();/*ターゲットの位置。*/
+			targetPosition = m_optionTextUI[enOptionTextUI_OK].GetPosition(); /*ターゲットの位置。*/
 
 			/*初期化。*/
 			m_selectDirectionUIAnimation[enPosition_Up][enSelectDirectionUIAnimationSprite_OKTextUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				&m_optionTextUI[enOptionTextUI_OK],/*アニメーションをさせるスプライト。*/
-				1.0f,/*ターゲットの割合。*/
-				SELECT_DIRECTION_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
-				false,/*ループするか？*/
-				0.0f,/*アニメーションを開始する前の遅延時間。*/
-				0.0f,/*アニメーションを終了した後の遅延時間。*/
-				basePosition,/*元の位置。*/
-				targetPosition/*ターゲットの位置。*/
+				&m_optionTextUI[enOptionTextUI_OK],		  /*アニメーションをさせるスプライト。*/
+				1.0f,									  /*ターゲットの割合。*/
+				SELECT_DIRECTION_UI_ANIMATION_PLAY_SPEED, /*アニメーションの再生速度。*/
+				false,									  /*ループするか？*/
+				0.0f,									  /*アニメーションを開始する前の遅延時間。*/
+				0.0f,									  /*アニメーションを終了した後の遅延時間。*/
+				basePosition,							  /*元の位置。*/
+				targetPosition							  /*ターゲットの位置。*/
 			);
 
 			/*選択したときの演出UIアニメーションの値の設定。*/
-			basePosition = m_okTextSelectUI.GetPosition();/*元の位置。*/
+			basePosition = m_okTextSelectUI.GetPosition(); /*元の位置。*/
 			basePosition.y -= DOWN_POSITION_OFFSET;
-			targetPosition = m_okTextSelectUI.GetPosition();/*ターゲットの位置。*/
+			targetPosition = m_okTextSelectUI.GetPosition(); /*ターゲットの位置。*/
 
 			/*初期化。*/
 			m_selectDirectionUIAnimation[enPosition_Up][enSelectDirectionUIAnimationSprite_SelectUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				&m_okTextSelectUI,/*アニメーションをさせるスプライト。*/
-				1.0f,/*ターゲットの割合。*/
-				SELECT_DIRECTION_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
-				false,/*ループするか？*/
-				0.0f,/*アニメーションを開始する前の遅延時間。*/
-				0.0f,/*アニメーションを終了した後の遅延時間。*/
-				basePosition,/*元の位置。*/
-				targetPosition/*ターゲットの位置。*/
+				&m_okTextSelectUI,						  /*アニメーションをさせるスプライト。*/
+				1.0f,									  /*ターゲットの割合。*/
+				SELECT_DIRECTION_UI_ANIMATION_PLAY_SPEED, /*アニメーションの再生速度。*/
+				false,									  /*ループするか？*/
+				0.0f,									  /*アニメーションを開始する前の遅延時間。*/
+				0.0f,									  /*アニメーションを終了した後の遅延時間。*/
+				basePosition,							  /*元の位置。*/
+				targetPosition							  /*ターゲットの位置。*/
 			);
 		}
 
@@ -514,12 +526,24 @@ namespace nsApp
 		/*選択の更新処理。*/
 		void Option::UpdateSelect()
 		{
+			auto *SoundManager = FindGO<nsSound::SoundLister>("SoundManager");
+
 			/*上を入力したら。*/
 			if (g_pad[0]->IsTrigger(enButtonUp))
 			{
+				/*カーソル音。*/
+				if (SoundManager)
+				{
+					SoundManager->GetSEList().PlaySE(nsSound::SE_ID::Cursor, 1.0f, false, 1.0f);
+				}
+
 				ResetAlphaUIAnimation();
 				/*現在の選択が「マスターボリューム」を選択していたら。*/
-				if (m_currentSelect == enSelect_MasterVolume) { m_currentSelect = enSelect_OK; return; }
+				if (m_currentSelect == enSelect_MasterVolume)
+				{
+					m_currentSelect = enSelect_OK;
+					return;
+				}
 
 				/*上を選択する。*/
 				m_currentSelect--;
@@ -529,9 +553,19 @@ namespace nsApp
 			/*下を入力したら。*/
 			if (g_pad[0]->IsTrigger(enButtonDown))
 			{
+				/*カーソル音。*/
+				if (SoundManager)
+				{
+					SoundManager->GetSEList().PlaySE(nsSound::SE_ID::Cursor, 1.0f, false, 1.0f);
+				}
+
 				ResetAlphaUIAnimation();
 				/*現在の選択が「OK」を選択していたら。*/
-				if (m_currentSelect == enSelect_OK) { m_currentSelect = enSelect_MasterVolume; return; }
+				if (m_currentSelect == enSelect_OK)
+				{
+					m_currentSelect = enSelect_MasterVolume;
+					return;
+				}
 
 				/*下を選択する。*/
 				m_currentSelect++;
@@ -562,6 +596,12 @@ namespace nsApp
 				/*Aボタンを押したら選択したときの演出を流すようにする。。*/
 				if (g_pad[0]->IsTrigger(enButtonA))
 				{
+					/*決定音を鳴らす。*/
+					if (SoundManager)
+					{
+						SoundManager->GetSEList().PlaySE(nsSound::SE_ID::Enter, 1.0f, false, 1.0f);
+					}
+
 					EnableDirection();
 				}
 			}
@@ -573,49 +613,52 @@ namespace nsApp
 			if (m_isGaugeDown)
 			{
 				m_volumeChangeValue = 1;
-				m_volumeRate[gaugeUI] -= m_volumeChangeValue;/*音量の割合を下げる。*/
+				m_volumeRate[gaugeUI] -= m_volumeChangeValue; /*音量の割合を下げる。*/
 
 				if (m_volumeRate[gaugeUI] <= 0)
 				{
-					m_volumeRate[gaugeUI] = 0;/*HPの割合が0以下にならないようにする。*/
+					m_volumeRate[gaugeUI] = 0; /*HPの割合が0以下にならないようにする。*/
 				}
 				m_isGaugeDown = false;
 			}
 			else if (m_isGaugeUp)
 			{
 				m_volumeChangeValue = 1;
-				m_volumeRate[gaugeUI] += m_volumeChangeValue;/*音量の割合を上げる。。*/
+				m_volumeRate[gaugeUI] += m_volumeChangeValue; /*音量の割合を上げる。。*/
 
 				if (m_volumeRate[gaugeUI] >= 100)
 				{
-					m_volumeRate[gaugeUI] = 100;/*HPの割合が100以上にならないようにする。*/
+					m_volumeRate[gaugeUI] = 100; /*HPの割合が100以上にならないようにする。*/
 				}
 				m_isGaugeUp = false;
 			}
 
-			if (m_volumeChangeValue <= 0) { return; }/*音量の値に変化がなければ処理しない。*/
+			if (m_volumeChangeValue <= 0)
+			{
+				return;
+			} /*音量の値に変化がなければ処理しない。*/
 
 			/*ゲージUI。*/
-			float volumeRate = (float)m_volumeRate[gaugeUI] / (float)m_volumeMaxRate[gaugeUI];/*音量の割合を計算。*/
-			Vector3 gaugeScale = m_gaugeUIBaseScale[gaugeUI];/*ゲージUIの大きさを取得。*/
-			gaugeScale.x *= volumeRate;/*音量の割合を乗算。*/
-			m_gaugeUI[gaugeUI].SetScale(gaugeScale);/*ゲージUIの大きさを設定。*/
-			m_volumeChangeValue = 0;/*音量の変化量をリセット。*/
-			CalcVolumeNumverDisplayData(gaugeUI, volumeRate);/*音量の数字UIに表示するためのデータの計算。*/
+			float volumeRate = (float)m_volumeRate[gaugeUI] / (float)m_volumeMaxRate[gaugeUI]; /*音量の割合を計算。*/
+			Vector3 gaugeScale = m_gaugeUIBaseScale[gaugeUI];								   /*ゲージUIの大きさを取得。*/
+			gaugeScale.x *= volumeRate;														   /*音量の割合を乗算。*/
+			m_gaugeUI[gaugeUI].SetScale(gaugeScale);										   /*ゲージUIの大きさを設定。*/
+			m_volumeChangeValue = 0;														   /*音量の変化量をリセット。*/
+			CalcVolumeNumverDisplayData(gaugeUI, volumeRate);								   /*音量の数字UIに表示するためのデータの計算。*/
 
 			/*円UI。*/
-			float maxLength = CIRCLE_UI_INIT_POSITION[circleUI].x - CIRCLE_UI_POSITION_MIN[circleUI].x;/*円UIの移動できる距離の最大値。*/
-			float moveLength = maxLength * (1.0f - volumeRate);/*円UIの移動距離。*/
-			Vector3 circlePosition = m_circleUIBasePosition[circleUI];/*円UIの位置を取得。*/
-			circlePosition.x = CIRCLE_UI_INIT_POSITION[gaugeUI].x - moveLength;/*円UIの位置を設定。*/
-			m_circleUI[circleUI].SetPosition(circlePosition);/*円UIの位置を設定。*/
+			float maxLength = CIRCLE_UI_INIT_POSITION[circleUI].x - CIRCLE_UI_POSITION_MIN[circleUI].x; /*円UIの移動できる距離の最大値。*/
+			float moveLength = maxLength * (1.0f - volumeRate);											/*円UIの移動距離。*/
+			Vector3 circlePosition = m_circleUIBasePosition[circleUI];									/*円UIの位置を取得。*/
+			circlePosition.x = CIRCLE_UI_INIT_POSITION[gaugeUI].x - moveLength;							/*円UIの位置を設定。*/
+			m_circleUI[circleUI].SetPosition(circlePosition);											/*円UIの位置を設定。*/
 		}
-		
+
 		/*音量の数字UIに表示するためのデータの計算。*/
 		void Option::CalcVolumeNumverDisplayData(EnGaugeUI gaugeUI, float volumeRate)
 		{
-			m_volumeNumverDisplayManager[gaugeUI].clear();/*音量の数字UIのデータを管理するクラスをリセット。*/
-			volumeRate *= 100.0f;/*音量の割合を100倍する。*/
+			m_volumeNumverDisplayManager[gaugeUI].clear(); /*音量の数字UIのデータを管理するクラスをリセット。*/
+			volumeRate *= 100.0f;						   /*音量の割合を100倍する。*/
 
 			/*百の位を算出するための計算。*/
 			int hundred = (int)volumeRate / 100;
@@ -662,9 +705,7 @@ namespace nsApp
 			/*選択したUIの形状の設定。*/
 			int currentSelectUIShape = enSelectUIShape_Num;
 			/*現在の選択の内容からUIの形状を分岐する。*/
-			m_currentSelect != enSelect_OK ?
-				currentSelectUIShape = enSelectUIShape_Circle:
-				currentSelectUIShape = enSelectUIShape_Bar;
+			m_currentSelect != enSelect_OK ? currentSelectUIShape = enSelectUIShape_Circle : currentSelectUIShape = enSelectUIShape_Bar;
 
 			m_alphaUIAnimation[currentSelectUIShape]->Update();
 		}

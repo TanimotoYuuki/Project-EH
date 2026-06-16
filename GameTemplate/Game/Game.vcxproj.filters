@@ -531,6 +531,7 @@
     <ClCompile Include="BossRoarState.cpp">
       <Filter>Src\Actor\Character\Boss\State</Filter>
     </ClCompile>
+    <ClCompile Include="UIInput.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -943,6 +944,7 @@
     <ClInclude Include="BossRoarState.h">
       <Filter>Src\Actor\Character\Boss\State</Filter>
     </ClInclude>
+    <ClInclude Include="UIInput.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Src\Utilty\TSVTableLoder.inl">

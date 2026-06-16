@@ -2,6 +2,9 @@
 #include "TailAttackStrategy.h"
 #include "Boss.h"
 
+#include "Src/Sound/SoundLister.h"
+#include "Src/Sound/SEList.h"
+
 namespace
 {
 	const float ATTACK_TIME = 1.2f;
@@ -15,6 +18,8 @@ namespace nsApp
 		void TailAttackStrategy::Enter(nsActor::Boss *boss)
 		{
 			m_timer = ATTACK_TIME;
+
+			/*攻撃フラグの初期化。*/
 			m_isHit = false;
 
 			/*尻尾攻撃アニメーション。*/
@@ -26,10 +31,20 @@ namespace nsApp
 			m_timer -= g_gameTime->GetFrameDeltaTime();
 
 			/*一度だけヒット判定を出す。*/
-			if (!m_isHit && m_timer <= HIT_TIME)
+			if (m_timer <= HIT_TIME)
 			{
-				m_isHit = true;
-				boss->AttackTail();
+				if (!m_isHit)
+				{
+					m_isHit = true;
+					boss->AttackTail();
+
+					/*SE再生。*/
+					auto soundManager = FindGO<nsSound::SoundLister>("SoundManger");
+					if (soundManager != nullptr && reinterpret_cast<uintptr_t>(soundManager) != 0xFFFFFFFFFFFFFFFF)
+					{
+						soundManager->GetSEList().PlaySE(nsSound::SE_ID::Tail, 1.0f, false, 100.0f);
+					}
+				}
 			}
 		}
 

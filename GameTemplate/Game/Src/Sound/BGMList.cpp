@@ -5,9 +5,8 @@ namespace nsApp
 {
 	namespace nsSound
 	{
-		nsK2EngineLow::SoundSource* BGMList::m_bgmSource = nullptr;
+		nsK2EngineLow::SoundSource *BGMList::m_bgmSource = nullptr;
 		BGM_ID BGMList::m_currentBGM = BGM_ID::None;
-
 
 		BGMList::~BGMList()
 		{

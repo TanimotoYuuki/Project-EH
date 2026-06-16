@@ -2,6 +2,9 @@
 #include "FireAttackStrategy.h"
 #include "Boss.h"
 
+#include "Src/Sound/SoundLister.h"
+#include "Src/Sound/SEList.h"
+
 namespace
 {
 	const float ATTACK_TIME = 2.5f; /*攻撃全体時間。*/
@@ -30,6 +33,13 @@ namespace nsApp
 			{
 				boss->ShotFireBall();
 				m_isShot = true;
+
+				/*発射のタイミングでSEを再生。*/
+				auto soundManager = FindGO<nsSound::SoundLister>("SoundManager");
+				if (soundManager != nullptr && reinterpret_cast<uintptr_t>(soundManager))
+				{
+					soundManager->GetSEList().PlaySE(nsSound::SE_ID::Fire, 1.0f, false, 100.0f);
+				}
 			}
 		}
 

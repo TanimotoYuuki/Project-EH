@@ -15,28 +15,22 @@ namespace nsApp
                 float currentDistance,
                 float hpRatio,
                 bool lastAttackWasBite)
+
             {
                 const BossTypeParameters &params = BossTypeManager::GetBossTypeParameters(bossType);
 
                 /*ボスのパーソナリティに基づいて確率を調整。*/
-                if (params.personality == BossPersonality::Aggressive)
+                switch (params.personality)
                 {
+                case BossPersonality::Aggressive:
                     return CreateAggressiveConfig(currentDistance, hpRatio, lastAttackWasBite, params);
-                }
-                else if (params.personality == BossPersonality::Balanced)
-                {
+                case BossPersonality::Balanced:
                     return CreateBalancedConfig(currentDistance, hpRatio, lastAttackWasBite, params);
-                }
-                else if (params.personality == BossPersonality::Defensive)
-                {
+                case BossPersonality::Defensive:
                     return CreateDefensiveConfig(currentDistance, hpRatio, lastAttackWasBite, params);
-                }
-                else if (params.personality == BossPersonality::Tricky)
-                {
+                case BossPersonality::Tricky:
                     return CreateTrickyConfig(currentDistance, hpRatio, lastAttackWasBite, params);
-                }
-                else
-                {
+                default:
                     return CreateBalancedConfig(currentDistance, hpRatio, lastAttackWasBite, params);
                 }
             }
@@ -48,11 +42,16 @@ namespace nsApp
             {
                 if (distance < 25.0f)
                 {
-                    return {
-                        0.0f, 25.0f,
-                        lastAttackWasBite ? 50 : 80,
-                        params.m_preferredTailChance,
-                        params.m_preferredFireChance};
+                    int bite = params.m_preferredBiteChance;
+                    int tail = params.m_preferredTailChance;
+                    int fire = params.m_preferredFireChance;
+
+                    if (lastAttackWasBite)
+                    {
+                        bite -= 30;
+                        tail += 30;
+                    }
+                    return {0.0f, 25.0f, bite, tail, fire};
                 }
                 else if (distance < 55.0f)
                 {
@@ -70,7 +69,7 @@ namespace nsApp
             {
                 if (distance < 25.0f)
                 {
-                    return {0.0f, 25.0f, 40, 30, 30};
+                    return {0.0f, 25.0f, lastAttackWasBite ? 20 : 45, 35, 20};
                 }
                 else if (distance < 55.0f)
                 {
@@ -78,7 +77,7 @@ namespace nsApp
                 }
                 else
                 {
-                    return {55.0f, 1000.0f, 15, 20, 65};
+                    return {55.0f, 1000.0f, lastAttackWasBite ? 20 : 45, 35, 20};
                 }
             }
 
@@ -88,11 +87,13 @@ namespace nsApp
             {
                 if (distance < 25.0f)
                 {
-                    return {0.0f, 25.0f, 50, 30, 20};
+                    int bite = lastAttackWasBite ? 25 : params.m_preferredBiteChance;
+                    int tail = lastAttackWasBite ? 55 : params.m_preferredTailChance;
+                    return {0.0f, 25.0f, bite, tail, params.m_preferredFireChance};
                 }
                 else if (distance < 55.0f)
                 {
-                    return {25.0f, 55.0f, 30, 40, 30};
+                    return {25.0f, 55.0f, 20, 50, 30};
                 }
                 else
                 {
@@ -106,15 +107,15 @@ namespace nsApp
             {
                 if (distance < 25.0f)
                 {
-                    return {0.0f, 25.0f, 20, 60, 20};
+                    return {0.0f, 25.0f, 15, 70, 15};
                 }
                 else if (distance < 55.0f)
                 {
-                    return {25.0f, 55.0f, 15, 65, 20};
+                    return {25.0f, 55.0f, 15, 70, 15};
                 }
                 else
                 {
-                    return {55.0f, 1000.0f, 10, 70, 20};
+                    return {55.0f, 1000.0f, params.m_preferredBiteChance, params.m_preferredTailChance, params.m_preferredFireChance};
                 }
             }
         };

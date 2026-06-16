@@ -1,4 +1,5 @@
 #pragma once
+#include "Src/Actor/Character/Common/CharacterModel.h"
 
 namespace nsApp
 {

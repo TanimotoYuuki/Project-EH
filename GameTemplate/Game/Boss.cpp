@@ -235,16 +235,13 @@ namespace nsApp
 		void Boss::OnDamageEvent(int damage)
 		{
 			if (m_characterStatus.hp.currentHP <= 0)
+			{
 				return;
+			}
 
 			if (m_currentStateID == BossStateID::enDamage || m_currentStateID == BossStateID::enDeath)
 			{
 				/*すでにダメージ状態か死亡状態なら追加の処理はなし。*/
-				return;
-			}
-
-			if (m_currentStateID == BossStateID::enAttack)
-			{
 				return;
 			}
 
@@ -348,18 +345,23 @@ namespace nsApp
 			/*待機アニメーション。*/
 			m_stateFactory[BossStateID::enIdle] = []()
 			{ return new nsState::BossIdleState(); };
+
 			/*移動アニメーション。*/
 			m_stateFactory[BossStateID::enMove] = []()
 			{ return new nsState::BossMoveState(); };
+
 			/*攻撃アニメーション。*/
 			m_stateFactory[BossStateID::enAttack] = []()
 			{ return new nsState::BossAttackState(); };
+
 			/*咆哮アニメーション。*/
 			m_stateFactory[BossStateID::enRoar] = []()
 			{ return new nsState::BossRoarState(); };
+
 			/*被弾アニメーション。*/
 			m_stateFactory[BossStateID::enDamage] = []()
 			{ return new nsState::BossDamageState(); };
+
 			/*死亡アニメーション。*/
 			m_stateFactory[BossStateID::enDeath] = []()
 			{ return new nsState::BossDethState(); };
