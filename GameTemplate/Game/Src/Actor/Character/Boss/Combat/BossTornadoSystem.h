@@ -40,7 +40,7 @@ namespace nsApp
 			float damageTimer = 0.0f;								//! ダメージ間隔タイマー。これが 0 以下のときにプレイヤーにダメージを与えることができ、ダメージを与えたらこのタイマーを TORNADO_DAMAGE_INTERVAL にリセットする。
 			float effectRespawnTimer = 0.0f;						//! エフェクト再生成タイマー。竜巻エフェクトは一定時間ごとに再生成して見た目をリフレッシュする。これが 0 以下のときにエフェクトを再生成し、再生成したらこのタイマーを TORNADO_EFFECT_RESPAWN_INTERVAL にリセットする。
 			float baseScale = 2.0f;									//! 基本スケール。竜巻の大きさに影響する。スポーン時に TORNADO_BASE_SCALE をセットし、移動パターンや残存時間に応じて変化させることもある。
-			nsK2EngineLow::EffectEmitter* emitter = nullptr;		//! 表示用エフェクト。スポーン時に生成し、竜巻の位置に追従させる。寿命が尽きるかステージ外に出たら削除���る。
+			nsK2EngineLow::EffectEmitter* emitter = nullptr;		//! 表示用エフェクト。スポーン時に生成し、竜巻の位置に追従させる。寿命が尽きるかステージ外に出たら削除   る。
 		};
 
 		class BossTornadoSystem

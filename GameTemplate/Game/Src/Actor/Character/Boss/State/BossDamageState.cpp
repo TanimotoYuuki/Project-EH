@@ -28,13 +28,11 @@ namespace nsApp
 			}
 		}
 
-
 		void BossDamageState::Update()
 		{
 			/* タイマー更新 */
 			m_timer -= g_gameTime->GetFrameDeltaTime();
 		}
-
 
 		bool BossDamageState::RequestID(uint8_t &id)
 		{

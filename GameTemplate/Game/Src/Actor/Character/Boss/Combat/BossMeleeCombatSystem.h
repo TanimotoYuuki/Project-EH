@@ -1,8 +1,8 @@
-#pragma once
+ï»¿#pragma once
 
 /**
  * @file   BossMeleeCombatSystem.h
- * @brief  ƒ{ƒX‚ÌŠš‚İ‚Â‚«EK”ö‹ßÚUŒ‚‚Æƒqƒbƒg”»’è‚ğŠÇ—‚·‚éƒNƒ‰ƒXB
+ * @brief  ãƒœã‚¹ã®å™›ã¿ã¤ããƒ»å°»å°¾è¿‘æ¥æ”»æ’ƒã¨ãƒ’ãƒƒãƒˆåˆ¤å®šã‚’ç®¡ç†ã™ã‚‹ã‚¯ãƒ©ã‚¹ã€‚
  * @date   2026/06/16
  */
 
@@ -16,51 +16,51 @@ namespace nsApp
 
 		/**
 		 * @class BossMeleeCombatSystem
-		 * @brief ‹ßÚUŒ‚‚Ì”»’è”z’uEƒ_ƒ[ƒW“K—p‚ğ Boss ‚©‚çˆÏ÷‚·‚éB
+		 * @brief è¿‘æ¥æ”»æ’ƒã®åˆ¤å®šé…ç½®ãƒ»ãƒ€ãƒ¡ãƒ¼ã‚¸é©ç”¨ã‚’ Boss ã‹ã‚‰å§”è­²ã™ã‚‹ã€‚
 		 */
 		class BossMeleeCombatSystem
 		{
 		public:
 			/**
-			 * @brief ƒqƒbƒg”»’è‚Ì‰Šú‰»BBoss::Start() ‚©‚çŒÄ‚ÔB
+			 * @brief ãƒ’ãƒƒãƒˆåˆ¤å®šã®åˆæœŸåŒ–ã€‚Boss::Start() ã‹ã‚‰å‘¼ã¶ã€‚
 			 */
 			void Init();
 
 			/**
-			 * @brief Šš‚İ‚Â‚«UŒ‚‚Ìƒqƒbƒg”»’è‚ğ”z’u‚·‚éB
-			 * @param boss UŒ‚å‘Ì‚Ìƒ{ƒXB
+			 * @brief å™›ã¿ã¤ãæ”»æ’ƒã®ãƒ’ãƒƒãƒˆåˆ¤å®šã‚’é…ç½®ã™ã‚‹ã€‚
+			 * @param boss æ”»æ’ƒä¸»ä½“ã®ãƒœã‚¹ã€‚
 			 */
 			void AttackBite(Boss* boss);
 
 			/**
-			 * @brief K”öUŒ‚‚Ìƒqƒbƒg”»’è‚ğ”z’u‚·‚éB
-			 * @param boss UŒ‚å‘Ì‚Ìƒ{ƒXB
-			 * @return UŒ‚”»’èˆÊ’ui—³Šª¶¬‚È‚Ç Facade ‘¤‚Åg—pjB
+			 * @brief å°»å°¾æ”»æ’ƒã®ãƒ’ãƒƒãƒˆåˆ¤å®šã‚’é…ç½®ã™ã‚‹ã€‚
+			 * @param boss æ”»æ’ƒä¸»ä½“ã®ãƒœã‚¹ã€‚
+			 * @return æ”»æ’ƒåˆ¤å®šä½ç½®ï¼ˆç«œå·»ç”Ÿæˆãªã© Facade å´ã§ä½¿ç”¨ï¼‰ã€‚
 			 */
 			Vector3 AttackTail(Boss* boss);
 
 			/**
-			 * @brief ‹ßÚƒqƒbƒg”»’è‚Æƒ_ƒ[ƒWE‚«”ò‚Î‚µ‚ğˆ—‚·‚éB
-			 * @param boss UŒ‚å‘Ì‚Ìƒ{ƒXB
+			 * @brief è¿‘æ¥ãƒ’ãƒƒãƒˆåˆ¤å®šã¨ãƒ€ãƒ¡ãƒ¼ã‚¸ãƒ»å¹ãé£›ã°ã—ã‚’å‡¦ç†ã™ã‚‹ã€‚
+			 * @param boss æ”»æ’ƒä¸»ä½“ã®ãƒœã‚¹ã€‚
 			 */
 			void CheckHitAndDamagePlayers(Boss* boss);
 
 			/**
-			 * @brief Šš‚İ‚Â‚«ƒqƒbƒg”»’è‚ğæ“¾‚·‚éB
-			 * @return ƒqƒbƒg”»’èQÆB
+			 * @brief å™›ã¿ã¤ããƒ’ãƒƒãƒˆåˆ¤å®šã‚’å–å¾—ã™ã‚‹ã€‚
+			 * @return ãƒ’ãƒƒãƒˆåˆ¤å®šå‚ç…§ã€‚
 			 */
 			WeaponHitDetection& GetBiteHit() { return m_BiteHit; }
 
 			/**
-			 * @brief K”öƒqƒbƒg”»’è‚ğæ“¾‚·‚éB
-			 * @return ƒqƒbƒg”»’èQÆB
+			 * @brief å°»å°¾ãƒ’ãƒƒãƒˆåˆ¤å®šã‚’å–å¾—ã™ã‚‹ã€‚
+			 * @return ãƒ’ãƒƒãƒˆåˆ¤å®šå‚ç…§ã€‚
 			 */
 			WeaponHitDetection& GetTailHit() { return m_TailHit; }
 
 
 		private:
-			WeaponHitDetection m_BiteHit; //! Šš‚İ‚Â‚«B
-			WeaponHitDetection m_TailHit; //! K”öB
+			WeaponHitDetection m_BiteHit; //! å™›ã¿ã¤ãã€‚
+			WeaponHitDetection m_TailHit; //! å°»å°¾ã€‚
 		};
 	}
 }

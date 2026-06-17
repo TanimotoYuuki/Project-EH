@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 /**
  * @file   BiteAttackStrategy.h
  * @brief  ボス噛みつき攻撃ストラテジー。
@@ -50,8 +50,7 @@ namespace nsApp
 		private:
 			float m_timer = 0.0f;		//! 攻撃開始からの経過時間。攻撃の進行管理に使用。
 			bool m_isAttack = false;	//! 攻撃中かどうか。攻撃の進行管理に使用。
-			bool m_hasPlaySound=false;
-
+			bool m_hasPlayedSound =false;	//! すでにSEを再生下かどうか。
 		};
 	}
 }

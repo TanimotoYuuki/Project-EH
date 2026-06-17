@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "ChargeAttackStrategy.h"
 #include "Src/Actor/Character/Boss/Boss.h"
 #include "Src/Actor/Character/Boss/Status/BossManager.h"
@@ -6,15 +6,15 @@
 
 namespace
 {
-    const float CHARGE_DURATION = 1.5f;   //! “Ëi‚ÌÅ‘åŒp‘±ŠÔi•bjB
-    const float CHARGE_SPEED_BASE = 150.0f; //! “Ëi‚ÌŠî–{‘¬“xB
-    const float CAMERA_EDGE_X = 140.0f; //! ƒJƒƒ‰’[‚ÌXÀ•Wi‰æ–Ê’[ƒMƒŠƒMƒŠjB
-    const float ARRIVE_THRESHOLD = 8.0f;   //! –Ú•W“’B‚Æ‚İ‚È‚·‹——£B
+    const float CHARGE_DURATION = 1.5f;   //! çªé€²ã®æœ€å¤§ç¶™ç¶šæ™‚é–“ï¼ˆç§’ï¼‰ã€‚
+    const float CHARGE_SPEED_BASE = 150.0f; //! çªé€²ã®åŸºæœ¬é€Ÿåº¦ã€‚
+    const float CAMERA_EDGE_X = 140.0f; //! ã‚«ãƒ¡ãƒ©ç«¯ã®Xåº§æ¨™ï¼ˆç”»é¢ç«¯ã‚®ãƒªã‚®ãƒªï¼‰ã€‚
+    const float ARRIVE_THRESHOLD = 8.0f;   //! ç›®æ¨™åˆ°é”ã¨ã¿ãªã™è·é›¢ã€‚
 
-    const float TURN_DURATION = 1.2f; //! •ûŒü“]Š·‚É‚©‚¯‚éŠÔi•bjB
-    const float TURN_WALK_SPEED = 5.0f; //! •ûŒü“]Š·’†‚Ì‚ä‚Á‚­‚è•à‚«‘¬“xB
+    const float TURN_DURATION = 1.2f; //! æ–¹å‘è»¢æ›ã«ã‹ã‘ã‚‹æ™‚é–“ï¼ˆç§’ï¼‰ã€‚
+    const float TURN_WALK_SPEED = 5.0f; //! æ–¹å‘è»¢æ›ä¸­ã®ã‚†ã£ãã‚Šæ­©ãé€Ÿåº¦ã€‚
 
-    std::mt19937 g_rng(std::random_device{}()); //! —”¶¬ŠíB
+    std::mt19937 g_rng(std::random_device{}()); //! ä¹±æ•°ç”Ÿæˆå™¨ã€‚
 }
 
 namespace nsApp
@@ -32,21 +32,21 @@ namespace nsApp
                 Vector3 bossPos = boss->GetPosition();
                 Vector3 targetPos = boss->GetTarget()->GetPosition();
 
-                /*ƒvƒŒƒCƒ„[‚Ö‚Ì•ûŒü‚ğŒvZB*/
+                /*ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã¸ã®æ–¹å‘ã‚’è¨ˆç®—ã€‚*/
                 Vector3 toPlayer = targetPos - bossPos;
                 toPlayer.y = 0.0f;
                 toPlayer.z = 0.0f;
                 if (toPlayer.LengthSq() > FLT_EPSILON)
                     toPlayer.Normalize();
 
-                /*50%‚ÅƒvƒŒƒCƒ„[•ûŒüA50%‚Å‹t•ûŒü‚É“ËiB*/
+                /*50%ã§ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼æ–¹å‘ã€50%ã§é€†æ–¹å‘ã«çªé€²ã€‚*/
                 std::uniform_int_distribution<int> coin(0, 1);
                 const bool chargeToward = (coin(g_rng) == 0);
                 m_chargeDir = chargeToward
                     ? toPlayer
                     : Vector3(-toPlayer.x, 0.0f, 0.0f);
 
-                /*“Ëiæ‚ğƒJƒƒ‰’[‚Éİ’èB*/
+                /*çªé€²å…ˆã‚’ã‚«ãƒ¡ãƒ©ç«¯ã«è¨­å®šã€‚*/
                 const float edgeX = (m_chargeDir.x > 0.0f) ? CAMERA_EDGE_X : -CAMERA_EDGE_X;
                 m_targetPosition = Vector3(edgeX, bossPos.y, 0.0f);
 
@@ -55,7 +55,7 @@ namespace nsApp
                 boss->LockRotation(true);
             }
 
-            /*“Ëi‘¬“x‚ğİ’èiƒ_ƒbƒVƒ…”{—¦‚ğ“K—pjB*/
+            /*çªé€²é€Ÿåº¦ã‚’è¨­å®šï¼ˆãƒ€ãƒƒã‚·ãƒ¥å€ç‡ã‚’é©ç”¨ï¼‰ã€‚*/
             const auto& params = nsAI::BossTypeManager::GetBossTypeParameters(boss->GetBossType());
             m_chargeSpeed = CHARGE_SPEED_BASE * params.m_dashSpeedMultiplier;
 
@@ -83,7 +83,7 @@ namespace nsApp
 
                 if (!arrived && !timedOut)
                 {
-                    /*•¨—‚ğ–³‹‚µ‚ÄXÀ•W‚ğ’¼ÚˆÚ“®‚·‚éi“Ëi‚Í‚·‚×‚Ä‚ğ‚·‚è”²‚¯‚éjB*/
+                    /*ç‰©ç†ã‚’ç„¡è¦–ã—ã¦Xåº§æ¨™ã‚’ç›´æ¥ç§»å‹•ã™ã‚‹ï¼ˆçªé€²ã¯ã™ã¹ã¦ã‚’ã™ã‚ŠæŠœã‘ã‚‹ï¼‰ã€‚*/
                     dir.Normalize();
                     boss->GetPosition().x += dir.x * m_chargeSpeed * dt;
                     boss->GetPosition().z = 0.0f;
@@ -92,7 +92,7 @@ namespace nsApp
                 }
                 else
                 {
-                    /*“ËiI—¹ ¨ •ûŒü“]Š·ƒtƒF[ƒY‚ÖB*/
+                    /*çªé€²çµ‚äº† â†’ æ–¹å‘è»¢æ›ãƒ•ã‚§ãƒ¼ã‚ºã¸ã€‚*/
                     m_phase = Phase::TurnAround;
                     boss->GetBiteHit().Disable();
                     boss->PlayAnimation(nsActor::BossAnimationID::Walk);
@@ -100,12 +100,12 @@ namespace nsApp
             }
             else
             {
-                /*•ûŒü“]Š·ƒtƒF[ƒYFWalk ƒAƒjƒ‚µ‚È‚ª‚ç‹t•ûŒüiƒvƒŒƒCƒ„[‘¤j‚ğŒü‚­B*/
+                /*æ–¹å‘è»¢æ›ãƒ•ã‚§ãƒ¼ã‚ºï¼šWalk ã‚¢ãƒ‹ãƒ¡ã—ãªãŒã‚‰é€†æ–¹å‘ï¼ˆãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼å´ï¼‰ã‚’å‘ãã€‚*/
                 m_turnTimer -= dt;
 
                 const float tClamped = max(0.0f, min(1.0f, 1.0f - (m_turnTimer / TURN_DURATION)));
 
-                /*“Ëi•ûŒü ¨ ‹t•ûŒü ‚ÖüŒ`•âŠÔ‚µ‚ÄŒü‚«‚ğXVB*/
+                /*çªé€²æ–¹å‘ â†’ é€†æ–¹å‘ ã¸ç·šå½¢è£œé–“ã—ã¦å‘ãã‚’æ›´æ–°ã€‚*/
                 Vector3 endDir = Vector3(-m_chargeDir.x, 0.0f, 0.0f);
                 Vector3 newForward;
                 newForward.x = m_chargeDir.x + (endDir.x - m_chargeDir.x) * tClamped;
@@ -115,7 +115,7 @@ namespace nsApp
                     newForward.Normalize();
                 boss->SetForward(newForward);
 
-                /*‚ä‚Á‚­‚è‹t•ûŒü‚Ö•à‚­B*/
+                /*ã‚†ã£ãã‚Šé€†æ–¹å‘ã¸æ­©ãã€‚*/
                 Vector3 moveStep = endDir * TURN_WALK_SPEED;
                 moveStep.z = 0.0f;
                 boss->GetController().Execute(moveStep, dt);

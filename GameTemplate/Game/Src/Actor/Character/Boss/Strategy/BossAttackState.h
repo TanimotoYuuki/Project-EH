@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 /**
  * @file   BossAttackState.h
  * @brief  ボス攻撃ステート。距離と AI 設定に応じて攻撃ストラテジーを選択する。
