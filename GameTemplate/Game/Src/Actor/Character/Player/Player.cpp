@@ -131,6 +131,25 @@ namespace nsApp
 
 		void Player::Update()
 		{
+			/* ローディングの描画用の表示モード。*/
+			if (m_isLoadingPreview)
+			{
+				/*
+					Loading中は入力・NPC思考・ステート更新を行わず、
+					モデルとアニメーションだけ更新する。
+				*/
+				if (!m_isLoadingPreviewRunStarted)
+				{
+					PlayBasicAnimation(CharacterBasicAnimationList::Run);
+					m_isLoadingPreviewRunStarted = true;
+				}
+				m_model.SettRotation(m_angle);
+				m_model.SetPosition(m_currentPosition);
+				m_model.Update();
+				m_model.UpdateWorldOnly();
+				return;
+			}
+
 			/* ヒットストップタイマー。*/
 			UpdateHitStioTImer();
 
@@ -156,9 +175,8 @@ namespace nsApp
 					m_playerInput.SetInputEnable(true);
 			}
 			else/*選択シーンでは操作を受け付けないようにする。*/
-			{
 				m_playerInput.SetInputEnable(false);
-			}
+
 
 			/* NPCの場合、仮想のコントローラーによる判定を行う。*/
 			if (m_brain != nullptr)
@@ -231,6 +249,7 @@ namespace nsApp
 			m_gravity = 30.0f;
 			m_maxFallVelocity = -1200.0f;
 		}
+
 
 		void Player::InitDummyModel()
 		{
@@ -358,6 +377,36 @@ namespace nsApp
 		}
 
 
+		void Player::SetLoadingPreviewTransform(const Vector3& position, float angleY, const Vector3& scale)
+		{
+			/* ローディング表示用の座標を同期する。*/
+			m_currentPosition = position;
+
+
+			/* ローディング表示用の回転を同期する。*/
+			m_angle = Quaternion::Identity;
+			m_angle.SetRotationDegY(angleY);
+
+			/* 大きさを同期する。*/
+			m_model.SetCharacterScale(scale);
+			m_model.SetWeaponScale(scale);
+
+			/*
+				ローディング表示では本編用の姿勢補正を使わない。
+			*/
+			m_model.SettRotation(m_angle);
+			m_model.SetPosition(m_currentPosition);
+
+			/*
+				LoadingRandomRunnerModel側から座標を更新した直後に、
+				モデルのワールド行列も即反映する。
+				これをしないと、Player::Updateの後に座標だけ変わって、
+				描画に使われる行列が前フレームのままになる。
+			*/
+			m_model.UpdateWorldOnly();
+		}
+
+
 		void Player::PlayBasicAnimation(CharacterBasicAnimationList state)
 		{
 			int animIndex = m_playerAnimation.GetBasicAnimationIndex(state);
@@ -432,5 +481,29 @@ namespace nsApp
 			/* 助けられ状態。*/
 			m_stateFactory[PlayerStateID::enGetUp] = []() { return new nsState::PlayerGetUpState(); };
 		}
-	}
+
+
+		void Player::ForceBlowAway(float knockbackVelocity, float dirX)
+		{
+			if (m_currentStateID == static_cast<uint8_t>(PlayerStateID::enDeath))
+				return;
+
+			auto* hitState = static_cast<nsState::PlayerHitState*>(
+				m_stateFactory[PlayerStateID::enHit]()
+				);
+			hitState->SetKnockBackVelocity(knockbackVelocity);
+			hitState->SetKnockBackSpeed(Vector3(dirX * 100.0f, 50.0f, 0.0f));
+			hitState->SetHitTimer(90);
+			hitState->SetGetUpFlag(false);  /* 移動させる。*/
+			m_currentStateID = static_cast<uint8_t>(PlayerStateID::enHit);
+			m_stateMachine->ChangeState(hitState);
+		}
+
+		void Player::ForceGetUp()
+		{
+			if (m_currentStateID == static_cast<uint8_t>(PlayerStateID::enDeath))
+				return;
+			m_currentStateID = static_cast<uint8_t>(PlayerStateID::enIdle);
+			m_stateMachine->ChangeState(m_stateFactory[PlayerStateID::enIdle]());
+		}	}
 }

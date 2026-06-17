@@ -1,7 +1,7 @@
 #pragma once
 /**
  * @file   PlayerReBoneState.h
- * @brief  ƒvƒŒƒCƒ„[‚ÌƒŠƒ{[ƒ“ó‘ÔƒNƒ‰ƒX
+ * @brief  ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Ìƒï¿½ï¿½{ï¿½[ï¿½ï¿½ï¿½ï¿½ÔƒNï¿½ï¿½ï¿½X
  * @author YamaguchiHayato
  * @date   202/03/24
  */
@@ -16,13 +16,13 @@ namespace nsApp
 		class PlayerReBoneState : public IState<nsActor::Actor>
 		{
 		public:
-			/* ƒRƒ“ƒXƒgƒ‰ƒNƒ^‚ÆƒfƒXƒgƒ‰ƒNƒ^B*/
+			/* ï¿½Rï¿½ï¿½ï¿½Xï¿½gï¿½ï¿½ï¿½Nï¿½^ï¿½Æƒfï¿½Xï¿½gï¿½ï¿½ï¿½Nï¿½^ï¿½B*/
 			PlayerReBoneState() = default;
 			virtual ~PlayerReBoneState() = default;
 
 
 		public:
-			/* ƒ‰ƒCƒtƒTƒCƒNƒ‹B*/
+			/* ï¿½ï¿½ï¿½Cï¿½tï¿½Tï¿½Cï¿½Nï¿½ï¿½ï¿½B*/
 			void Enter() override;
 			void Update() override;
 			void Exit() override;
@@ -31,8 +31,8 @@ namespace nsApp
 
 		public:
 			/**
-			 * @brief •‚¯‚é‘ÎÛ‚ğİ’è‚·‚éB
-			 * @param target •‚¯‚é‘ÎÛ‚ÌƒvƒŒƒCƒ„[
+			 * @brief ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÎÛ‚ï¿½İ’è‚·ï¿½ï¿½B
+			 * @param target ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÎÛ‚Ìƒvï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[
 			 */
 			inline void SetTargetCharacter(nsActor::Player* target)
 			{
@@ -42,41 +42,41 @@ namespace nsApp
 
 		private:
 			/**
-			 * @brief ‹~•‘ÎÛ‚ğ‰ğŒˆ‚·‚éB
+			 * @brief ï¿½~ï¿½ï¿½ï¿½ÎÛ‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
 			 */
 			void ResolveTargetCharacter();
 
 			/**
-			 * @brief ‹~•‘ÎÛ‚Æ‚µ‚Ä—LŒø‚©”»’è‚·‚éB
-			 * @return —LŒø‚È‹~•‘ÎÛ‚È‚çtrueB
+			 * @brief ï¿½~ï¿½ï¿½ï¿½ÎÛ‚Æ‚ï¿½ï¿½Ä—Lï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½è‚·ï¿½ï¿½B
+			 * @return ï¿½Lï¿½ï¿½ï¿½È‹~ï¿½ï¿½ï¿½ÎÛ‚È‚ï¿½trueï¿½B
 			 */
 			bool IsValidTargetCharacter() const;
 
 			/**
-			 * @brief ‹~•is‚ğŠJn‚·‚éB
+			 * @brief ï¿½~ï¿½ï¿½ï¿½iï¿½sï¿½ï¿½ï¿½Jï¿½nï¿½ï¿½ï¿½ï¿½B
 			 */
 			void BeginHelpProgress();
 
 			/**
-			 * @brief ‹~•Š®—¹Œã‚Ìˆ—B
+			 * @brief ï¿½~ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ìï¿½ï¿½ï¿½ï¿½B
 			 */
 			void CompleteHelp();
 
 			/**
-			 * @brief ‘Ò‹@ó‘Ô‚Ö–ß‚éB
+			 * @brief ï¿½Ò‹@ï¿½ï¿½Ô‚Ö–ß‚ï¿½B
 			 */
 			void ChangeIdleState();
 
 
 		private:
-			nsActor::Player* m_player = nullptr;       //! ƒvƒŒƒCƒ„[‚Ìƒ|ƒCƒ“ƒ^B
-			nsActor::Player* m_targetPlayer = nullptr; //! •‚¯‚é‘ÎÛ‚ÌƒvƒŒƒCƒ„[‚Ìƒ|ƒCƒ“ƒ^B
+			nsActor::Player* m_player = nullptr;       //! ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Ìƒ|ï¿½Cï¿½ï¿½ï¿½^ï¿½B
+			nsActor::Player* m_targetPlayer = nullptr; //! ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÎÛ‚Ìƒvï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Ìƒ|ï¿½Cï¿½ï¿½ï¿½^ï¿½B
 
 
 		private:
-			bool m_isHelpStarted = false;              //! ‹~•is‚ğŠJn‚µ‚½‚©B
-			bool m_isHelpCompleted = false;            //! ‹~•Š®—¹Ï‚İ‚©B
-			bool m_shouldReturnIdle = false;           //! Ÿ‚ÌUpdate‚Å‘Ò‹@ó‘Ô‚Ö–ß‚·‚©B
+			bool m_isHelpStarted = false;              //! ï¿½~ï¿½ï¿½ï¿½iï¿½sï¿½ï¿½ï¿½Jï¿½nï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
+			bool m_isHelpCompleted = false;            //! ï¿½~ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï‚İ‚ï¿½ï¿½B
+			bool m_shouldReturnIdle = false;           //! ï¿½ï¿½ï¿½ï¿½Updateï¿½Å‘Ò‹@ï¿½ï¿½Ô‚Ö–ß‚ï¿½ï¿½ï¿½ï¿½B
 		};
 	}
 }

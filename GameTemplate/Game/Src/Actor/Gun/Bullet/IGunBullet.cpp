@@ -1,13 +1,13 @@
 #include "stdafx.h"
 #include "IGunBullet.h"
-#include "Boss.h"
+#include "Src/Actor/Character/Boss/Boss.h"
 #include "Src/Actor/Character/Common/Damage/DamageProcessor.h"
 
 namespace
 {
-	const auto BOSS_CENTER_OFFSET_Y = 50.0f;            //! ƒ{ƒX‚Ì’†S‚ğ‘_‚¤‚½‚ß‚ÌY²ƒIƒtƒZƒbƒg
-	const auto BOSS_HIT_DISTANCE_THRESHOLD = 150.0f;    //! ü•ª”»’è‚Åƒqƒbƒg‚Æ‚·‚é‹–—e‹——£
-	const auto DAMAGE_TEXT_OFFSET_Y = 120.0f;			//! ƒ_ƒ[ƒWƒeƒLƒXƒg‚Ì•\¦ˆÊ’u‚ğƒ{ƒX‚Ì’†S‚©‚ç‚Ç‚ê‚¾‚¯ã‚É‚·‚é‚©‚ÌƒIƒtƒZƒbƒg
+	const auto BOSS_CENTER_OFFSET_Y = 50.0f;            //! ï¿½{ï¿½Xï¿½Ì’ï¿½ï¿½Sï¿½ï¿½_ï¿½ï¿½ï¿½ï¿½ï¿½ß‚ï¿½Yï¿½ï¿½ï¿½Iï¿½tï¿½Zï¿½bï¿½g
+	const auto BOSS_HIT_DISTANCE_THRESHOLD = 150.0f;    //! ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Åƒqï¿½bï¿½gï¿½Æ‚ï¿½ï¿½é‹–ï¿½eï¿½ï¿½ï¿½ï¿½
+	const auto DAMAGE_TEXT_OFFSET_Y = 120.0f;			//! ï¿½_ï¿½ï¿½ï¿½[ï¿½Wï¿½eï¿½Lï¿½Xï¿½gï¿½Ì•\ï¿½ï¿½ï¿½Ê’uï¿½ï¿½ï¿½{ï¿½Xï¿½Ì’ï¿½ï¿½Sï¿½ï¿½ï¿½ï¿½Ç‚ê‚¾ï¿½ï¿½ï¿½ï¿½É‚ï¿½ï¿½é‚©ï¿½ÌƒIï¿½tï¿½Zï¿½bï¿½g
 }
 
 namespace nsApp
@@ -16,7 +16,7 @@ namespace nsApp
 	{
 		IGunBullet::~IGunBullet()
 		{
-			/* íœ”»’èB*/
+			/* ï¿½íœï¿½ï¿½ï¿½ï¿½B*/
 			if (m_bulletCollider != nullptr)
 				DeleteGO(m_bulletCollider);
 		}
@@ -24,9 +24,9 @@ namespace nsApp
 
 		void IGunBullet::Initialize(const BulletParameter& param, const Vector3& spawnPosition, const Vector3& forwardDirection)
 		{
-			/* “ñdg—p‚ğ–h‚®‚½‚ß‰Šú‰»B*/
+			/* ï¿½ï¿½dï¿½gï¿½pï¿½ï¿½hï¿½ï¿½ï¿½ï¿½ï¿½ßï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B*/
 			m_isInUse = true;
-			/* ƒpƒ‰ƒ[ƒ^‚ÌƒZƒbƒgƒAƒbƒvB*/
+			/* ï¿½pï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½^ï¿½ÌƒZï¿½bï¿½gï¿½Aï¿½bï¿½vï¿½B*/
 			m_param = param;
 			m_position = spawnPosition;
 			m_previousPosition = spawnPosition;
@@ -34,22 +34,22 @@ namespace nsApp
 			m_speedPerSecond = param.speedPerSecond;
 			m_velocity = forwardDirection * m_speedPerSecond;
 
-			/* ’eŠÛ‚ÌŒü‚«‚ğŒvZB*/
+			/* ï¿½eï¿½Û‚ÌŒï¿½ï¿½ï¿½ï¿½ï¿½ï¿½vï¿½Zï¿½B*/
 			m_direction.SetRotation(Vector3::Front, forwardDirection);
 			m_angle = m_direction * param.angle;
 
-			/* ƒ‚ƒfƒ‹ƒŒƒ“ƒ_ƒ‰[‚Ì‰Šú‰»B*/
+			/* ï¿½ï¿½ï¿½fï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½_ï¿½ï¿½ï¿½[ï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B*/
 			if (!m_modelRender)
 				m_modelRender = std::make_unique<ModelRender>();
 
-			/* ƒ‚ƒfƒ‹‚Ì‰Šú‰»‚ÆƒXƒP[ƒŠƒ“ƒOB*/
+			/* ï¿½ï¿½ï¿½fï¿½ï¿½ï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÆƒXï¿½Pï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½B*/
 			m_modelRender->Init(param.modelName.c_str());
 			m_modelRender->SetScale(param.scale);
 			m_modelRender->SetRotation(m_angle);
 			m_modelRender->SetPosition(m_position);
 			m_modelRender->Update();
 
-			/* “–‚½‚è”»’èƒIƒuƒWƒFƒNƒg‚Ì‰Šú‰»B*/
+			/* ï¿½ï¿½ï¿½ï¿½ï¿½è”»ï¿½ï¿½Iï¿½uï¿½Wï¿½Fï¿½Nï¿½gï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B*/
 			if (m_bulletCollider == nullptr)
 			{
 				m_bulletCollider = NewGO<nsK2Engine::CollisionObject>(0, "BulletCollision");
@@ -59,14 +59,14 @@ namespace nsApp
 			else
 				m_bulletCollider->SetPosition(m_position);
 
-			/* ƒ{ƒXƒNƒ‰ƒX‚ğ’TõB*/
+			/* ï¿½{ï¿½Xï¿½Nï¿½ï¿½ï¿½Xï¿½ï¿½Tï¿½ï¿½ï¿½B*/
 			m_boss = FindGO<Boss>("boss");
 		}
 
 
 		void IGunBullet::Update()
 		{
-			/* –¢g—p‚È‚çˆ—‚ğƒXƒLƒbƒvB*/
+			/* ï¿½ï¿½ï¿½gï¿½pï¿½È‚çˆï¿½ï¿½ï¿½ï¿½ï¿½Xï¿½Lï¿½bï¿½vï¿½B*/
 			if (!m_isInUse)
 				return;
 
@@ -94,7 +94,7 @@ namespace nsApp
 
 			if (m_currentLifeTime <= 0.0f)
 			{
-				/* íœB*/
+				/* ï¿½íœï¿½B*/
 				Deactivate();
 				return;
 			}

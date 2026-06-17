@@ -110,7 +110,12 @@ namespace nsApp
 			/* すり抜け計算。*/
 			void ComputeSlipThrough();
 
-			/* クランプ制限。*/
+			/**
+			 * @brief 戦闘エリア制限を考慮して移動量を制限する処理。
+			 * @param moveVector 移動したい量のベクトル。
+			 * @param frameTime フレーム時間。
+			 * @return 制限された移動量のベクトル。
+			 */
 			Vector3 ClampBattleAreaMoveVector(const Vector3& moveVector, float frameTime) const;
 
 
@@ -173,6 +178,17 @@ namespace nsApp
 			 */
 			void CheckDeth();
 
+			/**
+			 * @brief ボスの攻撃を受けてノックバックする。
+			 * @param knockbackVelocity 吹っ飛びの初速。
+			 * @param dirX             吹っ飛ぶX方向（+1.0fで右、-1.0fで左）。
+			 */
+			void ForceBlowAway(float knockbackVelocity, float dirX = -1.0f);
+
+			/**
+			 * @brief 外部から強制的に起き上がり状態へ遷移させる。
+			 */
+			void ForceGetUp();
 
 			/* セッター。*/
 		public:
@@ -200,9 +216,11 @@ namespace nsApp
 			 */
 			inline void SetAttackDamageRate(float damageRate)
 			{
+				/* ダメージ補正率は0.0f未満にならないようにする。*/
 				if (damageRate < 0.0f)
 					damageRate = 0.0f;
 
+				/* キャラクターステータスの攻撃力にダメージ補正率を掛ける。*/
 				m_attackDamageRate = damageRate;
 			}
 
@@ -281,6 +299,42 @@ namespace nsApp
 			{
 				m_weaponAngle = rot;
 				m_model.SetWeaponAngle(m_weaponAngle);
+			}
+
+			/**
+			 * @brief モデルの大きさを設定する。
+			 * @param scale 設定する大きさ。
+			 */
+			inline void SetScale(const Vector3& scale)
+			{
+				m_model.SetCharacterScale(scale);
+				m_model.SetWeaponScale(scale);
+			}
+
+			/**
+			 * @brief ローディングプレビュー用の座標と角度を設定する。
+			 * @param position 設定する座標。
+			 * @param angleY   設定するY軸の角度。
+			 * @param scale    設定する大きさ。
+			 */
+			void SetLoadingPreviewTransform(const Vector3& position, float angleY, const Vector3& scale);
+
+			/**
+			 * @brief ローディングプレビューの有効化。
+			 */
+			inline void EnableLoadingPreview()
+			{
+				m_isLoadingPreview = true;
+				m_isLoadingPreviewRunStarted = false;
+			}
+
+			/**
+			 * @brief ローディングプレビューの無効化。
+			 */
+			void DisableLoadingPreview()
+			{
+				m_isLoadingPreview = false;
+				m_isLoadingPreviewRunStarted = false;
 			}
 
 
@@ -467,8 +521,9 @@ namespace nsApp
 			std::unordered_map<PlayerStateID, std::function<nsState::IState<nsActor::Actor>* ()>> m_stateFactory;  //! ステートの種類を格納。
 			uint8_t m_currentStateID = 0;                                                                          //! 現在のステートID。
 
-
-			/* 必要なステートを登録。*/
+			/**
+			 * @brief ステートを登録する関数。
+			 */
 			virtual void RegisterState();
 
 
@@ -492,7 +547,6 @@ namespace nsApp
 
 			Matrix m_subWeaponHandMatrix;                                                                          //! サブ武器を装備させるときの左手のボーンの行列を管理する変数。
 
-
 			int animIndex = 0;																				       //! アニメーションのインデックスを管理する変数。
 			int m_inputWaitTimer = 0;																			   //! 入力を受け付けるまでの時間。															   
 			int m_chargeLevel = 1;                                                                                 //! チャージレベル。
@@ -508,6 +562,8 @@ namespace nsApp
 
 			bool m_isIgnorePlayerSet = false;																	   //! プレイヤーのセットを無視するかどうかのフラグ。
 			bool m_isDown = false;                                                                                 //! プレイヤー専用のダウン状態。IGameObject側の死亡/削除フラグとは分ける。
+			bool m_isLoadingPreview = false;																	   //! ローディング画面用表示モードかどうか。
+			bool m_isLoadingPreviewRunStarted = false;															   //! ローディング用Runアニメーションを開始したか。
 		};
 	}
 }

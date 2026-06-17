@@ -1,15 +1,15 @@
 #pragma once
 /**
  * @file   PlayerAttackBaseState.h
- * @brief  ƒvƒŒƒCƒ„[‚ÌUŒ‚ó‘Ô‚ÌŠî’êƒNƒ‰ƒXB
+ * @brief  ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ÌUï¿½ï¿½ï¿½ï¿½Ô‚ÌŠï¿½ï¿½Nï¿½ï¿½ï¿½Xï¿½B
  * @author Yamaguchi Hayato
- * @date   2026/05/14 ÅIXV“úB
+ * @date   2026/05/14 ï¿½ÅIï¿½Xï¿½Vï¿½ï¿½ï¿½B
  */
 
 #include "Src/Actor/Character/Common/IState.h"
 #include "Src/Actor/Character/Player/Player.h"
 #include "Src/Actor/Character/Common/Damage/DamageProcessor.h"
-#include "Boss.h"
+#include "Src/Actor/Character/Boss/Boss.h"
 #include "Src/Actor/Magic/MagicProjectotile.h"
 #include "Src/Actor/Magic/Factory/MagicFactory.h"
 #include "Src/Actor/Character/Player/Component/ComboRouteTable.h"
@@ -17,7 +17,7 @@
 #include "Src/Actor/Character/Status/AttackParameterTable.h"
 
  /** @def
-  * ƒvƒŒƒCƒ„[‚Ì‘JˆÚó‘Ô‚ğ PLAYER_STATE_ID‚Æ‚¢‚¤–¼‘O‚Å’è‹`‚·‚éƒ}ƒNƒB
+  * ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Ì‘Jï¿½Úï¿½Ô‚ï¿½ PLAYER_STATE_IDï¿½Æ‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½Å’ï¿½`ï¿½ï¿½ï¿½ï¿½}ï¿½Nï¿½ï¿½ï¿½B
   */
 #define PLAYER_STATE_ID nsActor::PlayerStateID
 
@@ -29,73 +29,73 @@ namespace nsApp
 		class PlayerAttackBaseState : public IState<nsActor::Actor> 
 		{
 		public:
-			/* ƒRƒ“ƒXƒgƒ‰ƒNƒ^‚ÆƒfƒXƒgƒ‰ƒNƒ^B*/
+			/* ï¿½Rï¿½ï¿½ï¿½Xï¿½gï¿½ï¿½ï¿½Nï¿½^ï¿½Æƒfï¿½Xï¿½gï¿½ï¿½ï¿½Nï¿½^ï¿½B*/
 			PlayerAttackBaseState() = default;
 			virtual ~PlayerAttackBaseState() = default;
 
 
 		public:
-			/* ƒ‰ƒCƒtƒTƒCƒNƒ‹B*/
-			/* ‰Šú‰»ˆ—B*/
+			/* ï¿½ï¿½ï¿½Cï¿½tï¿½Tï¿½Cï¿½Nï¿½ï¿½ï¿½B*/
+			/* ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B*/
 			void Enter() override final;
-			/* –ˆƒtƒŒ[ƒ€XV‚·‚éˆ—B*/
+			/* ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½Xï¿½Vï¿½ï¿½ï¿½éˆï¿½ï¿½ï¿½B*/
 			void Update() override final;
-			/* •`‰æˆ—B*/
+			/* ï¿½`ï¿½æˆï¿½ï¿½ï¿½B*/
 			void Exit() override final;
-			/* ‘JˆÚ—v‹B*/
+			/* ï¿½Jï¿½Ú—vï¿½ï¿½ï¿½B*/
 			bool RequestID(uint8_t& id) override
 			{
 				return OnRequestAttackID(id);
 			}
 
 
-			/* TemplateMethodB*/
+			/* TemplateMethodï¿½B*/
 		protected:
 			/**
-			 * @brief UŒ‚ƒAƒjƒ[ƒVƒ‡ƒ“‚ÌÄ¶‚âUŒ‚ƒ^ƒCƒv‚Ìİ’èB
+			 * @brief ï¿½Uï¿½ï¿½ï¿½Aï¿½jï¿½ï¿½ï¿½[ï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½ÌÄï¿½ï¿½ï¿½Uï¿½ï¿½ï¿½^ï¿½Cï¿½vï¿½Ìİ’ï¿½B
 			 */
 			virtual void PlayAttackAnimation() {};
 
 			/*
-			 * @brief ƒXƒe[ƒgŠJn‚És‚¤ŒÅ—L‚Ìˆ—B
+			 * @brief ï¿½Xï¿½eï¿½[ï¿½gï¿½Jï¿½nï¿½ï¿½ï¿½Ésï¿½ï¿½ï¿½Å—Lï¿½Ìï¿½ï¿½ï¿½ï¿½B
 			 */
 			virtual void OnEnterAttack() {};
 
 			/**
-			 * @brief Enter‚Ì‹¤’Ê‚Ì‰Šú‰»ˆ—B
+			 * @brief Enterï¿½ï¿½ï¿½Ì‹ï¿½ï¿½Ê‚Ìï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
 			 */
 			void OnCommonInitializeToEnter()
 			{
-				/* “–‚½‚è”»’èB*/
+				/* ï¿½ï¿½ï¿½ï¿½ï¿½è”»ï¿½ï¿½B*/
 				m_isHit = false;
-				/* “ü—Í—\–ñB*/
+				/* ï¿½ï¿½ï¿½Í—\ï¿½ï¿½B*/
 				m_inputRequests.clear();
-				/* UŒ‚ƒ^ƒCƒ}[B*/
+				/* ï¿½Uï¿½ï¿½ï¿½^ï¿½Cï¿½}ï¿½[ï¿½B*/
 				SetAttackTimer(0);
-				/* ˜A‘ÅƒJƒEƒ“ƒgB*/
+				/* ï¿½Aï¿½ÅƒJï¿½Eï¿½ï¿½ï¿½gï¿½B*/
 				m_rushCount = 0;
-				/* ƒ_ƒ[ƒW”B*/
+				/* ï¿½_ï¿½ï¿½ï¿½[ï¿½Wï¿½ï¿½ï¿½B*/
 				m_finalDamage = 0;
 			}
 
 			/**
-			 * @brief –ˆƒtƒŒ[ƒ€XV‚És‚¤ŒÅ—L‚Ìˆ—B
+			 * @brief ï¿½ï¿½ï¿½tï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½Xï¿½Vï¿½ï¿½ï¿½Ésï¿½ï¿½ï¿½Å—Lï¿½Ìï¿½ï¿½ï¿½ï¿½B
 			 */
 			virtual bool OnUpdateAttack() { return false; };
 
 			/**
-			 * @brief ƒXƒe[ƒgI—¹‚És‚¤ŒÅ—L‚Ìˆ—B
+			 * @brief ï¿½Xï¿½eï¿½[ï¿½gï¿½Iï¿½ï¿½ï¿½ï¿½ï¿½Ésï¿½ï¿½ï¿½Å—Lï¿½Ìï¿½ï¿½ï¿½ï¿½B
 			 */
 			virtual void OnExitAttack() {};
 
 			/**
-			 * @brief ‚»‚Ì‘¼‚Ìˆ—‚ğs‚¤‚½‚ß‚ÌŠÖ”B
-			 * @detail “–‚½‚è”»’è‚Ì—L–³/’eŠÛ/–‚–@‚Ì¶¬ƒ^ƒCƒ~ƒ“ƒO‚ğ§ŒäB
+			 * @brief ï¿½ï¿½ï¿½Ì‘ï¿½ï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ß‚ÌŠÖï¿½ï¿½B
+			 * @detail ï¿½ï¿½ï¿½ï¿½ï¿½è”»ï¿½ï¿½Ì—Lï¿½ï¿½/ï¿½eï¿½ï¿½/ï¿½ï¿½ï¿½@ï¿½Ìï¿½ï¿½ï¿½ï¿½^ï¿½Cï¿½~ï¿½ï¿½ï¿½Oï¿½ğ§Œï¿½B
 			 */
 			virtual void OnAttackTick() {};
 
 			/**
-			 * @brief UŒ‚‚Ì‘JˆÚ—v‹‚ğs‚¤‚½‚ß‚ÌŠÖ”B
+			 * @brief ï¿½Uï¿½ï¿½ï¿½Ì‘Jï¿½Ú—vï¿½ï¿½ï¿½ï¿½ï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ß‚ÌŠÖï¿½ï¿½B
 			 */
 			virtual bool OnRequestAttackID(uint8_t& id)
 			{
@@ -103,11 +103,11 @@ namespace nsApp
 			}
 
 
-			/* ƒZƒbƒ^[B*/
+			/* ï¿½Zï¿½bï¿½^ï¿½[ï¿½B*/
 		public:
 			/**
-			 * @brief UŒ‚‚ÌŠÔ‚ğƒZƒbƒgB
-			 * @param timer UŒ‚‚ÌŠÔ‚ğŠÇ—‚·‚éƒ^ƒCƒ}[‚Ì’lB
+			 * @brief ï¿½Uï¿½ï¿½ï¿½Ìï¿½ï¿½Ô‚ï¿½ï¿½Zï¿½bï¿½gï¿½B
+			 * @param timer ï¿½Uï¿½ï¿½ï¿½Ìï¿½ï¿½Ô‚ï¿½ï¿½Ç—ï¿½ï¿½ï¿½ï¿½ï¿½^ï¿½Cï¿½}ï¿½[ï¿½Ì’lï¿½B
 			 */
 			inline void SetAttackTimer(int timer)
 			{
@@ -116,34 +116,34 @@ namespace nsApp
 
 
 			/**
-			 * @brief ¶¬‚·‚é’eŠÛ‚ğ’Ê’m‚·‚éB
-			 * @param request ’eŠÛ‚Ì¶¬‚É•K—v‚Èî•ñ‚ğŠi”[‚·‚é\‘¢‘ÌB
-			 * @param type ’Ê’m‚·‚é’eŠÛ‚Ìí—ŞB
-			 * @detail ‚»‚ê‚¼‚ê‚ÌUŒ‚ŠÖ”‚Å‚Ì‹¤’Ê€‚Ìˆ—‚ğŠÖ”‰»B
+			 * @brief ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½eï¿½Û‚ï¿½Ê’mï¿½ï¿½ï¿½ï¿½B
+			 * @param request ï¿½eï¿½Û‚Ìï¿½ï¿½ï¿½ï¿½É•Kï¿½vï¿½Èï¿½ï¿½ï¿½ï¿½iï¿½[ï¿½ï¿½ï¿½ï¿½\ï¿½ï¿½ï¿½ÌB
+			 * @param type ï¿½Ê’mï¿½ï¿½ï¿½ï¿½eï¿½Û‚Ìï¿½ŞB
+			 * @detail ï¿½ï¿½ï¿½ê‚¼ï¿½ï¿½ÌUï¿½ï¿½ï¿½Öï¿½ï¿½Å‚Ì‹ï¿½ï¿½Êï¿½ï¿½Ìï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öï¿½ï¿½ï¿½ï¿½B
 			 */
 			void ConstructAndTransmitBulletRequest(BulletType type)
 			{
-				/* ’eŠÛ‚Ìí—Ş‚ğŠi”[‚·‚éB*/
+				/* ï¿½eï¿½Û‚Ìï¿½Ş‚ï¿½ï¿½iï¿½[ï¿½ï¿½ï¿½ï¿½B*/
 				BulletFireRequest request;
 
-				/* ’Ê’m‚·‚é’eŠÛ‚Ìí—Ş‚ğİ’èB*/
+				/* ï¿½Ê’mï¿½ï¿½ï¿½ï¿½eï¿½Û‚Ìï¿½Ş‚ï¿½İ’ï¿½B*/
 				request.kind = type;
 
-				/* ’eŠÛ‚ğ¶¬‚·‚éÀ•WB*/
+				/* ï¿½eï¿½Û‚ğ¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Wï¿½B*/
 				request.basePosition = m_spawnPosition;
 
-				/* ’eŠÛ‚Ì”­Ë•ûŒüB*/
+				/* ï¿½eï¿½Û‚Ì”ï¿½ï¿½Ë•ï¿½ï¿½ï¿½ï¿½B*/
 				request.direction = m_forwardDirection;
 
-				/* GunShooterƒNƒ‰ƒX‚É”­Ëˆ—‚ğˆË—ŠB*/
+				/* GunShooterï¿½Nï¿½ï¿½ï¿½Xï¿½É”ï¿½ï¿½Ëï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë—ï¿½ï¿½B*/
 				m_player->GetGunShooter().Fire(request);
 			}
 
 			/**
-			 * @brief –‚–@‚Ì¶¬
-			 * @param type ¶¬‚·‚é–‚–@‚Ìí—ŞB
-			 * @param target –‚–@‚Ìƒ^[ƒQƒbƒg(ƒfƒtƒHƒ‹ƒg’l‚Å‰Šú‰»Ï‚İ)B
-			 * @detail ƒvƒŒƒCƒ„[‚ÌÀ•W‚ÆŒü‚«‚ğ©“®æ“¾‚µ‚ÄƒZƒbƒg‚·‚éƒo[ƒWƒ‡ƒ“B
+			 * @brief ï¿½ï¿½ï¿½@ï¿½Ìï¿½ï¿½ï¿½
+			 * @param type ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½é–‚ï¿½@ï¿½Ìï¿½ŞB
+			 * @param target ï¿½ï¿½ï¿½@ï¿½Ìƒ^ï¿½[ï¿½Qï¿½bï¿½g(ï¿½fï¿½tï¿½Hï¿½ï¿½ï¿½gï¿½lï¿½Åï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï‚ï¿½)ï¿½B
+			 * @detail ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Ìï¿½ï¿½Wï¿½ÆŒï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½æ“¾ï¿½ï¿½ï¿½ÄƒZï¿½bï¿½gï¿½ï¿½ï¿½ï¿½oï¿½[ï¿½Wï¿½ï¿½ï¿½ï¿½ï¿½B
 			 */
 			void ConstructAndTransmitMagicRequest(nsActor::MagicType type, nsActor::ICharacter* target = nullptr)
 			{
@@ -161,12 +161,12 @@ namespace nsApp
 
 
 			/**
-			 * @brief –‚–@‚Ì¶¬
-			 * @param type ¶¬‚·‚é–‚–@‚Ìí—ŞB
-			 * @param customPos –‚–@‚Ì¶¬ˆÊ’u‚ğw’è‚·‚é‚½‚ß‚Ìˆø”B
-			 * @param customDir –‚–@‚Ì”­Ë•ûŒü‚ğw’è‚·‚é‚½‚ß‚Ìˆø”B
-			 * @param target –‚–@‚Ìƒ^[ƒQƒbƒg(ƒfƒtƒHƒ‹ƒg’l‚Å‰Šú‰»Ï‚İ)B
-			 * @detail ƒvƒŒƒCƒ„[‚ÌÀ•W‚ÆŒü‚«‚ğg—p‚¹‚¸Aˆø”‚Åw’è‚µ‚½À•W‚ÆŒü‚«‚Å–‚–@‚ğ¶¬‚·‚éƒo[ƒWƒ‡ƒ“B
+			 * @brief ï¿½ï¿½ï¿½@ï¿½Ìï¿½ï¿½ï¿½
+			 * @param type ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½é–‚ï¿½@ï¿½Ìï¿½ŞB
+			 * @param customPos ï¿½ï¿½ï¿½@ï¿½Ìï¿½ï¿½ï¿½ï¿½Ê’uï¿½ï¿½ï¿½wï¿½è‚·ï¿½é‚½ï¿½ß‚Ìˆï¿½ï¿½ï¿½ï¿½B
+			 * @param customDir ï¿½ï¿½ï¿½@ï¿½Ì”ï¿½ï¿½Ë•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½wï¿½è‚·ï¿½é‚½ï¿½ß‚Ìˆï¿½ï¿½ï¿½ï¿½B
+			 * @param target ï¿½ï¿½ï¿½@ï¿½Ìƒ^ï¿½[ï¿½Qï¿½bï¿½g(ï¿½fï¿½tï¿½Hï¿½ï¿½ï¿½gï¿½lï¿½Åï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï‚ï¿½)ï¿½B
+			 * @detail ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Ìï¿½ï¿½Wï¿½ÆŒï¿½ï¿½ï¿½ï¿½ï¿½ï¿½gï¿½pï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½ï¿½ï¿½Åwï¿½è‚µï¿½ï¿½ï¿½ï¿½ï¿½Wï¿½ÆŒï¿½ï¿½ï¿½ï¿½Å–ï¿½ï¿½@ï¿½ğ¶ï¿½ï¿½ï¿½ï¿½ï¿½oï¿½[ï¿½Wï¿½ï¿½ï¿½ï¿½ï¿½B
 			 */
 			inline void ConstructAndTransmitMagicRequest(nsActor::MagicType type, const Vector3& customPos, const Vector3& customDir, nsActor::ICharacter* target = nullptr)
 			{
@@ -183,8 +183,8 @@ namespace nsApp
 			}
 
 		 	/**
-			 * @brief Œ»İ‚ÌUŒ‚ƒ^ƒCƒv‚ğƒZƒbƒg‚·‚éB
-			 * @param attackKind ƒZƒbƒg‚·‚éUŒ‚ƒ^ƒCƒvB
+			 * @brief ï¿½ï¿½ï¿½İ‚ÌUï¿½ï¿½ï¿½^ï¿½Cï¿½vï¿½ï¿½ï¿½Zï¿½bï¿½gï¿½ï¿½ï¿½ï¿½B
+			 * @param attackKind ï¿½Zï¿½bï¿½gï¿½ï¿½ï¿½ï¿½Uï¿½ï¿½ï¿½^ï¿½Cï¿½vï¿½B
 		 	 */
 		 	inline void SetCurrentAttackType(AttackType attackKind)
 			{
@@ -192,11 +192,11 @@ namespace nsApp
 			}
 
 
-		/* ƒQƒbƒ^[B*/
+		/* ï¿½Qï¿½bï¿½^ï¿½[ï¿½B*/
 		public:
 			/**
-			 * @brief Œ»İ‚ÌUŒ‚ƒ^ƒCƒv‚É‘Î‰‚·‚éUŒ‚ƒpƒ‰ƒ[ƒ^[‚ğæ“¾‚·‚éB
-			 * @return Œ»İ‚ÌUŒ‚ƒ^ƒCƒv‚É‘Î‰‚·‚éUŒ‚ƒpƒ‰ƒ[ƒ^[B
+			 * @brief ï¿½ï¿½ï¿½İ‚ÌUï¿½ï¿½ï¿½^ï¿½Cï¿½vï¿½É‘Î‰ï¿½ï¿½ï¿½ï¿½ï¿½Uï¿½ï¿½ï¿½pï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½^ï¿½[ï¿½ï¿½ï¿½æ“¾ï¿½ï¿½ï¿½ï¿½B
+			 * @return ï¿½ï¿½ï¿½İ‚ÌUï¿½ï¿½ï¿½^ï¿½Cï¿½vï¿½É‘Î‰ï¿½ï¿½ï¿½ï¿½ï¿½Uï¿½ï¿½ï¿½pï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½^ï¿½[ï¿½B
 			 */
 			inline const AttackParameter& GetCurrentAttackParameter() const
 			{
@@ -206,32 +206,32 @@ namespace nsApp
 
 		protected:
 			/**
-			 *  ƒRƒ“ƒ{‚ª—LŒø‚©Šm”F‚·‚éˆ—B
-			 * @param currentStateID Œ»İ‚Ìó‘ÔIDB
+			 *  ï¿½Rï¿½ï¿½ï¿½{ï¿½ï¿½ï¿½Lï¿½ï¿½ï¿½ï¿½ï¿½mï¿½Fï¿½ï¿½ï¿½éˆï¿½ï¿½ï¿½B
+			 * @param currentStateID ï¿½ï¿½ï¿½İ‚Ìï¿½ï¿½IDï¿½B
 			 */
 			bool CheckCombo(PLAYER_STATE_ID currentStateID, uint8_t& id);
 
 			/**
-			 * @brief ƒ_ƒ[ƒWƒeƒLƒXƒg‚Ì•\¦‚Æƒ_ƒ[ƒW‚ÌŒvZ‚ğs‚¤ˆ—B
-			 * @param target ƒ_ƒ[ƒW‚ğ—^‚¦‚é‘ÎÛ‚ÌƒLƒƒƒ‰ƒNƒ^[B
+			 * @brief ï¿½_ï¿½ï¿½ï¿½[ï¿½Wï¿½eï¿½Lï¿½Xï¿½gï¿½Ì•\ï¿½ï¿½ï¿½Æƒ_ï¿½ï¿½ï¿½[ï¿½Wï¿½ÌŒvï¿½Zï¿½ï¿½ï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
+			 * @param target ï¿½_ï¿½ï¿½ï¿½[ï¿½Wï¿½ï¿½^ï¿½ï¿½ï¿½ï¿½ÎÛ‚ÌƒLï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½^ï¿½[ï¿½B
 			 */
 			void ApplyDamageToText(nsActor::ICharacter* target);
 
 			/**
-			 * @brief ƒ_ƒ[ƒW‚ÌŒvZ‚ğs‚¤ˆ—B
+			 * @brief ï¿½_ï¿½ï¿½ï¿½[ï¿½Wï¿½ÌŒvï¿½Zï¿½ï¿½ï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
 			 */
 			int CalculateFinalDamage() const;
 
 			/**
-			 * @brief ƒ_ƒ[ƒWƒŠƒNƒGƒXƒg‚Ì\’z‚ğs‚¤ˆ—B
-			 * @param target ƒ_ƒ[ƒW‚ğ—^‚¦‚é‘ÎÛ‚ÌƒLƒƒƒ‰ƒNƒ^[B
-			 * @param damageAmount ƒ_ƒ[ƒW‚Ì—ÊB
-			 * @return ƒ_ƒ[ƒWƒŠƒNƒGƒXƒg\‘¢‘ÌB
+			 * @brief ï¿½_ï¿½ï¿½ï¿½[ï¿½Wï¿½ï¿½ï¿½Nï¿½Gï¿½Xï¿½gï¿½Ì\ï¿½zï¿½ï¿½ï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
+			 * @param target ï¿½_ï¿½ï¿½ï¿½[ï¿½Wï¿½ï¿½^ï¿½ï¿½ï¿½ï¿½ÎÛ‚ÌƒLï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½^ï¿½[ï¿½B
+			 * @param damageAmount ï¿½_ï¿½ï¿½ï¿½[ï¿½Wï¿½Ì—ÊB
+			 * @return ï¿½_ï¿½ï¿½ï¿½[ï¿½Wï¿½ï¿½ï¿½Nï¿½Gï¿½Xï¿½gï¿½\ï¿½ï¿½ï¿½ÌB
 			 */
 			DamageRequest BuildDamageRequest(nsActor::ICharacter* target, int damageAmount) const;
 
 			/**
-			 * @brief UŒ‚‚ÌI—¹‚É‹¤’Ê‚µ‚Äs‚¤ˆ—B
+			 * @brief ï¿½Uï¿½ï¿½ï¿½ÌIï¿½ï¿½ï¿½ï¿½ï¿½É‹ï¿½ï¿½Ê‚ï¿½ï¿½Äsï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
 			 */
 			virtual bool UseCommonEndTransition() const
 			{
@@ -241,38 +241,38 @@ namespace nsApp
 
 		protected:
 			/**
-			 * @brief CommentaryUI‚ÉUŒ‚“à—e‚ğ’Ê’m‚·‚éB
+			 * @brief CommentaryUIï¿½ÉUï¿½ï¿½ï¿½ï¿½ï¿½eï¿½ï¿½Ê’mï¿½ï¿½ï¿½ï¿½B
 			 */
 			void NotifyAttackCommentary();
 
 			/**
-			 * @brief Œ»İ‚ÌUŒ‚ƒ^ƒCƒv‚ğÀ‹µ—pƒeƒLƒXƒg‚É•ÏŠ·‚·‚éB
-			 * @return À‹µ—p‚ÌUŒ‚–¼B
+			 * @brief ï¿½ï¿½ï¿½İ‚ÌUï¿½ï¿½ï¿½^ï¿½Cï¿½vï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½pï¿½eï¿½Lï¿½Xï¿½gï¿½É•ÏŠï¿½ï¿½ï¿½ï¿½ï¿½B
+			 * @return ï¿½ï¿½ï¿½ï¿½ï¿½pï¿½ÌUï¿½ï¿½ï¿½ï¿½ï¿½B
 			 */
 			std::wstring GetCommentaryActionName() const;
 
 
 		protected:
-			nsActor::Player* m_player = nullptr;                      //! ƒvƒŒƒCƒ„[‚Ìƒ|ƒCƒ“ƒ^B
-			nsActor::Boss* m_boss = nullptr;						  //! ƒ{ƒX‚Ìƒ|ƒCƒ“ƒ^B
+			nsActor::Player* m_player = nullptr;                      //! ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Ìƒ|ï¿½Cï¿½ï¿½ï¿½^ï¿½B
+			nsActor::Boss* m_boss = nullptr;						  //! ï¿½{ï¿½Xï¿½Ìƒ|ï¿½Cï¿½ï¿½ï¿½^ï¿½B
 
 
 		protected:
-			int m_attackTimer = 0;                                    //! UŒ‚‚ÌŠÔŠÇ——pƒ^ƒCƒ}[B
-			int m_rushCount = 0;                                      //! ˜A‘±UŒ‚‚Ì‰ñ”ŠÇ——pƒJƒEƒ“ƒ^[B
-			int m_finalDamage = 0;                                    //! ÅI“I‚Èƒ_ƒ[ƒW—Ê‚ğŠÇ—‚·‚é•Ï”B
+			int m_attackTimer = 0;                                    //! ï¿½Uï¿½ï¿½ï¿½Ìï¿½ï¿½ÔŠÇ—ï¿½ï¿½pï¿½^ï¿½Cï¿½}ï¿½[ï¿½B
+			int m_rushCount = 0;                                      //! ï¿½Aï¿½ï¿½ï¿½Uï¿½ï¿½ï¿½Ì‰ñ”ŠÇ—ï¿½ï¿½pï¿½Jï¿½Eï¿½ï¿½ï¿½^ï¿½[ï¿½B
+			int m_finalDamage = 0;                                    //! ï¿½ÅIï¿½Iï¿½Èƒ_ï¿½ï¿½ï¿½[ï¿½Wï¿½Ê‚ï¿½ï¿½Ç—ï¿½ï¿½ï¿½ï¿½ï¿½Ïï¿½ï¿½B
 
-			bool m_isInputMatch;									  //! “ü—Í‚ªƒRƒ“ƒ{ƒ‹[ƒg‚ÌğŒ‚É‡’v‚µ‚Ä‚¢‚é‚©B
-			bool m_isGrounded;										  //! ’nã‚É‚¢‚é‚©‚Ç‚¤‚©B
-			bool m_isHit;											  //! UŒ‚‚ªƒqƒbƒg‚µ‚½‚©‚Ç‚¤‚©B
+			bool m_isInputMatch;									  //! ï¿½ï¿½ï¿½Í‚ï¿½ï¿½Rï¿½ï¿½ï¿½{ï¿½ï¿½ï¿½[ï¿½gï¿½Ìï¿½ï¿½ï¿½ï¿½Éï¿½ï¿½vï¿½ï¿½ï¿½Ä‚ï¿½ï¿½é‚©ï¿½B
+			bool m_isGrounded;										  //! ï¿½nï¿½ï¿½É‚ï¿½ï¿½é‚©ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½B
+			bool m_isHit;											  //! ï¿½Uï¿½ï¿½ï¿½ï¿½ï¿½qï¿½bï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½B
 
-			std::unordered_map<ComboInputType, bool> m_inputRequests; //! “ü—Íƒ^ƒCƒv‚Æƒtƒ‰ƒO‚ğ•R‚Ã‚¯B
+			std::unordered_map<ComboInputType, bool> m_inputRequests; //! ï¿½ï¿½ï¿½Íƒ^ï¿½Cï¿½vï¿½Æƒtï¿½ï¿½ï¿½Oï¿½ï¿½Rï¿½Ã‚ï¿½ï¿½B
 
-			AttackType m_currentAttackType = AttackType::None;        //! Œ»İ‚ÌUŒ‚ƒ^ƒCƒvB
-			DamageRequest m_damageRequest;						      //! ƒ_ƒ[ƒW‚ÌŒvZ‚É•K—v‚Èî•ñ‚ğŠi”[‚·‚é\‘¢‘ÌB	
+			AttackType m_currentAttackType = AttackType::None;        //! ï¿½ï¿½ï¿½İ‚ÌUï¿½ï¿½ï¿½^ï¿½Cï¿½vï¿½B
+			DamageRequest m_damageRequest;						      //! ï¿½_ï¿½ï¿½ï¿½[ï¿½Wï¿½ÌŒvï¿½Zï¿½É•Kï¿½vï¿½Èï¿½ï¿½ï¿½ï¿½iï¿½[ï¿½ï¿½ï¿½ï¿½\ï¿½ï¿½ï¿½ÌB	
 
-			Vector3 m_forwardDirection = Vector3::Zero;				  //! ƒvƒŒƒCƒ„[‚ÌŒü‚¢‚Ä‚¢‚é•ûŒü‚ğæ“¾‚·‚é‚½‚ß‚Ì•Ï”B
-			Vector3 m_spawnPosition = Vector3::Zero;				  //! ’eŠÛ‚Ì”­ËˆÊ’u‚ğŠÇ—‚·‚é•Ï”B
+			Vector3 m_forwardDirection = Vector3::Zero;				  //! ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ÌŒï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½æ“¾ï¿½ï¿½ï¿½é‚½ï¿½ß‚Ì•Ïï¿½ï¿½B
+			Vector3 m_spawnPosition = Vector3::Zero;				  //! ï¿½eï¿½Û‚Ì”ï¿½ï¿½ËˆÊ’uï¿½ï¿½ï¿½Ç—ï¿½ï¿½ï¿½ï¿½ï¿½Ïï¿½ï¿½B
 		};
 	}
 }

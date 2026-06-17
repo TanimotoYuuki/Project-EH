@@ -1,14 +1,16 @@
-#pragma once
+ï»¿#pragma once
 #include <Src/Actor/Character/Player/Component/PlayerSpawnData.h>
 
 /**
-* @file Game.h
-* @brief ƒf[ƒ^‚Ì“‡ƒNƒ‰ƒXB
-* @author All
-* @date 2026/05/08
-*/
+ * @file  Game2.h
+ * @brief ï¿½fï¿½[ï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½Xï¿½B
+ * @author All
+ * @date  2026/05/08
+ */
 
 #include "Src/Parameter/ParameterSystem.h"
+#include "Src/Build/InGameBuildHelper.h"
+#include "Src/Actor/Character/Boss/Status/BossPhaseEventController.h"
 
 namespace nsApp
 {
@@ -19,20 +21,12 @@ namespace nsApp
 	class DamageIndicatorPool;
 	class ParameterSystem;
 
-	namespace nsSound {
-		class SoundLister;
-	}
+	namespace nsSound { class SoundLister; }
+	namespace nsStage { class BackGround; }
+	namespace nsActor { class Player; class Boss; }
 
-	namespace nsStage {
-		class BackGround;
-	}
-
-	namespace nsActor {
-		class Player;
-		class Boss;
-	}
-
-	namespace nsUI {
+	namespace nsUI
+	{
 		class ReboneGaugeUIManager;
 		class CommentaryUIManager;
 	}
@@ -47,184 +41,200 @@ namespace nsApp
 		class GameOverDirection;
 		class Pause;
 
+
+		/**
+		 * @class Game2
+		 * @brief ï¿½Cï¿½ï¿½ï¿½Qï¿½[ï¿½ï¿½ï¿½ÌŠeï¿½Iï¿½uï¿½Wï¿½Fï¿½Nï¿½gï¿½ÌQï¿½Æ‚ï¿½Ûï¿½ï¿½Eï¿½Ç—ï¿½ï¿½ï¿½ï¿½ï¿½fï¿½[ï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½Xï¿½B
+		 */
 		class Game2 : public IGameObject
 		{
 		public:
-			/* ƒRƒ“ƒXƒgƒ‰ƒNƒ^‚ÆƒfƒXƒgƒ‰ƒNƒ^B*/
+			/* ï¿½Rï¿½ï¿½ï¿½Xï¿½gï¿½ï¿½ï¿½Nï¿½^ï¿½Æƒfï¿½Xï¿½gï¿½ï¿½ï¿½Nï¿½^ï¿½B*/
 			Game2() = default;
 			~Game2();
 
 
 		public:
-			/* ƒTƒCƒNƒ‹B*/
+			/**
+			 * @brief ï¿½Jï¿½nï¿½ï¿½ï¿½ï¿½ï¿½B
+			 * @return ï¿½ï¿½ï¿½ï¿½Éï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ê‚½ï¿½ê‡ trueï¿½B
+			 */
 			bool Start();
+
+			/**
+			 * @brief ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½B
+			 */
 			void Update();
+
+			/**
+			 * @brief ï¿½`ï¿½æˆï¿½ï¿½ï¿½B
+			 * @param rc ï¿½`ï¿½ï¿½Rï¿½ï¿½ï¿½eï¿½Lï¿½Xï¿½gï¿½B
+			 */
 			void Render(RenderContext& rc);
-
-
-		private:
-			/* ƒvƒŒƒCƒAƒuƒ‹ƒLƒƒƒ‰‚ğ¶¬‚·‚éB*/
-			void SpawnPlayCharacter();
-
-			/**
-			 * @brief ‰¹Œ¹ƒNƒ‰ƒX‚Ì‰Šúİ’è‚ÉŠÖ‚·‚éŠÖ”ŒQ‚ğŒÄ‚Ño‚·B
-			 */
-			void SettingSound();
-
-			/**
-			 * @brief À‹µUI‚Ì‰Šúİ’è‚ÉŠÖ‚·‚éŠÖ”ŒQ‚ğŒÄ‚Ño‚·B
-			 */
-			void SettingCommentaryUI();
 
 
 		public:
 			/**
-			* @brief ƒQ[ƒ€ƒNƒŠƒA‰‰o‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚Ìæ“¾B
-			* @return ƒQ[ƒ€ƒNƒŠƒA‰‰o‚ÌƒCƒ“ƒXƒ^ƒ“ƒXB
-			*/
+			 * @brief ï¿½â•ï¿½Nï¿½ï¿½ï¿½Xï¿½Åï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê‚ï¿½Game2ï¿½É”ï¿½ï¿½fï¿½ï¿½ï¿½ï¿½B
+			 * @param result InGameï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÊB
+			 */
+			void ApplyBuildResult(const InGameBuildResult& result);
+
+			/**
+			 * @brief ï¿½Qï¿½[ï¿½ï¿½ï¿½{ï¿½Ì‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
+			 */
+			void ActivateGame();
+
+
+		public:
+			/**
+			 * @brief ï¿½Qï¿½[ï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½oï¿½ÌƒCï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Xï¿½ï¿½Ô‚ï¿½ï¿½B
+			 * @return ï¿½Qï¿½[ï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½oï¿½ÌƒCï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Xï¿½B
+			 */
 			inline GameClearDirection* GetGameClearDirectionInstance() const
 			{
 				return m_gameClearDirection;
 			}
 
 			/**
-			* @brief ŠÔØ‚ê‰‰o‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚Ìæ“¾B
-			* @return ŠÔØ‚ê‰‰o‚ÌƒCƒ“ƒXƒ^ƒ“ƒXB
-			*/
+			 * @brief ï¿½ï¿½ï¿½ÔØ‚ê‰‰ï¿½oï¿½ÌƒCï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Xï¿½ï¿½Ô‚ï¿½ï¿½B
+			 * @return ï¿½ï¿½ï¿½ÔØ‚ê‰‰ï¿½oï¿½ÌƒCï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Xï¿½B
+			 */
 			inline GameTimeUpDirection* GetGameTimeUpDirectionInstance() const
 			{
 				return m_gameTimeUpDirection;
 			}
 
 			/**
-			* @brief ƒQ[ƒ€ƒI[ƒo[‰‰o‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚Ìæ“¾B
-			* @return ƒQ[ƒ€ƒI[ƒo[‰‰o‚ÌƒCƒ“ƒXƒ^ƒ“ƒXB
-			*/
+			 * @brief ï¿½Qï¿½[ï¿½ï¿½ï¿½Iï¿½[ï¿½oï¿½[ï¿½ï¿½ï¿½oï¿½ÌƒCï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Xï¿½ï¿½Ô‚ï¿½ï¿½B
+			 * @return ï¿½Qï¿½[ï¿½ï¿½ï¿½Iï¿½[ï¿½oï¿½[ï¿½ï¿½ï¿½oï¿½ÌƒCï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Xï¿½B
+			 */
 			inline GameOverDirection* GetGameOverDirectionInstance() const
 			{
 				return m_gameOverDirection;
 			}
 
 			/**
-			* @brief ƒQ[ƒ€‚ªI—¹‚µ‚½‚É‘I‘ğ‚·‚é‰æ–Ê‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚Ìæ“¾B
-			* @return ƒQ[ƒ€‚ªI—¹‚µ‚½‚É‘I‘ğ‚·‚é‰æ–Ê‚ÌƒCƒ“ƒXƒ^ƒ“ƒXB
-			*/
+			 * @brief ï¿½Qï¿½[ï¿½ï¿½ï¿½Iï¿½ï¿½ï¿½ï¿½É‘Iï¿½ï¿½ï¿½ï¿½ï¿½Ê‚ÌƒCï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Xï¿½ï¿½Ô‚ï¿½ï¿½B
+			 * @return ï¿½Iï¿½ï¿½ï¿½ï¿½ï¿½Ê‚ÌƒCï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Xï¿½B
+			 */
 			inline GameEndSelect* GetGameEndSelectInstance() const
 			{
 				return m_gameEndSelect;
 			}
 
 			/**
-			* @brief ƒ|[ƒY‚ÌƒCƒ“ƒXƒ^ƒ“ƒX‚Ìæ“¾B
-			* @return ƒ|[ƒY‚ÌƒCƒ“ƒXƒ^ƒ“ƒXB
-			*/
+			 * @brief ï¿½|ï¿½[ï¿½Yï¿½ÌƒCï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Xï¿½ï¿½Ô‚ï¿½ï¿½B
+			 * @return ï¿½|ï¿½[ï¿½Yï¿½ÌƒCï¿½ï¿½ï¿½Xï¿½^ï¿½ï¿½ï¿½Xï¿½B
+			 */
 			inline Pause* GetPauseInstance() const
 			{
 				return m_pause;
 			}
 
 			/**
-			* @brief ƒ{ƒX‚Ìí—Ş‚Ìİ’èB
-			* @param bossType ƒ{ƒX‚Ìí—ŞB
-			*/
+			 * @brief ï¿½{ï¿½Xï¿½Ìï¿½Ş‚ï¿½İ’è‚·ï¿½ï¿½B
+			 * @param bossType ï¿½{ï¿½Xï¿½Ìï¿½ŞB
+			 */
 			inline void SetBossType(int bossType)
 			{
 				m_bossType = bossType;
 			}
 
 			/**
-			* @brief ƒ{ƒX‚Ìí—Ş‚Ìæ“¾B
-			* @param bossType ƒ{ƒX‚Ìí—ŞB
-			*/
+			 * @brief ï¿½{ï¿½Xï¿½Ìï¿½Ş‚ï¿½Ô‚ï¿½ï¿½B
+			 * @return ï¿½{ï¿½Xï¿½Ìï¿½ŞB
+			 */
 			inline int GetBossType() const
 			{
 				return m_bossType + 5;
 			}
 
 			/**
-			* @brief ŠeƒLƒƒƒ‰ƒNƒ^[‚Ì–ğŠ„‚Ìİ’èB
-			* @param playerIndex ƒvƒŒƒCƒ„[‚ÌƒCƒ“ƒfƒbƒNƒXB
-			*/
-			inline void SetCharacterRole(int playerIndex,int role)
+			 * @brief ï¿½Lï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½^ï¿½[ï¿½Ì–ï¿½ï¿½ï¿½ï¿½ï¿½İ’è‚·ï¿½ï¿½B
+			 * @param playerIndex ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ÌƒCï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½B
+			 * @param role        ï¿½ï¿½ï¿½ï¿½ï¿½B
+			 */
+			inline void SetCharacterRole(int playerIndex, int role)
 			{
 				m_characterRole[playerIndex] = role;
 			}
 
 			/**
-			* @brief ŠeƒLƒƒƒ‰ƒNƒ^[‚Ì–ğŠ„‚Ìæ“¾B
-			* @param playerIndex ƒvƒŒƒCƒ„[‚ÌƒCƒ“ƒfƒbƒNƒXB
-			* @return ƒLƒƒƒ‰ƒNƒ^[‚Ì–ğŠ„B
-			*/
-			inline int GetCharacterRole(int playerIndex)const
+			 * @brief ï¿½Lï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½^ï¿½[ï¿½Ì–ï¿½ï¿½ï¿½ï¿½ï¿½Ô‚ï¿½ï¿½B
+			 * @param playerIndex ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ÌƒCï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½B
+			 * @return ï¿½Lï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½^ï¿½[ï¿½Ì–ï¿½ï¿½ï¿½ï¿½B
+			 */
+			inline int GetCharacterRole(int playerIndex) const
 			{
 				return m_characterRole[playerIndex];
 			}
 
 			/**
-			* @brief ƒvƒŒƒCƒ„[‚ª‘€ì‚µ‚Ä‚¢‚é‚©‚Ç‚¤‚©‚Ìİ’èB
-			* @param playerIndex ƒvƒŒƒCƒ„[‚ÌƒCƒ“ƒfƒbƒNƒXB
-			*/
+			 * @brief ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ì‚µï¿½Ä‚ï¿½ï¿½é‚©ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½İ’è‚·ï¿½ï¿½B
+			 * @param playerIndex ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ÌƒCï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½B
+			 * @param isControle  ï¿½ï¿½ï¿½ì‚µï¿½Ä‚ï¿½ï¿½é‚©ï¿½B
+			 */
 			inline void SetPlayerControle(int playerIndex, bool isControle)
 			{
 				m_isPlayerControle[playerIndex] = isControle;
 			}
 
 			/**
-			* @brief ƒvƒŒƒCƒ„[‚ª‘€ì‚µ‚Ä‚¢‚é‚©‚Ç‚¤‚©‚Ìæ“¾B
-			* @param playerIndex ƒvƒŒƒCƒ„[‚ÌƒCƒ“ƒfƒbƒNƒXB
-			* @return ƒvƒŒƒCƒ„[‚ª‘€ì‚µ‚Ä‚¢‚é‚©‚Ç‚¤‚©B
-			*/
+			 * @brief ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ì‚µï¿½Ä‚ï¿½ï¿½é‚©ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½ï¿½Ô‚ï¿½ï¿½B
+			 * @param playerIndex ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ÌƒCï¿½ï¿½ï¿½fï¿½bï¿½Nï¿½Xï¿½B
+			 * @return ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ì‚µï¿½Ä‚ï¿½ï¿½é‚©ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½B
+			 */
 			inline bool IsPlayerControle(int playerIndex) const
 			{
 				return m_isPlayerControle[playerIndex];
 			}
 
+
 		private:
-			nsApp::nsSound::SoundLister* m_soundLister = nullptr; //! ƒTƒEƒ“ƒhƒŠƒXƒ^[B
-			nsApp::nsStage::BackGround* m_backGround = nullptr; //! ”wŒiB
-			nsUI::ReboneGaugeUIManager* m_reboneGaugeUIManager = nullptr;
-			nsUI::CommentaryUIManager* m_commentaryUIManager = nullptr;
-			nsApp::Camera* m_camera = nullptr;
-			nsActor::Player* m_player = nullptr;
-			nsActor::Boss* m_boss = nullptr;
-			ParameterSystem m_parameterSystem;
-			DamageIndicatorPool* m_damageIndicatorPool = nullptr;
-			CharacterHP* m_characterHP = nullptr;
-			GameTimeLimit* m_gameTimeLimit = nullptr;
-			GameStartDirection* m_gameStartDirection = nullptr;
-			GameClearDirection* m_gameClearDirection = nullptr;
-			GameTimeUpDirection* m_gameTimeUpDirection = nullptr;
-			GameOverDirection* m_gameOverDirection = nullptr;
-			GameEndSelect* m_gameEndSelect = nullptr;
-			Pause* m_pause = nullptr;
+			/* ï¿½|ï¿½Cï¿½ï¿½ï¿½^ï¿½^ï¿½iï¿½Tï¿½Eï¿½ï¿½ï¿½hï¿½Eï¿½wï¿½iï¿½jï¿½B*/
+			nsApp::nsSound::SoundLister* m_soundLister = nullptr; //! ï¿½Tï¿½Eï¿½ï¿½ï¿½hï¿½ï¿½ï¿½Xï¿½^ï¿½[ï¿½B
+			nsApp::nsStage::BackGround* m_backGround = nullptr; //! ï¿½wï¿½iï¿½B
 
-			////////////////////////////////////////////////////////
-			//Player¶¬: ƒƒ“ƒo‘I‘ğƒNƒ‰ƒX‚ÉˆÚ“®‚ğ‚·‚é‚È‚çˆÚ“®‚µ‚Ä
-			////////////////////////////////////////////////////////
-			PlayerGenerator* m_generator = nullptr;
-			PlayerControlerHub* m_playerHub = nullptr;
+			/* ï¿½|ï¿½Cï¿½ï¿½ï¿½^ï¿½^ï¿½iUIï¿½jï¿½B*/
+			nsUI::ReboneGaugeUIManager* m_reboneGaugeUIManager = nullptr; //! ï¿½ï¿½ï¿½{ï¿½[ï¿½ï¿½ï¿½Qï¿½[ï¿½WUIï¿½}ï¿½lï¿½[ï¿½Wï¿½ï¿½ï¿½[ï¿½B
+			nsUI::CommentaryUIManager* m_commentaryUIManager = nullptr; //! ï¿½Rï¿½ï¿½ï¿½ï¿½ï¿½^ï¿½ï¿½ï¿½[UIï¿½}ï¿½lï¿½[ï¿½Wï¿½ï¿½ï¿½[ï¿½B
 
-			int m_bossType = 0;
-			int m_characterRole[4] = { 0 }; //! ƒLƒƒƒ‰ƒNƒ^[‚²‚Æ‚Ì–ğŠ„B
-			ControllerType m_controllerType[4] = { ControllerType::Player_1P }; //! ƒLƒƒƒ‰ƒNƒ^[‚²‚Æ‚ÌƒRƒ“ƒgƒ[ƒ‰[‚Ìí—ŞB
-			bool m_isPlayerControle[4] = { true }; //! ƒvƒŒƒCƒ„[‚ª‘€ì‚µ‚Ä‚¢‚é‚©‚Ç‚¤‚©B
+			/* ï¿½|ï¿½Cï¿½ï¿½ï¿½^ï¿½^ï¿½iï¿½Jï¿½ï¿½ï¿½ï¿½ï¿½Eï¿½Lï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½^ï¿½[ï¿½jï¿½B*/
+			nsApp::Camera* m_camera = nullptr; //! ï¿½Jï¿½ï¿½ï¿½ï¿½ï¿½B
+			nsActor::Player* m_player = nullptr; //! ï¿½ï¿½\ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½B
+			nsActor::Boss* m_boss = nullptr; //! ï¿½{ï¿½Xï¿½B
 
-			/**
-			 * @brief ƒfƒoƒbƒO—p‚Ì‰ñ•œƒeƒXƒgŠÖ”B
-			 */
-			void DebugUpdateHealTest();
+			/* ï¿½|ï¿½Cï¿½ï¿½ï¿½^ï¿½^ï¿½iï¿½Vï¿½Xï¿½eï¿½ï¿½ï¿½jï¿½B*/
+			DamageIndicatorPool* m_damageIndicatorPool = nullptr; //! ï¿½_ï¿½ï¿½ï¿½[ï¿½Wï¿½Cï¿½ï¿½ï¿½Wï¿½Pï¿½[ï¿½^ï¿½[ï¿½vï¿½[ï¿½ï¿½ï¿½B
+			CharacterHP* m_characterHP = nullptr; //! ï¿½Lï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½^ï¿½[HPï¿½Ç—ï¿½ï¿½B
+			GameTimeLimit* m_gameTimeLimit = nullptr; //! ï¿½Qï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÔB
+			GameStartDirection* m_gameStartDirection = nullptr; //! ï¿½Qï¿½[ï¿½ï¿½ï¿½Jï¿½nï¿½ï¿½ï¿½oï¿½B
+			GameClearDirection* m_gameClearDirection = nullptr; //! ï¿½Qï¿½[ï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½oï¿½B
+			GameTimeUpDirection* m_gameTimeUpDirection = nullptr; //! ï¿½ï¿½ï¿½ÔØ‚ê‰‰ï¿½oï¿½B
+			GameOverDirection* m_gameOverDirection = nullptr; //! ï¿½Qï¿½[ï¿½ï¿½ï¿½Iï¿½[ï¿½oï¿½[ï¿½ï¿½ï¿½oï¿½B
+			GameEndSelect* m_gameEndSelect = nullptr; //! ï¿½Qï¿½[ï¿½ï¿½ï¿½Iï¿½ï¿½ï¿½ï¿½Iï¿½ï¿½ï¿½B
+			Pause* m_pause = nullptr; //! ï¿½|ï¿½[ï¿½Yï¿½B
+			PlayerGenerator* m_generator = nullptr; //! ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½B
+			PlayerControlerHub* m_playerHub = nullptr; //! ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½Rï¿½ï¿½ï¿½gï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½[ï¿½nï¿½uï¿½B
+			BossPhaseEventController* m_bossPhaseController = nullptr; //! ï¿½{ï¿½Xï¿½tï¿½Fï¿½[ï¿½Yï¿½Cï¿½xï¿½ï¿½ï¿½gï¿½Rï¿½ï¿½ï¿½gï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½[ï¿½B
 
-			/**
-			 * @brief ƒfƒoƒbƒO—p‚Ìƒ_ƒ[ƒWƒeƒXƒgŠÖ”B
-			 */
-			void DebugDamageParty();
+			/* ï¿½Iï¿½uï¿½Wï¿½Fï¿½Nï¿½gï¿½^ï¿½B*/
+			ParameterSystem              m_parameterSystem;                //! ï¿½pï¿½ï¿½ï¿½ï¿½ï¿½[ï¿½^ï¿½[ï¿½Vï¿½Xï¿½eï¿½ï¿½ï¿½B
 
-			/**
-		     * @brief ƒfƒoƒbƒO—p‚ÌHP•\¦ŠÖ”B
-			 */
-			void DebugPrintPartyHP();
+			/* ï¿½Rï¿½ï¿½ï¿½eï¿½iï¿½^ï¿½B*/
+			std::vector<nsActor::Player*> m_players;   //! ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½Xï¿½gï¿½B
+			std::vector<PlayerSpawnData>  m_partyData; //! ï¿½pï¿½[ï¿½eï¿½Bï¿½fï¿½[ï¿½^ï¿½ï¿½ï¿½Xï¿½gï¿½B
 
+
+		private:
+			/* int ï¿½^ï¿½B*/
+			int m_bossType = 0;    //! ï¿½{ï¿½Xï¿½Ìï¿½ŞB
+			int m_characterRole[4] = { 0 }; //! ï¿½Lï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½^ï¿½[ï¿½ï¿½ï¿½Æ‚Ì–ï¿½ï¿½ï¿½ï¿½B
+
+			/* bool ï¿½^ï¿½B*/
+			bool m_isPlayerControle[4] = { true }; //! ï¿½vï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½[ï¿½ï¿½ï¿½ï¿½ï¿½ì‚µï¿½Ä‚ï¿½ï¿½é‚©ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½B
+			bool m_isGameActive = false;     //! ï¿½Qï¿½[ï¿½ï¿½ï¿½{ï¿½Ì‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½é‚©ï¿½B
 		};
 	}
 }
-

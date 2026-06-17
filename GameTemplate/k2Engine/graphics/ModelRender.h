@@ -82,6 +82,10 @@ namespace nsK2Engine {
 		/// </summary>
 		void Update();
 		/// <summary>
+		/// 更新処理。
+		/// </summary>
+		void UpdateWorldOnly();
+		/// <summary>
 		/// インスタンシングデータの更新。
 		/// </summary>
 		/// <param name="instanceNo">インスタンス番号</param>

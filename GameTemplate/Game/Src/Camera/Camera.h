@@ -1,25 +1,75 @@
 #pragma once
+
 /**
-* @file  @Camera.h
-* @brief @ƒQ[ƒ€‚É”ÍˆÍ‚ğˆµ‚¤ƒJƒƒ‰B
-* @author@Yamaguchi Hayato
-* @date  @2026/03/14
-*/
+ * @file   Camera.h
+ * @brief  ï¿½ï¿½Ê‚ï¿½ï¿½Æ‚ï¿½Strategyï¿½ÅØ‚ï¿½Ö‚ï¿½ï¿½Jï¿½ï¿½ï¿½ï¿½ï¿½B
+ * @author Yamaguchi Hayato
+ * @date   2026/6/09: ï¿½ï¿½ï¿½tï¿½@ï¿½Nï¿½^ï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½B
+ */
+
+#include <memory>
+#include "Src/Camera/ICameraStrategy.h"
+#include "Src/Camera/LoadingCameraStrategy.h"
 
 
 namespace nsApp
 {
+	/* ï¿½zï¿½ÂƒCï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½[ï¿½hï¿½ï¿½ï¿½ï¿½Ì‚ï¿½ï¿½ß‘Oï¿½ï¿½ï¿½éŒ¾ï¿½ï¿½ï¿½gï¿½pï¿½ï¿½ï¿½ï¿½B*/
+	class BattleCameraStrategy;
+
+
+	/**
+	 * @class Camera
+	 * @brief Strategyï¿½pï¿½^ï¿½[ï¿½ï¿½ï¿½Åï¿½Ê‚ï¿½ï¿½Æ‚ÉƒJï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø‚ï¿½Ö‚ï¿½ï¿½ï¿½Nï¿½ï¿½ï¿½Xï¿½B
+	 */
 	class Camera : public IGameObject
 	{
 	public:
-		/* ƒRƒ“ƒXƒgƒ‰ƒNƒ^‚ÆƒfƒXƒgƒ‰ƒNƒ^B*/
+		/* ï¿½Rï¿½ï¿½ï¿½Xï¿½gï¿½ï¿½ï¿½Nï¿½^ï¿½Æƒfï¿½Xï¿½gï¿½ï¿½ï¿½Nï¿½^ï¿½B*/
 		Camera() = default;
 		virtual ~Camera() = default;
 
 
 	public:
-		/* ‰Šú‰»ˆ—B*/
+		/**
+		 * @brief ï¿½Jï¿½nï¿½ï¿½ï¿½ï¿½ï¿½B
+		 * @return ï¿½ï¿½ï¿½ï¿½Éï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ê‚½ï¿½ê‡ trueï¿½B
+		 */
 		bool Start();
+
+		/**
+		 * @brief ï¿½Xï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½B
+		 */
+		void Update();
+
+		/**
+		 * @brief ï¿½ï¿½ï¿½[ï¿½fï¿½Bï¿½ï¿½ï¿½Oï¿½pï¿½Jï¿½ï¿½ï¿½ï¿½ï¿½ÉØ‚ï¿½Ö‚ï¿½ï¿½ï¿½B
+		 */
+		void ChangeToLoading();
+
+		/**
+		 * @brief ï¿½í“¬ï¿½pï¿½Jï¿½ï¿½ï¿½ï¿½ï¿½ÉØ‚ï¿½Ö‚ï¿½ï¿½ï¿½B
+		 */
+		void ChangeToBattle();
+
+		/**
+		 * @brief ï¿½Jï¿½ï¿½ï¿½ï¿½ï¿½Vï¿½Fï¿½Cï¿½Nï¿½ï¿½ï¿½Jï¿½nï¿½ï¿½ï¿½ï¿½Bï¿½í“¬ï¿½Jï¿½ï¿½ï¿½ï¿½ï¿½ÈŠOï¿½Å‚Í–ï¿½ï¿½ï¿½ï¿½B
+		 * @param duration  ï¿½Vï¿½Fï¿½Cï¿½Nï¿½ï¿½ï¿½éï¿½Ôiï¿½bï¿½jï¿½B
+		 * @param intensity ï¿½Vï¿½Fï¿½Cï¿½Nï¿½Ì‹ï¿½ï¿½ï¿½ï¿½B
+		 */
+		void StartShake(float duration, float intensity);
+
+
+	private:
+		/**
+		 * @brief ï¿½Jï¿½ï¿½ï¿½ï¿½Strategyï¿½ï¿½ÏXï¿½ï¿½ï¿½ï¿½B
+		 * @param strategy ï¿½Vï¿½ï¿½ï¿½ï¿½Strategyï¿½B
+		 */
+		void ChangeStrategy(std::unique_ptr<ICameraStrategy> strategy);
+
+
+	private:
+		std::unique_ptr<ICameraStrategy> m_strategy = nullptr; //! ï¿½ï¿½ï¿½İ‚ÌƒJï¿½ï¿½ï¿½ï¿½Strategyï¿½B
+		BattleCameraStrategy* m_battleCameraStrategy = nullptr; //! ï¿½í“¬ï¿½Jï¿½ï¿½ï¿½ï¿½Strategyï¿½Ìï¿½ï¿½|ï¿½Cï¿½ï¿½ï¿½^ï¿½iï¿½Vï¿½Fï¿½Cï¿½Nï¿½pï¿½jï¿½B
 	};
 }
-

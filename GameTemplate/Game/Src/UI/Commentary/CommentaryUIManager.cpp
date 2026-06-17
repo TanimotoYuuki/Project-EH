@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "CommentaryUIManager.h"
 
 namespace nsApp
@@ -73,15 +73,29 @@ namespace nsApp
 
 		void CommentaryUIManager::AddActionMessage(WeaponType weapon, const std::wstring& actionName)
 		{
-			AddMessage(GetWeaponName(weapon) + L"‚Ì" + actionName + L"!", GetPriorityFromActionName(actionName));
+			AddMessage(GetWeaponName(weapon) + L"  " + actionName + L"!", GetPriorityFromActionName(actionName));
 		}
 
 		void CommentaryUIManager::AddActionMessage(WeaponType weapon, CommentaryActionType actionType)
 		{
-			AddMessage(GetWeaponName(weapon) + L"‚Ì" + GetActionName(actionType) + L"!", GetPriorityFromActionType(actionType));
+			AddMessage(GetWeaponName(weapon) + L"  " + GetActionName(actionType) + L"!", GetPriorityFromActionType(actionType));
 		}
+		void CommentaryUIManager::ForceShowMessage(const std::wstring& text, float displayTime)
+		{
+			/*  Ò‹@  Æ•\      S N   A   Ä‘    ÉŠ  è ŞB*/
+			m_waitingMessages.clear();
+			m_messages.clear();
 
-		void CommentaryUIManager::RemoveExpiredMessages()
+			CommentaryMessage msg;
+			msg.text = text;
+			msg.displayTime = displayTime;
+			msg.timer = 0.0f;
+
+			m_messages.push_back(msg);
+
+			m_latestAcceptedText = text;
+			m_sameMessageCooldownTimer = 0.0f;
+		}		void CommentaryUIManager::RemoveExpiredMessages()
 		{
 			if (m_messages.empty())
 				return;
@@ -184,19 +198,19 @@ namespace nsApp
 			switch (weapon)
 			{
 			case WeaponType::GreatSword:
-				return L"ƒ\[ƒh";
+				return L"ã‚½ãƒ¼ãƒ‰";
 
 			case WeaponType::Hammer:
-				return L"ƒnƒ“ƒ}[";
+				return L"ãƒãƒ³ãƒãƒ¼";
 
 			case WeaponType::Wand:
-				return L"ƒƒCƒW";
+				return L"ãƒ¯ãƒ³ãƒ€ãƒ¼";
 
 			case WeaponType::TwinGun:
-				return L"ƒKƒ“ƒi[";
+				return L"ã‚¬ãƒ³ãƒŠãƒ¼";
 
 			default:
-				return L"‚È‚©‚Ü";
+				return L"";
 			}
 		}
 
@@ -205,30 +219,31 @@ namespace nsApp
 			switch (actionType)
 			{
 			case CommentaryActionType::NormalAttack:
-				return L"’ÊíUŒ‚";
+				return L"é€šå¸¸æ”»æ’ƒ";
 
 			case CommentaryActionType::HeavyAttack:
-				return L"‹­UŒ‚";
+				return L"å¼·æ”»æ’ƒ";
 
 			case CommentaryActionType::ChargeAttack:
-				return L"ƒ`ƒƒ[ƒWUŒ‚";
+				return L"ãƒãƒ£ãƒ¼ã‚¸æ”»æ’ƒ";
 
 			case CommentaryActionType::JumpAttack:
-				return L"ƒWƒƒƒ“ƒvUŒ‚";
+				return L"ã‚¸ãƒ£ãƒ³ãƒ—æ”»æ’ƒ";
 
 			case CommentaryActionType::Help:
-				return L"‹~•";
+				return L"åŠ©ã‘";
 
 			case CommentaryActionType::Revive:
-				return L"•œŠˆ";
+				return L"å¾©æ´»";
 
 			case CommentaryActionType::Down:
-				return L"ƒ_ƒEƒ“";
+				return L"ãƒ€ã‚¦ãƒ³";
 
 			default:
-				return L"s“®";
+				return L"";
 			}
 		}
+
 
 		CommentaryMessagePriority CommentaryUIManager::GetPriorityFromActionType(CommentaryActionType actionType) const
 		{
@@ -256,17 +271,13 @@ namespace nsApp
 
 		CommentaryMessagePriority CommentaryUIManager::GetPriorityFromActionName(const std::wstring& actionName) const
 		{
-			if (actionName == L"’ÊíUŒ‚" || actionName == L"ƒWƒƒƒ“ƒvUŒ‚")
+			if (actionName == L"é€šå¸¸æ”»æ’ƒ" || actionName == L"ã‚¸ãƒ£ãƒ³ãƒ—æ”»æ’ƒ")
 				return CommentaryMessagePriority::Low;
-
-			if (actionName == L"ƒ`ƒƒ[ƒWUŒ‚" || actionName == L"‚¢‚¿‚°‚«")
+			if (actionName == L"ãƒãƒ£ãƒ¼ã‚¸æ”»æ’ƒ" || actionName == L"å¼·æ”»æ’ƒ")
 				return CommentaryMessagePriority::High;
-
-			if (actionName == L"‹~•" || actionName == L"•œŠˆ" || actionName == L"ƒ_ƒEƒ“")
+			if (actionName == L"åŠ©ã‘" || actionName == L"å¾©æ´»" || actionName == L"ãƒ€ã‚¦ãƒ³")
 				return CommentaryMessagePriority::Critical;
-
 			return CommentaryMessagePriority::Normal;
 		}
-
 	}
 }
