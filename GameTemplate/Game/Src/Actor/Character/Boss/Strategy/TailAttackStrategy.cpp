@@ -2,6 +2,9 @@
 #include "TailAttackStrategy.h"
 #include "Src/Actor/Character/Boss/Boss.h"
 
+#include "Src/Sound/SoundLister.h"
+#include "Src/Sound/SEList.h"
+
 namespace
 {
 	const float ATTACK_TIME = 1.2f;
@@ -15,18 +18,20 @@ namespace nsApp
 		void TailAttackStrategy::Enter(nsActor::Boss *boss)
 		{
 			m_timer = ATTACK_TIME;
+
+			/*UŒ‚ƒtƒ‰ƒO‚Ì‰Šú‰»B*/
 			m_isHit = false;
 
-			// å°»å°¾æ”»æ’ƒã®ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³ã‚’å†ç”Ÿ
+			// K”öUŒ‚‚ÌƒAƒjƒ[ƒVƒ‡ƒ“‚ğÄ¶
 			boss->PlayAnimation(nsActor::BossAnimationID::TailAttack);
 		}
 
 		void TailAttackStrategy::Update(nsActor::Boss *boss)
 		{
-			// ã‚¿ã‚¤ãƒãƒ¼ã‚’æ¸›ã‚‰ã™
+			// ƒ^ƒCƒ}[‚ğŒ¸‚ç‚·
 			m_timer -= g_gameTime->GetFrameDeltaTime();
 
-			// æ”»æ’ƒé–‹å§‹ã‹ã‚‰ä¸€å®šæ™‚é–“çµŒéã—ãŸã‚‰ãƒ’ãƒƒãƒˆåˆ¤å®šã‚’é…ç½®
+			/*ˆê“x‚¾‚¯ƒqƒbƒg”»’è‚ğo‚·B*/
 			if (!m_isHit && m_timer <= HIT_TIME)
 			{
 				m_isHit = true;
@@ -36,7 +41,7 @@ namespace nsApp
 
 		void TailAttackStrategy::Exit(nsActor::Boss *boss)
 		{
-			// ãƒ’ãƒƒãƒˆåˆ¤å®šã‚’ç„¡åŠ¹åŒ–
+			// ƒqƒbƒg”»’è‚ğ–³Œø‰»
 			if (boss)
 				boss->GetTailHit().Disable();
 		}

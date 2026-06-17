@@ -549,36 +549,7 @@
     <ClCompile Include="Src\Actor\Character\Boss\State\BossDethState.cpp">
       <Filter>Src\Actor\Character\Boss\State</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Actor\Character\Boss\State\BossIdleState.cpp">
-      <Filter>Src\Actor\Character\Boss\State</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Actor\Character\Boss\State\BossMoveState.cpp">
-      <Filter>Src\Actor\Character\Boss\State</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Actor\Character\Boss\Strategy\BiteAttackStrategy.cpp">
-      <Filter>Src\Actor\Character\Boss\Strategy</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Actor\Character\Boss\Strategy\BossAttackState.cpp">
-      <Filter>Src\Actor\Character\Boss\Strategy</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Actor\Character\Boss\Strategy\BossRoarState.cpp">
-      <Filter>Src\Actor\Character\Boss\Strategy</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Actor\Character\Boss\Strategy\ChargeAttackStrategy.cpp">
-      <Filter>Src\Actor\Character\Boss\Strategy</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Actor\Character\Boss\Strategy\FireAttackStrategy.cpp">
-      <Filter>Src\Actor\Character\Boss\Strategy</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Actor\Character\Boss\Strategy\TailAttackStrategy.cpp">
-      <Filter>Src\Actor\Character\Boss\Strategy</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Actor\Character\Boss\Combat\BossFireCombatSystem.cpp" />
-    <ClCompile Include="Src\Actor\Character\Boss\Combat\BossMeleeCombatSystem.cpp" />
-    <ClCompile Include="Src\Actor\Character\Boss\Combat\BossTornadoSystem.cpp" />
-    <ClCompile Include="Src\Actor\Character\Boss\Combat\BossDamageHandler.cpp" />
-    <ClCompile Include="Src\Actor\Character\Boss\Combat\BossPhaseController.cpp" />
-    <ClCompile Include="Src\Actor\Character\Boss\State\BossDamageState.cpp" />
+    <ClCompile Include="UIInput.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -1007,6 +978,7 @@
     <ClInclude Include="Src\Actor\Character\Boss\State\BossMoveState.h">
       <Filter>Src\Actor\Character\Boss\State</Filter>
     </ClInclude>
+    <ClInclude Include="UIInput.h" />
     <ClInclude Include="Src\Actor\Character\Boss\Strategy\BiteAttackStrategy.h">
       <Filter>Src\Actor\Character\Boss\Strategy</Filter>
     </ClInclude>

@@ -11,42 +11,53 @@
 namespace nsApp
 {
 	namespace nsSound
-	{  
+	{
 		/*
 		 * @struct SEInfo。
 		 * @brief 再生するSEの情報を管理する。
-	     */
+		 */
 		struct SEInfo
 		{
-			nsK2EngineLow::SoundSource* source = nullptr;	//! SEのサウンドエンジン。
-			float lifeTime = 0.0f;						    //! SEの寿命。
-			float currentTime = 0.0f;					    //! SEの現在の経過時間。
-			bool isLoop = false;					        //! SEをループ再生するかどうかのフラグ。
-			float baseVolume = 0.0f;						//! SEの基本音量。音量の割合を考慮して計算される。
+			nsK2EngineLow::SoundSource *source = nullptr; //! SEのサウンドエンジン。
+			float lifeTime = 0.0f;						  //! SEの寿命。
+			float currentTime = 0.0f;					  //! SEの現在の経過時間。
+			bool isLoop = false;						  //! SEをループ再生するかどうかのフラグ。
+			float baseVolume = 0.0f;					  //! SEの基本音量。音量の割合を考慮して計算される。
 		};
-
 
 		/* SEのIDリスト。*/
 		enum SE_ID : uint8_t
 		{
 			/* Sword。*/
-			NormalAttack_Sword = 64,  //! 通常攻撃のSE。
-			RushAttack_Sword,		  //! 連続攻撃のSE。
-
+			NormalAttack_Sword = 64, //! 通常攻撃のSE。
+			RushAttack_Sword,		 //! 連続攻撃のSE。
 
 			/* Hammer*/
 			NormalAttack_Hammer, //! 通常攻撃のSE。
-			HeavyAttack_Hammer,  //! 重攻撃のSE。
-			AirAttack_Hammer,    //! 空中攻撃のSE。
+			HeavyAttack_Hammer,	 //! 重攻撃のSE。
+			AirAttack_Hammer,	 //! 空中攻撃のSE。
 			ChargeAttack_Hammer, //! 貯め攻撃のSE。
-			DashAttack_Hammer,   //! ダッシュ攻撃のSE。
+			DashAttack_Hammer,	 //! ダッシュ攻撃のSE。
 
 			/* その他。*/
-			Charge,              //! チャージ中のSE。
-			Rescue,				 //! 救助中のSE。
+			Charge, //! チャージ中のSE。
+			Rescue, //! 救助中のSE。
 
+			/*ボス専用*/
+			Roar,	   //! ボスの咆哮のSE。
+			Fire,	   //! ボスの火炎攻撃のSE。
+			Bite,	   //! ボスの噛みつき攻撃のSE。
+			BiteSoft,  //! ボスの弱い噛みつき攻撃のSE。
+			Tail,	   //! ボスの尻尾攻撃のSE。
+			HitDamage, //! ボスのダメージを受けたときのSE。
+			Death,	   //! ボスの死亡のSE。
+			Sleep,	   //! ボスの睡眠のSE。
+
+			/*UI専用*/
+			Cursor, //! カーソル移動のSE。
+			Enter,	//! 決定のSE。
+			Exit,	//! キャンセルのSE。
 		};
-
 
 		class SEList
 		{
@@ -54,7 +65,6 @@ namespace nsApp
 			/* コンストラクタとデストラクタ。*/
 			SEList() = default;
 			virtual ~SEList();
-
 
 		public:
 			/* 初期化処理。*/
@@ -71,45 +81,42 @@ namespace nsApp
 			 */
 			void Clear();
 
-
-			/* 
+			/*
 			 * @brief SEの再生。
 			 * @param id: SEの識別子。
 			 * @param volume: SEの音量。
 			 * @param flag: ループ再生するかどうかのフラグ。
 			 * @param lifeTime  単発SEの寿命。
-			 */ 
-			nsK2EngineLow::SoundSource* PlaySE(SE_ID id, float volume, bool flag, float lifeTime);
+			 */
+			nsK2EngineLow::SoundSource *PlaySE(SE_ID id, float volume, bool flag, float lifeTime);
 
 			/**
 			 * @brief 指定したSEを停止して削除する。
 			 * @param soundSource 停止したいSoundSource。
 			 */
-			void StopSE(nsK2EngineLow::SoundSource*& soundSource);
+			void StopSE(nsK2EngineLow::SoundSource *&soundSource);
 
-			/* @fun 
+			/* @fun
 			 * @brief 武器と攻撃タイプからSEを判別。
 			 * @param wepon  武器の種類。
 			 * @param attack 攻撃の種類。
 			 */
-			nsK2EngineLow::SoundSource* PlayAttackSE(WeaponType wepon, AttackType attack);
-
+			nsK2EngineLow::SoundSource *PlayAttackSE(WeaponType wepon, AttackType attack);
 
 		private:
 			/* 攻撃の種類ごとのSEを管理するテーブル。*/
 			/* ソード。*/
 			void RegisterSwordSEBank();
 
-
 			/* ハンマー。*/
 			void RegisterHammerSEBank();
 
 		public:
 			/**
-			* @brief 音量の割合を考慮した音量の計算処理。
-			* @param seEate SEの音量の割合。
-			* @param masterRate マスターボリュームの割合。
-			*/
+			 * @brief 音量の割合を考慮した音量の計算処理。
+			 * @param seEate SEの音量の割合。
+			 * @param masterRate マスターボリュームの割合。
+			 */
 			void CalcVolume(int seEate, int masterRate);
 
 		public:
@@ -119,7 +126,6 @@ namespace nsApp
 				std::string filePath = "Assets/sound/SE/" + seName + ".wav";
 				return filePath;
 			}
-
 
 		private:
 			/* SEの種類ごとに格納関数を作る。*/
@@ -132,12 +138,17 @@ namespace nsApp
 			/* その他の効果音。*/
 			void StorageOtherSE();
 
+			/* ボスのSE。*/
+			void StorageBossSE();
+
+			/*UIのSE。*/
+			void StorageUISE();
 
 		private:
 			std::unordered_map<WeaponType, std::unordered_map<AttackType, SE_ID>> m_attackSEmap; //! 武器と攻撃タイプからSE_IDを紐づけるマップ。
 			std::vector<SEInfo> m_playingSEs;													 //! 再生中のSEの情報を管理するベクター。
 
-			bool m_isLoop = false;																 //! ループ再生するかどうかのフラグ。
+			bool m_isLoop = false; //! ループ再生するかどうかのフラグ。
 		};
 	}
 }
