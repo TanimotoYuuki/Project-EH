@@ -368,6 +368,7 @@
     <ClCompile Include="Src\UIAnimation\UIAnimation.cpp" />
     <ClCompile Include="Src\Scene\TitleScene\TitleBackGround.cpp" />
     <ClCompile Include="Src\Scene\TitleScene\TitleSelect.cpp" />
+    <ClCompile Include="UIInput.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Src\Actor\Character\Boss\Combat\BossPhaseController.h" />
@@ -532,6 +533,7 @@
     <ClInclude Include="Src\Utilty\TSVTableLoder.h" />
     <ClInclude Include="Src\Scene\TitleScene\TitleBackGround.h" />
     <ClInclude Include="Src\Scene\TitleScene\TitleSelect.h" />
+    <ClInclude Include="UIInput.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Src\Actor\Character\Common\Pool\GameObjectPool.inl" />

@@ -13,10 +13,10 @@
 #if (_WIN32_WINNT < 0x0A00 /*_WIN32_WINNT_WIN10*/)
 #ifndef _XBOX_ONE
 #if !defined(WINAPI_FAMILY) || (WINAPI_FAMILY != WINAPI_FAMILY_PHONE_APP)
-#if (_WIN32_WINNT >= 0x0602 /*_WIN32_WINNT_WIN8*/ )
-#pragma comment(lib,"xinput.lib")
+#if (_WIN32_WINNT >= 0x0602 /*_WIN32_WINNT_WIN8*/)
+#pragma comment(lib, "xinput.lib")
 #else
-#pragma comment(lib,"xinput9_1_0.lib")
+#pragma comment(lib, "xinput9_1_0.lib")
 #endif
 #endif
 #endif
@@ -29,26 +29,25 @@
 #include <string>
 #endif
 
-
 namespace DirectX
 {
     class GamePad
     {
     public:
         GamePad() noexcept(false);
-        GamePad(GamePad&& moveFrom) noexcept;
-        GamePad& operator= (GamePad&& moveFrom) noexcept;
+        GamePad(GamePad &&moveFrom) noexcept;
+        GamePad &operator=(GamePad &&moveFrom) noexcept;
 
-        GamePad(GamePad const&) = delete;
-        GamePad& operator=(GamePad const&) = delete;
+        GamePad(GamePad const &) = delete;
+        GamePad &operator=(GamePad const &) = delete;
 
         virtual ~GamePad();
 
-    #if (_WIN32_WINNT >= 0x0A00 /*_WIN32_WINNT_WIN10*/ ) || defined(_XBOX_ONE)
+#if (_WIN32_WINNT >= 0x0A00 /*_WIN32_WINNT_WIN10*/) || defined(_XBOX_ONE)
         static const int MAX_PLAYER_COUNT = 8;
-    #else
+#else
         static const int MAX_PLAYER_COUNT = 4;
-    #endif
+#endif
 
         enum DeadZone
         {
@@ -103,12 +102,12 @@ namespace DirectX
 
         struct State
         {
-            bool        connected;
-            uint64_t    packet;
-            Buttons     buttons;
-            DPad        dpad;
+            bool connected;
+            uint64_t packet;
+            Buttons buttons;
+            DPad dpad;
             ThumbSticks thumbSticks;
-            Triggers    triggers;
+            Triggers triggers;
 
             bool __cdecl IsConnected() const { return connected; }
 
@@ -165,15 +164,15 @@ namespace DirectX
                 ARCADE_PAD = 19,
             };
 
-            bool            connected;
-            Type            gamepadType;
-        #if (_WIN32_WINNT >= 0x0A00 /*_WIN32_WINNT_WIN10*/)
-            std::wstring    id;
+            bool connected;
+            Type gamepadType;
+#if (_WIN32_WINNT >= 0x0A00 /*_WIN32_WINNT_WIN10*/)
+            std::wstring id;
 
             Capabilities() noexcept : connected(false), gamepadType(UNKNOWN) {}
-        #else
-            uint64_t        id;
-        #endif
+#else
+            uint64_t id;
+#endif
 
             bool __cdecl IsConnected() const { return connected; }
         };
@@ -183,10 +182,10 @@ namespace DirectX
         public:
             enum ButtonState
             {
-                UP = 0,         // Button is up
-                HELD = 1,       // Button is held down
-                RELEASED = 2,   // Button was just released
-                PRESSED = 3,    // Buton was just pressed
+                UP = 0,       // Button is up
+                HELD = 1,     // Button is held down
+                RELEASED = 2, // Button was just released
+                PRESSED = 3,  // Buton was just pressed
             };
 
             ButtonState a;
@@ -230,10 +229,10 @@ namespace DirectX
             ButtonState leftTrigger;
             ButtonState rightTrigger;
 
-            #pragma prefast(suppress: 26495, "Reset() performs the initialization")
+#pragma prefast(suppress : 26495, "Reset() performs the initialization")
             ButtonStateTracker() noexcept { Reset(); }
 
-            void __cdecl Update(const State& state);
+            void __cdecl Update(const State &state);
 
             void __cdecl Reset() noexcept;
 
@@ -256,12 +255,12 @@ namespace DirectX
         void __cdecl Suspend();
         void __cdecl Resume();
 
-    #if (_WIN32_WINNT >= 0x0A00 /*_WIN32_WINNT_WIN10*/ ) || defined(_XBOX_ONE)
-        void __cdecl RegisterEvents(void* ctrlChanged, void* userChanged);
-    #endif
+#if (_WIN32_WINNT >= 0x0A00 /*_WIN32_WINNT_WIN10*/) || defined(_XBOX_ONE)
+        void __cdecl RegisterEvents(void *ctrlChanged, void *userChanged);
+#endif
 
         // Singleton
-        static GamePad& __cdecl Get();
+        static GamePad &__cdecl Get();
 
     private:
         // Private implementation.

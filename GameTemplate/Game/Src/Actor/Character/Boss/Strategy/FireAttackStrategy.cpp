@@ -2,6 +2,9 @@
 #include "FireAttackStrategy.h"
 #include "Src/Actor/Character/Boss/Boss.h"
 
+#include "Src/Sound/SoundLister.h"
+#include "Src/Sound/SEList.h"
+
 namespace
 {
 	const float ATTACK_TIME = 2.5f; //! 1 回の攻撃の継続時間（秒）。この時間が経過すると次の行動に移る。
@@ -31,6 +34,13 @@ namespace nsApp
 			{
 				boss->ShotFireBall();
 				m_isShot = true;
+
+				/*���˂̃^�C�~���O��SE���Đ��B*/
+				auto soundManager = FindGO<nsSound::SoundLister>("SoundManager");
+				if (soundManager != nullptr && reinterpret_cast<uintptr_t>(soundManager))
+				{
+					soundManager->GetSEList().PlaySE(nsSound::SE_ID::Fire, 1.0f, false, 100.0f);
+				}
 			}
 		}
 

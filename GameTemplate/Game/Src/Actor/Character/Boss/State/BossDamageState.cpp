@@ -2,7 +2,6 @@
 #include "BossDamageState.h"
 #include "Src/Actor/Character/Boss/Boss.h"
 
-
 namespace nsApp
 {
 	namespace nsState
@@ -15,11 +14,17 @@ namespace nsApp
 			/* ダメージモーション再生と無敵時間開始 */
 			m_timer = 0.5f;
 
-			/* アニメーションの再生。*/
 			m_boss->PlayAnimation(nsActor::BossAnimationID::GetHit);
 
 			/* HPの初期化。*/
 			m_boss->ResetPrevHP();
+
+			/*被弾時の音再生。*/
+			auto soundManager = FindGO<nsSound::SoundLister>("SoundManager");
+			if (soundManager != nullptr && reinterpret_cast<uintptr_t>(soundManager))
+			{
+				soundManager->GetSEList().PlaySE(nsSound::SE_ID::HitDamage, 1.0f, false, 100.0f);
+			}
 		}
 
 

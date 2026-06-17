@@ -1,152 +1,155 @@
 #include "stdafx.h"
 #include "MemberSelect.h"
 #include "Src/Fade/Fade.h"
+#include "UIInput.h"
+#include "Src/Sound/SoundLister.h"
 
 #include "Src/Actor/Character/Player/CharacterByWeapon/SwordCharacter.h"
 #include "Src/Actor/Character/Player/CharacterByWeapon/HammerCharacter.h"
 #include "Src/Actor/Character/Player/CharacterByWeapon/WandCharacter.h"
 #include "Src/Actor/Character/Player/CharacterByWeapon/TwinGunCharacter.h"
 
-namespace {
+namespace
+{
 	/*メンバー選択テキストUI。*/
-	const float MEMBER_SELECT_TEXT_UI_WIDTH = 1024;/*メンバー選択テキストUIの幅。*/
+	const float MEMBER_SELECT_TEXT_UI_WIDTH = 1024; /*メンバー選択テキストUIの幅。*/
 
-	const float MEMBER_SELECT_TEXT_UI_HEIGHT = 256;/*メンバー選択テキストUIの高さ。*/
+	const float MEMBER_SELECT_TEXT_UI_HEIGHT = 256; /*メンバー選択テキストUIの高さ。*/
 
-	const Vector3 MEMBER_SELECT_TEXT_UI_INIT_POSITION = { -700.0f,450.0f,0.0f };/*メンバー選択テキストUIの初期位置。*/
+	const Vector3 MEMBER_SELECT_TEXT_UI_INIT_POSITION = {-700.0f, 450.0f, 0.0f}; /*メンバー選択テキストUIの初期位置。*/
 
-	const Vector3 MEMBER_SELECT_TEXT_UI_INIT_SCALE = { 1.0f,1.0f,1.0f };/*メンバー選択テキストUIの初期大きさ。*/
+	const Vector3 MEMBER_SELECT_TEXT_UI_INIT_SCALE = {1.0f, 1.0f, 1.0f}; /*メンバー選択テキストUIの初期大きさ。*/
 
 	/*キャラクター選択UI。*/
-	const float CHARACTER_SELECT_UI_WIDTH = 990;/*キャラクター選択UIの幅。*/
+	const float CHARACTER_SELECT_UI_WIDTH = 990; /*キャラクター選択UIの幅。*/
 
-	const float CHARACTER_SELECT_UI_HEIGHT = 1080;/*キャラクター選択UIの高さ。*/
+	const float CHARACTER_SELECT_UI_HEIGHT = 1080; /*キャラクター選択UIの高さ。*/
 
-	const Vector3 CHARACTER_SELECT_UI_INIT_POSITION = { 1785.0f,50.0f,0.0f };/*キャラクター選択UIの初期位置。*/
+	const Vector3 CHARACTER_SELECT_UI_INIT_POSITION = {1785.0f, 50.0f, 0.0f}; /*キャラクター選択UIの初期位置。*/
 
-	const Vector3 CHARACTER_SELECT_UI_INIT_SCALE = { 0.48f,0.48f,1.0f };/*キャラクター選択UIの初期大きさ。*/
+	const Vector3 CHARACTER_SELECT_UI_INIT_SCALE = {0.48f, 0.48f, 1.0f}; /*キャラクター選択UIの初期大きさ。*/
 
-	const Vector4 CHARACTER_SELECT_UI_INIT_MUL_COLOR = { 1.0f,1.0f,1.0f,0.6f };/*キャラクター選択UIの初期乗算色。*/
+	const Vector4 CHARACTER_SELECT_UI_INIT_MUL_COLOR = {1.0f, 1.0f, 1.0f, 0.6f}; /*キャラクター選択UIの初期乗算色。*/
 
 	/*キャラクター枠UI(1人目のキャラクターをベースに)。*/
-	const float CHARACTER_FRAME_UI_WIDTH = 990;/*キャラクター選択UIの幅。*/
+	const float CHARACTER_FRAME_UI_WIDTH = 990; /*キャラクター選択UIの幅。*/
 
-	const float CHARACTER_FRAME_UI_HEIGHT = 1080;/*キャラクター選択UIの高さ。*/
+	const float CHARACTER_FRAME_UI_HEIGHT = 1080; /*キャラクター選択UIの高さ。*/
 
-	const Vector3 CHARACTER_FRAME_UI_INIT_POSITION = { 1785.0f,50.0f,0.0f };/*キャラクター選択UIの初期位置。*/
+	const Vector3 CHARACTER_FRAME_UI_INIT_POSITION = {1785.0f, 50.0f, 0.0f}; /*キャラクター選択UIの初期位置。*/
 
-	const float CHARACTER_FRAME_UI_POSITION_INTERVAL = 475.0f;/*キャラクター枠UIの位置の間隔。*/
+	const float CHARACTER_FRAME_UI_POSITION_INTERVAL = 475.0f; /*キャラクター枠UIの位置の間隔。*/
 
-	const Vector3 CHARACTER_FRAME_UI_INIT_SCALE = { 0.45f,0.45f,1.0f };/*キャラクター選択UIの初期大きさ。*/
+	const Vector3 CHARACTER_FRAME_UI_INIT_SCALE = {0.45f, 0.45f, 1.0f}; /*キャラクター選択UIの初期大きさ。*/
 
 	/*役割アイコンUI。*/
-	const float ROLE_ICON_UI_WIDTH = 1024;/*役割アイコンUIの幅。*/
+	const float ROLE_ICON_UI_WIDTH = 1024; /*役割アイコンUIの幅。*/
 
-	const float ROLE_ICON_UI_HEIGHT = 1024;/*役割アイコンUIの高さ。*/
+	const float ROLE_ICON_UI_HEIGHT = 1024; /*役割アイコンUIの高さ。*/
 
-	const Vector3 ROLE_ICON_UI_INIT_POSITION = { 1785.0f,50.0f,0.0f };/*役割アイコンUIの初期位置。*/
+	const Vector3 ROLE_ICON_UI_INIT_POSITION = {1785.0f, 50.0f, 0.0f}; /*役割アイコンUIの初期位置。*/
 
-	const float ROLE_ICON_UI_POSITION_X_OFFSET = 135.0f;/*役割アイコンUIのX軸の位置のオフセット。*/
-	
-	const float ROLE_ICON_UI_POSITION_Y_OFFSET = 150.0f;/*役割アイコンUIのY軸の位置のオフセット。*/
+	const float ROLE_ICON_UI_POSITION_X_OFFSET = 135.0f; /*役割アイコンUIのX軸の位置のオフセット。*/
 
-	const Vector3 ROLE_ICON_UI_INIT_SCALE = { 0.105f,0.105f,1.0f };/*役割アイコンUIの初期大きさ。*/
+	const float ROLE_ICON_UI_POSITION_Y_OFFSET = 150.0f; /*役割アイコンUIのY軸の位置のオフセット。*/
+
+	const Vector3 ROLE_ICON_UI_INIT_SCALE = {0.105f, 0.105f, 1.0f}; /*役割アイコンUIの初期大きさ。*/
 
 	/*キャラクターフェイドUI。*/
-	const float CHARACTER_FADE_UI_WIDTH = 990;/*キャラクターフェイドUIの幅。*/
+	const float CHARACTER_FADE_UI_WIDTH = 990; /*キャラクターフェイドUIの幅。*/
 
-	const float CHARACTER_FADE_UI_HEIGHT = 1080;/*キャラクターフェイドUIの高さ。*/
+	const float CHARACTER_FADE_UI_HEIGHT = 1080; /*キャラクターフェイドUIの高さ。*/
 
-	const Vector3 CHARACTER_FADE_UI_INIT_SCALE = { 0.45f,0.45f,1.0f };/*キャラクターフェイドUIの初期大きさ。*/
+	const Vector3 CHARACTER_FADE_UI_INIT_SCALE = {0.45f, 0.45f, 1.0f}; /*キャラクターフェイドUIの初期大きさ。*/
 
-	const Vector4 CHARACTER_FADE_UI_INIT_MUL_COLOR = { 1.0f,1.0f,1.0f,0.5f };/*キャラクターフェイドUIの初期乗算色。*/
+	const Vector4 CHARACTER_FADE_UI_INIT_MUL_COLOR = {1.0f, 1.0f, 1.0f, 0.5f}; /*キャラクターフェイドUIの初期乗算色。*/
 
 	/*出撃選択UI。*/
-	const float DEPLOY_SELECT_UI_WIDTH = 1024;/*出撃選択UIの幅。*/
+	const float DEPLOY_SELECT_UI_WIDTH = 1024; /*出撃選択UIの幅。*/
 
-	const float DEPLOY_SELECT_UI_HEIGHT = 256;/*出撃選択UIの高さ。*/
+	const float DEPLOY_SELECT_UI_HEIGHT = 256; /*出撃選択UIの高さ。*/
 
-	const Vector3 DEPLOY_SELECT_UI_INIT_POSITION = { 2500.0f,-350.0f,0.0f };/*出撃選択UIの初期位置。*/
+	const Vector3 DEPLOY_SELECT_UI_INIT_POSITION = {2500.0f, -350.0f, 0.0f}; /*出撃選択UIの初期位置。*/
 
-	const Vector3 DEPLOY_SELECT_UI_INIT_SCALE = { 0.84f,1.03f,1.0f };/*出撃選択UIの初期大きさ。*/
+	const Vector3 DEPLOY_SELECT_UI_INIT_SCALE = {0.84f, 1.03f, 1.0f}; /*出撃選択UIの初期大きさ。*/
 
-	const Vector4 DEPLOY_SELECT_UI_INIT_MUL_COLOR = { 1.0f,1.0f,1.0f,0.6f };/*出撃テキストUIの初期乗算色。*/
+	const Vector4 DEPLOY_SELECT_UI_INIT_MUL_COLOR = {1.0f, 1.0f, 1.0f, 0.6f}; /*出撃テキストUIの初期乗算色。*/
 
 	/*出撃テキストUI。*/
-	const float DEPLOY_TEXT_UI_WIDTH = 1024;/*出撃テキストUIの幅。*/
+	const float DEPLOY_TEXT_UI_WIDTH = 1024; /*出撃テキストUIの幅。*/
 
-	const float DEPLOY_TEXT_UI_HEIGHT = 256;/*出撃テキストUIの高さ。*/
+	const float DEPLOY_TEXT_UI_HEIGHT = 256; /*出撃テキストUIの高さ。*/
 
-	const Vector3 DEPLOY_TEXT_UI_INIT_POSITION = { 2500.0f,-350.0f,0.0f };/*出撃テキストUIの初期位置。*/
+	const Vector3 DEPLOY_TEXT_UI_INIT_POSITION = {2500.0f, -350.0f, 0.0f}; /*出撃テキストUIの初期位置。*/
 
-	const Vector3 DEPLOY_TEXT_UI_INIT_SCALE = { 0.8f,0.8f,1.0f };/*出撃テキストUIの初期大きさ。*/
+	const Vector3 DEPLOY_TEXT_UI_INIT_SCALE = {0.8f, 0.8f, 1.0f}; /*出撃テキストUIの初期大きさ。*/
 
 	/*ボタンUI。*/
-	const float BUTTON_UI_WIDTH = 1024;/*ボタンUIの幅。*/
+	const float BUTTON_UI_WIDTH = 1024; /*ボタンUIの幅。*/
 
-	const float BUTTON_UI_HEIGHT = 1024;/*ボタンUIの高さ。*/
+	const float BUTTON_UI_HEIGHT = 1024; /*ボタンUIの高さ。*/
 
 	const Vector3 BUTTON_UI_INIT_POSITION[nsApp::nsSelect::MemberSelect::EnButtonUI::enButtonUI_Num] = {
-		Vector3{-600.0f,-450.0f,0.0f},/*Aボタン。*/
-		Vector3{-850.0f,-450.0f,0.0f},/*Bボタン。*/
-		Vector3{-345.0f,-450.0f,0.0f},/*Xボタン。*/
-		Vector3{75.0f,-450.0f,0.0f}/*Yボタン。*/
-	};/*ボタンUIの初期位置。*/
+		Vector3{-600.0f, -450.0f, 0.0f}, /*Aボタン。*/
+		Vector3{-850.0f, -450.0f, 0.0f}, /*Bボタン。*/
+		Vector3{-345.0f, -450.0f, 0.0f}, /*Xボタン。*/
+		Vector3{75.0f, -450.0f, 0.0f}	 /*Yボタン。*/
+	}; /*ボタンUIの初期位置。*/
 
-	const Vector3 BUTTON_UI_INIT_SCALE = { 0.1f,0.1f,1.0f };/*ボタンUIの初期大きさ。*/
+	const Vector3 BUTTON_UI_INIT_SCALE = {0.1f, 0.1f, 1.0f}; /*ボタンUIの初期大きさ。*/
 
 	/*テキストUI。*/
-	const float TEXT_UI_WIDTH = 1024;/*テキストUIの幅。*/
+	const float TEXT_UI_WIDTH = 1024; /*テキストUIの幅。*/
 
-	const float TEXT_UI_HEIGHT = 256;/*テキストUIの高さ。*/
+	const float TEXT_UI_HEIGHT = 256; /*テキストUIの高さ。*/
 
 	const Vector3 TEXT_UI_INIT_POSITION[nsApp::nsSelect::MemberSelect::EnTextUI::enTextUI_Num] = {
-		Vector3{-475.0f,-450.0f,0.0f},/*決定。*/
-		Vector3{-725.0f,-450.0f,0.0f},/*戻る。*/
-		Vector3{-135.0f,-450.0f,0.0f},/*ゲーム設定。*/
-		Vector3{255.0f,-450.0f,0.0f}/*操作方法。*/
-	};/*テキストUIの初期位置。*/
+		Vector3{-475.0f, -450.0f, 0.0f}, /*決定。*/
+		Vector3{-725.0f, -450.0f, 0.0f}, /*戻る。*/
+		Vector3{-135.0f, -450.0f, 0.0f}, /*ゲーム設定。*/
+		Vector3{255.0f, -450.0f, 0.0f}	 /*操作方法。*/
+	}; /*テキストUIの初期位置。*/
 
-	const Vector3 TEXT_UI_INIT_SCALE = { 1.0f,1.0f,1.0f };/*テキストUIの初期大きさ。*/
+	const Vector3 TEXT_UI_INIT_SCALE = {1.0f, 1.0f, 1.0f}; /*テキストUIの初期大きさ。*/
 
 	/*UIアニメーション。*/
-	const float SLIDE_UI_ANIMATION_PLAY_SPEED = 4.0f;/*UIをスライドさせるアニメーションの再生速度。*/
+	const float SLIDE_UI_ANIMATION_PLAY_SPEED = 4.0f; /*UIをスライドさせるアニメーションの再生速度。*/
 
-	const float ALPHA_UI_ANIMATION_PLAY_SPEED = 1.2f;/*UIの透明度を変えるアニメーションの再生速度。*/
+	const float ALPHA_UI_ANIMATION_PLAY_SPEED = 1.2f; /*UIの透明度を変えるアニメーションの再生速度。*/
 
-	const float SELECT_DIRECTION_UI_ANIMATION_PLAY_SPEED = 7.0f;/*選択したときの演出UIアニメーションの再生速度。*/
+	const float SELECT_DIRECTION_UI_ANIMATION_PLAY_SPEED = 7.0f; /*選択したときの演出UIアニメーションの再生速度。*/
 
-	const float SLIDE_UI_ANIMATION_POSITION_OFFSET = 2500.0f;/*UIをスライドさせるアニメーションの位置のオフセット。*/
+	const float SLIDE_UI_ANIMATION_POSITION_OFFSET = 2500.0f; /*UIをスライドさせるアニメーションの位置のオフセット。*/
 
 	const Vector3 AFTER_UI_ANIMATION_POSITION[nsApp::nsSelect::MemberSelect::EnSlide::enSlide_Num][nsApp::nsSelect::MemberSelect::EnSlideUIAnimationSprite::enSlideUIAnimationSprite_Num] = {
 		/*左側にスライドした時の位置。*/
-		Vector3{-715.0f,50.0f,0.0f},/*キャラクター選択UI。*/
-		Vector3{-715.0f,50.0f,0.0f},/*1人目のキャラクター枠UI。*/
-		Vector3{-715.0f + CHARACTER_FRAME_UI_POSITION_INTERVAL * 1,50.0f,0.0f},/*2人目のキャラクター枠UI。*/
-		Vector3{-715.0f + CHARACTER_FRAME_UI_POSITION_INTERVAL * 2,50.0f,0.0f},/*3人目のキャラクター枠UI。*/
-		Vector3{-715.0f + CHARACTER_FRAME_UI_POSITION_INTERVAL * 3,50.0f,0.0f},/*4人目のキャラクター枠UI。*/
-		Vector3{-715.0f + CHARACTER_FRAME_UI_POSITION_INTERVAL * 1,50.0f,0.0f},/*NPC用の2人目のキャラクター枠UI。*/
-		Vector3{-715.0f + CHARACTER_FRAME_UI_POSITION_INTERVAL * 2,50.0f,0.0f},/*NPC用の3人目のキャラクター枠UI。*/
-		Vector3{-715.0f + CHARACTER_FRAME_UI_POSITION_INTERVAL * 3,50.0f,0.0f},/*NPC用の4人目のキャラクター枠UI。*/
-		Vector3{0.0f,-350.0f,0.0f},/*出撃選択UI。*/
-		Vector3{0.0f,-350.0f,0.0f},/*出撃テキストUI。*/
+		Vector3{-715.0f, 50.0f, 0.0f},											  /*キャラクター選択UI。*/
+		Vector3{-715.0f, 50.0f, 0.0f},											  /*1人目のキャラクター枠UI。*/
+		Vector3{-715.0f + CHARACTER_FRAME_UI_POSITION_INTERVAL * 1, 50.0f, 0.0f}, /*2人目のキャラクター枠UI。*/
+		Vector3{-715.0f + CHARACTER_FRAME_UI_POSITION_INTERVAL * 2, 50.0f, 0.0f}, /*3人目のキャラクター枠UI。*/
+		Vector3{-715.0f + CHARACTER_FRAME_UI_POSITION_INTERVAL * 3, 50.0f, 0.0f}, /*4人目のキャラクター枠UI。*/
+		Vector3{-715.0f + CHARACTER_FRAME_UI_POSITION_INTERVAL * 1, 50.0f, 0.0f}, /*NPC用の2人目のキャラクター枠UI。*/
+		Vector3{-715.0f + CHARACTER_FRAME_UI_POSITION_INTERVAL * 2, 50.0f, 0.0f}, /*NPC用の3人目のキャラクター枠UI。*/
+		Vector3{-715.0f + CHARACTER_FRAME_UI_POSITION_INTERVAL * 3, 50.0f, 0.0f}, /*NPC用の4人目のキャラクター枠UI。*/
+		Vector3{0.0f, -350.0f, 0.0f},											  /*出撃選択UI。*/
+		Vector3{0.0f, -350.0f, 0.0f},											  /*出撃テキストUI。*/
 
 		/*右側にスライドした時の位置。*/
-		Vector3{1785.0f,50.0f,0.0f},/*キャラクター選択UI。*/
-		Vector3{1785.0f,50.0f,0.0f},/*1人目のキャラクター枠UI。*/
-		Vector3{1785.0f + CHARACTER_FRAME_UI_POSITION_INTERVAL * 1,50.0f,0.0f},/*2人目のキャラクター枠UI。*/
-		Vector3{1785.0f + CHARACTER_FRAME_UI_POSITION_INTERVAL * 2,50.0f,0.0f},/*3人目のキャラクター枠UI。*/
-		Vector3{1785.0f + CHARACTER_FRAME_UI_POSITION_INTERVAL * 3,50.0f,0.0f},/*4人目のキャラクター枠UI。*/
-		Vector3{1785.0f + CHARACTER_FRAME_UI_POSITION_INTERVAL * 1,50.0f,0.0f},/*NPC用の2人目のキャラクター枠UI。*/
-		Vector3{1785.0f + CHARACTER_FRAME_UI_POSITION_INTERVAL * 2,50.0f,0.0f},/*NPC用の3人目のキャラクター枠UI。*/
-		Vector3{1785.0f + CHARACTER_FRAME_UI_POSITION_INTERVAL * 3,50.0f,0.0f},/*NPC用の4人目のキャラクター枠UI。*/
-		Vector3{2500.0f,-350.0f,0.0f},/*出撃選択UI。*/
-		Vector3{2500.0f,-350.0f,0.0f},/*出撃テキストUI。*/
-	};/*UIをスライドさせるアニメーション後の位置。*/
+		Vector3{1785.0f, 50.0f, 0.0f},											  /*キャラクター選択UI。*/
+		Vector3{1785.0f, 50.0f, 0.0f},											  /*1人目のキャラクター枠UI。*/
+		Vector3{1785.0f + CHARACTER_FRAME_UI_POSITION_INTERVAL * 1, 50.0f, 0.0f}, /*2人目のキャラクター枠UI。*/
+		Vector3{1785.0f + CHARACTER_FRAME_UI_POSITION_INTERVAL * 2, 50.0f, 0.0f}, /*3人目のキャラクター枠UI。*/
+		Vector3{1785.0f + CHARACTER_FRAME_UI_POSITION_INTERVAL * 3, 50.0f, 0.0f}, /*4人目のキャラクター枠UI。*/
+		Vector3{1785.0f + CHARACTER_FRAME_UI_POSITION_INTERVAL * 1, 50.0f, 0.0f}, /*NPC用の2人目のキャラクター枠UI。*/
+		Vector3{1785.0f + CHARACTER_FRAME_UI_POSITION_INTERVAL * 2, 50.0f, 0.0f}, /*NPC用の3人目のキャラクター枠UI。*/
+		Vector3{1785.0f + CHARACTER_FRAME_UI_POSITION_INTERVAL * 3, 50.0f, 0.0f}, /*NPC用の4人目のキャラクター枠UI。*/
+		Vector3{2500.0f, -350.0f, 0.0f},										  /*出撃選択UI。*/
+		Vector3{2500.0f, -350.0f, 0.0f},										  /*出撃テキストUI。*/
+	}; /*UIをスライドさせるアニメーション後の位置。*/
 
-	const float AFTER_UI_ANIMATION_ALPHA = 0.2f;/*UIの透明度を変えるアニメーション後の透明度。*/
+	const float AFTER_UI_ANIMATION_ALPHA = 0.2f; /*UIの透明度を変えるアニメーション後の透明度。*/
 
-	const float DOWN_POSITION_OFFSET = 25.0f;/*選択したときの演出UIアニメーション時に下降する位置のオフセット。*/
+	const float DOWN_POSITION_OFFSET = 25.0f; /*選択したときの演出UIアニメーション時に下降する位置のオフセット。*/
 }
 
 namespace nsApp
@@ -183,6 +186,14 @@ namespace nsApp
 				}
 			}
 
+			/*インスタンスを検索。*/
+			auto *SoundManager = FindGO<nsSound::SoundLister>("SoundManager");
+			if (SoundManager == nullptr)
+			{
+				SoundManager = NewGO<nsSound::SoundLister>(0, "SoundManager");
+				SoundManager->InitSound();
+			}
+
 			return true;
 		}
 
@@ -197,32 +208,32 @@ namespace nsApp
 			GamePad gamePad;
 			for (int i = 0; i < GamePad::MAX_PAD; i++)
 			{
-				if (i == 0) 
-				{ 
+				if (i == 0)
+				{
 					m_isPlayerControle[i] = true;
 					continue;
 				}
 
 				if (gamePad.GetPadState(i) == GamePad::EnXInputPadState::Connect)
 				{
-					m_isPlayerControle[i] = true;/*プレイヤーが操作している。*/
+					m_isPlayerControle[i] = true; /*プレイヤーが操作している。*/
 				}
 				else
 				{
-					m_isPlayerControle[i] = false;/*プレイヤーが操作していない。*/
+					m_isPlayerControle[i] = false; /*プレイヤーが操作していない。*/
 				}
 			}
 
 			/*演出中でないかつ
-			* 選択できていないかつ
-			* ゲーム設定ボタンを押していなければ。
-			*/
+			 * 選択できていないかつ
+			 * ゲーム設定ボタンを押していなければ。
+			 */
 			if (!IsDirection() && !DidSelect() && !IsPushGameOptionButton())
 			{
 				/*選択。*/
 				UpdateSelect();
 			}
-			
+
 			/*UIアニメーション。*/
 			UpdateUIAnimation();
 
@@ -234,7 +245,7 @@ namespace nsApp
 		}
 
 		/*描画処理。*/
-		void MemberSelect::Render(RenderContext& rc)
+		void MemberSelect::Render(RenderContext &rc)
 		{
 			/*メンバー選択テキストUIの描画。*/
 			m_memberSelectTextUI.Draw(rc);
@@ -324,7 +335,10 @@ namespace nsApp
 				/*役割選択画面を表示していて存在しない操作をしないため。*/
 				if (IsEndSelectEndDirectionUIAnimation(GetCurrentSelect() + 1))
 				{
-					if (j == enButtonUI_X || j == enButtonUI_Y) { continue; }
+					if (j == enButtonUI_X || j == enButtonUI_Y)
+					{
+						continue;
+					}
 				}
 
 				/*ボタンUIの描画。*/
@@ -337,7 +351,10 @@ namespace nsApp
 				/*役割選択画面を表示していて存在しない操作をしないため。*/
 				if (IsEndSelectEndDirectionUIAnimation(GetCurrentSelect() + 1))
 				{
-					if (k == enTextUI_GameOption || k == enTextUI_HowToPlay) { continue; }
+					if (k == enTextUI_GameOption || k == enTextUI_HowToPlay)
+					{
+						continue;
+					}
 				}
 
 				/*テキストUIの描画。*/
@@ -397,116 +414,116 @@ namespace nsApp
 		/*メンバー選択テキストUIの初期化。*/
 		void MemberSelect::InitMemberSelectTextUI()
 		{
-			m_memberSelectTextUI.Init(m_memberSelectTextUIFilePath.c_str(), MEMBER_SELECT_TEXT_UI_WIDTH, MEMBER_SELECT_TEXT_UI_HEIGHT, true);/*初期化。*/
-			m_memberSelectTextUI.SetPosition(MEMBER_SELECT_TEXT_UI_INIT_POSITION);/*位置設定。*/
-			m_memberSelectTextUI.SetScale(MEMBER_SELECT_TEXT_UI_INIT_SCALE);/*大きさ設定。*/
-			m_memberSelectTextUI.Update();/*更新処理。*/
+			m_memberSelectTextUI.Init(m_memberSelectTextUIFilePath.c_str(), MEMBER_SELECT_TEXT_UI_WIDTH, MEMBER_SELECT_TEXT_UI_HEIGHT, true); /*初期化。*/
+			m_memberSelectTextUI.SetPosition(MEMBER_SELECT_TEXT_UI_INIT_POSITION);															  /*位置設定。*/
+			m_memberSelectTextUI.SetScale(MEMBER_SELECT_TEXT_UI_INIT_SCALE);																  /*大きさ設定。*/
+			m_memberSelectTextUI.Update();																									  /*更新処理。*/
 		}
 
 		/*キャラクター選択UIの初期化。*/
 		void MemberSelect::InitCharacterSelectUI()
 		{
-			m_characterSelectUI.Init(m_characterSelectUIFilePath.c_str(), CHARACTER_SELECT_UI_WIDTH, CHARACTER_SELECT_UI_HEIGHT, true);/*初期化。*/
-			m_characterSelectUI.SetPosition(CHARACTER_SELECT_UI_INIT_POSITION);/*位置設定。*/
-			m_characterSelectUI.SetScale(CHARACTER_SELECT_UI_INIT_SCALE);/*大きさ設定。*/
-			m_characterSelectUI.SetMulColor(CHARACTER_SELECT_UI_INIT_MUL_COLOR);/*乗算色設定。*/
-			m_characterSelectUI.Update();/*更新処理。*/
+			m_characterSelectUI.Init(m_characterSelectUIFilePath.c_str(), CHARACTER_SELECT_UI_WIDTH, CHARACTER_SELECT_UI_HEIGHT, true); /*初期化。*/
+			m_characterSelectUI.SetPosition(CHARACTER_SELECT_UI_INIT_POSITION);															/*位置設定。*/
+			m_characterSelectUI.SetScale(CHARACTER_SELECT_UI_INIT_SCALE);																/*大きさ設定。*/
+			m_characterSelectUI.SetMulColor(CHARACTER_SELECT_UI_INIT_MUL_COLOR);														/*乗算色設定。*/
+			m_characterSelectUI.Update();																								/*更新処理。*/
 
-			m_slideUIAnimationSprite.push_back(&m_characterSelectUI);/*UIをスライドさせるアニメーションのスプライトに追加。*/
-			m_alphaUIAnimationSprite.push_back(&m_characterSelectUI);/*UIの透明度を変えるアニメーションのスプライトに追加。*/
-			m_selectDirectionUIAnimationSprite.push_back(&m_characterSelectUI);/*選択したときの演出UIアニメーションのスプライトに追加。*/
+			m_slideUIAnimationSprite.push_back(&m_characterSelectUI);			/*UIをスライドさせるアニメーションのスプライトに追加。*/
+			m_alphaUIAnimationSprite.push_back(&m_characterSelectUI);			/*UIの透明度を変えるアニメーションのスプライトに追加。*/
+			m_selectDirectionUIAnimationSprite.push_back(&m_characterSelectUI); /*選択したときの演出UIアニメーションのスプライトに追加。*/
 		}
 
 		/*キャラクター枠UIの初期化。*/
 		void MemberSelect::InitCharacterFrameUI(EnCharacterFrameUI characterFrameUI, int characterIndex)
 		{
-			Vector3 initPosition = CHARACTER_FRAME_UI_INIT_POSITION;/*初期位置。*/
-			initPosition.x += CHARACTER_FRAME_UI_POSITION_INTERVAL * characterIndex;/*位置の間隔を加算。*/
+			Vector3 initPosition = CHARACTER_FRAME_UI_INIT_POSITION;				 /*初期位置。*/
+			initPosition.x += CHARACTER_FRAME_UI_POSITION_INTERVAL * characterIndex; /*位置の間隔を加算。*/
 
-			m_characterFrameUI[characterFrameUI].Init(m_characterFrameUIFilePath[characterFrameUI].c_str(), CHARACTER_FRAME_UI_WIDTH, CHARACTER_FRAME_UI_HEIGHT, true);/*初期化。*/
-			m_characterFrameUI[characterFrameUI].SetPosition(initPosition);/*位置設定。*/
-			m_characterFrameUI[characterFrameUI].SetScale(CHARACTER_FRAME_UI_INIT_SCALE);/*大きさ設定。*/
-			m_characterFrameUI[characterFrameUI].Update();/*更新処理。*/
+			m_characterFrameUI[characterFrameUI].Init(m_characterFrameUIFilePath[characterFrameUI].c_str(), CHARACTER_FRAME_UI_WIDTH, CHARACTER_FRAME_UI_HEIGHT, true); /*初期化。*/
+			m_characterFrameUI[characterFrameUI].SetPosition(initPosition);																								/*位置設定。*/
+			m_characterFrameUI[characterFrameUI].SetScale(CHARACTER_FRAME_UI_INIT_SCALE);																				/*大きさ設定。*/
+			m_characterFrameUI[characterFrameUI].Update();																												/*更新処理。*/
 
-			m_slideUIAnimationSprite.push_back(&m_characterFrameUI[characterFrameUI]);/*UIをスライドさせるアニメーションのスプライトに追加。*/
-			m_selectDirectionUIAnimationSprite.push_back(&m_characterFrameUI[characterFrameUI]);/*選択したときの演出UIアニメーションのスプライトに追加。*/
+			m_slideUIAnimationSprite.push_back(&m_characterFrameUI[characterFrameUI]);			 /*UIをスライドさせるアニメーションのスプライトに追加。*/
+			m_selectDirectionUIAnimationSprite.push_back(&m_characterFrameUI[characterFrameUI]); /*選択したときの演出UIアニメーションのスプライトに追加。*/
 		}
 
 		/*NPC用のキャラクター枠UIの初期化。*/
 		void MemberSelect::InitNpcCharacterFrameUI(EnNpcCharacterFrameUI npcCharacterFrameUI)
 		{
-			m_npcCharacterFrameUI[npcCharacterFrameUI].Init(m_npcCharacterFrameUIFilePath[npcCharacterFrameUI].c_str(), CHARACTER_FRAME_UI_WIDTH, CHARACTER_FRAME_UI_HEIGHT, true);/*初期化。*/
-			m_npcCharacterFrameUI[npcCharacterFrameUI].SetPosition(m_characterFrameUI[npcCharacterFrameUI + 1].GetPosition());/*位置設定。*/
-			m_npcCharacterFrameUI[npcCharacterFrameUI].SetScale(CHARACTER_FRAME_UI_INIT_SCALE);/*大きさ設定。*/
-			m_npcCharacterFrameUI[npcCharacterFrameUI].Update();/*更新処理。*/
+			m_npcCharacterFrameUI[npcCharacterFrameUI].Init(m_npcCharacterFrameUIFilePath[npcCharacterFrameUI].c_str(), CHARACTER_FRAME_UI_WIDTH, CHARACTER_FRAME_UI_HEIGHT, true); /*初期化。*/
+			m_npcCharacterFrameUI[npcCharacterFrameUI].SetPosition(m_characterFrameUI[npcCharacterFrameUI + 1].GetPosition());														/*位置設定。*/
+			m_npcCharacterFrameUI[npcCharacterFrameUI].SetScale(CHARACTER_FRAME_UI_INIT_SCALE);																						/*大きさ設定。*/
+			m_npcCharacterFrameUI[npcCharacterFrameUI].Update();																													/*更新処理。*/
 
-			m_slideUIAnimationSprite.push_back(&m_npcCharacterFrameUI[npcCharacterFrameUI]);/*UIをスライドさせるアニメーションのスプライトに追加。*/
-			m_selectDirectionUIAnimationSprite.push_back(&m_npcCharacterFrameUI[npcCharacterFrameUI]);/*選択したときの演出UIアニメーションのスプライトに追加。*/
+			m_slideUIAnimationSprite.push_back(&m_npcCharacterFrameUI[npcCharacterFrameUI]);		   /*UIをスライドさせるアニメーションのスプライトに追加。*/
+			m_selectDirectionUIAnimationSprite.push_back(&m_npcCharacterFrameUI[npcCharacterFrameUI]); /*選択したときの演出UIアニメーションのスプライトに追加。*/
 		}
 
 		/*役割アイコンUIの初期化。*/
 		void MemberSelect::InitRoleIconUI(EnCharacterFrameUI characterFrameUI, RoleSelect::EnRole role)
 		{
-			m_roleIconUI[characterFrameUI][role].Init(m_roleIconUIFilePath[characterFrameUI][role].c_str(), ROLE_ICON_UI_WIDTH, ROLE_ICON_UI_HEIGHT, true);/*初期化。*/
-			m_roleIconUI[characterFrameUI][role].SetPosition(ROLE_ICON_UI_INIT_POSITION);/*位置設定。*/
-			m_roleIconUI[characterFrameUI][role].SetScale(ROLE_ICON_UI_INIT_SCALE);/*大きさ設定。*/
-			m_roleIconUI[characterFrameUI][role].Update();/*更新処理。*/
+			m_roleIconUI[characterFrameUI][role].Init(m_roleIconUIFilePath[characterFrameUI][role].c_str(), ROLE_ICON_UI_WIDTH, ROLE_ICON_UI_HEIGHT, true); /*初期化。*/
+			m_roleIconUI[characterFrameUI][role].SetPosition(ROLE_ICON_UI_INIT_POSITION);																	/*位置設定。*/
+			m_roleIconUI[characterFrameUI][role].SetScale(ROLE_ICON_UI_INIT_SCALE);																			/*大きさ設定。*/
+			m_roleIconUI[characterFrameUI][role].Update();																									/*更新処理。*/
 		}
 
 		/*キャラクターフェイドUIの初期化。*/
 		void MemberSelect::InitCharacterFadeUI()
 		{
-			Vector3 initPosition = m_characterFrameUI[enCharacterFrameUI_One].GetPosition();/*初期位置。*/
+			Vector3 initPosition = m_characterFrameUI[enCharacterFrameUI_One].GetPosition(); /*初期位置。*/
 
-			m_characterFadeUI.Init(m_characterFadeUIFilePath.c_str(), CHARACTER_FADE_UI_WIDTH, CHARACTER_FADE_UI_HEIGHT, true);/*初期化。*/
-			m_characterFadeUI.SetPosition(initPosition);/*位置設定。*/
-			m_characterFadeUI.SetScale(CHARACTER_FADE_UI_INIT_SCALE);/*大きさ設定。*/
-			m_characterFadeUI.SetMulColor(CHARACTER_FADE_UI_INIT_MUL_COLOR);/*乗算色設定。*/
-			m_characterFadeUI.Update();/*更新処理。*/
+			m_characterFadeUI.Init(m_characterFadeUIFilePath.c_str(), CHARACTER_FADE_UI_WIDTH, CHARACTER_FADE_UI_HEIGHT, true); /*初期化。*/
+			m_characterFadeUI.SetPosition(initPosition);																		/*位置設定。*/
+			m_characterFadeUI.SetScale(CHARACTER_FADE_UI_INIT_SCALE);															/*大きさ設定。*/
+			m_characterFadeUI.SetMulColor(CHARACTER_FADE_UI_INIT_MUL_COLOR);													/*乗算色設定。*/
+			m_characterFadeUI.Update();																							/*更新処理。*/
 		}
 
 		/*出撃選択UIの初期化。*/
 		void MemberSelect::InitDeploySelectUI()
 		{
-			m_deploySelectUI.Init(m_deploySelectUIFilePath.c_str(), DEPLOY_SELECT_UI_WIDTH, DEPLOY_SELECT_UI_HEIGHT, true);/*初期化。*/
-			m_deploySelectUI.SetPosition(DEPLOY_SELECT_UI_INIT_POSITION);/*位置設定。*/
-			m_deploySelectUI.SetScale(DEPLOY_SELECT_UI_INIT_SCALE);/*大きさ設定。*/
-			m_deploySelectUI.SetMulColor(DEPLOY_SELECT_UI_INIT_MUL_COLOR);/*乗算色設定。*/
-			m_deploySelectUI.Update();/*更新処理。*/
+			m_deploySelectUI.Init(m_deploySelectUIFilePath.c_str(), DEPLOY_SELECT_UI_WIDTH, DEPLOY_SELECT_UI_HEIGHT, true); /*初期化。*/
+			m_deploySelectUI.SetPosition(DEPLOY_SELECT_UI_INIT_POSITION);													/*位置設定。*/
+			m_deploySelectUI.SetScale(DEPLOY_SELECT_UI_INIT_SCALE);															/*大きさ設定。*/
+			m_deploySelectUI.SetMulColor(DEPLOY_SELECT_UI_INIT_MUL_COLOR);													/*乗算色設定。*/
+			m_deploySelectUI.Update();																						/*更新処理。*/
 
-			m_slideUIAnimationSprite.push_back(&m_deploySelectUI);/*UIをスライドさせるアニメーションのスプライトに追加。*/
-			m_alphaUIAnimationSprite.push_back(&m_deploySelectUI);/*UIの透明度を変えるアニメーションのスプライトに追加。*/
-			m_selectDirectionUIAnimationSprite.push_back(&m_deploySelectUI);/*選択したときの演出UIアニメーションのスプライトに追加。*/
+			m_slideUIAnimationSprite.push_back(&m_deploySelectUI);			 /*UIをスライドさせるアニメーションのスプライトに追加。*/
+			m_alphaUIAnimationSprite.push_back(&m_deploySelectUI);			 /*UIの透明度を変えるアニメーションのスプライトに追加。*/
+			m_selectDirectionUIAnimationSprite.push_back(&m_deploySelectUI); /*選択したときの演出UIアニメーションのスプライトに追加。*/
 		}
 
 		/*出撃テキストUIの初期化。*/
 		void MemberSelect::InitDeployTextUI()
 		{
-			m_deployTextUI.Init(m_deployTextUIFilePath.c_str(), DEPLOY_TEXT_UI_WIDTH, DEPLOY_TEXT_UI_HEIGHT, true);/*初期化。*/
-			m_deployTextUI.SetPosition(DEPLOY_TEXT_UI_INIT_POSITION);/*位置設定。*/
-			m_deployTextUI.SetScale(DEPLOY_TEXT_UI_INIT_SCALE);/*大きさ設定。*/
-			m_deployTextUI.Update();/*更新処理。*/
+			m_deployTextUI.Init(m_deployTextUIFilePath.c_str(), DEPLOY_TEXT_UI_WIDTH, DEPLOY_TEXT_UI_HEIGHT, true); /*初期化。*/
+			m_deployTextUI.SetPosition(DEPLOY_TEXT_UI_INIT_POSITION);												/*位置設定。*/
+			m_deployTextUI.SetScale(DEPLOY_TEXT_UI_INIT_SCALE);														/*大きさ設定。*/
+			m_deployTextUI.Update();																				/*更新処理。*/
 
-			m_slideUIAnimationSprite.push_back(&m_deployTextUI);/*UIをスライドさせるアニメーションのスプライトに追加。*/
-			m_selectDirectionUIAnimationSprite.push_back(&m_deployTextUI);/*選択したときの演出UIアニメーションのスプライトに追加。*/
+			m_slideUIAnimationSprite.push_back(&m_deployTextUI);		   /*UIをスライドさせるアニメーションのスプライトに追加。*/
+			m_selectDirectionUIAnimationSprite.push_back(&m_deployTextUI); /*選択したときの演出UIアニメーションのスプライトに追加。*/
 		}
 
 		/*ボタンUIの初期化。*/
 		void MemberSelect::InitButtonUI(EnButtonUI buttonUI)
 		{
-			m_buttonUI[buttonUI].Init(m_buttonUIFilePath[buttonUI].c_str(), BUTTON_UI_WIDTH, BUTTON_UI_HEIGHT, true);/*初期化。*/
-			m_buttonUI[buttonUI].SetPosition(BUTTON_UI_INIT_POSITION[buttonUI]);/*位置設定。*/
-			m_buttonUI[buttonUI].SetScale(BUTTON_UI_INIT_SCALE);/*大きさ設定。*/
-			m_buttonUI[buttonUI].Update();/*更新処理。*/
+			m_buttonUI[buttonUI].Init(m_buttonUIFilePath[buttonUI].c_str(), BUTTON_UI_WIDTH, BUTTON_UI_HEIGHT, true); /*初期化。*/
+			m_buttonUI[buttonUI].SetPosition(BUTTON_UI_INIT_POSITION[buttonUI]);									  /*位置設定。*/
+			m_buttonUI[buttonUI].SetScale(BUTTON_UI_INIT_SCALE);													  /*大きさ設定。*/
+			m_buttonUI[buttonUI].Update();																			  /*更新処理。*/
 		}
 
 		/*テキストUIの初期化。*/
 		void MemberSelect::InitTextUI(EnTextUI textUI)
 		{
-			m_textUI[textUI].Init(m_textUIFilePath[textUI].c_str(), TEXT_UI_WIDTH, TEXT_UI_HEIGHT, true);/*初期化。*/
-			m_textUI[textUI].SetPosition(TEXT_UI_INIT_POSITION[textUI]);/*位置設定。*/
-			m_textUI[textUI].SetScale(TEXT_UI_INIT_SCALE);/*大きさ設定。*/
-			m_textUI[textUI].Update();/*更新処理。*/
+			m_textUI[textUI].Init(m_textUIFilePath[textUI].c_str(), TEXT_UI_WIDTH, TEXT_UI_HEIGHT, true); /*初期化。*/
+			m_textUI[textUI].SetPosition(TEXT_UI_INIT_POSITION[textUI]);								  /*位置設定。*/
+			m_textUI[textUI].SetScale(TEXT_UI_INIT_SCALE);												  /*大きさ設定。*/
+			m_textUI[textUI].Update();																	  /*更新処理。*/
 		}
 
 		/*UIアニメーションの初期化。*/
@@ -533,118 +550,113 @@ namespace nsApp
 				InitSelectStartDirectionUIAnimation(m_selectDirectionUIAnimationSprite[k]);
 
 				/*選択したときの演出UIアニメーション(終了)。*/
-				InitSelectEndDirectionUIAnimation(m_selectDirectionUIAnimationSprite[k]);	
+				InitSelectEndDirectionUIAnimation(m_selectDirectionUIAnimationSprite[k]);
 			}
 		}
 
 		/*UIを左にスライドさせるアニメーション。*/
-		void MemberSelect::InitSlideLeftUIAnimation(SpriteRender* spriteData)
+		void MemberSelect::InitSlideLeftUIAnimation(SpriteRender *spriteData)
 		{
 			/*UIをスライドさせるアニメーションの値の設定。*/
-			Vector3 basePosition = spriteData->GetPosition();/*元の位置。*/
-			Vector3 targetPosition = spriteData->GetPosition();/*ターゲットの位置。*/
-			targetPosition.x -= SLIDE_UI_ANIMATION_POSITION_OFFSET;/*位置のオフセットを加算。*/
+			Vector3 basePosition = spriteData->GetPosition();		/*元の位置。*/
+			Vector3 targetPosition = spriteData->GetPosition();		/*ターゲットの位置。*/
+			targetPosition.x -= SLIDE_UI_ANIMATION_POSITION_OFFSET; /*位置のオフセットを加算。*/
 
 			/*初期化。*/
 			m_slideLeftUIAnimation.push_back(std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				spriteData,/*アニメーションをさせるスプライト。*/
-				1.0f,/*ターゲットの割合。*/
-				SLIDE_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
-				false,/*ループするか？*/
-				0.0f,/*アニメーションを開始する前の遅延時間。*/
-				0.0f,/*アニメーションを終了した後の遅延時間。*/
-				basePosition,/*元の位置。*/
-				targetPosition/*ターゲットの位置。*/)
-			);
+				spriteData,					   /*アニメーションをさせるスプライト。*/
+				1.0f,						   /*ターゲットの割合。*/
+				SLIDE_UI_ANIMATION_PLAY_SPEED, /*アニメーションの再生速度。*/
+				false,						   /*ループするか？*/
+				0.0f,						   /*アニメーションを開始する前の遅延時間。*/
+				0.0f,						   /*アニメーションを終了した後の遅延時間。*/
+				basePosition,				   /*元の位置。*/
+				targetPosition /*ターゲットの位置。*/));
 		}
 
 		/*UIを右にスライドさせるアニメーション。*/
-		void MemberSelect::InitSlideRightUIAnimation(SpriteRender* spriteData)
+		void MemberSelect::InitSlideRightUIAnimation(SpriteRender *spriteData)
 		{
 			/*UIをスライドさせるアニメーションの値の設定。*/
-			Vector3 basePosition = spriteData->GetPosition();/*元の位置。*/
-			basePosition.x -= SLIDE_UI_ANIMATION_POSITION_OFFSET;/*位置のオフセットを加算。*/
-			Vector3 targetPosition = spriteData->GetPosition();/*ターゲットの位置。*/
+			Vector3 basePosition = spriteData->GetPosition();	  /*元の位置。*/
+			basePosition.x -= SLIDE_UI_ANIMATION_POSITION_OFFSET; /*位置のオフセットを加算。*/
+			Vector3 targetPosition = spriteData->GetPosition();	  /*ターゲットの位置。*/
 
 			/*初期化。*/
 			m_slideRightUIAnimation.push_back(std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				spriteData,/*アニメーションをさせるスプライト。*/
-				1.0f,/*ターゲットの割合。*/
-				SLIDE_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
-				false,/*ループするか？*/
-				0.0f,/*アニメーションを開始する前の遅延時間。*/
-				0.0f,/*アニメーションを終了した後の遅延時間。*/
-				basePosition,/*元の位置。*/
-				targetPosition/*ターゲットの位置。*/)
-			);
+				spriteData,					   /*アニメーションをさせるスプライト。*/
+				1.0f,						   /*ターゲットの割合。*/
+				SLIDE_UI_ANIMATION_PLAY_SPEED, /*アニメーションの再生速度。*/
+				false,						   /*ループするか？*/
+				0.0f,						   /*アニメーションを開始する前の遅延時間。*/
+				0.0f,						   /*アニメーションを終了した後の遅延時間。*/
+				basePosition,				   /*元の位置。*/
+				targetPosition /*ターゲットの位置。*/));
 		}
 
 		/*UIの透明度を変えるアニメーションの初期化。*/
-		void MemberSelect::InitAlphaUIAnimation(SpriteRender* spriteData)
+		void MemberSelect::InitAlphaUIAnimation(SpriteRender *spriteData)
 		{
 			/*UIの透明度を変えるアニメーションの値の設定。*/
-			float baseAlpha = spriteData->GetMulColor().a;/*元の透明度。*/
-			float targetAlpha = AFTER_UI_ANIMATION_ALPHA;/*ターゲットの透明度。*/
+			float baseAlpha = spriteData->GetMulColor().a; /*元の透明度。*/
+			float targetAlpha = AFTER_UI_ANIMATION_ALPHA;  /*ターゲットの透明度。*/
 
 			/*初期化。*/
 			m_alphaUIAnimation.push_back(std::make_unique<nsApp::nsUI::AlphaUIAnimation>(
-				spriteData,/*アニメーションをさせるスプライト。*/
-				1.0f,/*ターゲットの割合。*/
-				ALPHA_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
-				true,/*ループするか？*/
-				0.0f,/*アニメーションを開始する前の遅延時間。*/
-				0.0f,/*アニメーションを終了した後の遅延時間。*/
-				baseAlpha,/*元の透明度。*/
-				targetAlpha/*ターゲットの透明度。*/)
-			);
+				spriteData,					   /*アニメーションをさせるスプライト。*/
+				1.0f,						   /*ターゲットの割合。*/
+				ALPHA_UI_ANIMATION_PLAY_SPEED, /*アニメーションの再生速度。*/
+				true,						   /*ループするか？*/
+				0.0f,						   /*アニメーションを開始する前の遅延時間。*/
+				0.0f,						   /*アニメーションを終了した後の遅延時間。*/
+				baseAlpha,					   /*元の透明度。*/
+				targetAlpha /*ターゲットの透明度。*/));
 		}
 
 		/*選択したときの演出UIアニメーション(開始)。*/
-		void MemberSelect::InitSelectStartDirectionUIAnimation(SpriteRender* spriteData)
+		void MemberSelect::InitSelectStartDirectionUIAnimation(SpriteRender *spriteData)
 		{
 			/*選択したときの演出UIアニメーションの値の設定。*/
-			Vector3 spritePosition = spriteData->GetPosition();/*対象となるスプライトの位置。*/
+			Vector3 spritePosition = spriteData->GetPosition(); /*対象となるスプライトの位置。*/
 			spritePosition.x -= SLIDE_UI_ANIMATION_POSITION_OFFSET;
 
-			Vector3 basePosition = spritePosition;/*元の位置。*/
-			Vector3 targetPosition = spritePosition;/*ターゲットの位置。*/
+			Vector3 basePosition = spritePosition;	 /*元の位置。*/
+			Vector3 targetPosition = spritePosition; /*ターゲットの位置。*/
 			targetPosition.y -= DOWN_POSITION_OFFSET;
 
 			/*初期化。*/
 			m_selectStartDirectionUIAnimation.push_back(std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				spriteData,/*アニメーションをさせるスプライト。*/
-				1.0f,/*ターゲットの割合。*/
-				SELECT_DIRECTION_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
-				false,/*ループするか？*/
-				0.0f,/*アニメーションを開始する前の遅延時間。*/
-				0.0f,/*アニメーションを終了した後の遅延時間。*/
-				basePosition,/*元の位置。*/
-				targetPosition/*ターゲットの位置。*/)
-			);
+				spriteData,								  /*アニメーションをさせるスプライト。*/
+				1.0f,									  /*ターゲットの割合。*/
+				SELECT_DIRECTION_UI_ANIMATION_PLAY_SPEED, /*アニメーションの再生速度。*/
+				false,									  /*ループするか？*/
+				0.0f,									  /*アニメーションを開始する前の遅延時間。*/
+				0.0f,									  /*アニメーションを終了した後の遅延時間。*/
+				basePosition,							  /*元の位置。*/
+				targetPosition /*ターゲットの位置。*/));
 		}
 
 		/*選択したときの演出UIアニメーション(終了)。*/
-		void MemberSelect::InitSelectEndDirectionUIAnimation(SpriteRender* spriteData)
+		void MemberSelect::InitSelectEndDirectionUIAnimation(SpriteRender *spriteData)
 		{
 			/*選択したときの演出UIアニメーションの値の設定。*/
-			Vector3 spritePosition = spriteData->GetPosition();/*対象となるスプライトの位置。*/
+			Vector3 spritePosition = spriteData->GetPosition(); /*対象となるスプライトの位置。*/
 			spritePosition.x -= SLIDE_UI_ANIMATION_POSITION_OFFSET;
 
-			Vector3 basePosition = spritePosition;/*元の位置。*/
+			Vector3 basePosition = spritePosition; /*元の位置。*/
 			basePosition.y -= DOWN_POSITION_OFFSET;
-			Vector3 targetPosition = spritePosition;/*ターゲットの位置。*/
+			Vector3 targetPosition = spritePosition; /*ターゲットの位置。*/
 
 			/*初期化。*/
 			m_selectEndDirectionUIAnimation.push_back(std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				spriteData,/*アニメーションをさせるスプライト。*/
-				1.0f,/*ターゲットの割合。*/
-				SELECT_DIRECTION_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
-				false,/*ループするか？*/
-				0.0f,/*アニメーションを開始する前の遅延時間。*/
-				0.0f,/*アニメーションを終了した後の遅延時間。*/
-				basePosition,/*元の位置。*/
-				targetPosition/*ターゲットの位置。*/)
-			);
+				spriteData,								  /*アニメーションをさせるスプライト。*/
+				1.0f,									  /*ターゲットの割合。*/
+				SELECT_DIRECTION_UI_ANIMATION_PLAY_SPEED, /*アニメーションの再生速度。*/
+				false,									  /*ループするか？*/
+				0.0f,									  /*アニメーションを開始する前の遅延時間。*/
+				0.0f,									  /*アニメーションを終了した後の遅延時間。*/
+				basePosition,							  /*元の位置。*/
+				targetPosition /*ターゲットの位置。*/));
 		}
 
 		/*キャラクターモデルの生成。*/
@@ -740,15 +752,23 @@ namespace nsApp
 			}
 		}
 
-		/*選択の更新処理。*/ 
+		/*選択の更新処理。*/
 		void MemberSelect::UpdateSelect()
 		{
+			auto *SoundManager = FindGO<nsSound::SoundLister>("SoundManager");
+
 			/*現在の選択が出撃選択なら。*/
 			if (m_currentSelect == enSelect_Deploy)
 			{
 				/*上か下を入力したら前に選択したキャラクターを選択する。*/
 				if (g_pad[0]->IsTrigger(enButtonUp) || g_pad[0]->IsTrigger(enButtonDown))
 				{
+					/*決定音を再生。*/
+					if (SoundManager)
+					{
+						SoundManager->GetSEList().PlaySE(nsSound::SE_ID::Cursor, 1.0f, false, 1.0f);
+					}
+
 					ResetAlphaUIAnimation();
 					m_currentSelect = m_previousSelect;
 					return;
@@ -757,6 +777,11 @@ namespace nsApp
 				/*Aボタンを押したら選択したときの演出を流すようにする。*/
 				if (g_pad[0]->IsTrigger(enButtonA))
 				{
+					/*決定音を再生。*/
+					if (SoundManager)
+					{
+						SoundManager->GetSEList().PlaySE(nsSound::SE_ID::Enter, 1.0f, false, 1.0f);
+					}
 					EnableSelect();
 					EnableDirection();
 					return;
@@ -768,6 +793,11 @@ namespace nsApp
 				/*上か下を入力したら出撃を選択する。*/
 				if (g_pad[0]->IsTrigger(enButtonUp) || g_pad[0]->IsTrigger(enButtonDown))
 				{
+					/*カーソル音を再生。*/
+					if (SoundManager)
+					{
+						SoundManager->GetSEList().PlaySE(nsSound::SE_ID::Cursor, 1.0f, false, 1.0f);
+					}
 					ResetAlphaUIAnimation();
 					m_currentSelect = enSelect_Deploy;
 					return;
@@ -775,13 +805,22 @@ namespace nsApp
 
 				/*前に選択した内容を設定。*/
 				m_previousSelect = m_currentSelect;
-				
+
 				/*左を入力したら。*/
 				if (g_pad[0]->IsTrigger(enButtonLeft))
 				{
+					/*カーソル移動音を再生。*/
+					if (SoundManager)
+					{
+						SoundManager->GetSEList().PlaySE(nsSound::SE_ID::Cursor, 1.0f, false, 1.0f);
+					}
 					ResetAlphaUIAnimation();
 					/*現在の選択が1人目のキャラクターを選択していたら。*/
-					if (m_currentSelect == enSelect_OneCharacter) { m_currentSelect = enSelect_FourCharacter; return; }
+					if (m_currentSelect == enSelect_OneCharacter)
+					{
+						m_currentSelect = enSelect_FourCharacter;
+						return;
+					}
 
 					/*左隣りのキャラクターを選択する。*/
 					m_currentSelect--;
@@ -791,9 +830,18 @@ namespace nsApp
 				/*右を入力したら。*/
 				if (g_pad[0]->IsTrigger(enButtonRight))
 				{
+					/*カーソル移動音を再生。*/
+					if (SoundManager)
+					{
+						SoundManager->GetSEList().PlaySE(nsSound::SE_ID::Cursor, 1.0f, false, 1.0f);
+					}
 					ResetAlphaUIAnimation();
 					/*現在の選択が4人目のキャラクターを選択していたら。*/
-					if (m_currentSelect == enSelect_FourCharacter) { m_currentSelect = enSelect_OneCharacter; return; }
+					if (m_currentSelect == enSelect_FourCharacter)
+					{
+						m_currentSelect = enSelect_OneCharacter;
+						return;
+					}
 
 					/*右隣りのキャラクターを選択する。*/
 					m_currentSelect++;
@@ -803,6 +851,11 @@ namespace nsApp
 				/*Aボタンを押したら選択したときの演出を流すようにする。*/
 				if (g_pad[0]->IsTrigger(enButtonA))
 				{
+					/*決定音を再生。*/
+					if (SoundManager)
+					{
+						SoundManager->GetSEList().PlaySE(nsSound::SE_ID::Enter, 1.0f, false, 1.0f);
+					}
 					EnableSelect();
 					EnableDirection();
 					return;
@@ -812,6 +865,11 @@ namespace nsApp
 			/*Xボタンを押したら設定画面を表示する。*/
 			if (g_pad[0]->IsTrigger(enButtonX))
 			{
+				/*設定画面を表示する音を再生。(Enter音を流用。)*/
+				if (SoundManager)
+				{
+					SoundManager->GetSEList().PlaySE(nsSound::SE_ID::Enter, 1.0f, false, 1.0f);
+				}
 				EnablePushGameOptionButton();
 				return;
 			}
@@ -819,6 +877,11 @@ namespace nsApp
 			/*Yボタンを押したら操作方法画面を表示する。*/
 			if (g_pad[0]->IsTrigger(enButtonY))
 			{
+				/*操作方法画面を開く音を再生。(Enter音を流用。)*/
+				if (SoundManager)
+				{
+					SoundManager->GetSEList().PlaySE(nsSound::SE_ID::Enter, 1.0f, false, 1.0f);
+				}
 				EnablePushHowToPlayButton();
 				return;
 			}
@@ -826,8 +889,14 @@ namespace nsApp
 			/*Bボタンを押したら前の選択に戻る。*/
 			if (g_pad[0]->IsTrigger(enButtonB))
 			{
+				/*キャンセル音を再生。*/
+				if (SoundManager)
+				{
+					SoundManager->GetSEList().PlaySE(nsSound::SE_ID::Exit, 1.0f, false, 1.0f);
+				}
 				EnableBackSelect();
 				EnableDirection();
+				return;
 			}
 		}
 
@@ -843,31 +912,27 @@ namespace nsApp
 					/*選択した内容の特徴の設定。*/
 					int currentSelectFeature = enSelectFauture_Num;
 					/*現在の選択の内容から特徴を分岐する。*/
-					m_currentSelect != enSelect_Deploy ?
-						currentSelectFeature = enSelectFauture_Character:/*キャラクター。*/
-						currentSelectFeature = enSelectFauture_Deploy;/*出撃。*/
+					m_currentSelect != enSelect_Deploy ? currentSelectFeature = enSelectFauture_Character : /*キャラクター。*/
+						currentSelectFeature = enSelectFauture_Deploy;										/*出撃。*/
 
 					/*選択UIの特徴の設定。*/
 					int currentSelectUIFeature = enSelectDirectionUIAnimationSprite_Num;
-					currentSelectFeature == enSelectFauture_Character ?
-						currentSelectUIFeature = enSelectDirectionUIAnimationSprite_CharacterSelectUI:/*キャラクター。*/
-						currentSelectUIFeature = enSelectDirectionUIAnimationSprite_DeploySelectUI;/*出撃。*/
+					currentSelectFeature == enSelectFauture_Character ? currentSelectUIFeature = enSelectDirectionUIAnimationSprite_CharacterSelectUI : /*キャラクター。*/
+						currentSelectUIFeature = enSelectDirectionUIAnimationSprite_DeploySelectUI;														/*出撃。*/
 
 					/*ターゲットUIの特徴の設定*/
 					int currentTargetUIFeature = enSelectDirectionUIAnimationSprite_Num;
 					int currentCharacterFrameUI = m_currentSelect + 1;
-					currentSelectFeature == enSelectFauture_Character ?
-						currentTargetUIFeature =  currentCharacterFrameUI:/*キャラクター。*/
-						currentTargetUIFeature = enSelectDirectionUIAnimationSprite_DeployTextUI;/*出撃。*/
+					currentSelectFeature == enSelectFauture_Character ? currentTargetUIFeature = currentCharacterFrameUI : /*キャラクター。*/
+						currentTargetUIFeature = enSelectDirectionUIAnimationSprite_DeployTextUI;						   /*出撃。*/
 
 					/*プレイヤーとNPCの区別。*/
 					int player = m_currentSelect + 1;
 					int npc = m_currentSelect + 4;
 					if (m_currentSelect != enSelect_Deploy)
 					{
-						m_isPlayerControle[m_currentSelect] == true ?
-							currentTargetUIFeature = player :/*プレイヤー。*/
-							currentTargetUIFeature = npc;/*NPC。*/
+						m_isPlayerControle[m_currentSelect] == true ? currentTargetUIFeature = player : /*プレイヤー。*/
+							currentTargetUIFeature = npc;												/*NPC。*/
 					}
 
 					if (!m_selectStartDirectionUIAnimation[currentTargetUIFeature]->IsEnd())
@@ -912,9 +977,7 @@ namespace nsApp
 			/*選択した内容の特徴の設定。*/
 			int currentSelectFeature = enSelectFauture_Num;
 			/*現在の選択の内容から特徴を分岐する。*/
-			m_currentSelect != enSelect_Deploy ? 
-				currentSelectFeature = enSelectFauture_Character : 
-				currentSelectFeature = enSelectFauture_Deploy;
+			m_currentSelect != enSelect_Deploy ? currentSelectFeature = enSelectFauture_Character : currentSelectFeature = enSelectFauture_Deploy;
 
 			m_alphaUIAnimation[currentSelectFeature]->Update();
 		}
@@ -946,7 +1009,7 @@ namespace nsApp
 			m_characterSelectUI.Update();
 
 			/*キャラクター枠UI。*/
-			for(int i = 0; i < enCharacterFrameUI_Num; i++)
+			for (int i = 0; i < enCharacterFrameUI_Num; i++)
 			{
 				if (m_isPlayerControle[i])
 				{
@@ -985,9 +1048,9 @@ namespace nsApp
 		/*キャラクターモデルの更新処理。*/
 		void MemberSelect::UpdateCharacterModel()
 		{
-			float offsetX = 560.0f;/*キャラクターモデル用でX軸にずらすオフセット。*/
-			float positionY = 50.0f;/*キャラクターモデルのY軸の位置。*/
-			float intervalPositon = 375.0f;/*間隔位置。*/
+			float offsetX = 560.0f;			/*キャラクターモデル用でX軸にずらすオフセット。*/
+			float positionY = 50.0f;		/*キャラクターモデルのY軸の位置。*/
+			float intervalPositon = 375.0f; /*間隔位置。*/
 
 			for (int i = 0; i < enCharacterFrameUI_Num; i++)
 			{
