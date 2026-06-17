@@ -35,7 +35,7 @@ namespace nsApp
 				boss->ShotFireBall();
 				m_isShot = true;
 
-				/*”­Ë‚Ìƒ^ƒCƒ~ƒ“ƒO‚ÅSE‚ğÄ¶B*/
+				/*ï¿½ï¿½ï¿½Ë‚Ìƒ^ï¿½Cï¿½~ï¿½ï¿½ï¿½Oï¿½ï¿½SEï¿½ï¿½Äï¿½ï¿½B*/
 				auto soundManager = FindGO<nsSound::SoundLister>("SoundManager");
 				if (soundManager != nullptr && reinterpret_cast<uintptr_t>(soundManager))
 				{

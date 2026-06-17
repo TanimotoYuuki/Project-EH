@@ -3,6 +3,7 @@
 #include "Src/Actor/Character/Boss/Boss.h"
 #include "Src/Actor/Character/Boss/AI/BossAIConfigFactory.h"
 #include "Src/Actor/Character/Boss/Status/BossManager.h"
+#include "Src/Sound/SoundLister.h"
 #include <memory>
 #include <random>
 
