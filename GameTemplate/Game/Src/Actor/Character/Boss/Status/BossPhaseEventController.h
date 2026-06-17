@@ -1,8 +1,8 @@
-#pragma once
+ï»¿#pragma once
 
 /**
  * @file   BossPhaseEventController.h
- * @brief  ƒ{ƒX‚ÌHPè‡’l‚ğŠÄ‹‚µAƒtƒF[ƒYƒCƒxƒ“ƒg‚ğ§Œä‚·‚éƒNƒ‰ƒXB
+ * @brief  ãƒœã‚¹ã®HPé–¾å€¤ã‚’ç›£è¦–ã—ã€ãƒ•ã‚§ãƒ¼ã‚ºã‚¤ãƒ™ãƒ³ãƒˆã‚’åˆ¶å¾¡ã™ã‚‹ã‚¯ãƒ©ã‚¹ã€‚
  * @date   2026/06/12
  */
 
@@ -20,38 +20,38 @@ namespace nsApp
 
 	/**
 	 * @class BossPhaseEventController
-	 * @brief ƒ{ƒX‚ÌHPè‡’l‚ğŠÄ‹‚µAƒtƒF[ƒYƒCƒxƒ“ƒg‚ğ§Œä‚·‚éB
+	 * @brief ãƒœã‚¹ã®HPé–¾å€¤ã‚’ç›£è¦–ã—ã€ãƒ•ã‚§ãƒ¼ã‚ºã‚¤ãƒ™ãƒ³ãƒˆã‚’åˆ¶å¾¡ã™ã‚‹ã€‚
 	 */
 	class BossPhaseEventController
 	{
 	public:
-		/* ƒRƒ“ƒXƒgƒ‰ƒNƒ^‚ÆƒfƒXƒgƒ‰ƒNƒ^B*/
+		/* ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã¨ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã€‚*/
 		BossPhaseEventController() = default;
 		~BossPhaseEventController() = default;
 
 
 	public:
 		/**
-		 * @brief ‰Šú‰»ˆ—B
-		 * @param boss       ƒ{ƒX‚Ìƒ|ƒCƒ“ƒ^B
-		 * @param camera     ƒJƒƒ‰‚Ìƒ|ƒCƒ“ƒ^B
-		 * @param commentary ƒRƒƒ“ƒ^ƒŠ[UIƒ}ƒl[ƒWƒƒ[‚Ìƒ|ƒCƒ“ƒ^B
-		 * @param timeLimit  ƒQ[ƒ€§ŒÀŠÔ‚Ìƒ|ƒCƒ“ƒ^B
-		 * @param playerHub  ƒvƒŒƒCƒ„[ƒRƒ“ƒgƒ[ƒ‰[ƒnƒu‚Ìƒ|ƒCƒ“ƒ^B
-		 * @param players    ‚Á”ò‚Î‚µ‘ÎÛ‚ÌƒvƒŒƒCƒ„[ƒŠƒXƒgB
+		 * @brief åˆæœŸåŒ–å‡¦ç†ã€‚
+		 * @param boss       ãƒœã‚¹ã®ãƒã‚¤ãƒ³ã‚¿ã€‚
+		 * @param camera     ã‚«ãƒ¡ãƒ©ã®ãƒã‚¤ãƒ³ã‚¿ã€‚
+		 * @param commentary ã‚³ãƒ¡ãƒ³ã‚¿ãƒªãƒ¼UIãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼ã®ãƒã‚¤ãƒ³ã‚¿ã€‚
+		 * @param timeLimit  ã‚²ãƒ¼ãƒ åˆ¶é™æ™‚é–“ã®ãƒã‚¤ãƒ³ã‚¿ã€‚
+		 * @param playerHub  ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼ãƒãƒ–ã®ãƒã‚¤ãƒ³ã‚¿ã€‚
+		 * @param players    å¹ã£é£›ã°ã—å¯¾è±¡ã®ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãƒªã‚¹ãƒˆã€‚
 		 */
 		void Initialize(nsActor::Boss* boss, Camera* camera, nsUI::CommentaryUIManager* commentary, nsGame::GameTimeLimit* timeLimit, PlayerControlerHub* playerHub, const std::vector<nsActor::Player*>& players);
 
 		/**
-		 * @brief XVˆ—BGame2::Update()‚©‚ç–ˆƒtƒŒ[ƒ€ŒÄ‚Ño‚·B
+		 * @brief æ›´æ–°å‡¦ç†ã€‚Game2::Update()ã‹ã‚‰æ¯ãƒ•ãƒ¬ãƒ¼ãƒ å‘¼ã³å‡ºã™ã€‚
 		 */
 		void Update();
 
 
 	public:
 		/**
-		 * @brief ™ôšKƒCƒxƒ“ƒg‚ªis’†‚©‚Ç‚¤‚©B
-		 * @return is’†‚Ìê‡ trueB
+		 * @brief å’†å“®ã‚¤ãƒ™ãƒ³ãƒˆãŒé€²è¡Œä¸­ã‹ã©ã†ã‹ã€‚
+		 * @return é€²è¡Œä¸­ã®å ´åˆ trueã€‚
 		 */
 		inline bool IsEventActive() const
 		{
@@ -61,57 +61,57 @@ namespace nsApp
 
 	private:
 		/**
-		 * @brief HPè‡’l‚Ì•Ï‰»‚ğŒŸo‚µAŠeƒtƒF[ƒYˆ—‚ğŒÄ‚Ño‚·B
+		 * @brief HPé–¾å€¤ã®å¤‰åŒ–ã‚’æ¤œå‡ºã—ã€å„ãƒ•ã‚§ãƒ¼ã‚ºå‡¦ç†ã‚’å‘¼ã³å‡ºã™ã€‚
 		 */
 		void CheckPhaseTransitions();
 
 		/**
-		 * @brief 50%ƒtƒF[ƒYƒCƒxƒ“ƒg‚ğŠJn‚·‚éB
+		 * @brief 50%ãƒ•ã‚§ãƒ¼ã‚ºã‚¤ãƒ™ãƒ³ãƒˆã‚’é–‹å§‹ã™ã‚‹ã€‚
 		 */
 		void TriggerPhase1Event();
 
 		/**
-		 * @brief 25%ƒtƒF[ƒY‰‰o‚ğs‚¤B
+		 * @brief 25%ãƒ•ã‚§ãƒ¼ã‚ºæ¼”å‡ºã‚’è¡Œã†ã€‚
 		 */
 		void ApplyPhase2Effect();
 
 		/**
-		 * @brief ™ôšKƒCƒxƒ“ƒg‚ğI—¹‚µA•œ‹A‘Ò‚¿ƒ^ƒCƒ}[‚ğŠJn‚·‚éB
+		 * @brief å’†å“®ã‚¤ãƒ™ãƒ³ãƒˆã‚’çµ‚äº†ã—ã€å¾©å¸°å¾…ã¡ã‚¿ã‚¤ãƒãƒ¼ã‚’é–‹å§‹ã™ã‚‹ã€‚
 		 */
 		void EndEvent();
 
 
 	private:
-		static constexpr float SHAKE_DURATION = 3.0f;			//! ƒJƒƒ‰ƒVƒFƒCƒN‚ÌŠÔi•bjB
-		static constexpr float SHAKE_INTENSITY = 15.0f;			//! ƒJƒƒ‰ƒVƒFƒCƒN‚Ì‹­‚³B
-		static constexpr float BLOWAWAY_VELOCITY = 15.0f;		//! ‚Á”ò‚Ñ‚Ì‰‘¬B
+		static constexpr float SHAKE_DURATION = 3.0f;			//! ã‚«ãƒ¡ãƒ©ã‚·ã‚§ã‚¤ã‚¯ã®æ™‚é–“ï¼ˆç§’ï¼‰ã€‚
+		static constexpr float SHAKE_INTENSITY = 15.0f;			//! ã‚«ãƒ¡ãƒ©ã‚·ã‚§ã‚¤ã‚¯ã®å¼·ã•ã€‚
+		static constexpr float BLOWAWAY_VELOCITY = 15.0f;		//! å¹ã£é£›ã³ã®åˆé€Ÿã€‚
 
-		static constexpr float SHAKE_DELAY = 1.0f;				//! ƒAƒiƒEƒ“ƒXŒã‚ÉƒVƒFƒCƒN‚ğŠJn‚·‚é‚Ü‚Å‚Ì•b”B
-		static constexpr float BLOWAWAY_DELAY = 2.0f;			//! ƒVƒFƒCƒNŒã‚É‚Á”ò‚Ñ‚ğ”­¶‚³‚¹‚é‚Ü‚Å‚Ì•b”B
-		static constexpr float RECOVERY_DELAY = 2.0f;			//! ™ôšKI—¹Œã‚ÉƒvƒŒƒCƒ„[‚ª‹N‚«ã‚ª‚é‚Ü‚Å‚Ì•b”B
+		static constexpr float SHAKE_DELAY = 1.0f;				//! ã‚¢ãƒŠã‚¦ãƒ³ã‚¹å¾Œã«ã‚·ã‚§ã‚¤ã‚¯ã‚’é–‹å§‹ã™ã‚‹ã¾ã§ã®ç§’æ•°ã€‚
+		static constexpr float BLOWAWAY_DELAY = 2.0f;			//! ã‚·ã‚§ã‚¤ã‚¯å¾Œã«å¹ã£é£›ã³ã‚’ç™ºç”Ÿã•ã›ã‚‹ã¾ã§ã®ç§’æ•°ã€‚
+		static constexpr float RECOVERY_DELAY = 2.0f;			//! å’†å“®çµ‚äº†å¾Œã«ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãŒèµ·ãä¸ŠãŒã‚‹ã¾ã§ã®ç§’æ•°ã€‚
 
 
 	private:
-		/* ƒ|ƒCƒ“ƒ^Œ^B*/
-		nsActor::Boss* m_boss = nullptr;						//! ƒ{ƒX‚Ìƒ|ƒCƒ“ƒ^B
-		Camera* m_camera = nullptr;								//! ƒJƒƒ‰‚Ìƒ|ƒCƒ“ƒ^B
-		nsUI::CommentaryUIManager* m_commentary = nullptr;		//! ƒRƒƒ“ƒ^ƒŠ[UIƒ}ƒl[ƒWƒƒ[‚Ìƒ|ƒCƒ“ƒ^B
-		nsGame::GameTimeLimit* m_timeLimit = nullptr;			//! ƒQ[ƒ€§ŒÀŠÔ‚Ìƒ|ƒCƒ“ƒ^B
-		PlayerControlerHub* m_playerHub = nullptr;				//! ƒvƒŒƒCƒ„[ƒRƒ“ƒgƒ[ƒ‰[ƒnƒu‚Ìƒ|ƒCƒ“ƒ^B
+		/* ãƒã‚¤ãƒ³ã‚¿å‹ã€‚*/
+		nsActor::Boss* m_boss = nullptr;						//! ãƒœã‚¹ã®ãƒã‚¤ãƒ³ã‚¿ã€‚
+		Camera* m_camera = nullptr;								//! ã‚«ãƒ¡ãƒ©ã®ãƒã‚¤ãƒ³ã‚¿ã€‚
+		nsUI::CommentaryUIManager* m_commentary = nullptr;		//! ã‚³ãƒ¡ãƒ³ã‚¿ãƒªãƒ¼UIãƒãƒãƒ¼ã‚¸ãƒ£ãƒ¼ã®ãƒã‚¤ãƒ³ã‚¿ã€‚
+		nsGame::GameTimeLimit* m_timeLimit = nullptr;			//! ã‚²ãƒ¼ãƒ åˆ¶é™æ™‚é–“ã®ãƒã‚¤ãƒ³ã‚¿ã€‚
+		PlayerControlerHub* m_playerHub = nullptr;				//! ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚³ãƒ³ãƒˆãƒ­ãƒ¼ãƒ©ãƒ¼ãƒãƒ–ã®ãƒã‚¤ãƒ³ã‚¿ã€‚
 
-		/* ƒRƒ“ƒeƒiŒ^B*/
-		std::vector<nsActor::Player*> m_players;				//! ‚Á”ò‚Î‚µ‘ÎÛ‚ÌƒvƒŒƒCƒ„[ƒŠƒXƒgB
+		/* ã‚³ãƒ³ãƒ†ãƒŠå‹ã€‚*/
+		std::vector<nsActor::Player*> m_players;				//! å¹ã£é£›ã°ã—å¯¾è±¡ã®ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ãƒªã‚¹ãƒˆã€‚
 
-		/* float Œ^B*/
-		float m_eventTimer = 0.0f;								//! ƒCƒxƒ“ƒgŠJn‚©‚ç‚ÌŒo‰ßŠÔi•bjB
-		float m_recoveryTimer = 0.0f;							//! ™ôšKI—¹Œã‚Ì•œ‹A‘Ò‚¿Œo‰ßŠÔi•bjB
+		/* float å‹ã€‚*/
+		float m_eventTimer = 0.0f;								//! ã‚¤ãƒ™ãƒ³ãƒˆé–‹å§‹ã‹ã‚‰ã®çµŒéæ™‚é–“ï¼ˆç§’ï¼‰ã€‚
+		float m_recoveryTimer = 0.0f;							//! å’†å“®çµ‚äº†å¾Œã®å¾©å¸°å¾…ã¡çµŒéæ™‚é–“ï¼ˆç§’ï¼‰ã€‚
 
-		/* bool Œ^B*/
-		bool m_phase1Notified = false;							//! 50%ƒtƒF[ƒYˆ—Ï‚İƒtƒ‰ƒOB
-		bool m_phase2Notified = false;							//! 25%ƒtƒF[ƒYˆ—Ï‚İƒtƒ‰ƒOB
-		bool m_isEventActive = false;							//! ™ôšKƒCƒxƒ“ƒgis’†ƒtƒ‰ƒOB
-		bool m_shakeStarted = false;							//! ƒJƒƒ‰ƒVƒFƒCƒN”­‰ÎÏ‚İƒtƒ‰ƒOB
-		bool m_blowAwayStarted = false;							//! ‚Á”ò‚Ñ”­‰ÎÏ‚İƒtƒ‰ƒOB
-		bool m_waitingForRecovery = false;						//! •œ‹A‘Ò‚¿’†ƒtƒ‰ƒOB
+		/* bool å‹ã€‚*/
+		bool m_phase1Notified = false;							//! 50%ãƒ•ã‚§ãƒ¼ã‚ºå‡¦ç†æ¸ˆã¿ãƒ•ãƒ©ã‚°ã€‚
+		bool m_phase2Notified = false;							//! 25%ãƒ•ã‚§ãƒ¼ã‚ºå‡¦ç†æ¸ˆã¿ãƒ•ãƒ©ã‚°ã€‚
+		bool m_isEventActive = false;							//! å’†å“®ã‚¤ãƒ™ãƒ³ãƒˆé€²è¡Œä¸­ãƒ•ãƒ©ã‚°ã€‚
+		bool m_shakeStarted = false;							//! ã‚«ãƒ¡ãƒ©ã‚·ã‚§ã‚¤ã‚¯ç™ºç«æ¸ˆã¿ãƒ•ãƒ©ã‚°ã€‚
+		bool m_blowAwayStarted = false;							//! å¹ã£é£›ã³ç™ºç«æ¸ˆã¿ãƒ•ãƒ©ã‚°ã€‚
+		bool m_waitingForRecovery = false;						//! å¾©å¸°å¾…ã¡ä¸­ãƒ•ãƒ©ã‚°ã€‚
 	};
 }

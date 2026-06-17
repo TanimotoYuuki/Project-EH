@@ -1,7 +1,7 @@
-#pragma once
+ï»¿#pragma once
 /**
  * @file   BossFireCombatSystem.h
- * @brief  ƒ{ƒX‚Ì‰Î‹…EBurstERainE’…’e‰Š’Œ‚ğŠÇ—‚·‚éƒNƒ‰ƒXB
+ * @brief  ãƒœã‚¹ã®ç«çƒãƒ»Burstãƒ»Rainãƒ»ç€å¼¾ç‚æŸ±ã‚’ç®¡ç†ã™ã‚‹ã‚¯ãƒ©ã‚¹ã€‚
  * @date   2026/06/16
  */
 
@@ -16,52 +16,52 @@ namespace nsApp
 
 		/**
 		 * @enum FirePattern
-		 * @brief ‰Î‰ŠUŒ‚‚Ìƒpƒ^[ƒ“í•ÊB
+		 * @brief ç«ç‚æ”»æ’ƒã®ãƒ‘ã‚¿ãƒ¼ãƒ³ç¨®åˆ¥ã€‚
 		 */
 		enum class FirePattern : uint8_t
 		{
-			Straight, //! ’P”­‚Ì’¼ü‰Î‹…B
-			Burst,    //! 3˜AËB
-			Rain,     //! ~‚è’‚¬UŒ‚B
+			Straight, //! å˜ç™ºã®ç›´ç·šç«çƒã€‚
+			Burst,    //! 3é€£å°„ã€‚
+			Rain,     //! é™ã‚Šæ³¨ãæ”»æ’ƒã€‚
 		};
 
 		/**
 		 * @struct RainDrop
-		 * @brief Rain UŒ‚‚Åg—p‚·‚é 1 “H•ª‚Ì‰Î‹…ƒf[ƒ^B
+		 * @brief Rain æ”»æ’ƒã§ä½¿ç”¨ã™ã‚‹ 1 æ»´åˆ†ã®ç«çƒãƒ‡ãƒ¼ã‚¿ã€‚
 		 */
 		struct RainDrop
 		{
-			bool active = false;                              //! g—p’†‚©‚Ç‚¤‚©B
-			Vector3 pos = Vector3::Zero;                      //! ˜_—À•WB
-			Vector3 velocity = Vector3::Zero;                 //! ˆÚ“®‘¬“xB
-			nsK2EngineLow::EffectEmitter* emitter = nullptr;  //! •\¦—pƒGƒtƒFƒNƒgB
+			bool active = false;                              //! ä½¿ç”¨ä¸­ã‹ã©ã†ã‹ã€‚
+			Vector3 pos = Vector3::Zero;                      //! è«–ç†åº§æ¨™ã€‚
+			Vector3 velocity = Vector3::Zero;                 //! ç§»å‹•é€Ÿåº¦ã€‚
+			nsK2EngineLow::EffectEmitter* emitter = nullptr;  //! è¡¨ç¤ºç”¨ã‚¨ãƒ•ã‚§ã‚¯ãƒˆã€‚
 		};
 
 		/**
 		 * @class BossFireCombatSystem
-		 * @brief ‰Î‹…ŒnUŒ‚‚Ì¶¬EXVE’…’eˆ—‚ğ Boss ‚©‚çˆÏ÷‚·‚éB
+		 * @brief ç«çƒç³»æ”»æ’ƒã®ç”Ÿæˆãƒ»æ›´æ–°ãƒ»ç€å¼¾å‡¦ç†ã‚’ Boss ã‹ã‚‰å§”è­²ã™ã‚‹ã€‚
 		 */
 		class BossFireCombatSystem
 		{
 		public:
-			/** @brief ƒqƒbƒg”»’è‚Ì‰Šú‰»BBoss::Start() ‚©‚çŒÄ‚ÔB */
+			/** @brief ãƒ’ãƒƒãƒˆåˆ¤å®šã®åˆæœŸåŒ–ã€‚Boss::Start() ã‹ã‚‰å‘¼ã¶ã€‚ */
 			void Init();
 
 			/**
-			 * @brief –ˆƒtƒŒ[ƒ€‚Ì‰Î‹…ŒnXVˆ—B
-			 * @param boss XV‘ÎÛ‚Ìƒ{ƒXB
+			 * @brief æ¯ãƒ•ãƒ¬ãƒ¼ãƒ ã®ç«çƒç³»æ›´æ–°å‡¦ç†ã€‚
+			 * @param boss æ›´æ–°å¯¾è±¡ã®ãƒœã‚¹ã€‚
 			 */
 			void Update(Boss* boss);
 
 			/**
-			 * @brief ‰Î‹…UŒ‚‚ğŠJn‚·‚éiFireAttackStrategy ‚©‚çŒÄ‚Î‚ê‚éjB
-			 * @param boss UŒ‚å‘Ì‚Ìƒ{ƒXB
+			 * @brief ç«çƒæ”»æ’ƒã‚’é–‹å§‹ã™ã‚‹ï¼ˆFireAttackStrategy ã‹ã‚‰å‘¼ã°ã‚Œã‚‹ï¼‰ã€‚
+			 * @param boss æ”»æ’ƒä¸»ä½“ã®ãƒœã‚¹ã€‚
 			 */
 			void ShotFireBall(Boss* boss);
 
 			/**
-			 * @brief ’…’eƒGƒtƒFƒNƒg‚ÌXV‚Æƒqƒbƒg”»’èˆ—B
-			 * @return ’…’eƒGƒtƒFƒNƒg‚ªI—¹‚µ‚½‚©‚Ç‚¤‚©B
+			 * @brief ç€å¼¾ã‚¨ãƒ•ã‚§ã‚¯ãƒˆã®æ›´æ–°ã¨ãƒ’ãƒƒãƒˆåˆ¤å®šå‡¦ç†ã€‚
+			 * @return ç€å¼¾ã‚¨ãƒ•ã‚§ã‚¯ãƒˆãŒçµ‚äº†ã—ãŸã‹ã©ã†ã‹ã€‚
 			 */
 			inline WeaponHitDetection& GetFireHit()
 			{
@@ -71,104 +71,104 @@ namespace nsApp
 
 		private:
 			/**
-			 * @brief ‰Î‹…‚Ì¶¬ˆ—BFireAttackStrategy::ShotFireBall() ‚©‚çŒÄ‚Î‚ê‚éB
-			 * @param boss UŒ‚å‘Ì‚Ìƒ{ƒXB
+			 * @brief ç«çƒã®ç”Ÿæˆå‡¦ç†ã€‚FireAttackStrategy::ShotFireBall() ã‹ã‚‰å‘¼ã°ã‚Œã‚‹ã€‚
+			 * @param boss æ”»æ’ƒä¸»ä½“ã®ãƒœã‚¹ã€‚
 			 */
 			void CreateFireball(Boss* boss);
 
 			/**
-			 * @brief ‰Î‹…‚Ìíœˆ—B‰Î‹…‚Ìõ–½‚ªs‚«‚½‚Æ‚«‚âA’…’e‚µ‚½‚Æ‚«‚ÉŒÄ‚Î‚ê‚éB
-			 * @param boss UŒ‚å‘Ì‚Ìƒ{ƒXB
+			 * @brief ç«çƒã®å‰Šé™¤å‡¦ç†ã€‚ç«çƒã®å¯¿å‘½ãŒå°½ããŸã¨ãã‚„ã€ç€å¼¾ã—ãŸã¨ãã«å‘¼ã°ã‚Œã‚‹ã€‚
+			 * @param boss æ”»æ’ƒä¸»ä½“ã®ãƒœã‚¹ã€‚
 			 */
 			void DeleteFireball(Boss* boss);
 
 			/**
-			 * @brief Burst UŒ‚‚ÌŠJnˆ—BBurstAttackStrategy::StartBurst() ‚©‚çŒÄ‚Î‚ê‚éB
+			 * @brief Burst æ”»æ’ƒã®é–‹å§‹å‡¦ç†ã€‚BurstAttackStrategy::StartBurst() ã‹ã‚‰å‘¼ã°ã‚Œã‚‹ã€‚
 			 */
 			void StartRain();
 
 			/**
-			 * @brief Rain UŒ‚‚ÌXVˆ—BBoss::Update() ‚©‚çŒÄ‚Î‚ê‚éB
-			 * @param boss XV‘ÎÛ‚Ìƒ{ƒXB
+			 * @brief Rain æ”»æ’ƒã®æ›´æ–°å‡¦ç†ã€‚Boss::Update() ã‹ã‚‰å‘¼ã°ã‚Œã‚‹ã€‚
+			 * @param boss æ›´æ–°å¯¾è±¡ã®ãƒœã‚¹ã€‚
 			 */
 			void UpdateRain(Boss* boss);
 
 			/**
-			 * @brief Rain UŒ‚‚ÌƒXƒ|[ƒ“ˆ—BBoss::Update() ‚©‚çŒÄ‚Î‚ê‚éB
-			 * @param boss ƒXƒ|[ƒ“ˆÊ’u‚ÌŒvZ‚É•K—v‚Èƒ{ƒX‚Ìî•ñ‚ğ“n‚·‚½‚ß‚Éˆø”‚Æ‚µ‚Äó‚¯æ‚éB
+			 * @brief Rain æ”»æ’ƒã®ã‚¹ãƒãƒ¼ãƒ³å‡¦ç†ã€‚Boss::Update() ã‹ã‚‰å‘¼ã°ã‚Œã‚‹ã€‚
+			 * @param boss ã‚¹ãƒãƒ¼ãƒ³ä½ç½®ã®è¨ˆç®—ã«å¿…è¦ãªãƒœã‚¹ã®æƒ…å ±ã‚’æ¸¡ã™ãŸã‚ã«å¼•æ•°ã¨ã—ã¦å—ã‘å–ã‚‹ã€‚
 			 */
 			void SpawnRainDrop(Boss* boss);
 
 			/**
-			 * @brief Rain UŒ‚‚Ìíœˆ—BRain UŒ‚‚Ì‘±ŠÔ‚ªs‚«‚½‚Æ‚«‚âA’…’e‚µ‚½‚Æ‚«‚ÉŒÄ‚Î‚ê‚éB
-			 * @param boss UŒ‚å‘Ì‚Ìƒ{ƒXBRain UŒ‚‚Ìó‘Ô‚ğƒŠƒZƒbƒg‚·‚é‚½‚ß‚Éˆø”‚Æ‚µ‚Äó‚¯æ‚éB
+			 * @brief Rain æ”»æ’ƒã®å‰Šé™¤å‡¦ç†ã€‚Rain æ”»æ’ƒã®æŒç¶šæ™‚é–“ãŒå°½ããŸã¨ãã‚„ã€ç€å¼¾ã—ãŸã¨ãã«å‘¼ã°ã‚Œã‚‹ã€‚
+			 * @param boss æ”»æ’ƒä¸»ä½“ã®ãƒœã‚¹ã€‚Rain æ”»æ’ƒã®çŠ¶æ…‹ã‚’ãƒªã‚»ãƒƒãƒˆã™ã‚‹ãŸã‚ã«å¼•æ•°ã¨ã—ã¦å—ã‘å–ã‚‹ã€‚
 			 */
 			void UpdateRainDrops(Boss* boss);
 
 			/**
-			 * @brief ‰Î‹…‚Ì’…’eƒGƒtƒFƒNƒg‚ÌXV‚Æƒqƒbƒg”»’èˆ—BBoss::Update() ‚©‚çŒÄ‚Î‚ê‚éB
-			 * @param boss ’…’eƒGƒtƒFƒNƒg‚ÌˆÊ’uŒvZ‚É•K—v‚Èƒ{ƒX‚Ìî•ñ‚ğ“n‚·‚½‚ß‚Éˆø”‚Æ‚µ‚Äó‚¯æ‚éB
+			 * @brief ç«çƒã®ç€å¼¾ã‚¨ãƒ•ã‚§ã‚¯ãƒˆã®æ›´æ–°ã¨ãƒ’ãƒƒãƒˆåˆ¤å®šå‡¦ç†ã€‚Boss::Update() ã‹ã‚‰å‘¼ã°ã‚Œã‚‹ã€‚
+			 * @param boss ç€å¼¾ã‚¨ãƒ•ã‚§ã‚¯ãƒˆã®ä½ç½®è¨ˆç®—ã«å¿…è¦ãªãƒœã‚¹ã®æƒ…å ±ã‚’æ¸¡ã™ãŸã‚ã«å¼•æ•°ã¨ã—ã¦å—ã‘å–ã‚‹ã€‚
 			 */
 			void UpdateLandingEffect(Boss* boss);
 
 			/**
-			 * @brief ‰Î‹…‚Ì’…’eƒGƒtƒFƒNƒg‚Ìƒqƒbƒg”»’èˆ—BBoss::Update() ‚©‚çŒÄ‚Î‚ê‚éB
-			 * @param boss ƒqƒbƒg”»’è‚Ì‘ÎÛ‚Æ‚È‚éƒvƒŒƒCƒ„[‚ÌˆÊ’uŒvZ‚É•K—v‚Èƒ{ƒX‚Ìî•ñ‚ğ“n‚·‚½‚ß‚Éˆø”‚Æ‚µ‚Äó‚¯æ‚éB
+			 * @brief ç«çƒã®ç€å¼¾ã‚¨ãƒ•ã‚§ã‚¯ãƒˆã®ãƒ’ãƒƒãƒˆåˆ¤å®šå‡¦ç†ã€‚Boss::Update() ã‹ã‚‰å‘¼ã°ã‚Œã‚‹ã€‚
+			 * @param boss ãƒ’ãƒƒãƒˆåˆ¤å®šã®å¯¾è±¡ã¨ãªã‚‹ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ä½ç½®è¨ˆç®—ã«å¿…è¦ãªãƒœã‚¹ã®æƒ…å ±ã‚’æ¸¡ã™ãŸã‚ã«å¼•æ•°ã¨ã—ã¦å—ã‘å–ã‚‹ã€‚
 			 */
 			void CheckLandingHitDamage(Boss* boss);
 
 			/**
-			 * @brief Burst UŒ‚‚ÌXVˆ—BBoss::Update() ‚©‚çŒÄ‚Î‚ê‚éB
-			 * @param boss XV‘ÎÛ‚Ìƒ{ƒXBBurst UŒ‚‚Ìó‘Ô‚ğŠÇ—‚·‚é‚½‚ß‚Éˆø”‚Æ‚µ‚Äó‚¯æ‚éB
-			 * @param deltaTime ‘OƒtƒŒ[ƒ€‚©‚ç‚ÌŒo‰ßŠÔBBurst UŒ‚‚Ìƒ^ƒCƒ~ƒ“ƒOŠÇ—‚Ég—p‚·‚é‚½‚ß‚Éˆø”‚Æ‚µ‚Äó‚¯æ‚éB
+			 * @brief Burst æ”»æ’ƒã®æ›´æ–°å‡¦ç†ã€‚Boss::Update() ã‹ã‚‰å‘¼ã°ã‚Œã‚‹ã€‚
+			 * @param boss æ›´æ–°å¯¾è±¡ã®ãƒœã‚¹ã€‚Burst æ”»æ’ƒã®çŠ¶æ…‹ã‚’ç®¡ç†ã™ã‚‹ãŸã‚ã«å¼•æ•°ã¨ã—ã¦å—ã‘å–ã‚‹ã€‚
+			 * @param deltaTime å‰ãƒ•ãƒ¬ãƒ¼ãƒ ã‹ã‚‰ã®çµŒéæ™‚é–“ã€‚Burst æ”»æ’ƒã®ã‚¿ã‚¤ãƒŸãƒ³ã‚°ç®¡ç†ã«ä½¿ç”¨ã™ã‚‹ãŸã‚ã«å¼•æ•°ã¨ã—ã¦å—ã‘å–ã‚‹ã€‚
 			 */
 			void UpdateBurst(Boss* boss, float deltaTime);
 
 			/**
-			 * @brief Rain Drop ’…’e‚Ì‹¤’Êˆ—B
-			 * @param drop ’…’e‚µ‚½ Rain DropB
+			 * @brief Rain Drop ç€å¼¾æ™‚ã®å…±é€šå‡¦ç†ã€‚
+			 * @param drop ç€å¼¾ã—ãŸ Rain Dropã€‚
 			 */
 			void LandRainDrop(RainDrop& drop);
 
 			/**
-			 * @brief ‰Î‹…‚Ì¶¬ˆÊ’u‚ğŒvZ‚·‚éBBoss::Update() ‚©‚çŒÄ‚Î‚ê‚éB
-			 * @param boss ¶¬ˆÊ’u‚ÌŒvZ‚É•K—v‚Èƒ{ƒX‚Ìî•ñ‚ğ“n‚·‚½‚ß‚Éˆø”‚Æ‚µ‚Äó‚¯æ‚éB
-			 * @return ‰Î‹…‚Ì¶¬ˆÊ’uB
+			 * @brief ç«çƒã®ç”Ÿæˆä½ç½®ã‚’è¨ˆç®—ã™ã‚‹ã€‚Boss::Update() ã‹ã‚‰å‘¼ã°ã‚Œã‚‹ã€‚
+			 * @param boss ç”Ÿæˆä½ç½®ã®è¨ˆç®—ã«å¿…è¦ãªãƒœã‚¹ã®æƒ…å ±ã‚’æ¸¡ã™ãŸã‚ã«å¼•æ•°ã¨ã—ã¦å—ã‘å–ã‚‹ã€‚
+			 * @return ç«çƒã®ç”Ÿæˆä½ç½®ã€‚
 			 */
 			Vector3 GetMouthPosition(Boss* boss) const;
 
 			/**
-			 * @brief ‰Î‹…‚ÌƒGƒtƒFƒNƒg•\¦ˆÊ’u‚ğŒvZ‚·‚éBBoss::Update() ‚©‚çŒÄ‚Î‚ê‚éB
-			 * @param logicPos ‰Î‹…‚Ì˜_—À•WBƒGƒtƒFƒNƒg•\¦ˆÊ’u‚ÌŒvZ‚É•K—v‚Èî•ñ‚ğ“n‚·‚½‚ß‚Éˆø”‚Æ‚µ‚Äó‚¯æ‚éB
-			 * @return ‰Î‹…‚ÌƒGƒtƒFƒNƒg•\¦ˆÊ’uB
+			 * @brief ç«çƒã®ã‚¨ãƒ•ã‚§ã‚¯ãƒˆè¡¨ç¤ºä½ç½®ã‚’è¨ˆç®—ã™ã‚‹ã€‚Boss::Update() ã‹ã‚‰å‘¼ã°ã‚Œã‚‹ã€‚
+			 * @param logicPos ç«çƒã®è«–ç†åº§æ¨™ã€‚ã‚¨ãƒ•ã‚§ã‚¯ãƒˆè¡¨ç¤ºä½ç½®ã®è¨ˆç®—ã«å¿…è¦ãªæƒ…å ±ã‚’æ¸¡ã™ãŸã‚ã«å¼•æ•°ã¨ã—ã¦å—ã‘å–ã‚‹ã€‚
+			 * @return ç«çƒã®ã‚¨ãƒ•ã‚§ã‚¯ãƒˆè¡¨ç¤ºä½ç½®ã€‚
 			 */
 			Vector3 GetFireballEffectPosition(const Vector3& logicPos) const;
 
 			/**
-			 * @brief ’…’eƒGƒtƒFƒNƒg‚Ì•\¦ˆÊ’u‚ğŒvZ‚·‚éBBoss::Update() ‚©‚çŒÄ‚Î‚ê‚éB
-			 * @param hitPos ’…’eˆÊ’uBƒGƒtƒFƒNƒg•\¦ˆÊ’u‚ÌŒvZ‚É•K—v‚Èî•ñ‚ğ“n‚·‚½‚ß‚Éˆø”‚Æ‚µ‚Äó‚¯æ‚éB
-			 * @return ’…’eƒGƒtƒFƒNƒg‚Ì•\¦ˆÊ’uB
+			 * @brief ç€å¼¾ã‚¨ãƒ•ã‚§ã‚¯ãƒˆã®è¡¨ç¤ºä½ç½®ã‚’è¨ˆç®—ã™ã‚‹ã€‚Boss::Update() ã‹ã‚‰å‘¼ã°ã‚Œã‚‹ã€‚
+			 * @param hitPos ç€å¼¾ä½ç½®ã€‚ã‚¨ãƒ•ã‚§ã‚¯ãƒˆè¡¨ç¤ºä½ç½®ã®è¨ˆç®—ã«å¿…è¦ãªæƒ…å ±ã‚’æ¸¡ã™ãŸã‚ã«å¼•æ•°ã¨ã—ã¦å—ã‘å–ã‚‹ã€‚
+			 * @return ç€å¼¾ã‚¨ãƒ•ã‚§ã‚¯ãƒˆã®è¡¨ç¤ºä½ç½®ã€‚
 			 */
 			Vector3 GetLandingEffectPosition(const Vector3& hitPos) const;
 
 			/**
-			 * @brief ’…’e‰Š’Œƒqƒbƒg”»’è—p‚Ì˜_—À•W‚ğ•Ô‚·B
-			 * @return ’…’e‰Š’Œƒqƒbƒg”»’èÀ•WB
+			 * @brief ç€å¼¾ç‚æŸ±ãƒ’ãƒƒãƒˆåˆ¤å®šç”¨ã®è«–ç†åº§æ¨™ã‚’è¿”ã™ã€‚
+			 * @return ç€å¼¾ç‚æŸ±ãƒ’ãƒƒãƒˆåˆ¤å®šåº§æ¨™ã€‚
 			 */
 			Vector3 GetLandingHitPosition() const;
 
 			/**
-			 * @brief ‰Î‹…‚ÌÆ€•ûŒü‚ğŒvZ‚·‚éBBoss::Update() ‚©‚çŒÄ‚Î‚ê‚éB
-			 * @param boss Æ€•ûŒü‚ÌŒvZ‚É•K—v‚Èƒ{ƒX‚Ìî•ñ‚ğ“n‚·‚½‚ß‚Éˆø”‚Æ‚µ‚Äó‚¯æ‚éB
-			 * @param fromPos Æ€ŠJnˆÊ’uBÆ€•ûŒü‚ÌŒvZ‚É•K—v‚Èî•ñ‚ğ“n‚·‚½‚ß‚Éˆø”‚Æ‚µ‚Äó‚¯æ‚éB
-			 * @param toPos Æ€–Ú•WˆÊ’uBÆ€•ûŒü‚ÌŒvZ‚É•K—v‚Èî•ñ‚ğ“n‚·‚½‚ß‚Éˆø”‚Æ‚µ‚Äó‚¯æ‚éB
-			 * @return Æ€•ûŒü‚Ì’PˆÊƒxƒNƒgƒ‹B
+			 * @brief ç«çƒã®ç…§æº–æ–¹å‘ã‚’è¨ˆç®—ã™ã‚‹ã€‚Boss::Update() ã‹ã‚‰å‘¼ã°ã‚Œã‚‹ã€‚
+			 * @param boss ç…§æº–æ–¹å‘ã®è¨ˆç®—ã«å¿…è¦ãªãƒœã‚¹ã®æƒ…å ±ã‚’æ¸¡ã™ãŸã‚ã«å¼•æ•°ã¨ã—ã¦å—ã‘å–ã‚‹ã€‚
+			 * @param fromPos ç…§æº–é–‹å§‹ä½ç½®ã€‚ç…§æº–æ–¹å‘ã®è¨ˆç®—ã«å¿…è¦ãªæƒ…å ±ã‚’æ¸¡ã™ãŸã‚ã«å¼•æ•°ã¨ã—ã¦å—ã‘å–ã‚‹ã€‚
+			 * @param toPos ç…§æº–ç›®æ¨™ä½ç½®ã€‚ç…§æº–æ–¹å‘ã®è¨ˆç®—ã«å¿…è¦ãªæƒ…å ±ã‚’æ¸¡ã™ãŸã‚ã«å¼•æ•°ã¨ã—ã¦å—ã‘å–ã‚‹ã€‚
+			 * @return ç…§æº–æ–¹å‘ã®å˜ä½ãƒ™ã‚¯ãƒˆãƒ«ã€‚
 			 */
 			Vector3 ComputeAimDirection(Boss* boss, const Vector3& fromPos, const Vector3& toPos) const;
 
 			/**
-			 * @brief •ûŒü–¢İ’è‚ÌƒtƒH[ƒ‹ƒoƒbƒNŒü‚«‚ğ•Ô‚·B
-			 * @return ƒfƒtƒHƒ‹ƒg‚Ì‘O•ûŒüB
+			 * @brief æ–¹å‘æœªè¨­å®šæ™‚ã®ãƒ•ã‚©ãƒ¼ãƒ«ãƒãƒƒã‚¯å‘ãã‚’è¿”ã™ã€‚
+			 * @return ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã®å‰æ–¹å‘ã€‚
 			 */
 			Vector3 GetDefaultForward() const;
 
@@ -176,28 +176,28 @@ namespace nsApp
 		private:
 			nsK2EngineLow::EffectEmitter* m_fireballEmitter = nullptr;
 
-			FirePattern m_currentFirePattern = FirePattern::Straight;	//! ¡‚Ì‰Î‰Š‚Ìó‘ÔB
-			RainDrop m_rainDrops[16];									//! ~‚ç‚¹‚éó‘ÔBMAX_RAIN_DROPS ‚Í .cpp QÆB
+			FirePattern m_currentFirePattern = FirePattern::Straight;	//! ä»Šã®ç«ç‚ã®çŠ¶æ…‹ã€‚
+			RainDrop m_rainDrops[16];									//! é™ã‚‰ã›ã‚‹çŠ¶æ…‹ã€‚MAX_RAIN_DROPS ã¯ .cpp å‚ç…§ã€‚
 
-			WeaponHitDetection m_FireHit;								//! ‰Š‚Ì“–‚½‚è”»’èB
-			WeaponHitDetection m_LandingHit;							//! Šš‚İ‚Â‚«‚Ì“–‚½‚è”»’èB
-			WeaponHitDetection m_RainHit;								//! Rain‚Ì“–‚½‚è”»’èB
+			WeaponHitDetection m_FireHit;								//! ç‚ã®å½“ãŸã‚Šåˆ¤å®šã€‚
+			WeaponHitDetection m_LandingHit;							//! å™›ã¿ã¤ãã®å½“ãŸã‚Šåˆ¤å®šã€‚
+			WeaponHitDetection m_RainHit;								//! Rainã®å½“ãŸã‚Šåˆ¤å®šã€‚
 
-			Vector3 m_fireballPos = Vector3::Zero;						//! ‰Š’Œ‚Ì“–‚½‚è”»’èB
-			Vector3 m_fireballVelocity = Vector3::Zero;					//! ƒtƒ@ƒCƒAƒo[‚ÌƒxƒNƒgƒ‹B
-			Vector3 m_landingPos = Vector3::Zero;						//! Šš‚İ‚Â‚­À•WB
+			Vector3 m_fireballPos = Vector3::Zero;						//! ç‚æŸ±ã®å½“ãŸã‚Šåˆ¤å®šã€‚
+			Vector3 m_fireballVelocity = Vector3::Zero;					//! ãƒ•ã‚¡ã‚¤ã‚¢ãƒãƒ¼ã®ãƒ™ã‚¯ãƒˆãƒ«ã€‚
+			Vector3 m_landingPos = Vector3::Zero;						//! å™›ã¿ã¤ãåº§æ¨™ã€‚
 
-			float m_fireballLifeTime = 0.0f;							//! ƒtƒ@ƒCƒAƒo[‚Ìõ–½B
-			float m_landingEffectTimer = 0.0f;							//! Šš‚İ‚Â‚«UŒ‚‚Ìõ–½B
-			float m_landingSpawnInterval = 0.0f;						//! ¶¬ƒCƒ“ƒ^[ƒoƒ‹B
-			float m_burstTimer = 0.0f;									//! ƒ^ƒCƒ}[B
-			float m_rainTimer = 0.0f;									//! ~‚ç‚¹‚éŠÔB
-			float m_rainSpawnTimer = 0.0f;								//! ƒXƒ|[ƒ“ƒ^ƒCƒ}[B
+			float m_fireballLifeTime = 0.0f;							//! ãƒ•ã‚¡ã‚¤ã‚¢ãƒãƒ¼ã®å¯¿å‘½ã€‚
+			float m_landingEffectTimer = 0.0f;							//! å™›ã¿ã¤ãæ”»æ’ƒã®å¯¿å‘½ã€‚
+			float m_landingSpawnInterval = 0.0f;						//! ç”Ÿæˆã‚¤ãƒ³ã‚¿ãƒ¼ãƒãƒ«ã€‚
+			float m_burstTimer = 0.0f;									//! ã‚¿ã‚¤ãƒãƒ¼ã€‚
+			float m_rainTimer = 0.0f;									//! é™ã‚‰ã›ã‚‹æ™‚é–“ã€‚
+			float m_rainSpawnTimer = 0.0f;								//! ã‚¹ãƒãƒ¼ãƒ³ã‚¿ã‚¤ãƒãƒ¼ã€‚
 
-			int   m_burstRemaining = 0;									//! ƒuƒ‰ƒX‚Æ‚ğŒ‚‚Â‚©B
+			int   m_burstRemaining = 0;									//! ãƒ–ãƒ©ã‚¹ã¨ã‚’æ’ƒã¤ã‹ã€‚
 
-			bool  m_rainActive = false;									//! ~‚ç‚¹‚é‚©‚Ç‚¤‚©B
-			bool  m_fireballActive = false;								//! ƒtƒ@ƒCƒAƒo[‚ğo‚·‚©‚Ç‚¤‚©B
+			bool  m_rainActive = false;									//! é™ã‚‰ã›ã‚‹ã‹ã©ã†ã‹ã€‚
+			bool  m_fireballActive = false;								//! ãƒ•ã‚¡ã‚¤ã‚¢ãƒãƒ¼ã‚’å‡ºã™ã‹ã©ã†ã‹ã€‚
 		};
 	}
 }

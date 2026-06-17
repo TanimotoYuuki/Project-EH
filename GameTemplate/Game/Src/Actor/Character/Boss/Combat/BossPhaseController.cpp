@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "BossPhaseController.h"
 #include "Src/Actor/Character/Boss/Boss.h"
 #include "Src/Actor/Character/Boss/AI/BossAIConfig.h"
@@ -10,7 +10,7 @@ namespace nsApp
 	{
 		void BossPhaseController::Init()
 		{
-			/* �t�F�[�Y��Ԃ������l�ɖ߂� */
+			/* フェーズ状態を初期値に戻す */
 			m_phase1Triggered = false;
 			m_phase2Triggered = false;
 			m_idleTimeMultiplier = 1.0f;
@@ -27,7 +27,7 @@ namespace nsApp
 
 			const float hpRatio = boss->GetHPRatio();
 
-			/* �t�F�[�Y1�FHP 臒l���B�ōU���́E�ҋ@���Ԃ����� */
+			/* フェーズ1：HP 閾値到達で攻撃力・待機時間を強化 */
 			if (!m_phase1Triggered && hpRatio <= nsAI::BossAIConfig::PHASE1_HP_THRESHOLD)
 			{
 				m_phase1Triggered = true;
@@ -35,7 +35,7 @@ namespace nsApp
 				m_idleTimeMultiplier = m_phase1IdleTimeMultiplier;
 			}
 
-			/* �t�F�[�Y2�F����� HP ����������ǉ����� */
+			/* フェーズ2：さらに HP が減ったら追加強化 */
 			if (!m_phase2Triggered && hpRatio <= nsAI::BossAIConfig::PHASE2_HP_THRESHOLD)
 			{
 				m_phase2Triggered = true;

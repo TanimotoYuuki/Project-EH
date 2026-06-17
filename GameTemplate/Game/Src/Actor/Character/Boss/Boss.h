@@ -32,9 +32,9 @@ namespace nsApp
 		 */
 		enum BossStateID : uint8_t
 		{
-			enIdle,   //! 待機。
-			enMove,   //! 移動。
-			enRoar,   //! 咆哮。
+			enIdle,	  //! 待機。
+			enMove,	  //! 移動。
+			enRoar,	  //! 咆哮。
 			enAttack, //! 攻撃。
 			enDamage, //! 被ダメージ。
 			enDeath,  //! 死亡。
@@ -53,13 +53,11 @@ namespace nsApp
 			Boss() = default;
 			virtual ~Boss() override = default;
 
-
 		public:
 			/* ライフサイクル。*/
 			bool Start() override;
 			void Update() override;
-			void Render(RenderContext& rc) override;
-
+			void Render(RenderContext &rc) override;
 
 		public:
 			/* 攻撃・戦闘（System 委譲入口）。*/
@@ -95,9 +93,9 @@ namespace nsApp
 			}
 
 			/**
-		     * @brief 攻撃ステータスを倍率で乗算する（PhaseController から呼ぶ）。
-		     * @param multiplier 攻撃力倍率。
-		    */
+			 * @brief 攻撃ステータスを倍率で乗算する（PhaseController から呼ぶ）。
+			 * @param multiplier 攻撃力倍率。
+			 */
 			inline void MultiplyAttackStats(float multiplier)
 			{
 				/* 通常・会心ダメージを同倍率で強化 */
@@ -105,13 +103,12 @@ namespace nsApp
 				m_characterStatus.attack.criticalDamage *= multiplier;
 			}
 
-
 		public:
 			/**
 			 * @brief 座標をセット。
 			 * @param pos　座標。
 			 */
-			inline void SetPosition(const Vector3& pos)
+			inline void SetPosition(const Vector3 &pos)
 			{
 				m_position = pos;
 			}
@@ -120,7 +117,7 @@ namespace nsApp
 			 * @brief 回転軸をセット。
 			 * @param rot　回転軸。
 			 */
-			inline void SetRotation(const Quaternion& rot)
+			inline void SetRotation(const Quaternion &rot)
 			{
 				m_rotation = rot;
 				m_model.SettRotation(m_rotation);
@@ -130,7 +127,7 @@ namespace nsApp
 			 * @brief 前ベクトルを設定。
 			 * @param forward 前ベクトル。
 			 */
-			inline void SetForward(const Vector3& forward)
+			inline void SetForward(const Vector3 &forward)
 			{
 				if (forward.LengthSq() > 0.0f)
 					m_forward = forward;
@@ -140,7 +137,7 @@ namespace nsApp
 			 * @brief モデルごとのオフセットを設定。
 			 * @param offset　オフセット。
 			 */
-			inline void SetModelOffset(const Vector3& offset)
+			inline void SetModelOffset(const Vector3 &offset)
 			{
 				m_modelDynamicOffset = offset;
 			}
@@ -181,13 +178,12 @@ namespace nsApp
 				m_model.PlayAnimation((int)id, 0.2f);
 			}
 
-
 		public:
 			/**
 			 * @brief ターゲットを設定。
 			 * @param target 設定ターゲット。
 			 */
-			inline void SetTarget(ICharacter* target)
+			inline void SetTarget(ICharacter *target)
 			{
 				m_target = target;
 			}
@@ -201,7 +197,7 @@ namespace nsApp
 			 * @brief ターゲットを全員に設定。
 			 * @param targets 複数のターゲット。
 			 */
-			inline void SetAllTargets(const std::vector<nsActor::ICharacter*>& targets)
+			inline void SetAllTargets(const std::vector<nsActor::ICharacter *> &targets)
 			{
 				m_allTargets = targets;
 			}
@@ -210,11 +206,10 @@ namespace nsApp
 			 * @brief ターゲットを取得。
 			 * @return
 			 */
-			inline const std::vector<nsActor::ICharacter*>& GetAllTargets() const
+			inline const std::vector<nsActor::ICharacter *> &GetAllTargets() const
 			{
 				return m_allTargets;
 			}
-
 
 		public:
 			/**
@@ -261,7 +256,6 @@ namespace nsApp
 			 */
 			float GetHPRatio() const;
 
-
 		public:
 			/* ロア・フェーズ。*/
 			/**
@@ -307,7 +301,6 @@ namespace nsApp
 				m_lastAttackType = attackType;
 			}
 
-
 		public:
 			/* エフェクト。*/
 			/**
@@ -325,14 +318,13 @@ namespace nsApp
 			 */
 			void StopRageEffect();
 
-
 		public:
 			/* Getter。*/
 			/**
 			 * @brief ボス座標を取得。
 			 * @return 座標参照。
 			 */
-			inline Vector3& GetPosition() override
+			inline Vector3 &GetPosition() override
 			{
 				return m_position;
 			}
@@ -350,7 +342,7 @@ namespace nsApp
 			 * @brief キャラクターコントローラを取得。
 			 * @return コントローラ参照。
 			 */
-			inline CharacterController& GetController()
+			inline CharacterController &GetController()
 			{
 				return m_BossController;
 			}
@@ -359,7 +351,7 @@ namespace nsApp
 			 * @brief 主ターゲットを取得。
 			 * @return ターゲット。未設定なら nullptr。
 			 */
-			inline ICharacter* GetTarget() const
+			inline ICharacter *GetTarget() const
 			{
 				return m_target;
 			}
@@ -368,7 +360,7 @@ namespace nsApp
 			 * @brief 噛みつきヒット判定を取得（MeleeCombatSystem 委譲）。
 			 * @return ヒット判定参照。
 			 */
-			inline WeaponHitDetection& GetBiteHit()
+			inline WeaponHitDetection &GetBiteHit()
 			{
 				return m_meleeCombat.GetBiteHit();
 			}
@@ -377,7 +369,7 @@ namespace nsApp
 			 * @brief 尻尾ヒット判定を取得（MeleeCombatSystem 委譲）。
 			 * @return ヒット判定参照。
 			 */
-			inline WeaponHitDetection& GetTailHit()
+			inline WeaponHitDetection &GetTailHit()
 			{
 				return m_meleeCombat.GetTailHit();
 			}
@@ -386,7 +378,7 @@ namespace nsApp
 			 * @brief 火球ヒット判定を取得（FireCombatSystem 委譲）。
 			 * @return ヒット判定参照。
 			 */
-			inline WeaponHitDetection& GetFireHit()
+			inline WeaponHitDetection &GetFireHit()
 			{
 				return m_fireCombat.GetFireHit();
 			}
@@ -456,7 +448,6 @@ namespace nsApp
 				return !m_model.IsPlayAnimation();
 			}
 
-
 		private:
 			/* 内部初期化・更新。*/
 			/**
@@ -475,48 +466,46 @@ namespace nsApp
 			 */
 			void UpdateRotation(float deltaTime);
 
+		private:
+			std::vector<nsActor::ICharacter *> m_allTargets;				  //! 攻撃対象一覧。
+			ICharacter *m_target = nullptr;									  //! 主ターゲット（最寄り）。
+			CharacterModelType m_bossType = CharacterModelType::TutorialBoss; //! ボス種別。
+			nsK2EngineLow::EffectEmitter *m_rageEffectEmitter = nullptr;	  //! 怒りエフェクト。
 
 		private:
-			std::vector<nsActor::ICharacter*> m_allTargets;								  //! 攻撃対象一覧。
-			ICharacter* m_target = nullptr;												  //! 主ターゲット（最寄り）。
-			CharacterModelType m_bossType = CharacterModelType::TutorialBoss;			  //! ボス種別。
-			nsK2EngineLow::EffectEmitter* m_rageEffectEmitter = nullptr;				  //! 怒りエフェクト。
+			BossPhaseController m_phaseController; //! HP フェーズ強化。
+			BossDamageHandler m_damageHandler;	   //! 被ダメージ累積・硬直。
+			BossFireCombatSystem m_fireCombat;	   //! 火球・Burst・Rain・着弾炎柱。
+			BossMeleeCombatSystem m_meleeCombat;   //! 噛みつき・尻尾。
+			BossTornadoSystem m_tornadoSystem;	   //! 竜巻（GreenDragon）。
 
+			std::unique_ptr<BossAnimation> m_BossAnimation; //! アニメーション管理。
+			CharacterController m_BossController;			//! 物理移動。
 
-		private:
-			BossPhaseController   m_phaseController;									  //! HP フェーズ強化。
-			BossDamageHandler    m_damageHandler;										  //! 被ダメージ累積・硬直。
-			BossFireCombatSystem  m_fireCombat;											  //! 火球・Burst・Rain・着弾炎柱。
-			BossMeleeCombatSystem m_meleeCombat;										  //! 噛みつき・尻尾。
-			BossTornadoSystem     m_tornadoSystem;										  //! 竜巻（GreenDragon）。
+			Vector3 m_position = Vector3::Zero;			  //! 論理座標。
+			Vector3 m_forward = Vector3::Zero;			  //! 前方向。
+			Vector3 m_modelOffset = Vector3::Zero;		  //! ボスタイプ別固定オフセット。
+			Vector3 m_modelDynamicOffset = Vector3::Zero; //! ステート等の動的オフセット。
 
-			std::unique_ptr<BossAnimation> m_BossAnimation;								  //! アニメーション管理。
-			CharacterController m_BossController;										  //! 物理移動。
+			Quaternion m_rotation = Quaternion::Identity; //! 回転。
 
-			Vector3    m_position = Vector3::Zero;										  //! 論理座標。
-			Vector3    m_forward = Vector3::Zero;										  //! 前方向。
-			Vector3    m_modelOffset = Vector3::Zero;									  //! ボスタイプ別固定オフセット。
-			Vector3    m_modelDynamicOffset = Vector3::Zero;							  //! ステート等の動的オフセット。
-	
-			Quaternion m_rotation = Quaternion::Identity;								  //! 回転。
+			int m_prevHP = 0;			 //! 前フレーム HP。
+			int m_accumulatedDamage = 0; //! 硬直判定用累積ダメージ。
 
-			int m_prevHP = 0;															  //! 前フレーム HP。
-			int m_accumulatedDamage = 0;												  //! 硬直判定用累積ダメージ。
+			float m_damageMultiplier = 1.0f;	//! 攻撃力倍率（未使用なら 1.0）。
+			float m_roarCooldownTimer = 0.0f;	//! ロアクールダウン残り。
+			float m_lastRoarHPThreshold = 1.0f; //! 前回ロア発動時 HP 閾値。
+			float m_dir = 1.0f;					//! 向き補助（左右）。
+			float m_lockedYPosition = 0.0f;		//! Y 固定時の高さ。
 
-			float m_damageMultiplier = 1.0f;											  //! 攻撃力倍率（未使用なら 1.0）。
-			float m_roarCooldownTimer = 0.0f;											  //! ロアクールダウン残り。
-			float m_lastRoarHPThreshold = 1.0f;											  //! 前回ロア発動時 HP 閾値。
-			float m_dir = 1.0f;															  //! 向き補助（左右）。
-			float m_lockedYPosition = 0.0f;												  //! Y 固定時の高さ。
+			bool m_isYLocked = false;		 //! Y 座標固定フラグ。
+			bool m_isRotationLocked = false; //! 回転固定フラグ。
 
-			bool m_isYLocked = false;													  //! Y 座標固定フラグ。
-			bool m_isRotationLocked = false;											  //! 回転固定フラグ。
+			uint8_t m_roarUsageCount = 0;	 //! ロア使用回数。
+			uint8_t m_lastAttackType = 0xFF; //! 直前攻撃種別。
+			uint8_t m_currentStateID = 0;	 //! 現在ステート ID。
 
-			uint8_t m_roarUsageCount = 0;												  //! ロア使用回数。
-			uint8_t m_lastAttackType = 0xFF;											  //! 直前攻撃種別。
-			uint8_t m_currentStateID = 0;												  //! 現在ステート ID。
-
-			std::unordered_map<BossStateID, std::function<StateType* ()>> m_stateFactory; //! ステート生成表。
+			std::unordered_map<BossStateID, std::function<StateType *()>> m_stateFactory; //! ステート生成表。
 		};
 	}
 }

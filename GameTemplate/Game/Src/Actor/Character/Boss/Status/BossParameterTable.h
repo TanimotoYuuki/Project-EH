@@ -1,7 +1,7 @@
-#pragma once
+ï»¿#pragma once
 /**
  * @file   BossParameterTable.h
- * @brief  TSVƒtƒ@ƒCƒ‹‚©‚çƒ{ƒXƒpƒ‰ƒ[ƒ^‚ğ“Ç‚İ‚İŠÇ—‚·‚éƒNƒ‰ƒXB
+ * @brief  TSVãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰ãƒœã‚¹ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’èª­ã¿è¾¼ã¿ç®¡ç†ã™ã‚‹ã‚¯ãƒ©ã‚¹ã€‚
  */
 
 #include "BossManager.h"
@@ -17,59 +17,59 @@ namespace nsApp
     {
         /**
          * @class BossParameterTable
-         * @brief BossType.tsv ‚ğ“Ç‚İ‚İAƒ{ƒXƒ^ƒCƒv‚²‚Æ‚Ìƒpƒ‰ƒ[ƒ^‚ğ’ñ‹Ÿ‚·‚éB
+         * @brief BossType.tsv ã‚’èª­ã¿è¾¼ã¿ã€ãƒœã‚¹ã‚¿ã‚¤ãƒ—ã”ã¨ã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’æä¾›ã™ã‚‹ã€‚
          */
         class BossParameterTable
         {
         public:
             /**
-             * @brief TSVƒtƒ@ƒCƒ‹‚ğ“Ç‚İ‚ŞB
-             * @param filePath TSVƒtƒ@ƒCƒ‹‚ÌƒpƒXB
-             * @return “Ç‚İ‚İ¬Œ÷‚ÅtrueB
+             * @brief TSVãƒ•ã‚¡ã‚¤ãƒ«ã‚’èª­ã¿è¾¼ã‚€ã€‚
+             * @param filePath TSVãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ‘ã‚¹ã€‚
+             * @return èª­ã¿è¾¼ã¿æˆåŠŸã§trueã€‚
              */
             static bool LoadTSVFile(const char* filePath);
 
             /**
-             * @brief ƒ{ƒXƒ^ƒCƒv‚É‘Î‰‚·‚éƒpƒ‰ƒ[ƒ^‚ğ•Ô‚·B
-             * @param bossType ƒ{ƒXƒ^ƒCƒvB
-             * @return ƒ{ƒXƒpƒ‰ƒ[ƒ^‚ÌQÆB
+             * @brief ãƒœã‚¹ã‚¿ã‚¤ãƒ—ã«å¯¾å¿œã™ã‚‹ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’è¿”ã™ã€‚
+             * @param bossType ãƒœã‚¹ã‚¿ã‚¤ãƒ—ã€‚
+             * @return ãƒœã‚¹ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã®å‚ç…§ã€‚
              */
             static const BossTypeParameters& GetParameters(CharacterModelType bossType);
 
 
         private:
             /**
-			 * @brief TSV‚Ì•¶š—ñ‚ğ‘Î‰‚·‚é—ñ‹“Œ^‚â\‘¢‘Ì‚É•ÏŠ·‚·‚éƒwƒ‹ƒp[ŠÖ”B
-			 * @param name •ÏŠ·Œ³‚Ì•¶š—ñB
-			 * @return •ÏŠ·Œ‹‰ÊBCharacterModelType ˆÈŠO‚ÍA•ÏŠ·‚É¸”s‚µ‚½ê‡‚ÌƒfƒtƒHƒ‹ƒg’l‚ğ•Ô‚·B
+			 * @brief TSVã®æ–‡å­—åˆ—ã‚’å¯¾å¿œã™ã‚‹åˆ—æŒ™å‹ã‚„æ§‹é€ ä½“ã«å¤‰æ›ã™ã‚‹ãƒ˜ãƒ«ãƒ‘ãƒ¼é–¢æ•°ã€‚
+			 * @param name å¤‰æ›å…ƒã®æ–‡å­—åˆ—ã€‚
+			 * @return å¤‰æ›çµæœã€‚CharacterModelType ä»¥å¤–ã¯ã€å¤‰æ›ã«å¤±æ•—ã—ãŸå ´åˆã®ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆå€¤ã‚’è¿”ã™ã€‚
              */
             static BossPersonality   ConvertPersonality(const std::string& name);
 
             /**
-			 * @brief TSV‚Ì•¶š—ñ‚ğ CharacterModelType ‚É•ÏŠ·‚·‚éƒwƒ‹ƒp[ŠÖ”B
-			 * @param name •ÏŠ·Œ³‚Ì•¶š—ñB
-			 * @param outType •ÏŠ·Œ‹‰Ê‚ğŠi”[‚·‚éQÆB•ÏŠ·‚É¬Œ÷‚µ‚½ê‡‚Í‘Î‰‚·‚é CharacterModelType ‚ğA¸”s‚µ‚½ê‡‚Í CharacterModelType::TutorialBoss ‚ğƒZƒbƒg‚·‚éB
-			 * @return •ÏŠ·¬Œ÷‚ÅtrueA¸”s‚ÅfalseB¸”s‚µ‚½ê‡‚Í outType ‚É CharacterModelType::TutorialBoss ‚ªƒZƒbƒg‚³‚ê‚éB
+			 * @brief TSVã®æ–‡å­—åˆ—ã‚’ CharacterModelType ã«å¤‰æ›ã™ã‚‹ãƒ˜ãƒ«ãƒ‘ãƒ¼é–¢æ•°ã€‚
+			 * @param name å¤‰æ›å…ƒã®æ–‡å­—åˆ—ã€‚
+			 * @param outType å¤‰æ›çµæœã‚’æ ¼ç´ã™ã‚‹å‚ç…§ã€‚å¤‰æ›ã«æˆåŠŸã—ãŸå ´åˆã¯å¯¾å¿œã™ã‚‹ CharacterModelType ã‚’ã€å¤±æ•—ã—ãŸå ´åˆã¯ CharacterModelType::TutorialBoss ã‚’ã‚»ãƒƒãƒˆã™ã‚‹ã€‚
+			 * @return å¤‰æ›æˆåŠŸã§trueã€å¤±æ•—ã§falseã€‚å¤±æ•—ã—ãŸå ´åˆã¯ outType ã« CharacterModelType::TutorialBoss ãŒã‚»ãƒƒãƒˆã•ã‚Œã‚‹ã€‚
              */
             static bool ConvertBossType(const std::string& name, CharacterModelType& outType);
 
             /**
-			 * @brief TSV‚Ìs‚©‚ç BossTypeParameters ‚ğ¶¬‚·‚éƒwƒ‹ƒp[ŠÖ”B
-			 * @param table “Ç‚İ‚ñ‚¾TSVƒe[ƒuƒ‹B
-			 * @param rowIndex BossTypeParameters ‚ğ¶¬‚·‚és‚ÌƒCƒ“ƒfƒbƒNƒXBs‚ª‘¶İ‚µ‚È‚¢ê‡‚ÍAŠÖ”“à‚ÅƒGƒ‰[ƒnƒ“ƒhƒŠƒ“ƒO‚ğs‚¢AƒfƒtƒHƒ‹ƒg’l‚ğ•Ô‚·B
-			 * @return ¶¬‚³‚ê‚½ BossTypeParametersBs‚ª‘¶İ‚µ‚È‚¢ê‡‚ÍAŠÖ”“à‚ÅƒGƒ‰[ƒnƒ“ƒhƒŠƒ“ƒO‚ğs‚¢AƒfƒtƒHƒ‹ƒg’l‚ğ•Ô‚·B
+			 * @brief TSVã®è¡Œã‹ã‚‰ BossTypeParameters ã‚’ç”Ÿæˆã™ã‚‹ãƒ˜ãƒ«ãƒ‘ãƒ¼é–¢æ•°ã€‚
+			 * @param table èª­ã¿è¾¼ã‚“ã TSVãƒ†ãƒ¼ãƒ–ãƒ«ã€‚
+			 * @param rowIndex BossTypeParameters ã‚’ç”Ÿæˆã™ã‚‹è¡Œã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã€‚è¡ŒãŒå­˜åœ¨ã—ãªã„å ´åˆã¯ã€é–¢æ•°å†…ã§ã‚¨ãƒ©ãƒ¼ãƒãƒ³ãƒ‰ãƒªãƒ³ã‚°ã‚’è¡Œã„ã€ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆå€¤ã‚’è¿”ã™ã€‚
+			 * @return ç”Ÿæˆã•ã‚ŒãŸ BossTypeParametersã€‚è¡ŒãŒå­˜åœ¨ã—ãªã„å ´åˆã¯ã€é–¢æ•°å†…ã§ã‚¨ãƒ©ãƒ¼ãƒãƒ³ãƒ‰ãƒªãƒ³ã‚°ã‚’è¡Œã„ã€ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆå€¤ã‚’è¿”ã™ã€‚
              */
             static BossTypeParameters CreateParameterFromRow(const TSVTable& table, int rowIndex);
 
             /**
-			 * @brief TSV‚Ì“à—e‚ğ‚à‚Æ‚ÉAƒ{ƒXƒ^ƒCƒv‚²‚Æ‚Ìƒpƒ‰ƒ[ƒ^ƒe[ƒuƒ‹‚ğ¶¬‚·‚éƒwƒ‹ƒp[ŠÖ”B
-			 * @param table “Ç‚İ‚ñ‚¾TSVƒe[ƒuƒ‹Bƒe[ƒuƒ‹‚Ì“à—e‚ª•s³‚Èê‡‚ÍAŠÖ”“à‚ÅƒGƒ‰[ƒnƒ“ƒhƒŠƒ“ƒO‚ğs‚¢A‹ó‚Ìƒe[ƒuƒ‹‚ğ¶¬‚·‚éB
+			 * @brief TSVã®å†…å®¹ã‚’ã‚‚ã¨ã«ã€ãƒœã‚¹ã‚¿ã‚¤ãƒ—ã”ã¨ã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ãƒ†ãƒ¼ãƒ–ãƒ«ã‚’ç”Ÿæˆã™ã‚‹ãƒ˜ãƒ«ãƒ‘ãƒ¼é–¢æ•°ã€‚
+			 * @param table èª­ã¿è¾¼ã‚“ã TSVãƒ†ãƒ¼ãƒ–ãƒ«ã€‚ãƒ†ãƒ¼ãƒ–ãƒ«ã®å†…å®¹ãŒä¸æ­£ãªå ´åˆã¯ã€é–¢æ•°å†…ã§ã‚¨ãƒ©ãƒ¼ãƒãƒ³ãƒ‰ãƒªãƒ³ã‚°ã‚’è¡Œã„ã€ç©ºã®ãƒ†ãƒ¼ãƒ–ãƒ«ã‚’ç”Ÿæˆã™ã‚‹ã€‚
              */
             static void CreateDefaultTable(std::unordered_map<CharacterModelType, BossTypeParameters>& table);
 
 
         private:
-			static std::unordered_map<CharacterModelType, BossTypeParameters> m_table; //! ƒ{ƒXƒ^ƒCƒv‚²‚Æ‚Ìƒpƒ‰ƒ[ƒ^ƒe[ƒuƒ‹
+			static std::unordered_map<CharacterModelType, BossTypeParameters> m_table; //! ãƒœã‚¹ã‚¿ã‚¤ãƒ—ã”ã¨ã®ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ãƒ†ãƒ¼ãƒ–ãƒ«
         };
     }
 }

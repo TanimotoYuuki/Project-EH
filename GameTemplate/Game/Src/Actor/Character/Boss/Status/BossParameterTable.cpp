@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "BossParameterTable.h"
 #include "Src/Utilty/TSVTable.h"
 
@@ -54,7 +54,7 @@ namespace nsApp
 
         BossPersonality BossParameterTable::ConvertPersonality(const std::string& name)
         {
-			/* TSV ‚Ì personality —ñ‚Ì•¶š—ñ‚ğ BossPersonality ‚É•ÏŠ·B’è‹`‚³‚ê‚Ä‚¢‚È‚¢•¶š—ñ‚È‚ç Balanced ‚ğ•Ô‚·B */
+			/* TSV    personality   Ì•       BossPersonality  É•ÏŠ  B  `    Ä‚  È‚       È‚  Balanced   Ô‚  B */
             if (name == "Aggressive") return BossPersonality::Aggressive;
             if (name == "Balanced")   return BossPersonality::Balanced;
             if (name == "Defensive")  return BossPersonality::Defensive;
@@ -65,7 +65,7 @@ namespace nsApp
 
         bool BossParameterTable::ConvertBossType(const std::string& name, CharacterModelType& outType)
         {
-			/* TSV ‚Ì BossType —ñ‚Ì•¶š—ñ‚ğ CharacterModelType ‚É•ÏŠ·B’è‹`‚³‚ê‚Ä‚¢‚È‚¢•¶š—ñ‚È‚ç false ‚ğ•Ô‚·B */
+			/* TSV    BossType   Ì•       CharacterModelType  É•ÏŠ  B  `    Ä‚  È‚       È‚  false   Ô‚  B */
             if (name == "GrayDragon") { outType = CharacterModelType::GrayDragon;   return true; }
             if (name == "RedDragon") { outType = CharacterModelType::RedDragon;    return true; }
             if (name == "GreenDragon") { outType = CharacterModelType::GreenDragon;  return true; }
@@ -76,10 +76,10 @@ namespace nsApp
 
         BossTypeParameters BossParameterTable::CreateParameterFromRow(const TSVTable& table, int rowIndex)
         {
-			/* TSV ‚Ìs‚©‚ç BossTypeParameters ‚ğ¶¬B‘¶İ‚µ‚È‚¢—ñ‚ÍƒfƒtƒHƒ‹ƒg’l‚ğg—pB */
+			/* TSV  Ìs     BossTypeParameters  ğ¶  B   İ‚  È‚   Íƒf t H   g l  g p B */
             BossTypeParameters p;
 
-			/* BossType —ñ‚ÍŒÄ‚Ño‚µŒ³‚Åˆ—‚³‚ê‚Ä‚¢‚é‚½‚ßA‚±‚±‚Å‚Í personality —ñ‚Ì‚İ‚ğ•ÏŠ·‚µ‚Äİ’è‚·‚éB */
+			/* BossType   ÍŒÄ‚Ño     Å       Ä‚  é‚½ ßA     Å‚  personality   Ì‚İ‚ ÏŠ    Äİ’è‚·  B */
             p.personality = ConvertPersonality(table.GetString(rowIndex, "personality"));
             p.m_moveSpeed = table.GetFloat(rowIndex, "moveSpeed", 10.0f);
             p.m_moveStopDistance = table.GetFloat(rowIndex, "moveStopDistance", 55.0f);
@@ -112,7 +112,7 @@ namespace nsApp
 
         void BossParameterTable::CreateDefaultTable( std::unordered_map<CharacterModelType, BossTypeParameters>& table)
         {
-			/* ƒfƒtƒHƒ‹ƒg’l‚ğİ’èBTSV “Ç‚İ‚İ‚É¸”s‚µ‚½‚Æ‚«‚âATSV ‚É’è‹`‚³‚ê‚Ä‚¢‚È‚¢ƒ{ƒXƒ^ƒCƒv‚Ìƒpƒ‰ƒ[ƒ^‚ğ—v‹‚³‚ê‚½‚Æ‚«‚Ég—p‚³‚ê‚éB */
+			/*  f t H   g l  İ’ BTSV  Ç‚İ  İ‚É  s     Æ‚   ATSV  É’ `    Ä‚  È‚  { X ^ C v Ìƒp     [ ^  v     ê‚½ Æ‚  Ég p     B */
             table[CharacterModelType::GrayDragon] = { BossPersonality::Aggressive, 12.0f, 50.0f, 1.5f, 2.5f, 12.0f, 70, 20, 10, 5000, 1.0f, false, true,  2.0f, 0.0f, false };
             table[CharacterModelType::RedDragon] = { BossPersonality::Balanced,   10.0f, 60.0f, 2.0f, 3.0f, 15.0f, 20, 30, 50, 6000, 1.2f, true,  true,  1.2f, 0.2f, false };
             table[CharacterModelType::GreenDragon] = { BossPersonality::Tricky,     14.0f, 40.0f, 1.0f, 4.0f, 10.0f, 15, 70, 15, 4500, 0.9f, false, false, 1.5f, 0.5f, true };

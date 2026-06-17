@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include <time.h>
 #include "Game2.h"
 #include "Src/Fade/Fade.h"
@@ -93,7 +93,7 @@ namespace nsApp
 
 		bool Game2::Start()
 		{
-			/* �Q�[���͔񊈐�����ԂŊJ�n����B*/
+			/* ゲーム画面は非アクティブな状態から開始する。 */
 			m_isGameActive = false;
 
 			return true;
@@ -105,10 +105,10 @@ namespace nsApp
 			if (!m_isGameActive)
 				return;
 
-			/* �Q�[���J�n���o���̏����B*/
+			/* ゲーム開始演出の更新。 */
 			if (m_gameStartDirection != nullptr)
 			{
-				/* �Q�[���J�n���o���I��������C���X�^���X���폜����B*/
+				/* ゲーム開始演出終了時、インスタンスを削除。 */
 				if (m_gameStartDirection->IsDirectionFinished())
 				{
 					DeleteGO(m_gameStartDirection);
@@ -118,21 +118,21 @@ namespace nsApp
 					return;
 				}
 
-				/* �t�F�[�h���I�������Q�[���J�n���o���Đ�����B*/
+				/* フェードイン終了でゲーム開始演出再生。 */
 				if (nsApp::nsFade::Fade::GetInstance()->IsEnd())
 					m_gameStartDirection->Activate();
 			}
 			else
 			{
-				/* �|�[�Y��ʂ�\�����Ă��Ȃ��Ƃ��B*/
+				/* ポーズ画面を表示していないとき。 */
 				if (!m_pause->IsActive())
 				{
-					/* ���o���o�Ă��Ȃ��Ƃ��̂ݑ�����󂯕t����B*/
+					/* 演出が出ていないときのみ入力を受け付ける。 */
 					if (m_gameClearDirection == nullptr &&
 						m_gameOverDirection == nullptr &&
 						m_gameTimeUpDirection == nullptr)
 					{
-						/* Select�{�^���Ń|�[�Y��ʂ�\������B*/
+						/* Selectボタンでポーズ画面表示。 */
 						if (g_pad[0]->IsTrigger(enButtonSelect))
 						{
 							m_pause->Activate();
@@ -140,32 +140,32 @@ namespace nsApp
 							return;
 						}
 
-						/* �t�F�[�Y�C�x���g�R���g���[���[���X�V����B*/
+						/* ボスフェーズイベントコントローラーの更新。 */
 						if (m_bossPhaseController != nullptr)
 							m_bossPhaseController->Update();
 
-						/* �C�x���g�����ǂ����𔻒肷��B*/
+						/* イベント中かどうかを判定する。 */
 						bool isEventActive =
 							m_bossPhaseController != nullptr &&
 							m_bossPhaseController->IsEventActive();
 
-						/* �Q�[���J�n���o���I����Ă���Ƃ��ɏ�������B*/
+						/* ゲーム開始演出終了時に有効化。 */
 						if (m_gameStartDirection == nullptr)
 						{
 							m_characterHP->Activate();
 
-							/* �C�x���g���̓^�C�}�[���ĊJ���Ȃ��B*/
+							/* イベント中はタイムリミットを開始しない。 */
 							if (!isEventActive)
 								m_gameTimeLimit->Activate();
 						}
 
-						/* ���K�C�x���g���̓v���C���[/NPC�̓��͍X�V���~����B*/
+						/* ボスフェーズイベント中はプレイヤー/NPCの移動・更新を停止。 */
 						if (m_playerHub != nullptr && !isEventActive)
 							m_playerHub->Update();
 					}
 
-					/* �Q�[���N���A���o�B*/
-					/* TODO: �{�X��HP��0�ɂȂ����牉�o�𗬂��悤�ɂ���B*/
+					/* ゲームクリア演出。 */
+					/* TODO: ボスのHPが0になったら演出を流すようにする。 */
 					if (m_gameClearDirection == nullptr)
 					{
 						if (g_pad[0]->IsTrigger(enButtonLeft))
@@ -176,7 +176,7 @@ namespace nsApp
 						}
 					}
 
-					/* ���Ԑ؂ꉉ�o�B*/
+					/* 時間切れ演出。 */
 					if (m_gameTimeUpDirection == nullptr)
 					{
 						if (m_gameTimeLimit->IsTimeUp())
@@ -198,9 +198,9 @@ namespace nsApp
 						}
 					}
 
-					/* TODO: �L�����N�^�[�S����HP��0�ɂȂ����牉�o�𗬂��悤�ɂ���B*/
+					/* TODO: キャラクター全員のHPが0になったら演出を流すようにする。 */
 				}
-				/* �|�[�Y��ʂ�\�����Ă���Ƃ��B*/
+				/* ポーズ画面表示しているとき。 */
 				else
 				{
 					m_characterHP->Deactivate();
@@ -208,7 +208,7 @@ namespace nsApp
 				}
 			}
 
-			/* ���݂̃X�e�[�W�̍X�V���s���B*/
+			/* 現在のステージの更新を行う。 */
 			nsApp::nsStage::LoadStageData::GetInstance().Update();
 
 			if (m_reboneGaugeUIManager != nullptr)
@@ -221,7 +221,7 @@ namespace nsApp
 			if (!m_isGameActive)
 				return;
 
-			/* ���݂̃X�e�[�W��`�悷��B*/
+			/* 現在のステージを描画する。 */
 			nsApp::nsStage::LoadStageData::GetInstance().Draw(rc);
 
 			if (m_reboneGaugeUIManager != nullptr)
@@ -231,7 +231,7 @@ namespace nsApp
 
 		void Game2::ApplyBuildResult(const InGameBuildResult& result)
 		{
-			/* �������ʂ𔽉f����B*/
+			/* ビルド結果を反映。 */
 			m_soundLister = result.soundLister;
 			m_backGround = result.backGround;
 			m_reboneGaugeUIManager = result.reboneGaugeUIManager;
@@ -272,7 +272,7 @@ namespace nsApp
 					player->Activate();
 			}
 
-			/* PlayerHub �� Game2 ���Ő����E����������B*/
+			/* PlayerHubをGame2側で生成・初期化。 */
 			if (m_playerHub == nullptr)
 			{
 				m_playerHub = new PlayerControlerHub();
@@ -286,29 +286,29 @@ namespace nsApp
 				m_commentaryUIManager,
 				m_gameTimeLimit,
 				m_playerHub,
-				m_players        
+				m_players
 			);
 
 
-			/* Boss�̃^�[�Q�b�g���ŏI�ۏ؂���B*/
+			/* Bossのターゲットを最終保証する。 */
 			if (m_boss != nullptr && m_player != nullptr)
 				m_boss->SetTarget(m_player);
 
-			/* �{�X�ɑS�v���C���[��o�^����B*/
+			/* ボスに全プレイヤーを登録。 */
 			if (m_boss != nullptr && !m_players.empty())
 			{
 				std::vector<nsActor::ICharacter*> allTargets(m_players.begin(), m_players.end());
 				m_boss->SetAllTargets(allTargets);
 			}
 
-			/* CharacterHP �Ƀv���C���[��o�^����B*/
+			/* CharacterHPにプレイヤーを登録。 */
 			if (m_characterHP != nullptr)
 				m_characterHP->SetPlayers(m_players);
 
 			if (m_boss != nullptr)
 				m_boss->Activate();
 
-			/* �t�F�[�h��؂�ւ���B*/
+			/* フェードを切り替える。 */
 			nsFade::Fade::GetInstance()->ChangeFadeType(nsFade::Fade::enFadeType_FadeIn);
 		}
 	}

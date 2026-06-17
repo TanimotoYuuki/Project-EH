@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 /**
  * @file   BossAnimation.h
  * @brief  ボス種別ごとのアニメーションクリップ管理。

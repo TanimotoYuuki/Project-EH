@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 /**
  * @file   BossAIConfig.h
  * @brief  ボス AI の共通定数と攻撃抽選テーブル型を定義する。

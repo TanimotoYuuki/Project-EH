@@ -1,11 +1,11 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "BossAIConfigFactory.h"
 #include "Src/Actor/Character/Boss/Status/BossManager.h"
 
 namespace
 {
-	static constexpr float NEAR_MAX = 30.0f; //! Aggressive ê—p‚Ì‹ß‹——£‹«ŠEBBalanced ‚â Defensive ‚æ‚è‚à‹·‚ßB
-	static constexpr float MID_MAX = 60.0f;	 //! Aggressive ê—p‚Ì’†‹——£‹«ŠEBBalanced ‚æ‚è‚ÍL‚ß‚¾‚ªADefensive ‚æ‚è‚Í‹·‚ßB
+	static constexpr float NEAR_MAX = 30.0f; //! Aggressive å°‚ç”¨ã®è¿‘è·é›¢å¢ƒç•Œã€‚Balanced ã‚„ Defensive ã‚ˆã‚Šã‚‚ç‹­ã‚ã€‚
+	static constexpr float MID_MAX = 60.0f;	 //! Aggressive å°‚ç”¨ã®ä¸­è·é›¢å¢ƒç•Œã€‚Balanced ã‚ˆã‚Šã¯åºƒã‚ã ãŒã€Defensive ã‚ˆã‚Šã¯ç‹­ã‚ã€‚
 }
 
 
@@ -18,169 +18,169 @@ namespace nsApp
 		
 		Table BossAIConfigFactory::CreateConfigForBoss(CharacterModelType bossType, float currentDistance, float hpRatio, bool lastAttackWasBite)
 		{
-			/* ƒ{ƒXƒ^ƒCƒv‚ÉŠî‚Ã‚¢‚ÄUŒ‚‹——£ƒe[ƒuƒ‹‚ğ¶¬‚·‚éB*/
+			/* ãƒœã‚¹ã‚¿ã‚¤ãƒ—ã«åŸºã¥ã„ã¦æ”»æ’ƒè·é›¢ãƒ†ãƒ¼ãƒ–ãƒ«ã‚’ç”Ÿæˆã™ã‚‹ã€‚*/
 			const BossTypeParameters& params = BossTypeManager::GetBossTypeParameters(bossType);
 
-			/* ƒ`ƒ…[ƒgƒŠƒAƒ‹ƒ{ƒX‚ÆƒOƒŠ[ƒ“ƒhƒ‰ƒSƒ“‚Íê—p‚Ìƒe[ƒuƒ‹‚ğg—p‚·‚éB*/
+			/* ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«ãƒœã‚¹ã¨ã‚°ãƒªãƒ¼ãƒ³ãƒ‰ãƒ©ã‚´ãƒ³ã¯å°‚ç”¨ã®ãƒ†ãƒ¼ãƒ–ãƒ«ã‚’ä½¿ç”¨ã™ã‚‹ã€‚*/
 			if (bossType == CharacterModelType::TutorialBoss)
 				return CreateTutorialConfig(currentDistance, params);
-			/* ƒOƒŠ[ƒ“ƒhƒ‰ƒSƒ“‚Í‰Î‰ŠUŒ‚‚ğg—p‚µ‚È‚¢‚½‚ßAê—p‚Ìƒe[ƒuƒ‹‚ğg—p‚·‚éB*/
+			/* ã‚°ãƒªãƒ¼ãƒ³ãƒ‰ãƒ©ã‚´ãƒ³ã¯ç«ç‚æ”»æ’ƒã‚’ä½¿ç”¨ã—ãªã„ãŸã‚ã€å°‚ç”¨ã®ãƒ†ãƒ¼ãƒ–ãƒ«ã‚’ä½¿ç”¨ã™ã‚‹ã€‚*/
 			if (bossType == CharacterModelType::GreenDragon)
 				return CreateGreenDragonConfig(currentDistance, params);
 
 
-			/* ‚»‚êˆÈŠO‚Ìƒ{ƒXƒ^ƒCƒv‚Í«Ši‚É‰‚¶‚½ƒe[ƒuƒ‹‚ğg—p‚·‚éB*/
+			/* ãã‚Œä»¥å¤–ã®ãƒœã‚¹ã‚¿ã‚¤ãƒ—ã¯æ€§æ ¼ã«å¿œã˜ãŸãƒ†ãƒ¼ãƒ–ãƒ«ã‚’ä½¿ç”¨ã™ã‚‹ã€‚*/
 			switch (params.personality)
 			{
-			/* «Ši‚²‚Æ‚ÉUŒ‚‹——£ƒe[ƒuƒ‹‚ğ¶¬‚·‚éB*/
+			/* æ€§æ ¼ã”ã¨ã«æ”»æ’ƒè·é›¢ãƒ†ãƒ¼ãƒ–ãƒ«ã‚’ç”Ÿæˆã™ã‚‹ã€‚*/
 			case BossPersonality::Aggressive:
-				/* Aggressive ‚Í‹——£‚É‘Î‚µ‚Ä‚æ‚èUŒ‚“I‚Èƒe[ƒuƒ‹‚ğg—p‚·‚éB*/
+				/* Aggressive ã¯è·é›¢ã«å¯¾ã—ã¦ã‚ˆã‚Šæ”»æ’ƒçš„ãªãƒ†ãƒ¼ãƒ–ãƒ«ã‚’ä½¿ç”¨ã™ã‚‹ã€‚*/
 				return CreateAggressiveConfig(currentDistance, hpRatio, lastAttackWasBite, params);
 
 			case BossPersonality::Defensive:
-				/* Defensive ‚Í‹——£‚É‘Î‚µ‚Ä‚æ‚è–hŒä“I‚Èƒe[ƒuƒ‹‚ğg—p‚·‚éB*/
+				/* Defensive ã¯è·é›¢ã«å¯¾ã—ã¦ã‚ˆã‚Šé˜²å¾¡çš„ãªãƒ†ãƒ¼ãƒ–ãƒ«ã‚’ä½¿ç”¨ã™ã‚‹ã€‚*/
 				return CreateDefensiveConfig(currentDistance, hpRatio, lastAttackWasBite, params);
 
 			case BossPersonality::Tricky:
-				/* Tricky ‚Í‹——£‚É‘Î‚µ‚Ä‚æ‚èƒgƒŠƒbƒL[‚Èƒe[ƒuƒ‹‚ğg—p‚·‚éB*/
+				/* Tricky ã¯è·é›¢ã«å¯¾ã—ã¦ã‚ˆã‚Šãƒˆãƒªãƒƒã‚­ãƒ¼ãªãƒ†ãƒ¼ãƒ–ãƒ«ã‚’ä½¿ç”¨ã™ã‚‹ã€‚*/
 				return CreateTrickyConfig(currentDistance, hpRatio, lastAttackWasBite, params);
 
 			case BossPersonality::Balanced:
 			default:
-				/* Balanced ‚Í‹——£‚É‘Î‚µ‚Äƒoƒ‰ƒ“ƒX‚Ìæ‚ê‚½ƒe[ƒuƒ‹‚ğg—p‚·‚éB*/
+				/* Balanced ã¯è·é›¢ã«å¯¾ã—ã¦ãƒãƒ©ãƒ³ã‚¹ã®å–ã‚ŒãŸãƒ†ãƒ¼ãƒ–ãƒ«ã‚’ä½¿ç”¨ã™ã‚‹ã€‚*/
 				return CreateBalancedConfig(currentDistance, hpRatio, lastAttackWasBite, params);
 			}
 		}
 
 		Table BossAIConfigFactory::CreateTutorialConfig( float distance, const BossTypeParameters& params)
 		{
-			/* ƒ`ƒ…[ƒgƒŠƒAƒ‹ƒ{ƒX‚Í‹——£‚É‰‚¶‚ÄUŒ‚‚Ì—Dæ“x‚ª•Ï‰»‚·‚é‚ªA«Ši‚â HP Š„‡‚É‚Í‰e‹¿‚³‚ê‚È‚¢B*/
-			const int bite = params.m_preferredBiteChance; //! TSV ƒpƒ‰ƒ[ƒ^‚©‚çŠš‚İ‚Â‚«‚Ì—Dæ“x‚ğæ“¾
-			const int tail = params.m_preferredTailChance; //! TSV ƒpƒ‰ƒ[ƒ^‚©‚çK”öUŒ‚‚Ì—Dæ“x‚ğæ“¾
-			const int fire = params.m_preferredFireChance; //! TSV ƒpƒ‰ƒ[ƒ^‚©‚ç‰Î‰ŠUŒ‚‚Ì—Dæ“x‚ğæ“¾
+			/* ãƒãƒ¥ãƒ¼ãƒˆãƒªã‚¢ãƒ«ãƒœã‚¹ã¯è·é›¢ã«å¿œã˜ã¦æ”»æ’ƒã®å„ªå…ˆåº¦ãŒå¤‰åŒ–ã™ã‚‹ãŒã€æ€§æ ¼ã‚„ HP å‰²åˆã«ã¯å½±éŸ¿ã•ã‚Œãªã„ã€‚*/
+			const int bite = params.m_preferredBiteChance; //! TSV ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‹ã‚‰å™›ã¿ã¤ãã®å„ªå…ˆåº¦ã‚’å–å¾—
+			const int tail = params.m_preferredTailChance; //! TSV ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‹ã‚‰å°»å°¾æ”»æ’ƒã®å„ªå…ˆåº¦ã‚’å–å¾—
+			const int fire = params.m_preferredFireChance; //! TSV ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‹ã‚‰ç«ç‚æ”»æ’ƒã®å„ªå…ˆåº¦ã‚’å–å¾—
 
 			using C = BossAIConfig;
 
-			/* ‹——£‚É‰‚¶‚ÄUŒ‚‚Ì—Dæ“x‚ğ’²®‚·‚éB‹ß‹——£‚Å‚ÍŠš‚İ‚Â‚«‚ÆK”öUŒ‚‚ğ—Dæ‚µA‰“‹——£‚Å‚Í‰Î‰ŠUŒ‚‚ğ—Dæ‚·‚éB*/
+			/* è·é›¢ã«å¿œã˜ã¦æ”»æ’ƒã®å„ªå…ˆåº¦ã‚’èª¿æ•´ã™ã‚‹ã€‚è¿‘è·é›¢ã§ã¯å™›ã¿ã¤ãã¨å°»å°¾æ”»æ’ƒã‚’å„ªå…ˆã—ã€é è·é›¢ã§ã¯ç«ç‚æ”»æ’ƒã‚’å„ªå…ˆã™ã‚‹ã€‚*/
 			if (distance < C::ATTACK_TABLE_NEAR_MAX)
 				return { 0.0f, C::ATTACK_TABLE_NEAR_MAX, bite + 8, tail, fire > 8 ? fire - 8 : fire };
 
-			/* ’†‹——£‚Å‚ÍŠš‚İ‚Â‚«‚Ì—Dæ“x‚ğ­‚µ‰º‚°AK”öUŒ‚‚Æ‰Î‰ŠUŒ‚‚Ì—Dæ“x‚ğ­‚µã‚°‚éB*/
+			/* ä¸­è·é›¢ã§ã¯å™›ã¿ã¤ãã®å„ªå…ˆåº¦ã‚’å°‘ã—ä¸‹ã’ã€å°»å°¾æ”»æ’ƒã¨ç«ç‚æ”»æ’ƒã®å„ªå…ˆåº¦ã‚’å°‘ã—ä¸Šã’ã‚‹ã€‚*/
 			if (distance < C::ATTACK_TABLE_MID_MAX)
 				return { C::ATTACK_TABLE_NEAR_MAX, C::ATTACK_TABLE_MID_MAX, bite, tail, fire };
 
-			/* ‰“‹——£‚Å‚ÍŠš‚İ‚Â‚«‚Ì—Dæ“x‚ğ‘å•‚É‰º‚°AK”öUŒ‚‚Ì—Dæ“x‚ğˆÛ‚µA‰Î‰ŠUŒ‚‚Ì—Dæ“x‚ğ‘å•‚Éã‚°‚éB*/
+			/* é è·é›¢ã§ã¯å™›ã¿ã¤ãã®å„ªå…ˆåº¦ã‚’å¤§å¹…ã«ä¸‹ã’ã€å°»å°¾æ”»æ’ƒã®å„ªå…ˆåº¦ã‚’ç¶­æŒã—ã€ç«ç‚æ”»æ’ƒã®å„ªå…ˆåº¦ã‚’å¤§å¹…ã«ä¸Šã’ã‚‹ã€‚*/
 			return { C::ATTACK_TABLE_MID_MAX, C::ATTACK_TABLE_FAR_MAX, bite > 8 ? bite - 8 : bite, tail, fire + 8 };
 		}
 
 
 		Table BossAIConfigFactory::CreateAggressiveConfig( float distance, float hpRatio, bool lastAttackWasBite, const BossTypeParameters& params)
 		{
-			/* Aggressive ‚Í‹——£‚É‘Î‚µ‚Ä‚æ‚èUŒ‚“I‚Èƒe[ƒuƒ‹‚ğg—p‚·‚éBHP Š„‡‚â’¼‘O‚ÌUŒ‚‚Íl—¶‚µ‚È‚¢‚ªATSV ƒpƒ‰ƒ[ƒ^‚Íl—¶‚·‚éB*/
+			/* Aggressive ã¯è·é›¢ã«å¯¾ã—ã¦ã‚ˆã‚Šæ”»æ’ƒçš„ãªãƒ†ãƒ¼ãƒ–ãƒ«ã‚’ä½¿ç”¨ã™ã‚‹ã€‚HP å‰²åˆã‚„ç›´å‰ã®æ”»æ’ƒã¯è€ƒæ…®ã—ãªã„ãŒã€TSV ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã¯è€ƒæ…®ã™ã‚‹ã€‚*/
 			(void)hpRatio;
 			(void)params;
 
-			/* Aggressive ê—p‚Ì‹——£‹«ŠEi30 / 60jB‘¼«Ši‚Æ‚ÍˆÓ}“I‚ÉˆÙ‚È‚éB*/
+			/* Aggressive å°‚ç”¨ã®è·é›¢å¢ƒç•Œï¼ˆ30 / 60ï¼‰ã€‚ä»–æ€§æ ¼ã¨ã¯æ„å›³çš„ã«ç•°ãªã‚‹ã€‚*/
 			if (distance < NEAR_MAX)
 				return { 0.0f, NEAR_MAX, lastAttackWasBite ? 50 : 80, 15, 5 };
 
-			/* ’†‹——£‚Å‚ÍŠš‚İ‚Â‚«‚Ì—Dæ“x‚ğ­‚µ‰º‚°AK”öUŒ‚‚Ì—Dæ“x‚ğˆÛ‚µA‰Î‰ŠUŒ‚‚Ì—Dæ“x‚ğ­‚µã‚°‚éB*/
+			/* ä¸­è·é›¢ã§ã¯å™›ã¿ã¤ãã®å„ªå…ˆåº¦ã‚’å°‘ã—ä¸‹ã’ã€å°»å°¾æ”»æ’ƒã®å„ªå…ˆåº¦ã‚’ç¶­æŒã—ã€ç«ç‚æ”»æ’ƒã®å„ªå…ˆåº¦ã‚’å°‘ã—ä¸Šã’ã‚‹ã€‚*/
 			if (distance < MID_MAX)
 				return { NEAR_MAX, MID_MAX, lastAttackWasBite ? 40 : 70, 20, 10 };
 
-			/* ‰“‹——£‚Å‚ÍŠš‚İ‚Â‚«‚Ì—Dæ“x‚ğ‚³‚ç‚É‰º‚°AK”öUŒ‚‚Ì—Dæ“x‚ğ­‚µã‚°A‰Î‰ŠUŒ‚‚Ì—Dæ“x‚ğ‚³‚ç‚Éã‚°‚éB*/
+			/* é è·é›¢ã§ã¯å™›ã¿ã¤ãã®å„ªå…ˆåº¦ã‚’ã•ã‚‰ã«ä¸‹ã’ã€å°»å°¾æ”»æ’ƒã®å„ªå…ˆåº¦ã‚’å°‘ã—ä¸Šã’ã€ç«ç‚æ”»æ’ƒã®å„ªå…ˆåº¦ã‚’ã•ã‚‰ã«ä¸Šã’ã‚‹ã€‚*/
 			return { MID_MAX, BossAIConfig::ATTACK_TABLE_FAR_MAX, 60, 30, 10 };
 		}
 
 
 		Table BossAIConfigFactory::CreateBalancedConfig( float distance, float hpRatio, bool lastAttackWasBite, const BossTypeParameters& params)
 		{
-			/* Balanced ‚Í‹——£‚É‘Î‚µ‚Äƒoƒ‰ƒ“ƒX‚Ìæ‚ê‚½ƒe[ƒuƒ‹‚ğg—p‚·‚éBHP Š„‡‚â’¼‘O‚ÌUŒ‚‚Íl—¶‚µ‚È‚¢‚ªATSV ƒpƒ‰ƒ[ƒ^‚Íl—¶‚·‚éB*/
+			/* Balanced ã¯è·é›¢ã«å¯¾ã—ã¦ãƒãƒ©ãƒ³ã‚¹ã®å–ã‚ŒãŸãƒ†ãƒ¼ãƒ–ãƒ«ã‚’ä½¿ç”¨ã™ã‚‹ã€‚HP å‰²åˆã‚„ç›´å‰ã®æ”»æ’ƒã¯è€ƒæ…®ã—ãªã„ãŒã€TSV ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã¯è€ƒæ…®ã™ã‚‹ã€‚*/
 			(void)hpRatio;
 			(void)lastAttackWasBite;
 			(void)params;
 
-			/* Balanced ê—p‚Ì‹——£‹«ŠEi40 / 70jBAggressive ‚æ‚è‚ÍL‚ß‚¾‚ªADefensive ‚æ‚è‚Í‹·‚ßB*/
+			/* Balanced å°‚ç”¨ã®è·é›¢å¢ƒç•Œï¼ˆ40 / 70ï¼‰ã€‚Aggressive ã‚ˆã‚Šã¯åºƒã‚ã ãŒã€Defensive ã‚ˆã‚Šã¯ç‹­ã‚ã€‚*/
 			using C = BossAIConfig;
 
-			/* ‹——£‚É‰‚¶‚ÄUŒ‚‚Ì—Dæ“x‚ğ’²®‚·‚éB‹ß‹——£‚Å‚ÍŠš‚İ‚Â‚«‚ÆK”öUŒ‚‚ğ—Dæ‚µA‰“‹——£‚Å‚Í‰Î‰ŠUŒ‚‚ğ—Dæ‚·‚éBAggressive ‚æ‚è‚Íƒoƒ‰ƒ“ƒX‚Ìæ‚ê‚½”’lB*/
+			/* è·é›¢ã«å¿œã˜ã¦æ”»æ’ƒã®å„ªå…ˆåº¦ã‚’èª¿æ•´ã™ã‚‹ã€‚è¿‘è·é›¢ã§ã¯å™›ã¿ã¤ãã¨å°»å°¾æ”»æ’ƒã‚’å„ªå…ˆã—ã€é è·é›¢ã§ã¯ç«ç‚æ”»æ’ƒã‚’å„ªå…ˆã™ã‚‹ã€‚Aggressive ã‚ˆã‚Šã¯ãƒãƒ©ãƒ³ã‚¹ã®å–ã‚ŒãŸæ•°å€¤ã€‚*/
 			if (distance < C::ATTACK_TABLE_NEAR_MAX)
 				return { 0.0f, C::ATTACK_TABLE_NEAR_MAX, 40, 30, 30 };
 
-			/* ’†‹——£‚Å‚ÍŠš‚İ‚Â‚«‚Ì—Dæ“x‚ğ­‚µ‰º‚°AK”öUŒ‚‚Æ‰Î‰ŠUŒ‚‚Ì—Dæ“x‚ğ­‚µã‚°‚éBAggressive ‚æ‚è‚Íƒoƒ‰ƒ“ƒX‚Ìæ‚ê‚½”’lB*/
+			/* ä¸­è·é›¢ã§ã¯å™›ã¿ã¤ãã®å„ªå…ˆåº¦ã‚’å°‘ã—ä¸‹ã’ã€å°»å°¾æ”»æ’ƒã¨ç«ç‚æ”»æ’ƒã®å„ªå…ˆåº¦ã‚’å°‘ã—ä¸Šã’ã‚‹ã€‚Aggressive ã‚ˆã‚Šã¯ãƒãƒ©ãƒ³ã‚¹ã®å–ã‚ŒãŸæ•°å€¤ã€‚*/
 			if (distance < C::ATTACK_TABLE_MID_MAX)
 				return { C::ATTACK_TABLE_NEAR_MAX, C::ATTACK_TABLE_MID_MAX, 25, 40, 35 };
 
-			/* ‰“‹——£‚Å‚ÍŠš‚İ‚Â‚«‚Ì—Dæ“x‚ğ‚³‚ç‚É‰º‚°AK”öUŒ‚‚Ì—Dæ“x‚ğ­‚µã‚°A‰Î‰ŠUŒ‚‚Ì—Dæ“x‚ğ‚³‚ç‚Éã‚°‚éBAggressive ‚æ‚è‚Íƒoƒ‰ƒ“ƒX‚Ìæ‚ê‚½”’lB*/
+			/* é è·é›¢ã§ã¯å™›ã¿ã¤ãã®å„ªå…ˆåº¦ã‚’ã•ã‚‰ã«ä¸‹ã’ã€å°»å°¾æ”»æ’ƒã®å„ªå…ˆåº¦ã‚’å°‘ã—ä¸Šã’ã€ç«ç‚æ”»æ’ƒã®å„ªå…ˆåº¦ã‚’ã•ã‚‰ã«ä¸Šã’ã‚‹ã€‚Aggressive ã‚ˆã‚Šã¯ãƒãƒ©ãƒ³ã‚¹ã®å–ã‚ŒãŸæ•°å€¤ã€‚*/
 			return { C::ATTACK_TABLE_MID_MAX, C::ATTACK_TABLE_FAR_MAX, 15, 20, 65 };
 		}
 
 
 		Table BossAIConfigFactory::CreateDefensiveConfig(float distance, float hpRatio, bool lastAttackWasBite, const BossTypeParameters& params)
 		{
-			/* Defensive ‚Í‹——£‚É‘Î‚µ‚Ä‚æ‚è–hŒä“I‚Èƒe[ƒuƒ‹‚ğg—p‚·‚éBHP Š„‡‚â’¼‘O‚ÌUŒ‚‚Íl—¶‚µ‚È‚¢‚ªATSV ƒpƒ‰ƒ[ƒ^‚Íl—¶‚·‚éB*/
+			/* Defensive ã¯è·é›¢ã«å¯¾ã—ã¦ã‚ˆã‚Šé˜²å¾¡çš„ãªãƒ†ãƒ¼ãƒ–ãƒ«ã‚’ä½¿ç”¨ã™ã‚‹ã€‚HP å‰²åˆã‚„ç›´å‰ã®æ”»æ’ƒã¯è€ƒæ…®ã—ãªã„ãŒã€TSV ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã¯è€ƒæ…®ã™ã‚‹ã€‚*/
 			(void)hpRatio;
 			(void)lastAttackWasBite;
 			(void)params;
 
-			/* Defensive ê—p‚Ì‹——£‹«ŠEi50 / 80jBAggressive ‚æ‚è‚ÍL‚ß‚ÅABalanced ‚æ‚è‚à‚³‚ç‚ÉL‚ßB*/
+			/* Defensive å°‚ç”¨ã®è·é›¢å¢ƒç•Œï¼ˆ50 / 80ï¼‰ã€‚Aggressive ã‚ˆã‚Šã¯åºƒã‚ã§ã€Balanced ã‚ˆã‚Šã‚‚ã•ã‚‰ã«åºƒã‚ã€‚*/
 			using C = BossAIConfig;
 
-			/* ‹——£‚É‰‚¶‚ÄUŒ‚‚Ì—Dæ“x‚ğ’²®‚·‚éB‹ß‹——£‚Å‚ÍŠš‚İ‚Â‚«‚Ì—Dæ“x‚ğ­‚µã‚°AK”öUŒ‚‚Ì—Dæ“x‚ğˆÛ‚µA‰Î‰ŠUŒ‚‚Ì—Dæ“x‚ğ­‚µ‰º‚°‚éBAggressive ‚æ‚è‚Í–hŒä“I‚È”’lB*/
+			/* è·é›¢ã«å¿œã˜ã¦æ”»æ’ƒã®å„ªå…ˆåº¦ã‚’èª¿æ•´ã™ã‚‹ã€‚è¿‘è·é›¢ã§ã¯å™›ã¿ã¤ãã®å„ªå…ˆåº¦ã‚’å°‘ã—ä¸Šã’ã€å°»å°¾æ”»æ’ƒã®å„ªå…ˆåº¦ã‚’ç¶­æŒã—ã€ç«ç‚æ”»æ’ƒã®å„ªå…ˆåº¦ã‚’å°‘ã—ä¸‹ã’ã‚‹ã€‚Aggressive ã‚ˆã‚Šã¯é˜²å¾¡çš„ãªæ•°å€¤ã€‚*/
 			if (distance < C::ATTACK_TABLE_NEAR_MAX)
 				return { 0.0f, C::ATTACK_TABLE_NEAR_MAX, 50, 30, 20 };
 
-			/* ’†‹——£‚Å‚ÍŠš‚İ‚Â‚«‚Ì—Dæ“x‚ğˆÛ‚µAK”öUŒ‚‚Ì—Dæ“x‚ğ­‚µ‰º‚°A‰Î‰ŠUŒ‚‚Ì—Dæ“x‚ğ­‚µã‚°‚éBAggressive ‚æ‚è‚Í–hŒä“I‚È”’lB*/
+			/* ä¸­è·é›¢ã§ã¯å™›ã¿ã¤ãã®å„ªå…ˆåº¦ã‚’ç¶­æŒã—ã€å°»å°¾æ”»æ’ƒã®å„ªå…ˆåº¦ã‚’å°‘ã—ä¸‹ã’ã€ç«ç‚æ”»æ’ƒã®å„ªå…ˆåº¦ã‚’å°‘ã—ä¸Šã’ã‚‹ã€‚Aggressive ã‚ˆã‚Šã¯é˜²å¾¡çš„ãªæ•°å€¤ã€‚*/
 			if (distance < C::ATTACK_TABLE_MID_MAX)
 				return { C::ATTACK_TABLE_NEAR_MAX, C::ATTACK_TABLE_MID_MAX, 30, 40, 30 };
 
-			/* ‰“‹——£‚Å‚ÍŠš‚İ‚Â‚«‚Ì—Dæ“x‚ğ‚³‚ç‚É‰º‚°AK”öUŒ‚‚Ì—Dæ“x‚ğ­‚µã‚°A‰Î‰ŠUŒ‚‚Ì—Dæ“x‚ğ‚³‚ç‚Éã‚°‚éBAggressive ‚æ‚è‚Í–hŒä“I‚È”’lB*/
+			/* é è·é›¢ã§ã¯å™›ã¿ã¤ãã®å„ªå…ˆåº¦ã‚’ã•ã‚‰ã«ä¸‹ã’ã€å°»å°¾æ”»æ’ƒã®å„ªå…ˆåº¦ã‚’å°‘ã—ä¸Šã’ã€ç«ç‚æ”»æ’ƒã®å„ªå…ˆåº¦ã‚’ã•ã‚‰ã«ä¸Šã’ã‚‹ã€‚Aggressive ã‚ˆã‚Šã¯é˜²å¾¡çš„ãªæ•°å€¤ã€‚*/
 			return { C::ATTACK_TABLE_MID_MAX, C::ATTACK_TABLE_FAR_MAX, 20, 30, 50 };
 		}
 
 
 		Table BossAIConfigFactory::CreateTrickyConfig(float distance, float hpRatio, bool lastAttackWasBite, const BossTypeParameters& params)
 		{
-			/* Tricky ‚Í‹——£‚É‘Î‚µ‚Ä‚æ‚èƒgƒŠƒbƒL[‚Èƒe[ƒuƒ‹‚ğg—p‚·‚éBHP Š„‡‚â’¼‘O‚ÌUŒ‚‚Íl—¶‚µ‚È‚¢‚ªATSV ƒpƒ‰ƒ[ƒ^‚Íl—¶‚·‚éB*/
+			/* Tricky ã¯è·é›¢ã«å¯¾ã—ã¦ã‚ˆã‚Šãƒˆãƒªãƒƒã‚­ãƒ¼ãªãƒ†ãƒ¼ãƒ–ãƒ«ã‚’ä½¿ç”¨ã™ã‚‹ã€‚HP å‰²åˆã‚„ç›´å‰ã®æ”»æ’ƒã¯è€ƒæ…®ã—ãªã„ãŒã€TSV ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã¯è€ƒæ…®ã™ã‚‹ã€‚*/
 			(void)hpRatio;
 			(void)lastAttackWasBite;
 			(void)params;
 
-			/* Tricky ê—p‚Ì‹——£‹«ŠEi20 / 50jBAggressive ‚æ‚è‚Í‹·‚ß‚ÅADefensive ‚æ‚è‚ÍL‚ßB*/
+			/* Tricky å°‚ç”¨ã®è·é›¢å¢ƒç•Œï¼ˆ20 / 50ï¼‰ã€‚Aggressive ã‚ˆã‚Šã¯ç‹­ã‚ã§ã€Defensive ã‚ˆã‚Šã¯åºƒã‚ã€‚*/
 			using C = BossAIConfig;
 
-			/* ‹——£‚É‰‚¶‚ÄUŒ‚‚Ì—Dæ“x‚ğ’²®‚·‚éB‹ß‹——£‚Å‚ÍŠš‚İ‚Â‚«‚ÆK”öUŒ‚‚ğ—Dæ‚µA‰“‹——£‚Å‚Í‰Î‰ŠUŒ‚‚ğ—Dæ‚·‚éBAggressive ‚æ‚è‚ÍƒgƒŠƒbƒL[‚È”’lB*/
+			/* è·é›¢ã«å¿œã˜ã¦æ”»æ’ƒã®å„ªå…ˆåº¦ã‚’èª¿æ•´ã™ã‚‹ã€‚è¿‘è·é›¢ã§ã¯å™›ã¿ã¤ãã¨å°»å°¾æ”»æ’ƒã‚’å„ªå…ˆã—ã€é è·é›¢ã§ã¯ç«ç‚æ”»æ’ƒã‚’å„ªå…ˆã™ã‚‹ã€‚Aggressive ã‚ˆã‚Šã¯ãƒˆãƒªãƒƒã‚­ãƒ¼ãªæ•°å€¤ã€‚*/
 			if (distance < C::ATTACK_TABLE_NEAR_MAX)
 				return { 0.0f, C::ATTACK_TABLE_NEAR_MAX, 20, 60, 20 };
 
-			/* ’†‹——£‚Å‚ÍŠš‚İ‚Â‚«‚Ì—Dæ“x‚ğ­‚µ‰º‚°AK”öUŒ‚‚Ì—Dæ“x‚ğ‘å•‚Éã‚°A‰Î‰ŠUŒ‚‚Ì—Dæ“x‚ğ­‚µ‰º‚°‚éBAggressive ‚æ‚è‚ÍƒgƒŠƒbƒL[‚È”’lB*/
+			/* ä¸­è·é›¢ã§ã¯å™›ã¿ã¤ãã®å„ªå…ˆåº¦ã‚’å°‘ã—ä¸‹ã’ã€å°»å°¾æ”»æ’ƒã®å„ªå…ˆåº¦ã‚’å¤§å¹…ã«ä¸Šã’ã€ç«ç‚æ”»æ’ƒã®å„ªå…ˆåº¦ã‚’å°‘ã—ä¸‹ã’ã‚‹ã€‚Aggressive ã‚ˆã‚Šã¯ãƒˆãƒªãƒƒã‚­ãƒ¼ãªæ•°å€¤ã€‚*/
 			if (distance < C::ATTACK_TABLE_MID_MAX)
 				return { C::ATTACK_TABLE_NEAR_MAX, C::ATTACK_TABLE_MID_MAX, 15, 65, 20 };
 
-			/* ‰“‹——£‚Å‚ÍŠš‚İ‚Â‚«‚Ì—Dæ“x‚ğ‚³‚ç‚É‰º‚°AK”öUŒ‚‚Ì—Dæ“x‚ğ­‚µ‰º‚°A‰Î‰ŠUŒ‚‚Ì—Dæ“x‚ğ‘å•‚Éã‚°‚éBAggressive ‚æ‚è‚ÍƒgƒŠƒbƒL[‚È”’lB*/
+			/* é è·é›¢ã§ã¯å™›ã¿ã¤ãã®å„ªå…ˆåº¦ã‚’ã•ã‚‰ã«ä¸‹ã’ã€å°»å°¾æ”»æ’ƒã®å„ªå…ˆåº¦ã‚’å°‘ã—ä¸‹ã’ã€ç«ç‚æ”»æ’ƒã®å„ªå…ˆåº¦ã‚’å¤§å¹…ã«ä¸Šã’ã‚‹ã€‚Aggressive ã‚ˆã‚Šã¯ãƒˆãƒªãƒƒã‚­ãƒ¼ãªæ•°å€¤ã€‚*/
 			return { C::ATTACK_TABLE_MID_MAX, C::ATTACK_TABLE_FAR_MAX, 10, 70, 20 };
 		}
 
 
 		Table BossAIConfigFactory::CreateGreenDragonConfig(float distance, const BossTypeParameters& params)
 		{
-			/* ƒOƒŠ[ƒ“ƒhƒ‰ƒSƒ“‚Í‰Î‰ŠUŒ‚‚ğg—p‚µ‚È‚¢‚½‚ßA‹——£‚É‰‚¶‚ÄŠš‚İ‚Â‚«‚ÆK”öUŒ‚‚Ì—Dæ“x‚ª•Ï‰»‚·‚éƒe[ƒuƒ‹‚ğg—p‚·‚éBHP Š„‡‚â’¼‘O‚ÌUŒ‚‚Íl—¶‚µ‚È‚¢‚ªATSV ƒpƒ‰ƒ[ƒ^‚Íl—¶‚·‚éB*/
-			const int bite = params.m_preferredBiteChance; //! TSV ƒpƒ‰ƒ[ƒ^‚©‚çŠš‚İ‚Â‚«‚Ì—Dæ“x‚ğæ“¾
-			const int tail = params.m_preferredTailChance; //! TSV ƒpƒ‰ƒ[ƒ^‚©‚çK”öUŒ‚‚Ì—Dæ“x‚ğæ“¾
-			const int fire = 0;							   //! ƒOƒŠ[ƒ“ƒhƒ‰ƒSƒ“‚Í‰Î‰ŠUŒ‚‚ğg—p‚µ‚È‚¢‚½‚ßA—Dæ“x‚Íí‚É 0
+			/* ã‚°ãƒªãƒ¼ãƒ³ãƒ‰ãƒ©ã‚´ãƒ³ã¯ç«ç‚æ”»æ’ƒã‚’ä½¿ç”¨ã—ãªã„ãŸã‚ã€è·é›¢ã«å¿œã˜ã¦å™›ã¿ã¤ãã¨å°»å°¾æ”»æ’ƒã®å„ªå…ˆåº¦ãŒå¤‰åŒ–ã™ã‚‹ãƒ†ãƒ¼ãƒ–ãƒ«ã‚’ä½¿ç”¨ã™ã‚‹ã€‚HP å‰²åˆã‚„ç›´å‰ã®æ”»æ’ƒã¯è€ƒæ…®ã—ãªã„ãŒã€TSV ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã¯è€ƒæ…®ã™ã‚‹ã€‚*/
+			const int bite = params.m_preferredBiteChance; //! TSV ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‹ã‚‰å™›ã¿ã¤ãã®å„ªå…ˆåº¦ã‚’å–å¾—
+			const int tail = params.m_preferredTailChance; //! TSV ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‹ã‚‰å°»å°¾æ”»æ’ƒã®å„ªå…ˆåº¦ã‚’å–å¾—
+			const int fire = 0;							   //! ã‚°ãƒªãƒ¼ãƒ³ãƒ‰ãƒ©ã‚´ãƒ³ã¯ç«ç‚æ”»æ’ƒã‚’ä½¿ç”¨ã—ãªã„ãŸã‚ã€å„ªå…ˆåº¦ã¯å¸¸ã« 0
 
-			/* ƒOƒŠ[ƒ“ƒhƒ‰ƒSƒ“ê—p‚Ì‹——£‹«ŠEi30 / 60jB‘¼«Ši‚Æ‚ÍˆÓ}“I‚ÉˆÙ‚È‚éB*/
+			/* ã‚°ãƒªãƒ¼ãƒ³ãƒ‰ãƒ©ã‚´ãƒ³å°‚ç”¨ã®è·é›¢å¢ƒç•Œï¼ˆ30 / 60ï¼‰ã€‚ä»–æ€§æ ¼ã¨ã¯æ„å›³çš„ã«ç•°ãªã‚‹ã€‚*/
 			using C = BossAIConfig;
 
-			/* ‹——£‚É‰‚¶‚ÄUŒ‚‚Ì—Dæ“x‚ğ’²®‚·‚éB‹ß‹——£‚Å‚ÍŠš‚İ‚Â‚«‚ÆK”öUŒ‚‚ğ—Dæ‚µA‰“‹——£‚Å‚Í—¼•û‚Ì—Dæ“x‚ğ‰º‚°‚éB*/
+			/* è·é›¢ã«å¿œã˜ã¦æ”»æ’ƒã®å„ªå…ˆåº¦ã‚’èª¿æ•´ã™ã‚‹ã€‚è¿‘è·é›¢ã§ã¯å™›ã¿ã¤ãã¨å°»å°¾æ”»æ’ƒã‚’å„ªå…ˆã—ã€é è·é›¢ã§ã¯ä¸¡æ–¹ã®å„ªå…ˆåº¦ã‚’ä¸‹ã’ã‚‹ã€‚*/
 			if (distance < C::ATTACK_TABLE_NEAR_MAX)
 				return { 0.0f, C::ATTACK_TABLE_NEAR_MAX, bite, tail, fire };
 
-			/* ’†‹——£‚Å‚ÍŠš‚İ‚Â‚«‚Ì—Dæ“x‚ğ­‚µ‰º‚°AK”öUŒ‚‚Ì—Dæ“x‚ğ­‚µ‰º‚°‚éB*/
+			/* ä¸­è·é›¢ã§ã¯å™›ã¿ã¤ãã®å„ªå…ˆåº¦ã‚’å°‘ã—ä¸‹ã’ã€å°»å°¾æ”»æ’ƒã®å„ªå…ˆåº¦ã‚’å°‘ã—ä¸‹ã’ã‚‹ã€‚*/
 			if (distance < C::ATTACK_TABLE_MID_MAX)
 				return { C::ATTACK_TABLE_NEAR_MAX, C::ATTACK_TABLE_MID_MAX, bite, tail, fire };
 
-			/* ‰“‹——£‚Å‚ÍŠš‚İ‚Â‚«‚Ì—Dæ“x‚ğ‚³‚ç‚É‰º‚°AK”öUŒ‚‚Ì—Dæ“x‚ğ‚³‚ç‚É‰º‚°‚éB*/
+			/* é è·é›¢ã§ã¯å™›ã¿ã¤ãã®å„ªå…ˆåº¦ã‚’ã•ã‚‰ã«ä¸‹ã’ã€å°»å°¾æ”»æ’ƒã®å„ªå…ˆåº¦ã‚’ã•ã‚‰ã«ä¸‹ã’ã‚‹ã€‚*/
 			return { C::ATTACK_TABLE_MID_MAX, C::ATTACK_TABLE_FAR_MAX, bite, tail, fire };
 		}
 	}

@@ -1,8 +1,8 @@
-#pragma once
+ï»¿#pragma once
 
 /**
  * @file   BossPhaseController.h
- * @brief  ƒ{ƒX‚Ì HP ƒtƒF[ƒY‚É‰‚¶‚½ƒXƒe[ƒ^ƒX‹­‰»‚ğŠÇ—‚·‚éƒNƒ‰ƒXB
+ * @brief  ãƒœã‚¹ã® HP ãƒ•ã‚§ãƒ¼ã‚ºã«å¿œã˜ãŸã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹å¼·åŒ–ã‚’ç®¡ç†ã™ã‚‹ã‚¯ãƒ©ã‚¹ã€‚
  * @date   2026/06/16
  */
 
@@ -14,25 +14,25 @@ namespace nsApp
 
 		/**
 		 * @class BossPhaseController
-		 * @brief HP è‡’l“’B‚ÌUŒ‚—ÍE‘Ò‹@ŠÔ‹­‰»‚ğ Boss ‚©‚çˆÏ÷‚·‚éB
+		 * @brief HP é–¾å€¤åˆ°é”æ™‚ã®æ”»æ’ƒåŠ›ãƒ»å¾…æ©Ÿæ™‚é–“å¼·åŒ–ã‚’ Boss ã‹ã‚‰å§”è­²ã™ã‚‹ã€‚
 		 */
 		class BossPhaseController
 		{
 		public:
 			/**
-			 * @brief ƒtƒF[ƒYó‘Ô‚ğƒŠƒZƒbƒgBBoss::Start() ‚©‚çŒÄ‚ÔB
+			 * @brief ãƒ•ã‚§ãƒ¼ã‚ºçŠ¶æ…‹ã‚’ãƒªã‚»ãƒƒãƒˆã€‚Boss::Start() ã‹ã‚‰å‘¼ã¶ã€‚
 			 */
 			void Init();
 
 			/**
-			 * @brief HP ”ä—¦‚ğŠm”F‚µA–¢”­‰Î‚ÌƒtƒF[ƒY‹­‰»‚ğ“K—p‚·‚éB
-			 * @param boss ‘ÎÛƒ{ƒXB
+			 * @brief HP æ¯”ç‡ã‚’ç¢ºèªã—ã€æœªç™ºç«ã®ãƒ•ã‚§ãƒ¼ã‚ºå¼·åŒ–ã‚’é©ç”¨ã™ã‚‹ã€‚
+			 * @param boss å¯¾è±¡ãƒœã‚¹ã€‚
 			 */
 			void CheckAndApplyPhase(Boss* boss);
 
 			/**
-			 * @brief ƒtƒF[ƒY•â³Œã‚Ì‘Ò‹@ŠÔ”{—¦‚ğæ“¾B
-			 * @return ‘Ò‹@ŠÔ”{—¦B
+			 * @brief ãƒ•ã‚§ãƒ¼ã‚ºè£œæ­£å¾Œã®å¾…æ©Ÿæ™‚é–“å€ç‡ã‚’å–å¾—ã€‚
+			 * @return å¾…æ©Ÿæ™‚é–“å€ç‡ã€‚
 			 */
 			inline float GetIdleTimeMultiplier() const
 			{
@@ -40,8 +40,8 @@ namespace nsApp
 			}
 
 			/**
-			 * @brief ƒtƒF[ƒY1‹­‰»‚ª”­‰ÎÏ‚İ‚©B
-			 * @return true ‚È‚ç”­‰ÎÏ‚İB
+			 * @brief ãƒ•ã‚§ãƒ¼ã‚º1å¼·åŒ–ãŒç™ºç«æ¸ˆã¿ã‹ã€‚
+			 * @return true ãªã‚‰ç™ºç«æ¸ˆã¿ã€‚
 			 */
 			inline bool IsPhase1Triggered() const 
 			{
@@ -50,14 +50,14 @@ namespace nsApp
 
 
 		private:
-			bool  m_phase1Triggered = false;		  //! ƒtƒF[ƒY1”­‰ÎÏ‚İB
-			bool  m_phase2Triggered = false;		  //! ƒtƒF[ƒY2”­‰ÎÏ‚İB
-			float m_idleTimeMultiplier = 1.0f;        //! ‘Ò‹@ŠÔ”{—¦B
+			bool  m_phase1Triggered = false;		  //! ãƒ•ã‚§ãƒ¼ã‚º1ç™ºç«æ¸ˆã¿ã€‚
+			bool  m_phase2Triggered = false;		  //! ãƒ•ã‚§ãƒ¼ã‚º2ç™ºç«æ¸ˆã¿ã€‚
+			float m_idleTimeMultiplier = 1.0f;        //! å¾…æ©Ÿæ™‚é–“å€ç‡ã€‚
 
-			float m_phase1DamageMultiplier = 1.3f;    //! ƒtƒF[ƒY1UŒ‚—Í”{—¦B
-			float m_phase2DamageMultiplier = 1.3f;    //! ƒtƒF[ƒY2UŒ‚—Í”{—¦B
-			float m_phase1IdleTimeMultiplier = 0.75f; //! ƒtƒF[ƒY1‘Ò‹@ŠÔ”{—¦B
-			float m_phase2IdleTimeMultiplier = 0.5f;  //! ƒtƒF[ƒY2‘Ò‹@ŠÔ”{—¦B
+			float m_phase1DamageMultiplier = 1.3f;    //! ãƒ•ã‚§ãƒ¼ã‚º1æ”»æ’ƒåŠ›å€ç‡ã€‚
+			float m_phase2DamageMultiplier = 1.3f;    //! ãƒ•ã‚§ãƒ¼ã‚º2æ”»æ’ƒåŠ›å€ç‡ã€‚
+			float m_phase1IdleTimeMultiplier = 0.75f; //! ãƒ•ã‚§ãƒ¼ã‚º1å¾…æ©Ÿæ™‚é–“å€ç‡ã€‚
+			float m_phase2IdleTimeMultiplier = 0.5f;  //! ãƒ•ã‚§ãƒ¼ã‚º2å¾…æ©Ÿæ™‚é–“å€ç‡ã€‚
 		};
 	}
 }

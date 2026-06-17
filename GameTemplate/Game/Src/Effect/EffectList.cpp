@@ -3,7 +3,7 @@
 
 namespace
 {
-	static constexpr int MAX_EFFECT_COUNT = 64;   //! �����ɍĐ��ł���G�t�F�N�g���B
+	static constexpr int MAX_EFFECT_COUNT = 64; //! �����ɍĐ��ł���G�t�F�N�g���B
 }
 
 namespace nsApp
@@ -15,7 +15,6 @@ namespace nsApp
 			/* �G�t�F�N�g���������B*/
 			Clear();
 		}
-
 
 		void EffectList::Init()
 		{
@@ -34,7 +33,6 @@ namespace nsApp
 			/* Boss�G�t�F�N�g�B*/
 			StorageBossEffect();
 		}
-
 
 		void EffectList::Update(float deltaTime)
 		{
@@ -66,10 +64,9 @@ namespace nsApp
 			}
 		}
 
-
 		void EffectList::Clear()
 		{
-			for (auto& effectInfo : m_playingEffects)
+			for (auto &effectInfo : m_playingEffects)
 			{
 				DeleteGO(effectInfo.emitter);
 				effectInfo.emitter = nullptr;
@@ -78,10 +75,9 @@ namespace nsApp
 			m_playingEffects.clear();
 		}
 
-
-		nsK2EngineLow::EffectEmitter* EffectList::PlayEffect(Effect_ID id, const Vector3& position, const Quaternion& angle, const Vector3& scale, float lifeTime)
+		nsK2EngineLow::EffectEmitter *EffectList::PlayEffect(Effect_ID id, const Vector3 &position, const Quaternion &angle, const Vector3 &scale, float lifeTime)
 		{
-			if(m_effectPathList.find(id) == m_effectPathList.end())
+			if (m_effectPathList.find(id) == m_effectPathList.end())
 				return nullptr;
 
 			if (m_playingEffects.size() >= MAX_EFFECT_COUNT)
@@ -114,8 +110,7 @@ namespace nsApp
 			return m_effectEmitter;
 		}
 
-
-		void EffectList::StopEffect(nsK2EngineLow::EffectEmitter* effect)
+		void EffectList::StopEffect(nsK2EngineLow::EffectEmitter *effect)
 		{
 			if (effect == nullptr)
 				return;
@@ -136,8 +131,7 @@ namespace nsApp
 			/* ���X�g�ɂȂ��ꍇ���O�̂��ߍ폜����B*/
 			DeleteGO(effect);
 			effect = nullptr;
-		}	
-
+		}
 
 		void EffectList::StorageGreatSwordEffect()
 		{
@@ -147,7 +141,6 @@ namespace nsApp
 			/* �G�t�F�N�g��o�^�B*/
 			EffectEngine::GetInstance()->ResistEffect(Effect_ID::Charge, m_effectPathList[Effect_ID::Charge].c_str());
 		}
-
 
 		void EffectList::StorageHammerEffect()
 		{
@@ -161,9 +154,7 @@ namespace nsApp
 			EffectEngine::GetInstance()->ResistEffect(Effect_ID::Fire, m_effectPathList[Effect_ID::Fire].c_str());
 
 			EffectEngine::GetInstance()->ResistEffect(Effect_ID::ShockWave, m_effectPathList[Effect_ID::ShockWave].c_str());
-
 		}
-
 
 		void EffectList::StorageWandEffect()
 		{
@@ -189,10 +180,9 @@ namespace nsApp
 			/* ���@�U���G�t�F�N�g�B*/
 			EffectEngine::GetInstance()->ResistEffect(Effect_ID::MagicAttack, m_effectPathList[Effect_ID::MagicAttack].c_str());
 
-			/* �q�b�g�G�t�F�N�g�B*/ 
+			/* �q�b�g�G�t�F�N�g�B*/
 			EffectEngine::GetInstance()->ResistEffect(Effect_ID::Hit, m_effectPathList[Effect_ID::Hit].c_str());
 		}
-
 
 		void EffectList::StorageTwinGunEffect()
 		{
@@ -202,7 +192,6 @@ namespace nsApp
 			/* �G�t�F�N�g��o�^�B*/
 			EffectEngine::GetInstance()->ResistEffect(Effect_ID::Shot, m_effectPathList[Effect_ID::Shot].c_str());
 		}
-
 
 		void EffectList::StorageBossEffect()
 		{

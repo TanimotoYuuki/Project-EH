@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "BossRoarState.h"
 #include "Src/Actor/Character/Boss/Boss.h"
 #include <random>
@@ -21,10 +21,10 @@ namespace nsApp
 			m_boss = static_cast<nsActor::Boss *>(m_owner);
 			m_timer = ROAR_DURATION;
 
-			/*ƒAƒjƒ[ƒVƒ‡ƒ“Ä¶B*/
+			/*ã‚¢ãƒ‹ãƒ¡ãƒ¼ã‚·ãƒ§ãƒ³å†ç”Ÿã€‚*/
 			m_boss->PlayAnimation(nsActor::BossAnimationID::Scream);
 
-			/*SEÄ¶B*/
+			/*SEå†ç”Ÿã€‚*/
 			auto soundManager = FindGO<nsSound::SoundLister>("SoundManager");
 			if (soundManager != nullptr && reinterpret_cast<int8_t>(soundManager) != 0xFFFFFFFFFFFFFFFF)
 			{

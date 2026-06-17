@@ -1,8 +1,8 @@
-#pragma once
+ï»¿#pragma once
 
 /**
  * @file   BossDamageHandler.h
- * @brief  ƒ{ƒX‚Ì”íƒ_ƒ[ƒW—İÏEd’¼i‹¯‚İj”»’è‚ğŠÇ—‚·‚éƒNƒ‰ƒXB
+ * @brief  ãƒœã‚¹ã®è¢«ãƒ€ãƒ¡ãƒ¼ã‚¸ç´¯ç©ãƒ»ç¡¬ç›´ï¼ˆæ€¯ã¿ï¼‰åˆ¤å®šã‚’ç®¡ç†ã™ã‚‹ã‚¯ãƒ©ã‚¹ã€‚
  * @date   2026/06/16
  */
 
@@ -14,34 +14,34 @@ namespace nsApp
 
 		/**
 		 * @class BossDamageHandler
-		 * @brief ”íƒ_ƒ[ƒW‚Ì—İÏ‚Æd’¼ƒXƒe[ƒg‘JˆÚ‚ğ Boss ‚©‚çˆÏ÷‚·‚éB
+		 * @brief è¢«ãƒ€ãƒ¡ãƒ¼ã‚¸ã®ç´¯ç©ã¨ç¡¬ç›´ã‚¹ãƒ†ãƒ¼ãƒˆé·ç§»ã‚’ Boss ã‹ã‚‰å§”è­²ã™ã‚‹ã€‚
 		 */
 		class BossDamageHandler
 		{
 		public:
 			/**
-			 * @brief ƒ^ƒCƒ}[‚Æ—İÏƒ_ƒ[ƒW‚ğƒŠƒZƒbƒgBBoss::Start() ‚©‚çŒÄ‚ÔB
+			 * @brief ã‚¿ã‚¤ãƒãƒ¼ã¨ç´¯ç©ãƒ€ãƒ¡ãƒ¼ã‚¸ã‚’ãƒªã‚»ãƒƒãƒˆã€‚Boss::Start() ã‹ã‚‰å‘¼ã¶ã€‚
 			 */
 			void Init();
 
 			/**
-			 * @brief —İÏƒ_ƒ[ƒWƒŠƒZƒbƒgEd’¼ƒN[ƒ‹ƒ_ƒEƒ“‚Ìƒ^ƒCƒ}[‚ğXVB
-			 * @param deltaTime Œo‰ßŠÔi•bjB
+			 * @brief ç´¯ç©ãƒ€ãƒ¡ãƒ¼ã‚¸ãƒªã‚»ãƒƒãƒˆãƒ»ç¡¬ç›´ã‚¯ãƒ¼ãƒ«ãƒ€ã‚¦ãƒ³ã®ã‚¿ã‚¤ãƒãƒ¼ã‚’æ›´æ–°ã€‚
+			 * @param deltaTime çµŒéæ™‚é–“ï¼ˆç§’ï¼‰ã€‚
 			 */
 			void UpdateTimers(float deltaTime);
 
 			/**
-			 * @brief ”íƒ_ƒ[ƒWƒCƒxƒ“ƒg‚ğˆ—‚µA•K—v‚È‚çd’¼ƒXƒe[ƒg‚Ö‘JˆÚ‚³‚¹‚éB
-			 * @param boss   ”íƒ_ƒ[ƒW‚ğó‚¯‚½ƒ{ƒXB
-			 * @param damage ¡ƒtƒŒ[ƒ€‚Ì HP Œ¸­—ÊB
+			 * @brief è¢«ãƒ€ãƒ¡ãƒ¼ã‚¸ã‚¤ãƒ™ãƒ³ãƒˆã‚’å‡¦ç†ã—ã€å¿…è¦ãªã‚‰ç¡¬ç›´ã‚¹ãƒ†ãƒ¼ãƒˆã¸é·ç§»ã•ã›ã‚‹ã€‚
+			 * @param boss   è¢«ãƒ€ãƒ¡ãƒ¼ã‚¸ã‚’å—ã‘ãŸãƒœã‚¹ã€‚
+			 * @param damage ä»Šãƒ•ãƒ¬ãƒ¼ãƒ ã® HP æ¸›å°‘é‡ã€‚
 			 */
 			void HandleDamageEvent(Boss* boss, int damage);
 
 
 		private:
-			int   m_accumulatedDamage = 0;     //! d’¼”»’è—p—İÏƒ_ƒ[ƒWB
-			float m_damageResetTimer = 0.0f;   //! —İÏƒ_ƒ[ƒWƒŠƒZƒbƒgƒ^ƒCƒ}[B
-			float m_flinchCooldownTimer = 0.0f; //! d’¼ƒN[ƒ‹ƒ_ƒEƒ“B
+			int   m_accumulatedDamage = 0;     //! ç¡¬ç›´åˆ¤å®šç”¨ç´¯ç©ãƒ€ãƒ¡ãƒ¼ã‚¸ã€‚
+			float m_damageResetTimer = 0.0f;   //! ç´¯ç©ãƒ€ãƒ¡ãƒ¼ã‚¸ãƒªã‚»ãƒƒãƒˆã‚¿ã‚¤ãƒãƒ¼ã€‚
+			float m_flinchCooldownTimer = 0.0f; //! ç¡¬ç›´ã‚¯ãƒ¼ãƒ«ãƒ€ã‚¦ãƒ³ã€‚
 		};
 	}
 }
