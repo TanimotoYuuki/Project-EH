@@ -1,6 +1,7 @@
 ﻿#include "stdafx.h"
 #include "BossDamageState.h"
 #include "Src/Actor/Character/Boss/Boss.h"
+#include "Src/Sound/SoundLister.h"
 
 namespace nsApp
 {
