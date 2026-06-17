@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "BossDamageHandler.h"
 #include "Src/Actor/Character/Boss/Boss.h"
 #include "Src/Actor/Character/Boss/AI/BossAIConfig.h"
@@ -10,7 +10,7 @@ namespace nsApp
 	{
 		void BossDamageHandler::Init()
 		{
-			/* d’¼ŠÖ˜A‚Ì“à•”ó‘Ô‚ð‰Šú‰» */
+			/* ç¡¬ç›´é–¢é€£ã®å†…éƒ¨çŠ¶æ…‹ã‚’åˆæœŸåŒ– */
 			m_accumulatedDamage = 0;
 			m_damageResetTimer = 0.0f;
 			m_flinchCooldownTimer = 0.0f;
@@ -19,7 +19,7 @@ namespace nsApp
 
 		void BossDamageHandler::UpdateTimers(float deltaTime)
 		{
-			/* —ÝÏƒ_ƒ[ƒWƒŠƒZƒbƒgƒ^ƒCƒ}[ */
+			/* ç´¯ç©ãƒ€ãƒ¡ãƒ¼ã‚¸ãƒªã‚»ãƒƒãƒˆã‚¿ã‚¤ãƒžãƒ¼ */
 			if (m_damageResetTimer > 0.0f)
 			{
 				m_damageResetTimer -= deltaTime;
@@ -27,7 +27,7 @@ namespace nsApp
 					m_accumulatedDamage = 0;
 			}
 
-			/* d’¼ƒN[ƒ‹ƒ_ƒEƒ“ƒ^ƒCƒ}[ */
+			/* ç¡¬ç›´ã‚¯ãƒ¼ãƒ«ãƒ€ã‚¦ãƒ³ã‚¿ã‚¤ãƒžãƒ¼ */
 			if (m_flinchCooldownTimer > 0.0f)
 				m_flinchCooldownTimer -= deltaTime;
 		}
@@ -38,7 +38,7 @@ namespace nsApp
 			if (boss == nullptr)
 				return;
 
-			/* Ž€–SE”íƒ_ƒEUŒ‚’†‚Íd’¼‚µ‚È‚¢ */
+			/* æ­»äº¡ãƒ»è¢«ãƒ€ãƒ¡ãƒ»æ”»æ’ƒä¸­ã¯ç¡¬ç›´ã—ãªã„ */
 			if (boss->GetCharacterStatus().hp.currentHP <= 0)
 				return;
 
@@ -49,14 +49,14 @@ namespace nsApp
 			if (stateID == BossStateID::enAttack)
 				return;
 
-			/* ’ZŽžŠÔ“à‚Ì”íƒ_ƒ[ƒW‚ð—ÝÏ */
+			/* çŸ­æ™‚é–“å†…ã®è¢«ãƒ€ãƒ¡ãƒ¼ã‚¸ã‚’ç´¯ç© */
 			if (damage > 0)
 			{
 				m_accumulatedDamage += damage;
 				m_damageResetTimer = nsAI::BossAIConfig::DAMAGE_RESET_TIME;
 			}
 
-			/* —ÝÏƒ_ƒ[ƒW‚ªè‡’l‚ð’´‚¦Ad’¼ƒN[ƒ‹ƒ_ƒEƒ“’†‚Å‚È‚¯‚ê‚Î”íƒ_ƒƒXƒe[ƒg‚Ö */
+			/* ç´¯ç©ãƒ€ãƒ¡ãƒ¼ã‚¸ãŒé–¾å€¤ã‚’è¶…ãˆã€ç¡¬ç›´ã‚¯ãƒ¼ãƒ«ãƒ€ã‚¦ãƒ³ä¸­ã§ãªã‘ã‚Œã°è¢«ãƒ€ãƒ¡ã‚¹ãƒ†ãƒ¼ãƒˆã¸ */
 			if (m_accumulatedDamage >= nsAI::BossAIConfig::FLINCH_DAMAGE_THRESHOLD &&
 				m_flinchCooldownTimer <= 0.0f)
 			{

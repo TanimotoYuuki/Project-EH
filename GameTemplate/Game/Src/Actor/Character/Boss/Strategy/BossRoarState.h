@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 /**
  * @file   BossRoarState.h
  * @brief  ボス咆哮ステート。

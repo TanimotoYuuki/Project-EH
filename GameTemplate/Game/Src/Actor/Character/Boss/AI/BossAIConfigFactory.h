@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 /**
  * @file   BossAIConfigFactory.h
  * @brief  ボスタイプと戦闘状況から攻撃抽選テーブルを生成するファクトリ。

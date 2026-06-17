@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "BossPhaseEventController.h"
 
 #include "Src/Actor/Character/Boss/Boss.h"
@@ -27,7 +27,7 @@ namespace nsApp
 		if (m_boss == nullptr)
 			return;
 
-		/* •œ‹A‘Ò‚¿’†‚Íƒ^ƒCƒ}[‚ði‚ßAˆê’èŽžŠÔŒã‚É‹N‚«ã‚ª‚ç‚¹‚éB*/
+		/* å¾©å¸°å¾…ã¡ä¸­ã¯ã‚¿ã‚¤ãƒžãƒ¼ã‚’é€²ã‚ã€ä¸€å®šæ™‚é–“å¾Œã«èµ·ãä¸ŠãŒã‚‰ã›ã‚‹ã€‚*/
 		if (m_waitingForRecovery)
 		{
 			m_recoveryTimer += g_gameTime->GetFrameDeltaTime();
@@ -45,12 +45,12 @@ namespace nsApp
 			return;
 		}
 
-		/* ƒCƒxƒ“ƒg’†‚Íƒ^ƒCƒ}[‚ði‚ßA‰‰o‚ð‡”Ô‚É”­‰Î‚·‚éB*/
+		/* ã‚¤ãƒ™ãƒ³ãƒˆä¸­ã¯ã‚¿ã‚¤ãƒžãƒ¼ã‚’é€²ã‚ã€æ¼”å‡ºã‚’é †ç•ªã«ç™ºç«ã™ã‚‹ã€‚*/
 		if (m_isEventActive)
 		{
 			m_eventTimer += g_gameTime->GetFrameDeltaTime();
 
-			/* t >= SHAKE_DELAY : ƒJƒƒ‰ƒVƒFƒCƒNŠJŽnB*/
+			/* t >= SHAKE_DELAY : ã‚«ãƒ¡ãƒ©ã‚·ã‚§ã‚¤ã‚¯é–‹å§‹ã€‚*/
 			if (!m_shakeStarted && m_eventTimer >= SHAKE_DELAY)
 			{
 				m_shakeStarted = true;
@@ -58,13 +58,13 @@ namespace nsApp
 					m_camera->StartShake(SHAKE_DURATION, SHAKE_INTENSITY);
 			}
 
-			/* t >= BLOWAWAY_DELAY : ƒvƒŒƒCƒ„[‚Á”ò‚ÑB*/
+			/* t >= BLOWAWAY_DELAY : ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼å¹ã£é£›ã³ã€‚*/
 			if (!m_blowAwayStarted && m_eventTimer >= BLOWAWAY_DELAY)
 			{
 				m_blowAwayStarted = true;
 
 				if (m_commentary != nullptr)
-					m_commentary->ForceShowMessage(L"ƒKƒI[II");
+					m_commentary->ForceShowMessage(L"ã‚¬ã‚ªãƒ¼ï¼ï¼");
 
 				for (auto* player : m_players)
 				{
@@ -73,28 +73,28 @@ namespace nsApp
 				}
 			}
 
-			/* ƒ{ƒX‚ª™ôšKƒXƒe[ƒg‚ð”²‚¯‚½‚çƒCƒxƒ“ƒgI—¹B*/
+			/* ãƒœã‚¹ãŒå’†å“®ã‚¹ãƒ†ãƒ¼ãƒˆã‚’æŠœã‘ãŸã‚‰ã‚¤ãƒ™ãƒ³ãƒˆçµ‚äº†ã€‚*/
 			if (m_boss->GetCurrentStateID() != nsActor::BossStateID::enRoar)
 				EndEvent();
 
 			return;
 		}
 
-		/* ƒCƒxƒ“ƒg‚ª”­¶‚µ‚Ä‚¢‚È‚¢‚Æ‚«‚ÍƒtƒF[ƒY‘JˆÚ‚ðƒ`ƒFƒbƒN‚·‚éB*/
+		/* ã‚¤ãƒ™ãƒ³ãƒˆãŒç™ºç”Ÿã—ã¦ã„ãªã„ã¨ãã¯ãƒ•ã‚§ãƒ¼ã‚ºé·ç§»ã‚’ãƒã‚§ãƒƒã‚¯ã™ã‚‹ã€‚*/
 		CheckPhaseTransitions();
 	}
 
 
 	void BossPhaseEventController::CheckPhaseTransitions()
 	{
-		/* 50%F™ôšKƒCƒxƒ“ƒg‚ð”­‰Î‚·‚éB*/
+		/* 50%ï¼šå’†å“®ã‚¤ãƒ™ãƒ³ãƒˆã‚’ç™ºç«ã™ã‚‹ã€‚*/
 		if (!m_phase1Notified && m_boss->IsPhase1EventTriggered())
 		{
 			m_phase1Notified = true;
 			TriggerPhase1Event();
 		}
 
-		/* 25%FƒRƒƒ“ƒg•\Ž¦iƒXƒe[ƒ^ƒX‹­‰»‚ÍBoss‘¤‚ÅŠ®—¹Ï‚ÝjB*/
+		/* 25%ï¼šã‚³ãƒ¡ãƒ³ãƒˆè¡¨ç¤ºï¼ˆã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹å¼·åŒ–ã¯Bosså´ã§å®Œäº†æ¸ˆã¿ï¼‰ã€‚*/
 		if (!m_phase2Notified &&
 			m_boss->GetHPRatio() <= nsAI::BossAIConfig::PHASE2_HP_THRESHOLD)
 		{
@@ -111,18 +111,18 @@ namespace nsApp
 		m_shakeStarted = false;
 		m_blowAwayStarted = false;
 
-		/* t=0 : ‚Á”ò‚Ñ‚Ì’¼‘O‚Ü‚ÅŽc‚é‚æ‚¤‚É’·‚ß‚É•\Ž¦‚·‚éB*/
+		/* t=0 : å¹ã£é£›ã³ã®ç›´å‰ã¾ã§æ®‹ã‚‹ã‚ˆã†ã«é•·ã‚ã«è¡¨ç¤ºã™ã‚‹ã€‚*/
 		if (m_commentary != nullptr)
-			m_commentary->ForceShowMessage(L"ƒ{ƒX‚Ì‚æ‚¤‚·‚ªII", BLOWAWAY_DELAY + 0.3f);
+			m_commentary->ForceShowMessage(L"ãƒœã‚¹ã®ã‚ˆã†ã™ãŒï¼ï¼", BLOWAWAY_DELAY + 0.3f);
 
-		/* ƒ{ƒX‚ð‹­§“I‚É™ôšKƒXƒe[ƒg‚Ö‘JˆÚ‚³‚¹‚éB*/
+		/* ãƒœã‚¹ã‚’å¼·åˆ¶çš„ã«å’†å“®ã‚¹ãƒ†ãƒ¼ãƒˆã¸é·ç§»ã•ã›ã‚‹ã€‚*/
 		m_boss->ForceRoar();
 
-		/* ƒ^ƒCƒ}[‚ð’âŽ~‚·‚éB*/
+		/* ã‚¿ã‚¤ãƒžãƒ¼ã‚’åœæ­¢ã™ã‚‹ã€‚*/
 		if (m_timeLimit != nullptr)
 			m_timeLimit->Deactivate();
 
-		/* “{‚èƒI[ƒ‰ƒGƒtƒFƒNƒg‚ðŠJŽn‚·‚éB*/
+		/* æ€’ã‚Šã‚ªãƒ¼ãƒ©ã‚¨ãƒ•ã‚§ã‚¯ãƒˆã‚’é–‹å§‹ã™ã‚‹ã€‚*/
 		m_boss->StartRageEffect();
 	}
 
@@ -130,7 +130,7 @@ namespace nsApp
 	void BossPhaseEventController::ApplyPhase2Effect()
 	{
 		if (m_commentary != nullptr)
-			m_commentary->AddMessage(L"ƒ{ƒX‚ª‚¨‚±‚Á‚Ä‚éI", nsUI::CommentaryMessagePriority::Critical);
+			m_commentary->AddMessage(L"ãƒœã‚¹ãŒãŠã“ã£ã¦ã‚‹ï¼", nsUI::CommentaryMessagePriority::Critical);
 	}
 
 
@@ -140,7 +140,7 @@ namespace nsApp
 		m_waitingForRecovery = true;
 		m_recoveryTimer = 0.0f;
 
-		/* ƒ^ƒCƒ}[‚ðÄŠJ‚·‚éiƒvƒŒƒCƒ„[‚Í‚Ü‚¾ƒ_ƒEƒ“’†‚¾‚ªƒQ[ƒ€‚ÍÄŠJjB*/
+		/* ã‚¿ã‚¤ãƒžãƒ¼ã‚’å†é–‹ã™ã‚‹ï¼ˆãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã¯ã¾ã ãƒ€ã‚¦ãƒ³ä¸­ã ãŒã‚²ãƒ¼ãƒ ã¯å†é–‹ï¼‰ã€‚*/
 		if (m_timeLimit != nullptr)
 			m_timeLimit->Activate();
 	}

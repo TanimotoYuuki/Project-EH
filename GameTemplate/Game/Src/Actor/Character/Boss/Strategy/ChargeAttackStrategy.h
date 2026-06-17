@@ -1,7 +1,7 @@
-#pragma once
+ï»¿#pragma once
 /**
  * @file   ChargeAttackStrategy.h
- * @brief  ƒ{ƒX‚Ì“ËiUŒ‚ƒXƒgƒ‰ƒeƒW[BƒvƒŒƒCƒ„[‚ğ“Ë‚«”²‚¯‚Ä•ûŒü“]Š·‚·‚éB
+ * @brief  ãƒœã‚¹ã®çªé€²æ”»æ’ƒã‚¹ãƒˆãƒ©ãƒ†ã‚¸ãƒ¼ã€‚ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚’çªãæŠœã‘ã¦æ–¹å‘è»¢æ›ã™ã‚‹ã€‚
  */
 
 #include "Src/Actor/Character/Boss/Strategy/IBossAttackStrategy.h"
@@ -14,55 +14,55 @@ namespace nsApp
     {
         /**
          * @class ChargeAttackStrategy
-         * @brief ƒvƒŒƒCƒ„[‚ÉŒü‚©‚Á‚Ä‚‘¬“Ëi‚µA’Ê‚è”²‚¯‚½Œã‚ÉWalk‚µ‚È‚ª‚ç•ûŒü“]Š·‚·‚éUŒ‚B
+         * @brief ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã«å‘ã‹ã£ã¦é«˜é€Ÿçªé€²ã—ã€é€šã‚ŠæŠœã‘ãŸå¾Œã«Walkã—ãªãŒã‚‰æ–¹å‘è»¢æ›ã™ã‚‹æ”»æ’ƒã€‚
          */
         class ChargeAttackStrategy : public IBossAttackStrategy
         {
         public:
             /**
-             * @brief ‰Šú‰»ˆ—B
-			 * @param boss@UŒ‚å‘Ì‚Ìƒ{ƒXBUŒ‚ŠJn‘O‚Éˆê“x‚¾‚¯ŒÄ‚Ño‚³‚ê‚éB
+             * @brief åˆæœŸåŒ–å‡¦ç†ã€‚
+			 * @param bossã€€æ”»æ’ƒä¸»ä½“ã®ãƒœã‚¹ã€‚æ”»æ’ƒé–‹å§‹å‰ã«ä¸€åº¦ã ã‘å‘¼ã³å‡ºã•ã‚Œã‚‹ã€‚
              */
             void Enter(nsActor::Boss* boss) override;
 
             /**
-             * @brief XVˆ—B
-			 * @param boss UŒ‚å‘Ì‚Ìƒ{ƒXBUŒ‚’†‚Í–ˆƒtƒŒ[ƒ€ŒÄ‚Ño‚³‚ê‚éB
+             * @brief æ›´æ–°å‡¦ç†ã€‚
+			 * @param boss æ”»æ’ƒä¸»ä½“ã®ãƒœã‚¹ã€‚æ”»æ’ƒä¸­ã¯æ¯ãƒ•ãƒ¬ãƒ¼ãƒ å‘¼ã³å‡ºã•ã‚Œã‚‹ã€‚
              */
             void Update(nsActor::Boss* boss) override;
 
             /**
-			 * @brief I—¹ˆ—B
-			 * @param boss@UŒ‚å‘Ì‚Ìƒ{ƒXBUŒ‚I—¹Œã‚Éˆê“x‚¾‚¯ŒÄ‚Ño‚³‚ê‚éB
+			 * @brief çµ‚äº†å‡¦ç†ã€‚
+			 * @param bossã€€æ”»æ’ƒä¸»ä½“ã®ãƒœã‚¹ã€‚æ”»æ’ƒçµ‚äº†å¾Œã«ä¸€åº¦ã ã‘å‘¼ã³å‡ºã•ã‚Œã‚‹ã€‚
              */
             void Exit(nsActor::Boss* boss) override;
 
             /**
-			 * @brief UŒ‚I—¹”»’èB“Ëi‚Æ•ûŒü“]Š·‚Ì—¼ƒtƒF[ƒY‚ªŠ®—¹‚µ‚½‚ç true ‚ğ•Ô‚·B
-			 * @return UŒ‚I—¹”»’èB“Ëi‚Æ•ûŒü“]Š·‚Ì—¼ƒtƒF[ƒY‚ªŠ®—¹‚µ‚½‚ç trueB
+			 * @brief æ”»æ’ƒçµ‚äº†åˆ¤å®šã€‚çªé€²ã¨æ–¹å‘è»¢æ›ã®ä¸¡ãƒ•ã‚§ãƒ¼ã‚ºãŒå®Œäº†ã—ãŸã‚‰ true ã‚’è¿”ã™ã€‚
+			 * @return æ”»æ’ƒçµ‚äº†åˆ¤å®šã€‚çªé€²ã¨æ–¹å‘è»¢æ›ã®ä¸¡ãƒ•ã‚§ãƒ¼ã‚ºãŒå®Œäº†ã—ãŸã‚‰ trueã€‚
              */
             bool IsEnd() override;
 
 
         private:
             /**
-			 * @brief “ËiƒtƒF[ƒY‚Æ•ûŒü“]Š·ƒtƒF[ƒY‚Ì 2 ‚Â‚ÌƒtƒF[ƒY‚ğŠÇ—‚·‚é—ñ‹“Œ^B
+			 * @brief çªé€²ãƒ•ã‚§ãƒ¼ã‚ºã¨æ–¹å‘è»¢æ›ãƒ•ã‚§ãƒ¼ã‚ºã® 2 ã¤ã®ãƒ•ã‚§ãƒ¼ã‚ºã‚’ç®¡ç†ã™ã‚‹åˆ—æŒ™å‹ã€‚
              */
             enum class Phase : uint8_t
             {
-                Charge,     //! ‚‘¬“ËiƒtƒF[ƒYB
-                TurnAround, //! Walk ‚µ‚È‚ª‚ç•ûŒü“]Š·‚·‚éƒtƒF[ƒYB
+                Charge,     //! é«˜é€Ÿçªé€²ãƒ•ã‚§ãƒ¼ã‚ºã€‚
+                TurnAround, //! Walk ã—ãªãŒã‚‰æ–¹å‘è»¢æ›ã™ã‚‹ãƒ•ã‚§ãƒ¼ã‚ºã€‚
             };
 
 
-            float   m_timer = 0.0f;                   //! “ËiƒtƒF[ƒY‚Ìc‚èŠÔB
-            float   m_chargeSpeed = 0.0f;             //! “Ëi‘¬“xB
-            float   m_turnTimer = 0.0f;               //! •ûŒü“]Š·ƒtƒF[ƒY‚Ìc‚èŠÔB
+            float   m_timer = 0.0f;                   //! çªé€²ãƒ•ã‚§ãƒ¼ã‚ºã®æ®‹ã‚Šæ™‚é–“ã€‚
+            float   m_chargeSpeed = 0.0f;             //! çªé€²é€Ÿåº¦ã€‚
+            float   m_turnTimer = 0.0f;               //! æ–¹å‘è»¢æ›ãƒ•ã‚§ãƒ¼ã‚ºã®æ®‹ã‚Šæ™‚é–“ã€‚
 
-            Vector3 m_targetPosition = Vector3::Zero; //! “ËiæiƒvƒŒƒCƒ„[‚ÌŒã•ûjB
-            Vector3 m_chargeDir = Vector3::Zero;      //! “Ëi•ûŒüi³‹K‰»Ï‚İjB
+            Vector3 m_targetPosition = Vector3::Zero; //! çªé€²å…ˆï¼ˆãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®å¾Œæ–¹ï¼‰ã€‚
+            Vector3 m_chargeDir = Vector3::Zero;      //! çªé€²æ–¹å‘ï¼ˆæ­£è¦åŒ–æ¸ˆã¿ï¼‰ã€‚
 
-            Phase   m_phase = Phase::Charge;          //! Œ»İ‚ÌƒtƒF[ƒYB
+            Phase   m_phase = Phase::Charge;          //! ç¾åœ¨ã®ãƒ•ã‚§ãƒ¼ã‚ºã€‚
         };
     }
 }
