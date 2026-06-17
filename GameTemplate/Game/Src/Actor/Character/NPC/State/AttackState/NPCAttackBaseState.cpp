@@ -6,7 +6,7 @@
 
 namespace
 {
-	const auto CLIPPING_LIMIT_DISTANCE = 40.0f;     //! クリッピングを防止する距離。
+	const auto CLIPPING_LIMIT_DISTANCE = 40.0f; //! クリッピングを防止する距離。
 }
 
 namespace nsApp
@@ -16,9 +16,9 @@ namespace nsApp
 		void NPCAttackBaseState::Enter()
 		{
 			/* キャスト。*/
-			m_npcBrain = static_cast<NPCBrain*>(m_owner);
+			m_npcBrain = static_cast<NPCBrain *>(m_owner);
 
-			/* キャストに失敗した場合は、以降の処理を行わない。*/	
+			/* キャストに失敗した場合は、以降の処理を行わない。*/
 			if (m_npcBrain == nullptr)
 			{
 				m_getBody = nullptr;
@@ -36,7 +36,6 @@ namespace nsApp
 			SetAttackTimer(0);
 		}
 
-
 		void NPCAttackBaseState::Exit()
 		{
 			/* 攻撃インターバルを開始。*/
@@ -46,7 +45,7 @@ namespace nsApp
 				m_npcBrain->StartAttackInterval();
 
 				/* VirtualInputAdapterが存在する場合は、入力をリセットする。*/
-				auto* virtualInput = m_npcBrain->GetVirtualInputAdapter();
+				auto *virtualInput = m_npcBrain->GetVirtualInputAdapter();
 				if (virtualInput != nullptr)
 					virtualInput->Reset();
 			}
@@ -56,8 +55,7 @@ namespace nsApp
 			m_npcBrain = nullptr;
 		}
 
-
-		void NPCAttackBaseState::ComputeDistance(nsActor::ICharacter* targetObject)
+		void NPCAttackBaseState::ComputeDistance(nsActor::ICharacter *targetObject)
 		{
 			if (m_getBody == nullptr || targetObject == nullptr)
 			{
@@ -67,11 +65,10 @@ namespace nsApp
 			}
 
 			/* ヘルパークラスから距離計算処理を呼び出す。*/
-			m_distance =  NPCCombatHelper::ComputeDistance(m_getBody->GetPosition(), targetObject->GetPosition(), m_diff);
+			m_distance = NPCCombatHelper::ComputeDistance(m_getBody->GetPosition(), targetObject->GetPosition(), m_diff);
 		}
 
-
-		void NPCAttackBaseState::PreventClipping(nsActor::ICharacter* target)
+		void NPCAttackBaseState::PreventClipping(nsActor::ICharacter *target)
 		{
 			/* Playerクラスが居ないなら処理を止める。*/
 			if (m_getBody == nullptr || target == nullptr)
@@ -80,7 +77,6 @@ namespace nsApp
 			/* ヘルパークラスからクリッピング防止処理を呼び出す。*/
 			NPCCombatHelper::PreventClipping(m_getBody, target, m_distance, 40.0f);
 		}
-
 
 		void NPCAttackBaseState::UpdateFacingDirection()
 		{
@@ -92,8 +88,7 @@ namespace nsApp
 			NPCCombatHelper::UpdateFacing(m_getBody, m_diff, m_isAttacking);
 		}
 
-
-		void NPCAttackBaseState::ResetVirtualInputs() 
+		void NPCAttackBaseState::ResetVirtualInputs()
 		{
 			/* 入力情報が無いなら処理を止める。*/
 			if (!m_virtualInput)
@@ -103,7 +98,6 @@ namespace nsApp
 			m_virtualInput->Reset();
 		}
 
-
 		bool NPCAttackBaseState::CheckHelpTransition()
 		{
 			/* NPCBrainクラスが存在しない場合は、以降の処理を行わない。*/
@@ -111,7 +105,7 @@ namespace nsApp
 				return false;
 
 			/* ヘルプ対象を取得。*/
-			auto* helpTarget = m_npcBrain->GetHelpTarget();
+			auto *helpTarget = m_npcBrain->GetHelpTarget();
 			if (helpTarget == nullptr)
 				return false;
 

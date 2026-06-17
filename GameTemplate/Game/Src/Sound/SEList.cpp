@@ -4,8 +4,8 @@
 
 namespace
 {
-	const auto SE_VOLUME = 1.0f;			  //! SEの音量。
-	static constexpr int MAX_SE_COUNT = 64;   //! 同時に再生できるSEの数。
+	const auto SE_VOLUME = 1.0f;			//! SEの音量。
+	static constexpr int MAX_SE_COUNT = 64; //! 同時に再生できるSEの数。
 }
 
 namespace nsApp
@@ -17,7 +17,6 @@ namespace nsApp
 			/* SEを解放する。*/
 			Clear();
 		}
-
 
 		void SEList::Init()
 		{
@@ -31,6 +30,12 @@ namespace nsApp
 			/* その他。*/
 			StorageOtherSE();
 
+			/*ボスのSE。*/
+			StorageBossSE();
+
+			/*UIのSE*/
+			StorageUISE();
+
 			/* 攻撃手段/武器の種類ごとのSEを登録。*/
 			/* ソード。*/
 			RegisterSwordSEBank();
@@ -38,7 +43,6 @@ namespace nsApp
 			/* ハンマー。*/
 			RegisterHammerSEBank();
 		}
-
 
 		void SEList::StorageGreatSwordSE()
 		{
@@ -49,7 +53,6 @@ namespace nsApp
 			/* 連続攻撃。*/
 			g_soundEngine->ResistWaveFileBank(SE_ID::RushAttack_Sword, GetSEFilePath("GreatSword_RushAttack").c_str());
 		}
-
 
 		void SEList::StorageHammerSE()
 		{
@@ -70,7 +73,6 @@ namespace nsApp
 			g_soundEngine->ResistWaveFileBank(SE_ID::DashAttack_Hammer, GetSEFilePath("Hammer_DashAttack").c_str());
 		}
 
-
 		void SEList::StorageOtherSE()
 		{
 			/* チャージ中の効果音。*/
@@ -80,6 +82,24 @@ namespace nsApp
 			g_soundEngine->ResistWaveFileBank(SE_ID::Rescue, GetSEFilePath("rebone").c_str());
 		}
 
+		void SEList::StorageBossSE()
+		{
+			g_soundEngine->ResistWaveFileBank(SE_ID::Roar, GetSEFilePath("Roar").c_str());
+			g_soundEngine->ResistWaveFileBank(SE_ID::Fire, GetSEFilePath("Fire").c_str());
+			g_soundEngine->ResistWaveFileBank(SE_ID::Bite, GetSEFilePath("Bite").c_str());
+			g_soundEngine->ResistWaveFileBank(SE_ID::BiteSoft, GetSEFilePath("BiteSoft").c_str());
+			g_soundEngine->ResistWaveFileBank(SE_ID::Tail, GetSEFilePath("Tail").c_str());
+			g_soundEngine->ResistWaveFileBank(SE_ID::HitDamage, GetSEFilePath("HitDamage").c_str());
+			g_soundEngine->ResistWaveFileBank(SE_ID::Death, GetSEFilePath("Death").c_str());
+			g_soundEngine->ResistWaveFileBank(SE_ID::Sleep, GetSEFilePath("Sleep").c_str());
+		}
+
+		void SEList::StorageUISE()
+		{
+			g_soundEngine->ResistWaveFileBank(SE_ID::Cursor, GetSEFilePath("Cursor").c_str());
+			g_soundEngine->ResistWaveFileBank(SE_ID::Enter, GetSEFilePath("Enter").c_str());
+			g_soundEngine->ResistWaveFileBank(SE_ID::Exit, GetSEFilePath("Exit").c_str());
+		}
 
 		void SEList::Update(float deltaTime)
 		{
@@ -94,7 +114,6 @@ namespace nsApp
 
 				it->currentTime += deltaTime;
 
-		
 				if (it->currentTime >= it->lifeTime)
 				{
 					if (it->source != nullptr)
@@ -113,10 +132,9 @@ namespace nsApp
 			}
 		}
 
-
 		void SEList::Clear()
 		{
-			for (auto& se : m_playingSEs)
+			for (auto &se : m_playingSEs)
 			{
 				if (se.source != nullptr)
 				{
@@ -128,14 +146,13 @@ namespace nsApp
 			m_playingSEs.clear();
 		}
 
-
-		nsK2EngineLow::SoundSource* SEList::PlaySE(SE_ID id, float volume, bool flag, float lifeTime)
+		nsK2EngineLow::SoundSource *SEList::PlaySE(SE_ID id, float volume, bool flag, float lifeTime)
 		{
 			if (m_playingSEs.size() >= MAX_SE_COUNT)
 				return nullptr;
 
 			/* 音源クラスの生成。*/
-			auto* seSource = NewGO<nsK2EngineLow::SoundSource>(0, "SE");
+			auto *seSource = NewGO<nsK2EngineLow::SoundSource>(0, "SE");
 
 			/* データを代入。*/
 			seSource->Init(id);
@@ -160,19 +177,17 @@ namespace nsApp
 			if (flag)
 				return seSource;
 
-
 			/* 単発SEはSEList側で自動削除する。*/
 			return nullptr;
 		}
 
-
-		nsK2EngineLow::SoundSource* SEList::PlayAttackSE(WeaponType wepon, AttackType attack)
+		nsK2EngineLow::SoundSource *SEList::PlayAttackSE(WeaponType wepon, AttackType attack)
 		{
 			/* 武器がテーブルに登録されているか確認。*/
 			if (m_attackSEmap.count(wepon) > 0)
 			{
 				/* テーブルから武器の情報を取得。*/
-				auto& attackTable = m_attackSEmap[wepon];
+				auto &attackTable = m_attackSEmap[wepon];
 
 				/* 対応するSEが登録されている場合、SEを再生する。*/
 				if (attackTable.count(attack) > 0)
@@ -186,8 +201,7 @@ namespace nsApp
 			return nullptr;
 		}
 
-
-		void SEList::StopSE(nsK2EngineLow::SoundSource*& soundSource)
+		void SEList::StopSE(nsK2EngineLow::SoundSource *&soundSource)
 		{
 			if (soundSource == nullptr)
 				return;
@@ -212,30 +226,26 @@ namespace nsApp
 			soundSource = nullptr;
 		}
 
-
 		void SEList::RegisterSwordSEBank()
 		{
 			m_attackSEmap[WeaponType::GreatSword] =
-			{
-				{ AttackType::NormalAttack, SE_ID::NormalAttack_Sword},
-				{ AttackType::RushAttack_Start, SE_ID::RushAttack_Sword},
-				{ AttackType::RushAttack_End, SE_ID::RushAttack_Sword},
-				{ AttackType::Charging, SE_ID::Charge}
-			};
+				{
+					{AttackType::NormalAttack, SE_ID::NormalAttack_Sword},
+					{AttackType::RushAttack_Start, SE_ID::RushAttack_Sword},
+					{AttackType::RushAttack_End, SE_ID::RushAttack_Sword},
+					{AttackType::Charging, SE_ID::Charge}};
 		}
-
 
 		void SEList::RegisterHammerSEBank()
 		{
 			m_attackSEmap[WeaponType::Hammer] =
-			{
-				{ AttackType::NormalAttack, SE_ID::NormalAttack_Hammer},
-				{ AttackType::HeavyAttack, SE_ID::HeavyAttack_Hammer},
-				{ AttackType::AirAttack, SE_ID::AirAttack_Hammer},
-				{ AttackType::ChargeAttack, SE_ID::ChargeAttack_Hammer},
-				{ AttackType::PushForward, SE_ID::DashAttack_Hammer},
-				{ AttackType::Charging, SE_ID::Charge}
-			};
+				{
+					{AttackType::NormalAttack, SE_ID::NormalAttack_Hammer},
+					{AttackType::HeavyAttack, SE_ID::HeavyAttack_Hammer},
+					{AttackType::AirAttack, SE_ID::AirAttack_Hammer},
+					{AttackType::ChargeAttack, SE_ID::ChargeAttack_Hammer},
+					{AttackType::PushForward, SE_ID::DashAttack_Hammer},
+					{AttackType::Charging, SE_ID::Charge}};
 		}
 
 		void SEList::CalcVolume(int seRate, int masterRate)
@@ -246,7 +256,7 @@ namespace nsApp
 			int masterVolumeRate = masterRate;
 			float masterVolume = masterVolumeRate / 100.0f;
 
-			for (const auto& playSe: m_playingSEs)
+			for (const auto &playSe : m_playingSEs)
 			{
 				float finalVolume = playSe.baseVolume * bgmVolume * masterVolume;
 

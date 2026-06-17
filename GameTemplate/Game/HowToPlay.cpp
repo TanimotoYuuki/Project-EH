@@ -1,74 +1,77 @@
 #include "stdafx.h"
 #include "HowToPlay.h"
+#include "Src/Sound/SoundLister.h"
+#include "UIInput.h"
 
-namespace {
+namespace
+{
 	/*背景。*/
-	const float BACK_GROUND_WIDTH = 1920;/*背景の幅。*/
+	const float BACK_GROUND_WIDTH = 1920; /*背景の幅。*/
 
-	const float BACK_GROUND_HEIGHT = 1080;/*背景の高さ。*/
+	const float BACK_GROUND_HEIGHT = 1080; /*背景の高さ。*/
 
 	/*操作方法テキストUI。*/
-	const float HOW_TO_PLAY_TEXT_UI_WIDTH = 1024;/*操作方法テキストUIの幅。*/
+	const float HOW_TO_PLAY_TEXT_UI_WIDTH = 1024; /*操作方法テキストUIの幅。*/
 
-	const float HOW_TO_PLAY_TEXT_UI_HEIGHT = 256;/*操作方法テキストUIの高さ。*/
+	const float HOW_TO_PLAY_TEXT_UI_HEIGHT = 256; /*操作方法テキストUIの高さ。*/
 
-	const Vector3 HOW_TO_PLAY_TEXT_UI_INIT_POSITION = { -700.0f,450.0f,0.0f };/*操作方法テキストUIの初期位置。*/
+	const Vector3 HOW_TO_PLAY_TEXT_UI_INIT_POSITION = {-700.0f, 450.0f, 0.0f}; /*操作方法テキストUIの初期位置。*/
 
-	const Vector3 HOW_TO_PLAY_TEXT_UI_INIT_SCALE = { 1.0f,1.0f,1.0f };/*操作方法テキストUIの初期大きさ。*/
+	const Vector3 HOW_TO_PLAY_TEXT_UI_INIT_SCALE = {1.0f, 1.0f, 1.0f}; /*操作方法テキストUIの初期大きさ。*/
 
 	/*操作方法UI。*/
-	const float HOW_TO_PLAY_UI_WIDTH = 1578;/*操作方法UIの幅。*/
+	const float HOW_TO_PLAY_UI_WIDTH = 1578; /*操作方法UIの幅。*/
 
-	const float HOW_TO_PLAY_UI_HEIGHT = 816;/*操作方法UIの高さ。*/
+	const float HOW_TO_PLAY_UI_HEIGHT = 816; /*操作方法UIの高さ。*/
 
-	const Vector3 HOW_TO_PLAY_UI_INIT_POSITION = { 0.0f,-50.0f,0.0f };/*操作方法UIの初期位置。*/
+	const Vector3 HOW_TO_PLAY_UI_INIT_POSITION = {0.0f, -50.0f, 0.0f}; /*操作方法UIの初期位置。*/
 
-	const Vector3 HOW_TO_PLAY_UI_INIT_SCALE = Vector3(1.0f, 1.0f, 1.0f);/*操作方法UIの初期大きさ。*/
+	const Vector3 HOW_TO_PLAY_UI_INIT_SCALE = Vector3(1.0f, 1.0f, 1.0f); /*操作方法UIの初期大きさ。*/
 
 	/*矢印UI。*/
-	const float ARROW_UI_WIDTH = 1024;/*矢印UIの幅。*/
+	const float ARROW_UI_WIDTH = 1024; /*矢印UIの幅。*/
 
-	const float ARROW_UI_HEIGHT = 1024;/*矢印UIの高さ。*/
+	const float ARROW_UI_HEIGHT = 1024; /*矢印UIの高さ。*/
 
 	const Vector3 ARROW_UI_INIT_POSITION[nsApp::nsHowToPlay::HowToPlay::EnArrowUI::enArrowUI_Num] = {
-		Vector3{-790.0f,-75.0f,0.0f},/*左。*/
-		Vector3{790.0f,-75.0f,0.0f},/*右。*/
-	};/*役割UIの初期位置。*/
+		Vector3{-790.0f, -75.0f, 0.0f}, /*左。*/
+		Vector3{790.0f, -75.0f, 0.0f},	/*右。*/
+	}; /*役割UIの初期位置。*/
 
-	const Vector3 ARROW_UI_INIT_SCALE = { 0.25f,0.25f,1.0f };/*矢印UIの初期大きさ。*/
+	const Vector3 ARROW_UI_INIT_SCALE = {0.25f, 0.25f, 1.0f}; /*矢印UIの初期大きさ。*/
 
 	/*ボタンUI。*/
-	const float BUTTON_UI_WIDTH = 1024;/*ボタンUIの幅。*/
+	const float BUTTON_UI_WIDTH = 1024; /*ボタンUIの幅。*/
 
-	const float BUTTON_UI_HEIGHT = 1024;/*ボタンUIの高さ。*/
+	const float BUTTON_UI_HEIGHT = 1024; /*ボタンUIの高さ。*/
 
-	const Vector3 BUTTON_UI_INIT_POSITION = { -850.0f,-450.0f,0.0f };/*ボタンUIの初期位置。*/
+	const Vector3 BUTTON_UI_INIT_POSITION = {-850.0f, -450.0f, 0.0f}; /*ボタンUIの初期位置。*/
 
-	const Vector3 BUTTON_UI_INIT_SCALE = { 0.1f,0.1f,1.0f };/*ボタンUIの初期大きさ。*/
+	const Vector3 BUTTON_UI_INIT_SCALE = {0.1f, 0.1f, 1.0f}; /*ボタンUIの初期大きさ。*/
 
 	/*テキストUI。*/
-	const float TEXT_UI_WIDTH = 1024;/*テキストUIの幅。*/
+	const float TEXT_UI_WIDTH = 1024; /*テキストUIの幅。*/
 
-	const float TEXT_UI_HEIGHT = 256;/*テキストUIの高さ。*/
+	const float TEXT_UI_HEIGHT = 256; /*テキストUIの高さ。*/
 
-	const Vector3 TEXT_UI_INIT_POSITION = { -725.0f,-450.0f,0.0f };/*テキストUIの初期位置。*/
+	const Vector3 TEXT_UI_INIT_POSITION = {-725.0f, -450.0f, 0.0f}; /*テキストUIの初期位置。*/
 
-	const Vector3 TEXT_UI_INIT_SCALE = { 1.0f,1.0f,1.0f };/*テキストUIの初期大きさ。*/
+	const Vector3 TEXT_UI_INIT_SCALE = {1.0f, 1.0f, 1.0f}; /*テキストUIの初期大きさ。*/
 
 	/*UIアニメーション。*/
-	const Vector3 AFTER_SLIDE_LEFT_HOW_TO_PLAY_UI_ANIMATION_POSITION = { -1750.0,-50.0f,0.0f };/*操作方法UIを左にスライドさせるアニメーション後の位置。*/
+	const Vector3 AFTER_SLIDE_LEFT_HOW_TO_PLAY_UI_ANIMATION_POSITION = {-1750.0, -50.0f, 0.0f}; /*操作方法UIを左にスライドさせるアニメーション後の位置。*/
 
-	const Vector3 AFTER_SLIDE_RIGHT_HOW_TO_PLAY_UI_ANIMATION_POSITION = { 1750.0,-50.0f,0.0f };/*操作方法UIを右にスライドさせるアニメーション後の位置。*/
+	const Vector3 AFTER_SLIDE_RIGHT_HOW_TO_PLAY_UI_ANIMATION_POSITION = {1750.0, -50.0f, 0.0f}; /*操作方法UIを右にスライドさせるアニメーション後の位置。*/
 
-	const Vector2 AFTER_SCALE_UP_ARROW_UI_ANIMATION_SCALE = { 0.3f,0.3f };/*矢印UIの大きさを大きくするアニメーション後の大きさ。*/
+	const Vector2 AFTER_SCALE_UP_ARROW_UI_ANIMATION_SCALE = {0.3f, 0.3f}; /*矢印UIの大きさを大きくするアニメーション後の大きさ。*/
 
-	const Vector3 AFTER_COLOR_ARROW_UI_ANIMATION_COLOR = { 2.0f,2.0f,2.0f };/*矢印UIの色を変えるアニメーション後の色。*/
+	const Vector3 AFTER_COLOR_ARROW_UI_ANIMATION_COLOR = {2.0f, 2.0f, 2.0f}; /*矢印UIの色を変えるアニメーション後の色。*/
 
-	const float SLIDE_UI_ANIMATION_PLAY_SPEED = 4.0f;/*UIをスライドさせるアニメーションの再生速度。*/
+	const float SLIDE_UI_ANIMATION_PLAY_SPEED = 4.0f; /*UIをスライドさせるアニメーションの再生速度。*/
 
-	const float SCALE_UI_ANIMATION_PLAY_SPEED = 4.0f;/*UIの大きさを変えるアニメーションの再生速度。*/
+	const float SCALE_UI_ANIMATION_PLAY_SPEED = 4.0f; /*UIの大きさを変えるアニメーションの再生速度。*/
 
-	const float COLOR_UI_ANIMATION_PLAY_SPEED = 4.0f;/*UIの色を変えるアニメーションの再生速度。*/
+	const float COLOR_UI_ANIMATION_PLAY_SPEED = 4.0f; /*UIの色を変えるアニメーションの再生速度。*/
 }
 
 namespace nsApp
@@ -83,6 +86,13 @@ namespace nsApp
 
 			/*UIアニメーションの初期化。*/
 			InitUIAnimation();
+
+			auto *SoundManager = FindGO<nsSound::SoundLister>("SoundManager");
+			if (SoundManager == nullptr)
+			{
+				SoundManager = NewGO<nsSound::SoundLister>(0, "SoundManager");
+				SoundManager->InitSound();
+			}
 
 			return true;
 		}
@@ -105,7 +115,7 @@ namespace nsApp
 		}
 
 		/*描画処理。*/
-		void HowToPlay::Render(RenderContext& rc)
+		void HowToPlay::Render(RenderContext &rc)
 		{
 			/*背景の描画。*/
 			m_backGround.Draw(rc);
@@ -166,51 +176,51 @@ namespace nsApp
 		/*操作方法テキストUIの初期化。*/
 		void HowToPlay::InitHowToPlayTextUI()
 		{
-			m_howToPlayTextUI.Init(m_howToPlayTextUIFilePath.c_str(), HOW_TO_PLAY_TEXT_UI_WIDTH, HOW_TO_PLAY_TEXT_UI_HEIGHT);/*初期化。*/
-			m_howToPlayTextUI.SetPosition(HOW_TO_PLAY_TEXT_UI_INIT_POSITION);/*位置設定。*/
-			m_howToPlayTextUI.SetScale(HOW_TO_PLAY_TEXT_UI_INIT_SCALE);/*大きさ設定。*/
-			m_howToPlayTextUI.Update();/*更新処理。*/
+			m_howToPlayTextUI.Init(m_howToPlayTextUIFilePath.c_str(), HOW_TO_PLAY_TEXT_UI_WIDTH, HOW_TO_PLAY_TEXT_UI_HEIGHT); /*初期化。*/
+			m_howToPlayTextUI.SetPosition(HOW_TO_PLAY_TEXT_UI_INIT_POSITION);												  /*位置設定。*/
+			m_howToPlayTextUI.SetScale(HOW_TO_PLAY_TEXT_UI_INIT_SCALE);														  /*大きさ設定。*/
+			m_howToPlayTextUI.Update();																						  /*更新処理。*/
 		}
 
 		/*操作方法UIの初期化。*/
 		void HowToPlay::InitHowToPlayUI(EnHowToPlayUI howToPlayUI)
 		{
-			m_howtToPlayUI[howToPlayUI].Init(m_howToPlayUIFliePath[howToPlayUI].c_str(), HOW_TO_PLAY_UI_WIDTH, HOW_TO_PLAY_UI_HEIGHT);/*初期化。*/
-			m_howtToPlayUI[howToPlayUI].SetPosition(HOW_TO_PLAY_UI_INIT_POSITION);/*位置設定。*/
-			m_howtToPlayUI[howToPlayUI].SetScale(HOW_TO_PLAY_UI_INIT_SCALE);/*大きさ設定。*/
-			m_howtToPlayUI[howToPlayUI].Update();/*更新処理。*/
+			m_howtToPlayUI[howToPlayUI].Init(m_howToPlayUIFliePath[howToPlayUI].c_str(), HOW_TO_PLAY_UI_WIDTH, HOW_TO_PLAY_UI_HEIGHT); /*初期化。*/
+			m_howtToPlayUI[howToPlayUI].SetPosition(HOW_TO_PLAY_UI_INIT_POSITION);													   /*位置設定。*/
+			m_howtToPlayUI[howToPlayUI].SetScale(HOW_TO_PLAY_UI_INIT_SCALE);														   /*大きさ設定。*/
+			m_howtToPlayUI[howToPlayUI].Update();																					   /*更新処理。*/
 
-			m_slideHowToPlayUIAnimationSprite.push_back(&m_howtToPlayUI[howToPlayUI]);/*操作方法UIをスライドUIアニメーションのスプライトに追加。*/
+			m_slideHowToPlayUIAnimationSprite.push_back(&m_howtToPlayUI[howToPlayUI]); /*操作方法UIをスライドUIアニメーションのスプライトに追加。*/
 		}
 
 		/*矢印UIの初期化。*/
 		void HowToPlay::InitArrowUI(EnArrowUI arrowUI)
 		{
-			m_arrowUI[arrowUI].Init(m_arrowUIFliePath[arrowUI].c_str(), ARROW_UI_WIDTH, ARROW_UI_HEIGHT);/*初期化。*/
-			m_arrowUI[arrowUI].SetPosition(ARROW_UI_INIT_POSITION[arrowUI]);/*位置設定。*/
-			m_arrowUI[arrowUI].SetScale(ARROW_UI_INIT_SCALE);/*大きさ設定。*/
-			m_arrowUI[arrowUI].Update();/*更新処理。*/
+			m_arrowUI[arrowUI].Init(m_arrowUIFliePath[arrowUI].c_str(), ARROW_UI_WIDTH, ARROW_UI_HEIGHT); /*初期化。*/
+			m_arrowUI[arrowUI].SetPosition(ARROW_UI_INIT_POSITION[arrowUI]);							  /*位置設定。*/
+			m_arrowUI[arrowUI].SetScale(ARROW_UI_INIT_SCALE);											  /*大きさ設定。*/
+			m_arrowUI[arrowUI].Update();																  /*更新処理。*/
 
-			m_scaleArrowUIAnimationSprite.push_back(&m_arrowUI[arrowUI]);/*矢印UIを大きさを変えるUIアニメーションのスプライトに追加。。*/
-			m_colorArrowUIAnimationSprite.push_back(&m_arrowUI[arrowUI]);/*矢印UIを色を変えるUIアニメーションのスプライトに追加。。*/
+			m_scaleArrowUIAnimationSprite.push_back(&m_arrowUI[arrowUI]); /*矢印UIを大きさを変えるUIアニメーションのスプライトに追加。。*/
+			m_colorArrowUIAnimationSprite.push_back(&m_arrowUI[arrowUI]); /*矢印UIを色を変えるUIアニメーションのスプライトに追加。。*/
 		}
 
 		/*ボタンUIの初期化・*/
 		void HowToPlay::InitButtonUI()
 		{
-			m_buttonUI.Init(m_buttonUIFliePath.c_str(), BUTTON_UI_WIDTH, BUTTON_UI_HEIGHT);/*初期化。*/
-			m_buttonUI.SetPosition(BUTTON_UI_INIT_POSITION);/*位置設定。*/
-			m_buttonUI.SetScale(BUTTON_UI_INIT_SCALE);/*大きさ設定。*/
-			m_buttonUI.Update();/*更新処理。*/
+			m_buttonUI.Init(m_buttonUIFliePath.c_str(), BUTTON_UI_WIDTH, BUTTON_UI_HEIGHT); /*初期化。*/
+			m_buttonUI.SetPosition(BUTTON_UI_INIT_POSITION);								/*位置設定。*/
+			m_buttonUI.SetScale(BUTTON_UI_INIT_SCALE);										/*大きさ設定。*/
+			m_buttonUI.Update();															/*更新処理。*/
 		}
 
 		/*テキストUIの初期化。*/
 		void HowToPlay::InitTextUI()
 		{
-			m_textUI.Init(m_textUIFilePath.c_str(), TEXT_UI_WIDTH, TEXT_UI_HEIGHT);/*初期化。*/
-			m_textUI.SetPosition(TEXT_UI_INIT_POSITION);/*位置設定。*/
-			m_textUI.SetScale(TEXT_UI_INIT_SCALE);/*大きさ設定。*/
-			m_textUI.Update();/*更新処理。*/
+			m_textUI.Init(m_textUIFilePath.c_str(), TEXT_UI_WIDTH, TEXT_UI_HEIGHT); /*初期化。*/
+			m_textUI.SetPosition(TEXT_UI_INIT_POSITION);							/*位置設定。*/
+			m_textUI.SetScale(TEXT_UI_INIT_SCALE);									/*大きさ設定。*/
+			m_textUI.Update();														/*更新処理。*/
 		}
 
 		/*UIアニメーションの初期化。*/
@@ -251,163 +261,153 @@ namespace nsApp
 		}
 
 		/*操作方法UIを左にスライドさせるアニメーション(開始)の初期化。*/
-		void HowToPlay::InitSlideLeftStartHowToPlayUIAnimation(SpriteRender* spriteData)
+		void HowToPlay::InitSlideLeftStartHowToPlayUIAnimation(SpriteRender *spriteData)
 		{
 			/*操作方法UIを左にスライドさせるアニメーション(開始)の値の設定。*/
-			Vector3 basePosition = AFTER_SLIDE_RIGHT_HOW_TO_PLAY_UI_ANIMATION_POSITION;/*元の位置。*/
-			Vector3 targetPosition = spriteData->GetPosition();/*ターゲットの位置。*/
+			Vector3 basePosition = AFTER_SLIDE_RIGHT_HOW_TO_PLAY_UI_ANIMATION_POSITION; /*元の位置。*/
+			Vector3 targetPosition = spriteData->GetPosition();							/*ターゲットの位置。*/
 
 			m_slideLeftStartHowToPlayUIAnimation.push_back(std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				spriteData,/*アニメーションをさせるスプライト。*/
-				1.0f,/*ターゲットの割合。*/
-				SLIDE_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
-				false,/*ループするか？*/
-				0.0f,/*アニメーションを開始する前の遅延時間。*/
-				0.0f,/*アニメーションを終了した後の遅延時間。*/
-				basePosition,/*元の位置。*/
-				targetPosition/*ターゲットの位置。*/)
-			);
+				spriteData,					   /*アニメーションをさせるスプライト。*/
+				1.0f,						   /*ターゲットの割合。*/
+				SLIDE_UI_ANIMATION_PLAY_SPEED, /*アニメーションの再生速度。*/
+				false,						   /*ループするか？*/
+				0.0f,						   /*アニメーションを開始する前の遅延時間。*/
+				0.0f,						   /*アニメーションを終了した後の遅延時間。*/
+				basePosition,				   /*元の位置。*/
+				targetPosition /*ターゲットの位置。*/));
 		}
 
 		/*操作方法UIを左にスライドさせるアニメーション(終了)の初期化。*/
-		void HowToPlay::InitSlideLeftEndHowToPlayUIAnimation(SpriteRender* spriteData)
+		void HowToPlay::InitSlideLeftEndHowToPlayUIAnimation(SpriteRender *spriteData)
 		{
 			/*操作方法UIを左にスライドさせるアニメーション(終了)の値の設定。*/
-			Vector3 basePosition = spriteData->GetPosition();/*元の位置。*/
-			Vector3 targetPosition = AFTER_SLIDE_LEFT_HOW_TO_PLAY_UI_ANIMATION_POSITION;/*ターゲットの位置。*/
+			Vector3 basePosition = spriteData->GetPosition();							 /*元の位置。*/
+			Vector3 targetPosition = AFTER_SLIDE_LEFT_HOW_TO_PLAY_UI_ANIMATION_POSITION; /*ターゲットの位置。*/
 
 			m_slideLeftEndHowToPlayUIAnimation.push_back(std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				spriteData,/*アニメーションをさせるスプライト。*/
-				1.0f,/*ターゲットの割合。*/
-				SLIDE_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
-				false,/*ループするか？*/
-				0.0f,/*アニメーションを開始する前の遅延時間。*/
-				0.0f,/*アニメーションを終了した後の遅延時間。*/
-				basePosition,/*元の位置。*/
-				targetPosition/*ターゲットの位置。*/)
-			);
+				spriteData,					   /*アニメーションをさせるスプライト。*/
+				1.0f,						   /*ターゲットの割合。*/
+				SLIDE_UI_ANIMATION_PLAY_SPEED, /*アニメーションの再生速度。*/
+				false,						   /*ループするか？*/
+				0.0f,						   /*アニメーションを開始する前の遅延時間。*/
+				0.0f,						   /*アニメーションを終了した後の遅延時間。*/
+				basePosition,				   /*元の位置。*/
+				targetPosition /*ターゲットの位置。*/));
 		}
 
 		/*操作方法UIを右にスライドさせるアニメーション(開始)の初期化。*/
-		void HowToPlay::InitSlideRightStartHowToPlayUIAnimation(SpriteRender* spriteData)
+		void HowToPlay::InitSlideRightStartHowToPlayUIAnimation(SpriteRender *spriteData)
 		{
 			/*操作方法UIを右にスライドさせるアニメーション(開始)の値の設定。*/
-			Vector3 basePosition = AFTER_SLIDE_LEFT_HOW_TO_PLAY_UI_ANIMATION_POSITION;/*元の位置。*/
-			Vector3 targetPosition = spriteData->GetPosition();/*ターゲットの位置。*/
+			Vector3 basePosition = AFTER_SLIDE_LEFT_HOW_TO_PLAY_UI_ANIMATION_POSITION; /*元の位置。*/
+			Vector3 targetPosition = spriteData->GetPosition();						   /*ターゲットの位置。*/
 
 			m_slideRightStartHowToPlayUIAnimation.push_back(std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				spriteData,/*アニメーションをさせるスプライト。*/
-				1.0f,/*ターゲットの割合。*/
-				SLIDE_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
-				false,/*ループするか？*/
-				0.0f,/*アニメーションを開始する前の遅延時間。*/
-				0.0f,/*アニメーションを終了した後の遅延時間。*/
-				basePosition,/*元の位置。*/
-				targetPosition/*ターゲットの位置。*/)
-			);
+				spriteData,					   /*アニメーションをさせるスプライト。*/
+				1.0f,						   /*ターゲットの割合。*/
+				SLIDE_UI_ANIMATION_PLAY_SPEED, /*アニメーションの再生速度。*/
+				false,						   /*ループするか？*/
+				0.0f,						   /*アニメーションを開始する前の遅延時間。*/
+				0.0f,						   /*アニメーションを終了した後の遅延時間。*/
+				basePosition,				   /*元の位置。*/
+				targetPosition /*ターゲットの位置。*/));
 		}
 
 		/*操作方法UIを右にスライドさせるアニメーション(終了)の初期化。*/
-		void HowToPlay::InitSlideRightEndHowToPlayUIAnimation(SpriteRender* spriteData)
+		void HowToPlay::InitSlideRightEndHowToPlayUIAnimation(SpriteRender *spriteData)
 		{
 			/*操作方法UIを右にスライドさせるアニメーション(終了)の値の設定。*/
-			Vector3 basePosition = spriteData->GetPosition();/*元の位置。*/
-			Vector3 targetPosition = AFTER_SLIDE_RIGHT_HOW_TO_PLAY_UI_ANIMATION_POSITION;/*ターゲットの位置。*/
+			Vector3 basePosition = spriteData->GetPosition();							  /*元の位置。*/
+			Vector3 targetPosition = AFTER_SLIDE_RIGHT_HOW_TO_PLAY_UI_ANIMATION_POSITION; /*ターゲットの位置。*/
 
 			m_slideRightEndHowToPlayUIAnimation.push_back(std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				spriteData,/*アニメーションをさせるスプライト。*/
-				1.0f,/*ターゲットの割合。*/
-				SLIDE_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
-				false,/*ループするか？*/
-				0.0f,/*アニメーションを開始する前の遅延時間。*/
-				0.0f,/*アニメーションを終了した後の遅延時間。*/
-				basePosition,/*元の位置。*/
-				targetPosition/*ターゲットの位置。*/)
-			);
+				spriteData,					   /*アニメーションをさせるスプライト。*/
+				1.0f,						   /*ターゲットの割合。*/
+				SLIDE_UI_ANIMATION_PLAY_SPEED, /*アニメーションの再生速度。*/
+				false,						   /*ループするか？*/
+				0.0f,						   /*アニメーションを開始する前の遅延時間。*/
+				0.0f,						   /*アニメーションを終了した後の遅延時間。*/
+				basePosition,				   /*元の位置。*/
+				targetPosition /*ターゲットの位置。*/));
 		}
 
 		/*矢印UIの大きさを大きくするアニメーションの初期化。*/
-		void HowToPlay::InitScaleDownArrowUIAnimation(SpriteRender* spriteData)
+		void HowToPlay::InitScaleDownArrowUIAnimation(SpriteRender *spriteData)
 		{
 			/*矢印UIの大きさを大きくするアニメーションの値の設定。*/
-			Vector2 baseScale = { spriteData->GetScale().x,spriteData->GetScale().y };/*元の大きさ。*/
-			Vector2 targetScale = AFTER_SCALE_UP_ARROW_UI_ANIMATION_SCALE;/*ターゲットの大きさ。*/
+			Vector2 baseScale = {spriteData->GetScale().x, spriteData->GetScale().y}; /*元の大きさ。*/
+			Vector2 targetScale = AFTER_SCALE_UP_ARROW_UI_ANIMATION_SCALE;			  /*ターゲットの大きさ。*/
 
 			m_scaleUpArrowUIAnimation.push_back(std::make_unique<nsApp::nsUI::ScaleUIAnimation>(
-				spriteData,/*アニメーションをさせるスプライト。*/
-				1.0f,/*ターゲットの割合。*/
-				SCALE_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
-				false,/*ループするか？*/
-				0.0f,/*アニメーションを開始する前の遅延時間。*/
-				0.0f,/*アニメーションを終了した後の遅延時間。*/
-				baseScale,/*元の大きさ。*/
-				targetScale/*ターゲットの大きさ。*/)
-			);
+				spriteData,					   /*アニメーションをさせるスプライト。*/
+				1.0f,						   /*ターゲットの割合。*/
+				SCALE_UI_ANIMATION_PLAY_SPEED, /*アニメーションの再生速度。*/
+				false,						   /*ループするか？*/
+				0.0f,						   /*アニメーションを開始する前の遅延時間。*/
+				0.0f,						   /*アニメーションを終了した後の遅延時間。*/
+				baseScale,					   /*元の大きさ。*/
+				targetScale /*ターゲットの大きさ。*/));
 		}
 
 		/*矢印UIの大きさを小さくするアニメーションの初期化。*/
-		void HowToPlay::InitScaleUpArrowUIAnimation(SpriteRender* spriteData)
+		void HowToPlay::InitScaleUpArrowUIAnimation(SpriteRender *spriteData)
 		{
 			/*矢印UIの大きさを小さくするアニメーションの値の設定。*/
-			Vector2 baseScale = AFTER_SCALE_UP_ARROW_UI_ANIMATION_SCALE;/*元の大きさ。*/
-			Vector2 targetScale = { spriteData->GetScale().x,spriteData->GetScale().y };/*ターゲットの大きさ。*/
+			Vector2 baseScale = AFTER_SCALE_UP_ARROW_UI_ANIMATION_SCALE;				/*元の大きさ。*/
+			Vector2 targetScale = {spriteData->GetScale().x, spriteData->GetScale().y}; /*ターゲットの大きさ。*/
 
 			m_scaleDownArrowUIAnimation.push_back(std::make_unique<nsApp::nsUI::ScaleUIAnimation>(
-				spriteData,/*アニメーションをさせるスプライト。*/
-				1.0f,/*ターゲットの割合。*/
-				SCALE_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
-				false,/*ループするか？*/
-				0.0f,/*アニメーションを開始する前の遅延時間。*/
-				0.0f,/*アニメーションを終了した後の遅延時間。*/
-				baseScale,/*元の大きさ。*/
-				targetScale/*ターゲットの大きさ。*/)
-			);
+				spriteData,					   /*アニメーションをさせるスプライト。*/
+				1.0f,						   /*ターゲットの割合。*/
+				SCALE_UI_ANIMATION_PLAY_SPEED, /*アニメーションの再生速度。*/
+				false,						   /*ループするか？*/
+				0.0f,						   /*アニメーションを開始する前の遅延時間。*/
+				0.0f,						   /*アニメーションを終了した後の遅延時間。*/
+				baseScale,					   /*元の大きさ。*/
+				targetScale /*ターゲットの大きさ。*/));
 		}
 
 		/*矢印UIの色を変更前の色にするアニメーションの初期化。*/
-		void HowToPlay::InitColorBeforeArrowUIAnimation(SpriteRender* spriteData)
+		void HowToPlay::InitColorBeforeArrowUIAnimation(SpriteRender *spriteData)
 		{
 			/*矢印UIの色を変更前の色にするアニメーションの値の設定。*/
 			Vector3 baseColor = {
 				spriteData->GetMulColor().x,
 				spriteData->GetMulColor().y,
-				spriteData->GetMulColor().z
-			};/*元の色。*/
-			Vector3 targetColor = AFTER_COLOR_ARROW_UI_ANIMATION_COLOR;/*ターゲットの色。*/
+				spriteData->GetMulColor().z};							/*元の色。*/
+			Vector3 targetColor = AFTER_COLOR_ARROW_UI_ANIMATION_COLOR; /*ターゲットの色。*/
 
 			m_colorBeforeArrowUIAnimation.push_back(std::make_unique<nsApp::nsUI::ColorUIAnimation>(
-				spriteData,/*アニメーションをさせるスプライト。*/
-				1.0f,/*ターゲットの割合。*/
-				COLOR_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
-				false,/*ループするか？*/
-				0.0f,/*アニメーションを開始する前の遅延時間。*/
-				0.0f,/*アニメーションを終了した後の遅延時間。*/
-				baseColor,/*元の色。*/
-				targetColor/*ターゲットの色。*/)
-			);
+				spriteData,					   /*アニメーションをさせるスプライト。*/
+				1.0f,						   /*ターゲットの割合。*/
+				COLOR_UI_ANIMATION_PLAY_SPEED, /*アニメーションの再生速度。*/
+				false,						   /*ループするか？*/
+				0.0f,						   /*アニメーションを開始する前の遅延時間。*/
+				0.0f,						   /*アニメーションを終了した後の遅延時間。*/
+				baseColor,					   /*元の色。*/
+				targetColor /*ターゲットの色。*/));
 		}
 
 		/*矢印UIの色を変更後の色にするアニメーションの初期化。*/
-		void HowToPlay::InitColorAfterArrowUIAnimation(SpriteRender* spriteData)
+		void HowToPlay::InitColorAfterArrowUIAnimation(SpriteRender *spriteData)
 		{
 			/*矢印UIの色を変更後の色にするアニメーションの値の設定。*/
-			Vector3 baseColor = AFTER_COLOR_ARROW_UI_ANIMATION_COLOR;/*元の色。*/
+			Vector3 baseColor = AFTER_COLOR_ARROW_UI_ANIMATION_COLOR; /*元の色。*/
 			Vector3 targetColor = {
 				spriteData->GetMulColor().x,
 				spriteData->GetMulColor().y,
-				spriteData->GetMulColor().z
-			};/*ターゲットの色。*/
+				spriteData->GetMulColor().z}; /*ターゲットの色。*/
 
 			m_colorAfterArrowUIAnimation.push_back(std::make_unique<nsApp::nsUI::ColorUIAnimation>(
-				spriteData,/*アニメーションをさせるスプライト。*/
-				1.0f,/*ターゲットの割合。*/
-				COLOR_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
-				false,/*ループするか？*/
-				0.0f,/*アニメーションを開始する前の遅延時間。*/
-				0.0f,/*アニメーションを終了した後の遅延時間。*/
-				baseColor,/*元の色。*/
-				targetColor/*ターゲットの色。*/)
-			);
+				spriteData,					   /*アニメーションをさせるスプライト。*/
+				1.0f,						   /*ターゲットの割合。*/
+				COLOR_UI_ANIMATION_PLAY_SPEED, /*アニメーションの再生速度。*/
+				false,						   /*ループするか？*/
+				0.0f,						   /*アニメーションを開始する前の遅延時間。*/
+				0.0f,						   /*アニメーションを終了した後の遅延時間。*/
+				baseColor,					   /*元の色。*/
+				targetColor /*ターゲットの色。*/));
 		}
 
 		/*操作方法UIを左にスライドさせるアニメーション(開始)のリセット処理。*/
@@ -485,14 +485,24 @@ namespace nsApp
 		/*選択の更新処理。*/
 		void HowToPlay::UpdateSelect()
 		{
+			auto *SoundManager = FindGO<nsSound::SoundLister>("SoundManager");
 			/*左を入力したら。*/
 			if (g_pad[0]->IsTrigger(enButtonLeft))
 			{
+				/*カーソル音。*/
+				if (SoundManager)
+				{
+					SoundManager->GetSEList().PlaySE(nsSound::SE_ID::Cursor, 1.0f, false, 1.0f);
+				}
 				EnablePreviousPageTransitionDirection();
 
 				m_previousPage = m_currentPage;
 				/*現在の選択が共通ページを選択していたら。*/
-				if (m_currentPage == enHowToPlayUI_GeneralPage) { m_currentPage = enHowToPlayUI_Gunner_OnePage; return; }
+				if (m_currentPage == enHowToPlayUI_GeneralPage)
+				{
+					m_currentPage = enHowToPlayUI_Gunner_OnePage;
+					return;
+				}
 
 				/*左隣りのページを選択する。*/
 				m_currentPage--;
@@ -502,11 +512,20 @@ namespace nsApp
 			/*右を入力したら。*/
 			if (g_pad[0]->IsTrigger(enButtonRight))
 			{
+				/*カーソル音。*/
+				if (SoundManager)
+				{
+					SoundManager->GetSEList().PlaySE(nsSound::SE_ID::Cursor, 1.0f, false, 1.0f);
+				}
 				EnableNextPageTransitionDirection();
 
 				m_previousPage = m_currentPage;
 				/*現在の選択がガンナー(1ページ)を選択していたら。*/
-				if (m_currentPage == enHowToPlayUI_Gunner_OnePage) { m_currentPage = enHowToPlayUI_GeneralPage; return; }
+				if (m_currentPage == enHowToPlayUI_Gunner_OnePage)
+				{
+					m_currentPage = enHowToPlayUI_GeneralPage;
+					return;
+				}
 
 				/*右隣りのページを選択する。*/
 				m_currentPage++;
@@ -516,6 +535,11 @@ namespace nsApp
 			/*Bボタンを押したら前の画面に戻る。*/
 			if (g_pad[0]->IsTrigger(enButtonB))
 			{
+				/*決定音。*/
+				if (SoundManager)
+				{
+					SoundManager->GetSEList().PlaySE(nsSound::SE_ID::Enter, 1.0f, false, 1.0f);
+				}
 				EnableBackSelect();
 			}
 		}
@@ -533,7 +557,7 @@ namespace nsApp
 				}
 				else if (!m_slideLeftStartHowToPlayUIAnimation[m_currentPage]->IsEnd())
 				{
-					m_displayHowToPlayUI = m_currentPage;/*操作方法UIを左にスライドさせるアニメーションが終わったタイミングで操作方法UIを切り替える。*/
+					m_displayHowToPlayUI = m_currentPage; /*操作方法UIを左にスライドさせるアニメーションが終わったタイミングで操作方法UIを切り替える。*/
 					m_slideLeftStartHowToPlayUIAnimation[m_currentPage]->Update();
 					m_scaleDownArrowUIAnimation[enArrowUI_Right]->Update();
 					m_colorAfterArrowUIAnimation[enArrowUI_Right]->Update();
@@ -553,7 +577,7 @@ namespace nsApp
 				}
 				else if (!m_slideRightStartHowToPlayUIAnimation[m_currentPage]->IsEnd())
 				{
-					m_displayHowToPlayUI = m_currentPage;/*操作方法UIを右にスライドさせるアニメーションが終わったタイミングで操作方法UIを切り替える。*/
+					m_displayHowToPlayUI = m_currentPage; /*操作方法UIを右にスライドさせるアニメーションが終わったタイミングで操作方法UIを切り替える。*/
 					m_slideRightStartHowToPlayUIAnimation[m_currentPage]->Update();
 					m_scaleDownArrowUIAnimation[enArrowUI_Left]->Update();
 					m_colorAfterArrowUIAnimation[enArrowUI_Left]->Update();
