@@ -10,10 +10,10 @@ namespace
     const float MOVE_TIME_DASH = 0.8f;
     const float MOVE_TIME_SIDESTEP = 1.0f;
 
-    const float GREEN_DRAGON_STAGE_MIN_X = -50.0f;   // 70 → プレイヤー側まで広げる
+    const float GREEN_DRAGON_STAGE_MIN_X = -50.0f; // 70 → プレイヤー側まで広げる
     const float GREEN_DRAGON_STAGE_MAX_X = 220.0f;
     const float GREEN_DRAGON_EDGE_MARGIN = 25.0f;
-    const float GREEN_DRAGON_STRAFE_RANGE = 55.0f;   // この距離以内は横 Walk 優先
+    const float GREEN_DRAGON_STRAFE_RANGE = 55.0f; // この距離以内は横 Walk 優先
 
     const float RED_DRAGON_TOO_CLOSE = 70.0f;
     const float RED_DRAGON_ATTACK_MIN = 70.0f;
@@ -27,9 +27,9 @@ namespace nsApp
     {
         void BossMoveState::Enter()
         {
-            m_boss = static_cast<nsActor::Boss*>(m_owner);
+            m_boss = static_cast<nsActor::Boss *>(m_owner);
 
-            const auto& params = nsAI::BossTypeManager::GetBossTypeParameters(m_boss->GetBossType());
+            const auto &params = nsAI::BossTypeManager::GetBossTypeParameters(m_boss->GetBossType());
 
             m_isDashing = false;
             m_isSideStep = false;
@@ -60,9 +60,9 @@ namespace nsApp
                     m_sideDir = (rand() % 2 == 0) ? 1.0f : -1.0f;
                     // 端だけ方向を制限
                     if (bossX <= GREEN_DRAGON_STAGE_MIN_X + GREEN_DRAGON_EDGE_MARGIN)
-                        m_sideDir = 1.0f;   // 左端 → 右へ
+                        m_sideDir = 1.0f; // 左端 → 右へ
                     else if (bossX >= GREEN_DRAGON_STAGE_MAX_X - GREEN_DRAGON_EDGE_MARGIN)
-                        m_sideDir = -1.0f;  // 右端 → 左へ
+                        m_sideDir = -1.0f; // 右端 → 左へ
                 }
                 else
                 {
@@ -105,13 +105,12 @@ namespace nsApp
             m_boss->PlayAnimation(nsActor::BossAnimationID::Walk);
         }
 
-
         void BossMoveState::Update()
         {
             float dt = g_gameTime->GetFrameDeltaTime();
             m_timer -= dt;
 
-            const auto& params = nsAI::BossTypeManager::GetBossTypeParameters(m_boss->GetBossType());
+            const auto &params = nsAI::BossTypeManager::GetBossTypeParameters(m_boss->GetBossType());
             const bool isRedDragon = (m_boss->GetBossType() == CharacterModelType::RedDragon);
 
             Vector3 toTarget = Vector3::Zero;
@@ -210,9 +209,9 @@ namespace nsApp
             if (RequestID(nextID))
                 m_timer = 0.0f;
         }
-        bool BossMoveState::RequestID(uint8_t& id)
+        bool BossMoveState::RequestID(uint8_t &id)
         {
-            const auto& params = nsAI::BossTypeManager::GetBossTypeParameters(m_boss->GetBossType());
+            const auto &params = nsAI::BossTypeManager::GetBossTypeParameters(m_boss->GetBossType());
             const float distance = m_boss->GetDistanceToTarget();
 
             if (m_boss->GetBossType() == CharacterModelType::RedDragon)

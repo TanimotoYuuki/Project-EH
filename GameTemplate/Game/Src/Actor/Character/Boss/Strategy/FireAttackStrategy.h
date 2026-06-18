@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 /**
  * @file   FireAttackStrategy.h
  * @brief  ボス火炎攻撃ストラテジー。

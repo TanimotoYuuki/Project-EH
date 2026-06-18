@@ -2,10 +2,10 @@
 #include <Src/Actor/Character/Player/Component/PlayerSpawnData.h>
 
 /**
- * @file  Game2.h
- * @brief �f�[�^�����N���X�B
+ * @file   Game2.h
+ * @brief  ゲームメイン管理クラス
  * @author All
- * @date  2026/05/08
+ * @date   2026/05/08
  */
 
 #include "Src/Parameter/ParameterSystem.h"
@@ -44,52 +44,52 @@ namespace nsApp
 
 		/**
 		 * @class Game2
-		 * @brief �C���Q�[���̊e�I�u�W�F�N�g�̎Q�Ƃ�ێ��E�Ǘ�����f�[�^�����N���X�B
+		 * @brief  ゲーム内各オブジェクトの参照を保持・管理するクラス。
 		 */
 		class Game2 : public IGameObject
 		{
 		public:
-			/* �R���X�g���N�^�ƃf�X�g���N�^�B*/
+			/* コンストラクタとデストラクタ。 */
 			Game2() = default;
 			~Game2();
 
 
 		public:
 			/**
-			 * @brief �J�n�����B
-			 * @return ����ɏ��������ꂽ�ꍇ true�B
+			 * @brief  初期化・開始処理。
+			 * @return 正常に初期化された場合 true。
 			 */
 			bool Start();
 
 			/**
-			 * @brief �X�V�����B
+			 * @brief  更新処理。
 			 */
 			void Update();
 
 			/**
-			 * @brief �`�揈���B
-			 * @param rc �`��R���e�L�X�g�B
+			 * @brief  描画処理。
+			 * @param rc 描画コンテキスト。
 			 */
 			void Render(RenderContext& rc);
 
 
 		public:
 			/**
-			 * @brief �⏕�N���X�Ő����������ʂ�Game2�ɔ��f����B
-			 * @param result InGame�������ʁB
+			 * @brief  補助ビルドクラスで生成した結果を Game2 に反映する。
+			 * @param result InGameビルド結果。
 			 */
 			void ApplyBuildResult(const InGameBuildResult& result);
 
 			/**
-			 * @brief �Q�[���{�̂�����������B
+			 * @brief  ゲーム本編をアクティブにする。
 			 */
 			void ActivateGame();
 
 
 		public:
 			/**
-			 * @brief �Q�[���N���A���o�̃C���X�^���X��Ԃ��B
-			 * @return �Q�[���N���A���o�̃C���X�^���X�B
+			 * @brief  ゲームクリア演出のインスタンスを返す。
+			 * @return ゲームクリア演出のインスタンス。
 			 */
 			inline GameClearDirection* GetGameClearDirectionInstance() const
 			{
@@ -97,8 +97,8 @@ namespace nsApp
 			}
 
 			/**
-			 * @brief ���Ԑ؂ꉉ�o�̃C���X�^���X��Ԃ��B
-			 * @return ���Ԑ؂ꉉ�o�̃C���X�^���X�B
+			 * @brief  時間切れ演出のインスタンスを返す。
+			 * @return 時間切れ演出のインスタンス。
 			 */
 			inline GameTimeUpDirection* GetGameTimeUpDirectionInstance() const
 			{
@@ -106,8 +106,8 @@ namespace nsApp
 			}
 
 			/**
-			 * @brief �Q�[���I�[�o�[���o�̃C���X�^���X��Ԃ��B
-			 * @return �Q�[���I�[�o�[���o�̃C���X�^���X�B
+			 * @brief  ゲームオーバー演出のインスタンスを返す。
+			 * @return ゲームオーバー演出のインスタンス。
 			 */
 			inline GameOverDirection* GetGameOverDirectionInstance() const
 			{
@@ -115,8 +115,8 @@ namespace nsApp
 			}
 
 			/**
-			 * @brief �Q�[���I����ɑI�����ʂ̃C���X�^���X��Ԃ��B
-			 * @return �I�����ʂ̃C���X�^���X�B
+			 * @brief  ゲーム終了時の選択画面のインスタンスを返す。
+			 * @return 選択画面のインスタンス。
 			 */
 			inline GameEndSelect* GetGameEndSelectInstance() const
 			{
@@ -124,8 +124,8 @@ namespace nsApp
 			}
 
 			/**
-			 * @brief �|�[�Y�̃C���X�^���X��Ԃ��B
-			 * @return �|�[�Y�̃C���X�^���X�B
+			 * @brief  ポーズ画面のインスタンスを返す。
+			 * @return ポーズ画面のインスタンス。
 			 */
 			inline Pause* GetPauseInstance() const
 			{
@@ -133,8 +133,8 @@ namespace nsApp
 			}
 
 			/**
-			 * @brief �{�X�̎�ނ�ݒ肷��B
-			 * @param bossType �{�X�̎�ށB
+			 * @brief  ボスの種類を設定する。
+			 * @param bossType ボスの種類。
 			 */
 			inline void SetBossType(int bossType)
 			{
@@ -142,8 +142,8 @@ namespace nsApp
 			}
 
 			/**
-			 * @brief �{�X�̎�ނ�Ԃ��B
-			 * @return �{�X�̎�ށB
+			 * @brief  ボスの種類を返す。
+			 * @return ボスの種類。
 			 */
 			inline int GetBossType() const
 			{
@@ -151,9 +151,9 @@ namespace nsApp
 			}
 
 			/**
-			 * @brief �L�����N�^�[�̖�����ݒ肷��B
-			 * @param playerIndex �v���C���[�̃C���f�b�N�X�B
-			 * @param role        �����B
+			 * @brief  キャラクターの役割（ロール）を設定する。
+			 * @param playerIndex プレイヤーのインデックス。
+			 * @param role        役割（ロール）。
 			 */
 			inline void SetCharacterRole(int playerIndex, int role)
 			{
@@ -161,9 +161,9 @@ namespace nsApp
 			}
 
 			/**
-			 * @brief �L�����N�^�[�̖�����Ԃ��B
-			 * @param playerIndex �v���C���[�̃C���f�b�N�X�B
-			 * @return �L�����N�^�[�̖����B
+			 * @brief  キャラクターの役割（ロール）を返す。
+			 * @param playerIndex プレイヤーのインデックス。
+			 * @return キャラクターの役割（ロール）。
 			 */
 			inline int GetCharacterRole(int playerIndex) const
 			{
@@ -171,9 +171,9 @@ namespace nsApp
 			}
 
 			/**
-			 * @brief �v���C���[�����삵�Ă��邩�ǂ�����ݒ肷��B
-			 * @param playerIndex �v���C���[�̃C���f�b�N�X�B
-			 * @param isControle  ���삵�Ă��邩�B
+			 * @brief  プレイヤーが操作されているかどうかを設定する。
+			 * @param playerIndex プレイヤーのインデックス。
+			 * @param isControle  操作されているかどうか。
 			 */
 			inline void SetPlayerControle(int playerIndex, bool isControle)
 			{
@@ -181,9 +181,9 @@ namespace nsApp
 			}
 
 			/**
-			 * @brief �v���C���[�����삵�Ă��邩�ǂ�����Ԃ��B
-			 * @param playerIndex �v���C���[�̃C���f�b�N�X�B
-			 * @return �v���C���[�����삵�Ă��邩�ǂ����B
+			 * @brief  プレイヤーが操作されているかどうかを返す。
+			 * @param playerIndex プレイヤーのインデックス。
+			 * @return プレイヤーが操作されているかどうか。
 			 */
 			inline bool IsPlayerControle(int playerIndex) const
 			{
@@ -192,49 +192,49 @@ namespace nsApp
 
 
 		private:
-			/* �|�C���^�^�i�T�E���h�E�w�i�j�B*/
-			nsApp::nsSound::SoundLister* m_soundLister = nullptr; //! �T�E���h���X�^�[�B
-			nsApp::nsStage::BackGround* m_backGround = nullptr; //! �w�i�B
+			/* ポインタ（サウンド・背景）。 */
+			nsApp::nsSound::SoundLister* m_soundLister = nullptr; //! サウンドリスナー。
+			nsApp::nsStage::BackGround* m_backGround = nullptr; //! 背景。
 
-			/* �|�C���^�^�iUI�j�B*/
-			nsUI::ReboneGaugeUIManager* m_reboneGaugeUIManager = nullptr; //! ���{�[���Q�[�WUI�}�l�[�W���[�B
-			nsUI::CommentaryUIManager* m_commentaryUIManager = nullptr; //! �R�����^���[UI�}�l�[�W���[�B
+			/* ポインタ（UI）。 */
+			nsUI::ReboneGaugeUIManager* m_reboneGaugeUIManager = nullptr; //! リボーンゲージUIマネージャー。
+			nsUI::CommentaryUIManager* m_commentaryUIManager = nullptr; //! 実況・解説UIマネージャー。
 
-			/* �|�C���^�^�i�J�����E�L�����N�^�[�j�B*/
-			nsApp::Camera* m_camera = nullptr; //! �J�����B
-			nsActor::Player* m_player = nullptr; //! ��\�v���C���[�B
-			nsActor::Boss* m_boss = nullptr; //! �{�X�B
+			/* ポインタ（カメラ・キャラクター）。 */
+			nsApp::Camera* m_camera = nullptr; //! カメラ。
+			nsActor::Player* m_player = nullptr; //! 操作プレイヤー。
+			nsActor::Boss* m_boss = nullptr; //! ボス。
 
-			/* �|�C���^�^�i�V�X�e���j�B*/
-			DamageIndicatorPool* m_damageIndicatorPool = nullptr; //! �_���[�W�C���W�P�[�^�[�v�[���B
-			CharacterHP* m_characterHP = nullptr; //! �L�����N�^�[HP�Ǘ��B
-			GameTimeLimit* m_gameTimeLimit = nullptr; //! �Q�[���������ԁB
-			GameStartDirection* m_gameStartDirection = nullptr; //! �Q�[���J�n���o�B
-			GameClearDirection* m_gameClearDirection = nullptr; //! �Q�[���N���A���o�B
-			GameTimeUpDirection* m_gameTimeUpDirection = nullptr; //! ���Ԑ؂ꉉ�o�B
-			GameOverDirection* m_gameOverDirection = nullptr; //! �Q�[���I�[�o�[���o�B
-			GameEndSelect* m_gameEndSelect = nullptr; //! �Q�[���I����I���B
-			Pause* m_pause = nullptr; //! �|�[�Y�B
-			PlayerGenerator* m_generator = nullptr; //! �v���C���[������B
-			PlayerControlerHub* m_playerHub = nullptr; //! �v���C���[�R���g���[���[�n�u�B
-			BossPhaseEventController* m_bossPhaseController = nullptr; //! �{�X�t�F�[�Y�C�x���g�R���g���[���[�B
+			/* ポインタ（システム）。 */
+			DamageIndicatorPool* m_damageIndicatorPool = nullptr; //! ダメージインジケータープール。
+			CharacterHP* m_characterHP = nullptr; //! キャラクターHP管理。
+			GameTimeLimit* m_gameTimeLimit = nullptr; //! ゲーム制限時間。
+			GameStartDirection* m_gameStartDirection = nullptr; //! ゲーム開始演出。
+			GameClearDirection* m_gameClearDirection = nullptr; //! ゲームクリア演出。
+			GameTimeUpDirection* m_gameTimeUpDirection = nullptr; //! 時間切れ演出。
+			GameOverDirection* m_gameOverDirection = nullptr; //! ゲームオーバー演出。
+			GameEndSelect* m_gameEndSelect = nullptr; //! ゲーム終了時選択。
+			Pause* m_pause = nullptr; //! ポーズ。
+			PlayerGenerator* m_generator = nullptr; //! プレイヤー生成。
+			PlayerControlerHub* m_playerHub = nullptr; //! プレイヤーコントローラーハブ。
+			BossPhaseEventController* m_bossPhaseController = nullptr; //! ボスフェーズイベントコントローラー。
 
-			/* �I�u�W�F�N�g�^�B*/
-			ParameterSystem              m_parameterSystem;                //! �p�����[�^�[�V�X�e���B
+			/* オブジェクト型。 */
+			ParameterSystem              m_parameterSystem;                //! パラメータシステム。
 
-			/* �R���e�i�^�B*/
-			std::vector<nsActor::Player*> m_players;   //! �v���C���[���X�g�B
-			std::vector<PlayerSpawnData>  m_partyData; //! �p�[�e�B�f�[�^���X�g�B
+			/* コンテナ型。 */
+			std::vector<nsActor::Player*> m_players;   //! プレイヤーリスト。
+			std::vector<PlayerSpawnData>  m_partyData; //! パーティデータリスト。
 
 
 		private:
-			/* int �^�B*/
-			int m_bossType = 0;    //! �{�X�̎�ށB
-			int m_characterRole[4] = { 0 }; //! �L�����N�^�[���Ƃ̖����B
+			/* int型。 */
+			int m_bossType = 0;    //! ボスの種類。
+			int m_characterRole[4] = { 0 }; //! キャラクターごとの役割（ロール）。
 
-			/* bool �^�B*/
-			bool m_isPlayerControle[4] = { true }; //! �v���C���[�����삵�Ă��邩�ǂ����B
-			bool m_isGameActive = false;     //! �Q�[���{�̂����������Ă��邩�B
+			/* bool型。 */
+			bool m_isPlayerControle[4] = { true }; //! プレイヤーが操作されているかどうか。
+			bool m_isGameActive = false;     //! ゲーム本編がアクティブになっているか。
 		};
 	}
 }

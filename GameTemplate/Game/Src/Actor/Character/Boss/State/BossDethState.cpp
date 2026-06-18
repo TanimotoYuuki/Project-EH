@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "BossDethState.h"
 #include "Src/Actor/Character/Boss/Boss.h"
 
@@ -17,7 +17,7 @@ namespace nsApp
 			{
 				m_boss->PlayAnimation(nsActor::BossAnimationID::Death);
 
-				/*€–S‚Ì‰¹‚ğÄ¶B*/
+				/*æ­»äº¡æ™‚ã®éŸ³ã‚’å†ç”Ÿã€‚*/
 				auto soundManager = FindGO<nsSound::SoundLister>("SoundManager");
 
 				if (soundManager != nullptr && reinterpret_cast<uintptr_t>(soundManager))
@@ -37,7 +37,7 @@ namespace nsApp
 
 		bool BossDethState::RequestID(uint8_t &id)
 		{
-			/*€‚ñ‚¾‚ç‰½‚à‚µ‚È‚¢B*/
+			/*æ­»ã‚“ã ã‚‰ä½•ã‚‚ã—ãªã„ã€‚*/
 			return false;
 		}
 	}

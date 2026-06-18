@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 /**
  * @file   TailAttackStrategy.h
  * @brief  ボス尻尾攻撃ストラテジー。

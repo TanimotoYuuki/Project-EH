@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "BossMeleeCombatSystem.h"
 #include "Src/Actor/Character/Boss/Boss.h"
 #include "Src/Actor/Character/Player/Player.h"
@@ -7,7 +7,7 @@
 
 namespace
 {
-	/* ‹ßÚUŒ‚ */
+	/* è¿‘æ¥æ”»æ’ƒ */
 	static constexpr float BITE_ATTACK_FORWARD = 2.0f;
 	static constexpr float TAIL_ATTACK_FORWARD = 1.5f;
 	static constexpr float BITE_HIT_RADIUS = 20.0f;
@@ -29,7 +29,7 @@ namespace nsApp
 
 		void BossMeleeCombatSystem::AttackBite(Boss* boss)
 		{
-			/* ‘O•û‚ÉŠš‚İ‚Â‚«”»’è‚ğ”z’u */
+			/* å‰æ–¹ã«å™›ã¿ã¤ãåˆ¤å®šã‚’é…ç½® */
 			Vector3 attackPos = boss->GetPosition() + boss->GetForward() * BITE_ATTACK_FORWARD;
 			m_BiteHit.Enable();
 			m_BiteHit.Update(attackPos);
@@ -38,7 +38,7 @@ namespace nsApp
 
 		Vector3 BossMeleeCombatSystem::AttackTail(Boss* boss)
 		{
-			/* ‘O•û‚ÉK”ö”»’è‚ğ”z’u */
+			/* å‰æ–¹ã«å°»å°¾åˆ¤å®šã‚’é…ç½® */
 			Vector3 attackPos = boss->GetPosition() + boss->GetForward() * TAIL_ATTACK_FORWARD;
 			m_TailHit.Enable();
 			m_TailHit.Update(attackPos);
@@ -64,10 +64,10 @@ namespace nsApp
 				if (!biteHit && !tailHit)
 					continue;
 
-				/* ‹ßÚƒ_ƒ[ƒW“K—p */
+				/* è¿‘æ¥ãƒ€ãƒ¡ãƒ¼ã‚¸é©ç”¨ */
 				DamageProcessor::ApplyDamageToTarget(target, damage);
 
-				/* ƒvƒŒƒCƒ„[‚Í‚«”ò‚Î‚µ */
+				/* ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã¯å¹ãé£›ã°ã— */
 				if (biteHit || tailHit)
 				{
 					auto* player = dynamic_cast<Player*>(target);
