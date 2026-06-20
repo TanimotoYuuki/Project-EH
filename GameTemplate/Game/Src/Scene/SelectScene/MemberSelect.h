@@ -28,6 +28,8 @@ namespace nsApp
 			void Update() override;/*更新処理。*/
 			void Render(RenderContext& rc);/*描画処理。*/
 
+			void ReleaseAllCharacterModels();
+
 		public:/*列挙型。*/
 
 			/*キャラクター枠UI。*/

@@ -550,6 +550,20 @@
       <Filter>Src\Actor\Character\Boss\State</Filter>
     </ClCompile>
     <ClCompile Include="UIInput.cpp" />
+    <ClCompile Include="Src\Actor\Character\Boss\Combat\BossPhaseController.cpp" />
+    <ClCompile Include="Src\Actor\Character\Boss\Combat\BossDamageHandler.cpp" />
+    <ClCompile Include="Src\Actor\Character\Boss\Combat\BossMeleeCombatSystem.cpp" />
+    <ClCompile Include="Src\Actor\Character\Boss\Combat\BossFireCombatSystem.cpp" />
+    <ClCompile Include="Src\Actor\Character\Boss\Combat\BossTornadoSystem.cpp" />
+    <ClCompile Include="Src\Actor\Character\Boss\State\BossDamageState.cpp" />
+    <ClCompile Include="Src\Actor\Character\Boss\State\BossIdleState.cpp" />
+    <ClCompile Include="Src\Actor\Character\Boss\State\BossMoveState.cpp" />
+    <ClCompile Include="Src\Actor\Character\Boss\Strategy\BiteAttackStrategy.cpp" />
+    <ClCompile Include="Src\Actor\Character\Boss\Strategy\BossAttackState.cpp" />
+    <ClCompile Include="Src\Actor\Character\Boss\Strategy\BossRoarState.cpp" />
+    <ClCompile Include="Src\Actor\Character\Boss\Strategy\ChargeAttackStrategy.cpp" />
+    <ClCompile Include="Src\Actor\Character\Boss\Strategy\FireAttackStrategy.cpp" />
+    <ClCompile Include="Src\Actor\Character\Boss\Strategy\TailAttackStrategy.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -1007,6 +1021,7 @@
     <ClInclude Include="Src\Actor\Character\Boss\Combat\BossDamageHandler.h" />
     <ClInclude Include="Src\Actor\Character\Boss\Combat\BossPhaseController.h" />
     <ClInclude Include="Src\Actor\Character\Boss\State\BossDamageState.h" />
+    <ClInclude Include="Src\Scene\Loading\LoadingDestination.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Src\Utilty\TSVTableLoder.inl">
