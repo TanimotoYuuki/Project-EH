@@ -1,11 +1,11 @@
-#pragma once
+﻿#pragma once
 
 /**
  * @file   InGameBuildHelper.h
- * @brief  InGame�����⏕�N���X�B
- * @author Yamaguchi Hayato�B
+ * @brief  InGame生成処理を管理するクラスのヘッダファイル。
+ * @author Yamaguchi Hayato
  * @date   2026/06/05
- * @detail Game2�ŕK�v�Ȑ���������1�X�e�b�v�����s����B
+ * @detail Game2で必要な生成処理を1ステップずつ実行する。
  */
 
 #include <vector>
@@ -36,6 +36,7 @@ namespace nsApp
 	namespace nsUI {
 		class ReboneGaugeUIManager;
 		class CommentaryUIManager;
+		class GuardGaugeUIManager;
 	}
 
 	namespace nsGame {
@@ -48,7 +49,7 @@ namespace nsApp
 
 	/**
 	 * @struct InGameBuildRequest
-	 * @brief InGame�����ɕK�v�ȃ��N�G�X�g���B
+	 * @brief InGame生成に必要なリクエスト情報。
 	 */
 	struct InGameBuildRequest
 	{
@@ -60,7 +61,7 @@ namespace nsApp
 
 	/**
 	 * @struct InGameBuildResult
-	 * @brief InGame�������ʁB
+	 * @brief InGame生成結果。
 	 */
 	struct InGameBuildResult
 	{
@@ -68,10 +69,11 @@ namespace nsApp
 		nsStage::BackGround* backGround = nullptr;
 		nsUI::ReboneGaugeUIManager* reboneGaugeUIManager = nullptr;
 		nsUI::CommentaryUIManager* commentaryUIManager = nullptr;
+		nsUI::GuardGaugeUIManager* guardGaugeUIManager = nullptr;
 		Camera* camera = nullptr;
 		nsActor::Player* player = nullptr;
 		std::vector<nsActor::Player*> players;
-		std::vector<PlayerSpawnData> partyData;    
+		std::vector<PlayerSpawnData> partyData;
 		nsActor::Boss* boss = nullptr;
 		DamageIndicatorPool* damageIndicatorPool = nullptr;
 		nsGame::CharacterHP* characterHP = nullptr;
@@ -84,7 +86,8 @@ namespace nsApp
 
 
 	/**
-	 * @brief InGame�����⏕�N���X�B
+	 * @class InGameBuildHelper
+	 * @brief InGame生成補助クラス。
 	 */
 	class InGameBuildHelper
 	{
@@ -95,26 +98,26 @@ namespace nsApp
 
 	public:
 		/**
-		 * @brief �����������B
-		 * @param request �����ɕK�v�ȏ��B
+		 * @brief 初期化処理。
+		 * @param request 生成に必要な情報。
 		 */
 		void Initialize(const InGameBuildRequest& request);
 
 		/**
-		 * @brief �X�V�����B
+		 * @brief 更新処理。
 		 */
 		void Update()
 		{
-			/* �������������Ă���ꍇ�͉������Ȃ��B*/
+			/* 生成が完了している場合は何もしない。*/
 			ExecuteNextBuildFunction();
 		}
 
 
-		/* �Q�b�^�[�B*/
+		/* ゲッター。*/
 	public:
 		/**
-		 * @brief �������������Ă��邩�B
-		 * @return �������������Ă���ꍇ��true�B
+		 * @brief 生成が完了しているか。
+		 * @return 生成が完了している場合は true。
 		 */
 		inline bool IsFinished() const
 		{
@@ -122,8 +125,8 @@ namespace nsApp
 		}
 
 		/**
-		 * @brief �������ʂ��擾����B
-		 * @return �������ʁB
+		 * @brief 生成結果を取得する。
+		 * @return 生成結果。
 		 */
 		inline const InGameBuildResult& GetResult() const
 		{
@@ -131,7 +134,8 @@ namespace nsApp
 		}
 
 		/**
-		 * @brief �i�������擾����B
+		 * @brief 進捗率を取得する。
+		 * @return 0.0f〜1.0f の進捗率。
 		 */
 		float GetProgress() const;
 
@@ -142,119 +146,128 @@ namespace nsApp
 
 	private:
 		/**
-		 * @brief �����֐���o�^����B
+		 * @brief 生成関数を登録する。
 		 */
 		void InitializeBuildFunctions();
 
 		/**
-		 * @brief ���̐����֐���1���s����B
+		 * @brief 次の生成関数を1つ実行する。
 		 */
 		void ExecuteNextBuildFunction();
 
 		/**
-		 * @brief �����̐����B
+		 * @brief 乱数の生成。
 		 */
 		void BuildRandom();
 
 		/**
-		 * @brief �����̐����B
+		 * @brief サウンドの生成。
 		 */
 		void BuildSound();
 
 		/**
-		 * @brief �X�e�[�W�̐����B
+		 * @brief ステージの生成。
 		 */
 		void BuildStage();
 
 		/**
-		 * @brief �w�i�̐����B
+		 * @brief 背景の生成。
 		 */
 		void BuildBackGround();
 
 		/**
-		 * @brief �J�����̐����B
+		 * @brief カメラの生成。
 		 */
 		void BuildCamera();
 
 		/**
-		 * @brief �_���[�W�C���W�P�[�^�[�̃v�[���̐����B
+		 * @brief ダメージインジケーターのプールの生成。
 		 */
 		void BuildDamagePool();
 
 		/**
-		 * @brief ����UI�̐����B
+		 * @brief 実況UIの生成。
 		 */
 		void BuildCommentaryUI();
 
 		/**
-		 * @brief PlayerGenerator�̐����B
+		 * @brief PlayerGeneratorの生成。
 		 */
 		void BuildPlayerGenerator();
 
 		/**
-		 * @brief �v���C���[�̐����ɕK�v�ȃf�[�^�̍쐬�B
+		 * @brief プレイヤーの生成に必要なデータの作成。
 		 */
 		void CreatePartyData();
 
 		/**
-		 * @brief �v���C���[�̐����B
-		 * @param playerIndex �v���C���[�̃C���f�b�N�X�B
+		 * @brief プレイヤーの生成。
+		 * @param playerIndex プレイヤーのインデックス。
 		 */
 		void SpawnPlayer(int playerIndex);
 
 		/**
-		 * @brief �v���C���[�����{�[���Q�[�W�ɓo�^����B
+		 * @brief プレイヤーをリボーンゲージに登録する。
 		 */
 		void RegisterPlayersToReboneGauge();
 
 		/**
-		 * @brief PlayerHub�̐����B
+		 * @brief ガードゲージUIの生成。
+		 */
+		void BuildGuardGaugeUI();
+
+		/**
+		 * @brief プレイヤーをガードゲージUIに登録する。
+		 */
+		void RegisterPlayersToGuardGauge();
+
+		/**
+		 * @brief PlayerHubの生成。
 		 */
 		void BuildPlayerHub();
 
 		/**
-		 * @brief Boss�̐����B
+		 * @brief Bossの生成。
 		 */
 		void BuildBoss();
 
 		/**
-		 * @brief CharacterHP�̐����B
+		 * @brief CharacterHPの生成。
 		 */
 		void BuildCharacterHP();
 
 		/**
-		 * @brief �Q�[�����Ԑ����̐����B
+		 * @brief ゲーム制限時間の生成。
 		 */
 		void BuildGameTimeLimit();
 
 		/**
-		 * @brief �Q�[���J�n���o�̐����B
+		 * @brief ゲーム開始演出の生成。
 		 */
 		void BuildGameStartDirection();
 
 		/**
-		 * @brief �|�[�Y�̐����B
+		 * @brief ポーズの生成。
 		 */
 		void BuildPause();
 
 		/**
-		 * @brief �������������B
+		 * @brief 生成完了処理。
 		 */
 		void FinishBuild();
 
 
 	private:
-		InGameBuildRequest m_request;//! �����ɕK�v�ȏ��B
-		InGameBuildResult m_result;  //! �������ʁB
+		InGameBuildRequest m_request;                //! 生成に必要な情報。
+		InGameBuildResult m_result;                  //! 生成結果。
 
-		std::vector<BuildFunction> m_buildFunctions; //! �����֐��̃��X�g�B
-		std::vector<PlayerSpawnData> m_partyData;    //! �v���C���[�̐����ɕK�v�ȃf�[�^�̃��X�g�B
-		std::vector<nsActor::Player*> m_players;     //! �������ꂽ�v���C���[�̃��X�g�B
+		std::vector<BuildFunction> m_buildFunctions; //! 生成関数のリスト。
+		std::vector<PlayerSpawnData> m_partyData;    //! プレイヤーの生成に必要なデータのリスト。
+		std::vector<nsActor::Player*> m_players;     //! 生成されたプレイヤーのリスト。
 
-		ControllerType m_controllerType[4] = { ControllerType::Player_1P }; //! �L�����N�^�[���Ƃ̃R���g���[���[�̎�ށB
+		ControllerType m_controllerType[4] = { ControllerType::Player_1P }; //! キャラクターごとのコントローラーの種類。
 
-		bool m_isFinished = false; //! �������������Ă��邩�B 
-			
-		int m_currentBuildIndex = 0; //! ���ݎ��s���鐶���֐��̃C���f�b�N�X�B
+		bool m_isFinished = false;                   //! 生成が完了しているか。
+		int m_currentBuildIndex = 0;                 //! 現在実行中の生成関数のインデックス。
 	};
 }

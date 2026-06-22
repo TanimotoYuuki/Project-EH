@@ -21,14 +21,23 @@ namespace nsApp
 	class DamageIndicatorPool;
 	class ParameterSystem;
 
-	namespace nsSound { class SoundLister; }
-	namespace nsStage { class BackGround; }
-	namespace nsActor { class Player; class Boss; }
+	namespace nsSound { 
+		class SoundLister; 
+	}
 
-	namespace nsUI
-	{
+	namespace nsStage  {
+		class BackGround; 
+	}
+
+	namespace nsActor {
+		class Player; 
+		class Boss; 
+	}
+
+	namespace nsUI {
 		class ReboneGaugeUIManager;
 		class CommentaryUIManager;
+		class GuardGaugeUIManager;
 	}
 
 	namespace nsGame
@@ -198,7 +207,9 @@ namespace nsApp
 
 			/* ポインタ（UI）。 */
 			nsUI::ReboneGaugeUIManager* m_reboneGaugeUIManager = nullptr; //! リボーンゲージUIマネージャー。
-			nsUI::CommentaryUIManager* m_commentaryUIManager = nullptr; //! 実況・解説UIマネージャー。
+			nsUI::CommentaryUIManager* m_commentaryUIManager = nullptr;   //! 実況・解説UIマネージャー。
+			nsUI::GuardGaugeUIManager* m_guardGaugeUIManager = nullptr;   //! ガードゲージUIマネージャー。
+
 
 			/* ポインタ（カメラ・キャラクター）。 */
 			nsApp::Camera* m_camera = nullptr; //! カメラ。
