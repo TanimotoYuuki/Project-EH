@@ -268,10 +268,10 @@
     <ClCompile Include="Src\Actor\Character\Player\State\BasicState\PlayerDethState.cpp">
       <Filter>Src\Actor\Character\Player\State\BasicState</Filter>
     </ClCompile>
-    <ClCompile Include="CharacterHP.cpp" />
+    <ClCompile Include="Src\UI\Character\CharacterHP.cpp" />
     <ClCompile Include="GameTimeLimit.cpp" />
-    <ClCompile Include="Option.cpp" />
-    <ClCompile Include="HowToPlay.cpp" />
+    <ClCompile Include="Src\UI\GameFlow\Option.cpp" />
+    <ClCompile Include="Src\UI\GameFlow\HowToPlay.cpp" />
     <ClCompile Include="Game2.cpp" />
     <ClCompile Include="Src\AsyncLoad\AsyncLoadManager.cpp">
       <Filter>Src\AsyncLoad</Filter>
@@ -304,9 +304,6 @@
       <Filter>Src\Fade</Filter>
     </ClCompile>
     <ClCompile Include="Src\Parameter\ParameterSystem.cpp">
-      <Filter>Src\Parameter</Filter>
-    </ClCompile>
-    <ClCompile Include="Src\Parameter\PlayerStatusParameterTable.cpp">
       <Filter>Src\Parameter</Filter>
     </ClCompile>
     <ClCompile Include="Src\Scene\InGame\Pause.cpp">
@@ -447,7 +444,7 @@
     <ClCompile Include="Src\Actor\Character\Status\NPCStatusParameterTable.cpp">
       <Filter>Src\Actor\Character\Status</Filter>
     </ClCompile>
-    <ClCompile Include="Src\Actor\Character\Status\PlayerStatusParameterTable.cpp">
+    <ClCompile Include="Src\Parameter\PlayerStatusParameterTable.cpp">
       <Filter>Src\Actor\Character\Status</Filter>
     </ClCompile>
     <ClCompile Include="Src\Actor\Character\Player\Component\PlayerGenerator.cpp">
@@ -528,9 +525,6 @@
     <ClCompile Include="Src\UI\Loading\LoadingTextUI.cpp">
       <Filter>Src\UI\Loading</Filter>
     </ClCompile>
-    <ClCompile Include="BossParameterTable.cpp">
-      <Filter>Src\Actor\Character\Boss\Status</Filter>
-    </ClCompile>
     <ClCompile Include="Src\Actor\Character\Boss\AI\BossAIConfigFactory.cpp">
       <Filter>Src\Actor\Character\Boss\AI</Filter>
     </ClCompile>
@@ -549,7 +543,7 @@
     <ClCompile Include="Src\Actor\Character\Boss\State\BossDethState.cpp">
       <Filter>Src\Actor\Character\Boss\State</Filter>
     </ClCompile>
-    <ClCompile Include="UIInput.cpp" />
+    <ClCompile Include="Src\Sound\UIInput.cpp" />
     <ClCompile Include="Src\Actor\Character\Boss\Combat\BossPhaseController.cpp" />
     <ClCompile Include="Src\Actor\Character\Boss\Combat\BossDamageHandler.cpp" />
     <ClCompile Include="Src\Actor\Character\Boss\Combat\BossMeleeCombatSystem.cpp" />
@@ -564,6 +558,24 @@
     <ClCompile Include="Src\Actor\Character\Boss\Strategy\ChargeAttackStrategy.cpp" />
     <ClCompile Include="Src\Actor\Character\Boss\Strategy\FireAttackStrategy.cpp" />
     <ClCompile Include="Src\Actor\Character\Boss\Strategy\TailAttackStrategy.cpp" />
+    <ClCompile Include="Src\Parameter\BossParameterTable.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\Component\Guard\GuardParameterTable.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\Component\Guard\PlayerGuardSystem.cpp" />
+    <ClCompile Include="Src\UI\GuardGage\GuardGaugeUI.cpp" />
+    <ClCompile Include="Src\UI\GuardGage\GuardGageUIManager.cpp" />
+    <ClCompile Include="Src\Actor\Character\NPC\Movement\NPCMovementController.cpp" />
+    <ClCompile Include="Src\Actor\Character\NPC\Threat\ThreatZoneCircle.cpp" />
+    <ClCompile Include="Src\Actor\Character\NPC\Threat\BossMeleeThreatProvider.cpp" />
+    <ClCompile Include="Src\Actor\Character\NPC\Threat\ThreatCollector.cpp" />
+    <ClCompile Include="Src\Actor\Character\NPC\Navigation\SimpleAvoidPathfinder.cpp" />
+    <ClCompile Include="Src\Actor\Character\NPC\State\BasicState\NPCEvadeState.cpp" />
+    <ClCompile Include="Src\Actor\Character\NPC\Component\NPCBehaviorProfileTable.cpp" />
+    <ClCompile Include="Src\Actor\Character\NPC\Threat\BossFireThreatProvider.cpp" />
+    <ClCompile Include="Src\Actor\Character\NPC\Social\NPCSocialEvaluator.cpp" />
+    <ClCompile Include="Src\Actor\Character\NPC\Brain\NPCCombatMind.cpp" />
+    <ClCompile Include="Src\Actor\Character\NPC\Brain\NPCLocomotonMind.cpp" />
+    <ClCompile Include="Src\Actor\Character\NPC\Brain\NPCSupportMind.cpp" />
+    <ClCompile Include="Src\Actor\Character\Player\Component\Damage\PlayerDamageInvincibilitySystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -661,12 +673,11 @@
       <Filter>Src\Camera</Filter>
     </ClInclude>
     <ClInclude Include="Src\Actor\Stage\BackGround.h" />
-    <ClInclude Include="CharacterHP.h" />
+    <ClInclude Include="Src\UI\Character\CharacterHP.h" />
     <ClInclude Include="GameTimeLimit.h" />
     <ClInclude Include="Game2.h" />
-    <ClInclude Include="Option.h" />
-    <ClInclude Include="HowToPlay.h" />
-    <ClInclude Include="Game.h" />
+    <ClInclude Include="Src\UI\GameFlow\Option.h" />
+    <ClInclude Include="Src\UI\GameFlow\HowToPlay.h" />
     <ClInclude Include="Src\AsyncLoad\AsyncLoadManager.h">
       <Filter>Src\AsyncLoad</Filter>
     </ClInclude>
@@ -698,9 +709,6 @@
       <Filter>Src\Fade</Filter>
     </ClInclude>
     <ClInclude Include="Src\Parameter\ParameterSystem.h">
-      <Filter>Src\Parameter</Filter>
-    </ClInclude>
-    <ClInclude Include="Src\Parameter\PlayerStatusParameterTable.h">
       <Filter>Src\Parameter</Filter>
     </ClInclude>
     <ClInclude Include="Src\Scene\InGame\Pause.h">
@@ -859,7 +867,7 @@
     <ClInclude Include="Src\Actor\Character\Status\NPCStatusParameterTable.h">
       <Filter>Src\Actor\Character\Status</Filter>
     </ClInclude>
-    <ClInclude Include="Src\Actor\Character\Status\PlayerStatusParameterTable.h">
+    <ClInclude Include="Src\Parameter\PlayerStatusParameterTable.h">
       <Filter>Src\Actor\Character\Status</Filter>
     </ClInclude>
     <ClInclude Include="Src\Actor\Character\Player\Component\PlayerGenerator.h">
@@ -962,9 +970,6 @@
       <Filter>Src\UI\Loading</Filter>
     </ClInclude>
     <ClInclude Include="resource.h" />
-    <ClInclude Include="BossParameterTable.h">
-      <Filter>Src\Actor\Character\Boss\Status</Filter>
-    </ClInclude>
     <ClInclude Include="Src\Actor\Character\Boss\AI\BossAIConfigFactory.h">
       <Filter>Src\Actor\Character\Boss\AI</Filter>
     </ClInclude>
@@ -992,7 +997,7 @@
     <ClInclude Include="Src\Actor\Character\Boss\State\BossMoveState.h">
       <Filter>Src\Actor\Character\Boss\State</Filter>
     </ClInclude>
-    <ClInclude Include="UIInput.h" />
+    <ClInclude Include="Src\Sound\UIInput.h" />
     <ClInclude Include="Src\Actor\Character\Boss\Strategy\BiteAttackStrategy.h">
       <Filter>Src\Actor\Character\Boss\Strategy</Filter>
     </ClInclude>
@@ -1022,6 +1027,35 @@
     <ClInclude Include="Src\Actor\Character\Boss\Combat\BossPhaseController.h" />
     <ClInclude Include="Src\Actor\Character\Boss\State\BossDamageState.h" />
     <ClInclude Include="Src\Scene\Loading\LoadingDestination.h" />
+    <ClInclude Include="Src\Parameter\BossParameterTable.h" />
+    <ClInclude Include="Src\Actor\Character\Player\Component\Guard\GuardParameter.h" />
+    <ClInclude Include="Src\Actor\Character\Player\Component\Guard\GuardParameterTable.h" />
+    <ClInclude Include="Src\Actor\Character\Player\Component\Guard\PlayerGuardSystem.h" />
+    <ClInclude Include="Src\UI\GuardGage\GuardGaugeUI.h" />
+    <ClInclude Include="Src\UI\GuardGage\GuardGageUIManager.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\Movement\NPCMovementIntent.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\Movement\NPCMovementController.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\Threat\IThreatZone.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\Threat\ThreatZoneCircle.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\Threat\IThreatProvider.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\Threat\BossMeleeThreatProvider.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\Threat\ThreatCollector.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\Navigation\AvoidPathResult.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\Navigation\SimpleAvoidPathfinder.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\State\BasicState\NPCEvadeState.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\Component\NPCBehaviorProfile.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\Component\NPCBehaviorProfileTable.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\Threat\BossFireThreatProvider.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\Social\NPCSocialContext.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\Social\NPCSocialEvaluator.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\Movement\NPCCombatRangeHelper.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\Brain\NPCIntent.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\Brain\NPCMindContext.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\Brain\NPCCombatMind.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\Brain\NPCLocomotonMind.h" />
+    <ClInclude Include="Src\Actor\Character\NPC\Brain\NPCSupportMind.h" />
+    <ClInclude Include="Src\Actor\Character\Player\Component\Damage\DamageInvincibilityParameter.h" />
+    <ClInclude Include="Src\Actor\Character\Player\Component\Damage\PlayerDamageInvincibilitySystem.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Src\Utilty\TSVTableLoder.inl">
