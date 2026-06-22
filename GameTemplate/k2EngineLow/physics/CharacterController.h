@@ -22,7 +22,7 @@ namespace nsK2EngineLow {
 		}
 		~CharacterController()
 		{
-			RemoveRigidBoby();
+		   // RemoveRigidBoby();
 		}
 		/*!
 			* @brief	‰Šú‰»B

@@ -7,6 +7,7 @@
  */
 
 #include "Src/AsyncLoad/AsyncLoadManager.h"
+#include "Src/Scene/Loading/LoadingDestination.h"
 #include "Src/Scene/Loading/LoadingSceneController.h"
 
 namespace nsApp
@@ -17,8 +18,9 @@ namespace nsApp
 	class IScene : public IGameObject
 	{
 	public:
-		IScene() {};/*コンストラクタ。*/
-		virtual~IScene() {};/*仮想純粋デストラクタ。*/
+		IScene() = default;
+		virtual~IScene() = default;
+
 
 	public:/*列挙型。*/
 
@@ -109,16 +111,17 @@ namespace nsApp
 			return m_volumeRate[index];
 		}
 
-	public:/*メンバ変数。*/
-		EnSceneID m_sceneID = enSceneID_Num;/*シーンID。*/
+
+	public:
+		EnSceneID m_sceneID = enSceneID_Num;				//! シーンID。
 		int m_bossType = 0;/*ボスの種類。*/
 		int m_characterRole[4] = { 0 };/*キャラクターごとの役割。*/
 		bool m_isPlayerControle[4] = { true };/*プレイヤーがキャラクターを操作するか？*/
 		int m_volumeRate[3] = { 100,100,100 };/*各音量の割合。*/
 	};
 
-	namespace nsOption
-	{
+
+	namespace nsOption {
 		class Option;
 	}
 
@@ -296,17 +299,21 @@ namespace nsApp
 		class SceneLoader
 		{
 		private:
-			SceneLoader() {};/*コンストラクタ。*/
+			/* コンストラクタとデストラクタ。*/
+			SceneLoader() = default;
+			virtual ~SceneLoader() = default;
+
 
 		public:
-			~SceneLoader() {};/*デストラクタ。*/
+			/* 開始処理。*/
+			bool Start();
 
+			/* 更新処理。*/
+			void Update();
+
+
+		/* セッター。*/
 		public:
-			bool Start();/*開始処理。*/
-			void Update();/*更新処理。*/
-
-		public:/*メンバ関数。*/
-
 			/**
 			* @brief シーンの切り替え。
 			* @param enSceneID 切り替えるシーンID。
@@ -317,16 +324,37 @@ namespace nsApp
 			}
 
 			/**
-			* @brief 現在のシーンIDの取得。
-			* @return 現在のシーンID。
-			*/
+			 * @brief ローディングの遷移先の設定。
+			 * @param destination ローディングの遷移先。
+			 */
+			inline void SetLoadingDestination(EnLoadingDestination destination)
+			{
+				m_loadingDestination = destination;
+			}
+
+
+		/* ゲッター。*/
+		public:
+			/**
+			 * @brief 現在のシーンIDの取得。
+			 * @return 現在のシーンID。
+			 */
 			inline IScene::EnSceneID GetCurrentSceneID() const
 			{
 				return m_currentSceneID;
 			}
 
-		public:/*シングルトン用の関数。*/
+			/**
+			 * @brief ローディングの遷移先の取得。
+		     * @return ローディングの遷移先。
+		     */
+			inline EnLoadingDestination GetLoadingDestination() const
+			{
+				return m_loadingDestination;
+			}
 
+
+		public:
 			/**
 			* @brief シングルトンインスタンスの生成。
 			*/
@@ -356,16 +384,24 @@ namespace nsApp
 				return m_instance;
 			}
 
-		private:/*メンバ変数。*/
-			IScene* m_currentScene = nullptr;/*現在のシーンを表す用のインスタンス。*/
-			IScene::EnSceneID m_changeSceneID = IScene::enSceneID_None;/*切り替えるシーンID。*/
-			IScene::EnSceneID m_previousSceneID = IScene::enSceneID_None;/*前のシーンID。*/
-			IScene::EnSceneID m_currentSceneID = IScene::enSceneID_None;/*現在のシーンID。*/
-			int m_bossType = 0;/*ボスの種類。*/
-			int m_characterRole[4] = { 0 };/*キャラクターごとの役割。*/
-			bool m_isPlayerControle[4] = { true };/*プレイヤーがキャラクターを操作するか？*/
-			int m_volumeRate[3] = { 100,100,100 };/*各音量の割合。*/
-			static SceneLoader* m_instance;/*シングルトンインスタンス。*/
+
+		private:
+			IScene* m_currentScene = nullptr;								//! 現在のシーンを表す用のインスタンス。
+			static SceneLoader* m_instance;									//! シングルトンインスタンス。
+
+
+		private:
+			IScene::EnSceneID m_changeSceneID = IScene::enSceneID_None;	    //! 切り替えるシーンID。
+			IScene::EnSceneID m_previousSceneID = IScene::enSceneID_None;   //! 前のシーンID。
+			IScene::EnSceneID m_currentSceneID = IScene::enSceneID_None;    //! 現在のシーンID。
+
+			EnLoadingDestination m_loadingDestination = toInGame;		    //! ローディングの遷移先。
+
+			int m_bossType = 0;												//! ボスの種類。
+			int m_characterRole[4] = { 0 };									//! キャラクターごとの役割。
+			int m_volumeRate[3] = { 100,100,100 };						    //!各音量の割合。
+
+			bool m_isPlayerControle[4] = { true };							//! プレイヤーがキャラクターを操作するか。
 		};
 	}
 }

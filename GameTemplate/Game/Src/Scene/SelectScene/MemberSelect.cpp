@@ -156,19 +156,16 @@ namespace nsApp
 {
 	namespace nsSelect
 	{
-		/*デストラクタ。*/
 		MemberSelect::~MemberSelect()
 		{
 			for (int i = 0; i < enCharacterFrameUI_Num; i++)
 			{
 				for (int j = 0; j < RoleSelect::EnRole::enRole_Num; j++)
-				{
 					DeleteGO(m_characterModel[i][j]);
-				}
 			}
 		}
 
-		/*開始処理。*/
+
 		bool MemberSelect::Start()
 		{
 			/*スプライトの初期化。*/
@@ -194,6 +191,8 @@ namespace nsApp
 				SoundManager->InitSound();
 			}
 
+			AllCharacterModelDeactivate();
+			Deactivate();
 			return true;
 		}
 
@@ -361,6 +360,23 @@ namespace nsApp
 				m_textUI[k].Draw(rc);
 			}
 		}
+
+
+		void MemberSelect::ReleaseAllCharacterModels()
+		{
+			for (int i = 0; i < enCharacterFrameUI_Num; i++)
+			{
+				for (int j = 0; j < RoleSelect::EnRole::enRole_Num; j++)
+				{
+					if (m_characterModel[i][j] != nullptr)
+					{
+						DeleteGO(m_characterModel[i][j]);
+						m_characterModel[i][j] = nullptr;
+					}
+				}
+			}
+		}
+
 
 		/*スプライトの初期化。*/
 		void MemberSelect::InitSprite()
@@ -746,8 +762,8 @@ namespace nsApp
 			{
 				for (int j = 0; j < RoleSelect::EnRole::enRole_Num; j++)
 				{
-					/*キャラクターモデルの生成。*/
-					m_characterModel[i][j]->Deactivate();
+					if(m_characterModel[i][j] != nullptr)
+					   m_characterModel[i][j]->Deactivate();
 				}
 			}
 		}

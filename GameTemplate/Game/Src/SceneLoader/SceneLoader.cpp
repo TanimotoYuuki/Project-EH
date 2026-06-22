@@ -12,19 +12,18 @@
 #include "Src/Select/ConfirmationSelect.h"
 #include "Option.h"
 #include "HowToPlay.h"
-#include "Game.h"
 #include "Game2.h"
+#include "Src/Sound/SoundLister.h"
 #include "Src/Direction/GameClearDirection.h"
 #include "Src/Select/GameEndSelect.h"
 #include "Src/Scene/InGame/Pause.h"
 #include "Src/Scene/ResultScene/Result.h"
+#include "Src/Camera/Camera.h"
 
 namespace nsApp
 {
 	namespace nsTitle
 	{
-		/*タイトルシーン。*/
-		/*デストラクタ。*/
 		TitleScene::~TitleScene()
 		{
 			DeleteGO(m_titleBackGround);
@@ -33,22 +32,22 @@ namespace nsApp
 			DeleteGO(m_option);
 		}
 
-		/*開始処理。*/
+
 		bool TitleScene::Start()
 		{
 			m_titleBackGround = NewGO<TitleBackGround>(0, "titleBackGround");
 			m_title = NewGO<Title>(0, "title");
 			m_titleSelect = NewGO<TitleSelect>(0, "titleSelect");
-			m_option = NewGO<nsApp::nsOption::Option>(0, "option");
+			m_option = NewGO<nsOption::Option>(0, "option");
 
-			for (int i = 0; i < nsApp::nsOption::Option::EnGaugeUI::enGaugeUI_Num; i++)
-			{
-				m_option->SetVolumeRate((nsApp::nsOption::Option::EnGaugeUI)i, GetVolumeRate(i));
-			}
+			for (int i = 0; i < nsOption::Option::EnGaugeUI::enGaugeUI_Num; i++)
+				m_option->SetVolumeRate((nsOption::Option::EnGaugeUI)i, GetVolumeRate(i));
+
+
 			return true;
 		}
 
-		/*更新処理。*/
+
 		void TitleScene::Update()
 		{
 			/*選択が終わったら。*/
@@ -63,19 +62,17 @@ namespace nsApp
 					{
 						/* BGNの停止処理。*/
 						if (m_title->GetBGMInstance() != nullptr)
-						{
 							m_title->StopBGM();
-						}
 
 						for (int i = 0; i < nsApp::nsOption::Option::EnGaugeUI::enGaugeUI_Num; i++)
-						{
 							SetVolumeRate(i, m_option->GetVolumeRate((nsApp::nsOption::Option::EnGaugeUI)i));
-						}
 
 						/*フェード処理が終わったら選択シーンに遷移する。*/
 						if (nsApp::nsFade::Fade::GetInstance()->IsEnd())
 						{
-							nsApp::nsScene::SceneLoader::GetInstance()->ChangeScene(nsApp::IScene::EnSceneID::enSceneID_Select);
+							auto* loader = nsApp::nsScene::SceneLoader::GetInstance();
+							loader->SetLoadingDestination(nsScene::toSelect);
+							loader->ChangeScene(IScene::enSceneID_Loading);
 						}
 					}
 					/*選択画面で設定を選択していたら。*/
@@ -185,12 +182,27 @@ namespace nsApp
 			m_select = NewGO<Select>(0, "select");
 			m_howToPlay = NewGO<nsApp::nsHowToPlay::HowToPlay>(0, "howToPlay");
 			m_option = NewGO<nsApp::nsOption::Option>(1, "option");
+
 			for (int i = 0; i < nsApp::nsOption::Option::EnGaugeUI::enGaugeUI_Num; i++)
-			{
 				m_option->SetVolumeRate((nsApp::nsOption::Option::EnGaugeUI)i, GetVolumeRate(i));
+
+			/* 操作方法・設定は、開くまで非表示にする。*/
+			m_howToPlay->Deactivate();
+			m_option->Deactivate();
+
+			if (g_camera3D != nullptr)
+			{
+				g_camera3D->SetPosition({ 0.0f, 100.0f, -200.0f });
+				g_camera3D->SetTarget({ 0.0f, 50.0f, 0.0f });
 			}
+
+			auto* camera = FindGO<Camera>("camera");
+			if (camera != nullptr)
+				DeleteGO(camera);
+
 			return true;
 		}
+
 
 		/*更新処理。*/
 		void SelectScene::Update()
@@ -239,8 +251,10 @@ namespace nsApp
 					for (int j = 0; j < nsApp::nsOption::Option::EnGaugeUI::enGaugeUI_Num; j++)
 						SetVolumeRate(j, m_option->GetVolumeRate((nsApp::nsOption::Option::EnGaugeUI)j));
 
-					/*フェード処理が終わったらインゲームシーンに遷移する。*/
-					nsScene::SceneLoader::GetInstance()->ChangeScene(IScene::enSceneID_Loading);
+
+					auto* loader = nsScene::SceneLoader::GetInstance();
+					loader->SetLoadingDestination(nsScene::toInGame);
+					loader->ChangeScene(IScene::enSceneID_Loading);
 					return;
 				}
 
@@ -354,17 +368,13 @@ namespace nsApp
 						{
 							/*選択したときの演出UIアニメーションが終わっていないときは役割選択画面を表示しない。*/
 							if (!m_memberSelect->IsEndSelectEndDirectionUIAnimation(m_memberSelect->GetCurrentSelect() + 1))
-							{
 								return;
-							}
 						}
 						else
 						{
 							/*選択したときの演出UIアニメーションが終わっていないときは役割選択画面を表示しない。*/
 							if (!m_memberSelect->IsEndSelectEndDirectionUIAnimation(m_memberSelect->GetCurrentSelect() + 4))
-							{
 								return;
-							}
 						}
 
 						m_roleSelect->Activate();
@@ -389,9 +399,7 @@ namespace nsApp
 				/*選択しているキャラクター枠UIにある役割UIに応じた役割選択画面のUIを表示するための設定。*/
 				int currentSelectCharacterFrame = m_memberSelect->GetCurrentSelect();
 				if (currentSelectCharacterFrame != nsApp::nsSelect::MemberSelect::EnSelect::enSelect_Deploy)
-				{
 					m_roleSelect->ChangeDisplayRoleUI(m_memberSelect->GetCurrentRole((nsApp::nsSelect::MemberSelect::EnCharacterFrameUI)currentSelectCharacterFrame));
-				}
 
 				m_confirmationSelect->Deactivate();
 				m_confirmationSelect->DisableDrawingUI();
@@ -506,8 +514,27 @@ namespace nsApp
 					m_questSelect->ChangeSlide(nsApp::nsSelect::QuestSelect::enSlide_Left);
 				}
 			}
-		}
+
+			/* 選択シーン中（ボス選択・メンバー選択）select.wav */
+			auto* sound = FindGO<nsSound::SoundLister>("SoundManager");
+			if (sound == nullptr)
+			{
+				sound = NewGO<nsSound::SoundLister>(0, "SoundManager");
+				sound->InitSound();
+			}
+			if (!m_confirmationSelect->IsActive()
+				&& !m_howToPlay->IsActive()
+				&& !m_option->IsActive())
+			{
+				sound->GetBGMList().PlayBGM(nsSound::BGM_ID::Select, 1.0f);
+			}
+			else
+			{
+				sound->GetBGMList().StopBGM();
+			}	
 	}
+	}
+
 
 	namespace nsGame
 	{
@@ -551,9 +578,8 @@ namespace nsApp
 
 			/*ポーズ用のインスタンスがnullptrの場合は取得する。*/
 			if (m_pause == nullptr)
-			{
 				m_pause = m_game2->GetPauseInstance();
-			}
+
 			else
 			{
 				/*ポーズ画面が表示している状態。*/
@@ -573,36 +599,38 @@ namespace nsApp
 						m_confirmationSelect->DisableDrawingUI();
 
 						/*ポーズ画面でゲームをやり直すを選択していたら。*/
-						if (m_pause->GetCurrentSelect() == nsApp::nsGame::Pause::EnSelect::enSelect_RestartTheGame)
+						if (m_pause->GetCurrentSelect() == nsGame::Pause::EnSelect::enSelect_RestartTheGame)
 						{
 							/*フェード処理が終わったらローディングシーンに遷移する。*/
 							if (nsApp::nsFade::Fade::GetInstance()->IsEnd())
 							{
-								nsApp::nsScene::SceneLoader::GetInstance()->ChangeScene(nsApp::IScene::EnSceneID::enSceneID_Loading);
+								auto* loader = nsApp::nsScene::SceneLoader::GetInstance();
+								loader->SetLoadingDestination(nsScene::toInGame);
+								loader->ChangeScene(nsApp::IScene::EnSceneID::enSceneID_Loading);
 							}
 						}
 						/*ポーズ画面でクエスト選択に戻るを選択していたら。*/
-						else if (m_pause->GetCurrentSelect() == nsApp::nsGame::Pause::EnSelect::enSelect_ReturnToQuestSelect)
+						else if (m_pause->GetCurrentSelect() == nsGame::Pause::EnSelect::enSelect_ReturnToQuestSelect)
 						{
 							/*フェード処理が終わったら選択シーンに遷移する。*/
-							if (nsApp::nsFade::Fade::GetInstance()->IsEnd())
-							{
-								nsApp::nsScene::SceneLoader::GetInstance()->ChangeScene(nsApp::IScene::EnSceneID::enSceneID_Select);
-							}
+							if (nsFade::Fade::GetInstance()->IsEnd())
+								nsScene::SceneLoader::GetInstance()->ChangeScene(IScene::EnSceneID::enSceneID_Select);
 						}
 						return;
 					}
 
 					/*ポーズ画面で選択できていなければ以下の処理しない。*/
-					if (!m_pause->DidSelect()) { m_confirmationSelect->Deactivate(); return; }
+					if (!m_pause->DidSelect())
+					{
+						m_confirmationSelect->Deactivate(); 
+						return; 
+					}
 
 					/*ポーズ画面で「ゲームを続ける」と「操作方法」以外を選択できている状態。*/
-					if (m_pause->GetCurrentSelect() != nsApp::nsGame::Pause::EnSelect::enSelect_ReturnToGame &&
-						m_pause->GetCurrentSelect() != nsApp::nsGame::Pause::EnSelect::enSelect_HowToPlay &&
-						m_pause->DidSelect())
+					if (m_pause->GetCurrentSelect() != nsGame::Pause::EnSelect::enSelect_ReturnToGame && m_pause->GetCurrentSelect() != nsGame::Pause::EnSelect::enSelect_HowToPlay && m_pause->DidSelect())
 					{
 						/*確認画面でNoを選択できている状態。*/
-						if (m_confirmationSelect->GetCurrentSelect() == nsApp::nsSelect::ConfirmationSelect::EnConfirmationSelectTextUI::enConfirmationSelectTextUI_No &&
+						if (m_confirmationSelect->GetCurrentSelect() == nsSelect::ConfirmationSelect::EnConfirmationSelectTextUI::enConfirmationSelectTextUI_No &&
 							m_confirmationSelect->DidSelect())
 						{
 							m_pause->DisableSelect();
@@ -616,20 +644,18 @@ namespace nsApp
 						m_confirmationSelect->EnableDrawingUI();
 
 						/*ポーズ画面でゲームをやり直すを選択できている状態。*/
-						if (m_pause->GetCurrentSelect() == nsApp::nsGame::Pause::EnSelect::enSelect_RestartTheGame)
-						{
-							m_confirmationSelect->ChangeConfirmationUI(nsApp::nsSelect::ConfirmationSelect::EnConfirmationUI::enConfirmationUI_RestartTheGame);
-						}
+						if (m_pause->GetCurrentSelect() == nsGame::Pause::EnSelect::enSelect_RestartTheGame)
+							m_confirmationSelect->ChangeConfirmationUI(nsSelect::ConfirmationSelect::EnConfirmationUI::enConfirmationUI_RestartTheGame);
+
 						/*ポーズ画面でクエスト選択に戻るを選択できている状態。*/
-						else if (m_pause->GetCurrentSelect() == nsApp::nsGame::Pause::EnSelect::enSelect_ReturnToQuestSelect)
-						{
-							m_confirmationSelect->ChangeConfirmationUI(nsApp::nsSelect::ConfirmationSelect::EnConfirmationUI::enConfirmationUI_ReturnToQuestSelect);
-						}
+						else if (m_pause->GetCurrentSelect() == nsGame::Pause::EnSelect::enSelect_ReturnToQuestSelect)
+							m_confirmationSelect->ChangeConfirmationUI(nsSelect::ConfirmationSelect::EnConfirmationUI::enConfirmationUI_ReturnToQuestSelect);
+
 						return;
 					}
 
 					/*ポーズ画面で操作方法を選択できている状態。*/
-					if (m_pause->GetCurrentSelect() == nsApp::nsGame::Pause::EnSelect::enSelect_HowToPlay)
+					if (m_pause->GetCurrentSelect() == nsGame::Pause::EnSelect::enSelect_HowToPlay)
 					{
 						/*前の画面に戻る状態。*/
 						if (m_howToPlay->IsBackSelect())
@@ -643,9 +669,8 @@ namespace nsApp
 						}
 
 						if (m_howToPlay->IsActive())
-						{
 							m_pause->DisableDrawingUI();
-						}
+
 						m_howToPlay->Activate();
 						return;
 					}
@@ -705,7 +730,9 @@ namespace nsApp
 					/*フェード処理が終わったらローディングシーンに遷移する。*/
 					if (nsApp::nsFade::Fade::GetInstance()->IsEnd())
 					{
-						nsApp::nsScene::SceneLoader::GetInstance()->ChangeScene(nsApp::IScene::EnSceneID::enSceneID_Loading);
+						auto* loader = nsApp::nsScene::SceneLoader::GetInstance();
+						loader->SetLoadingDestination(nsScene::toInGame);
+						loader->ChangeScene(nsApp::IScene::EnSceneID::enSceneID_Loading);
 					}
 				}
 				/*ゲーム終了選択画面でクエスト選択に戻るを選択できている状態。*/
@@ -770,7 +797,9 @@ namespace nsApp
 				/*フェード処理が終わったらローディングシーンに遷移する。*/
 				if (nsApp::nsFade::Fade::GetInstance()->IsEnd())
 				{
-					nsApp::nsScene::SceneLoader::GetInstance()->ChangeScene(nsApp::IScene::EnSceneID::enSceneID_Loading);
+					auto* loader = nsApp::nsScene::SceneLoader::GetInstance();
+					loader->SetLoadingDestination(nsScene::toInGame);
+					loader->ChangeScene(nsApp::IScene::EnSceneID::enSceneID_Loading);
 				}
 			}
 			/*ゲーム終了選択画面でクエスト選択に戻るを選択できている状態。*/
@@ -811,7 +840,7 @@ namespace nsApp
 			}
 
 			/* ローディング処理を初期化する。*/
-			m_loadingSceneController.Initialize(m_request);
+			m_loadingSceneController.Initialize(m_request, nsScene::SceneLoader::GetInstance()->GetLoadingDestination());
 
 			return true;
 		}
@@ -847,8 +876,16 @@ namespace nsApp
 					/* ローディングに成功したときはインゲームシーンに遷移する。*/
 					m_isChangesScene = true;
 
-					/* ローディング画面に遷移。*/
-					nsApp::nsScene::SceneLoader::GetInstance()->ChangeScene(nsApp::IScene::EnSceneID::enSceneID_InGame);
+					/* クラスを取得。*/
+					auto* loader = nsScene::SceneLoader::GetInstance();
+
+					if (loader->GetLoadingDestination() == toSelect)
+						/* Selectへ遷移。*/
+						loader->ChangeScene(IScene::enSceneID_Select);
+
+					else
+						/* InGameへ遷移。*/
+						loader->ChangeScene(IScene::enSceneID_InGame);
 				}
 				return;
 			}

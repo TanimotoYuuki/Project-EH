@@ -6,6 +6,7 @@
  * @date 2026/06/06
  */
 
+#include "Src/Scene/Loading/LoadingDestination.h"
 #include "Src/AsyncLoad/AsyncLoadManager.h"
 #include "Src/Build/InGameBuildHelper.h"
 #include "Src/UI/Loading/LoadingTextUI.h"
@@ -18,6 +19,8 @@ namespace nsApp
 	{
 		class Game2;
 	}
+
+	using namespace nsScene;
 
 	namespace nsLoading
 	{
@@ -32,8 +35,9 @@ namespace nsApp
 			/**
 			 * @brief 初期化処理。
 			 * @param request InGame生成に必要なリクエスト情報。
+			 * @param destination ローディングの遷移先。
 			 */
-			void Initialize(const InGameBuildRequest& request);
+			void Initialize(const InGameBuildRequest& request, EnLoadingDestination destination);
 
 			/**
 			 * @brief 更新処理.
@@ -85,7 +89,6 @@ namespace nsApp
 			{
 				return m_loadingProgressUI.GetDisplayProgress();
 			}
-
 
 
 		private:
@@ -167,6 +170,7 @@ namespace nsApp
 			Camera* m_camera = nullptr;							//! ローディング画面専用のカメラ。
 			AsyncLoadManager m_asyncLoadManager;				//! 非同期ロードを管理するクラス。
 			nsUI::LoadingProgressUI m_loadingProgressUI;		//! ローディングの進捗を表示するUIクラス。
+			EnLoadingDestination m_destination = toInGame;	    //! ローディングの遷移先。
 			nsUI::LoadingRandomRunnerModel m_runnerModel;		//! ロード画面で走るランナーモデル。
 			nsUI::LoadingTextUI m_loadingTextUI;		        //! ローディングのテキストを管理するUIクラス。
 			nsGame::Game2* m_game2 = nullptr;					//! ローディング完了後に生成されるゲーム本編のクラス。
@@ -182,7 +186,7 @@ namespace nsApp
 
 			int m_loadingFrame = 0;								//! ローディング開始からの経過フレーム数。
 
-			float m_ndcX = 0.0f;									//! ランナーのNDC座標X。これをもとにワールド座標が計算される。
+			float m_ndcX = 0.0f;								//! ランナーのNDC座標X。これをもとにワールド座標が計算される。
 			float m_debugRunnerProgress = 0.0f;					//! デバッグ用のランナーの進捗。これが1.0f以上になるとランナーのアニメーションが終了したとみなす。
 			float m_runnerBarProgress = 0.0f;					//! ランナーの実際のプログレスバー上の進捗。これがGetTotalProgress()に合わせて更新される。
 		};

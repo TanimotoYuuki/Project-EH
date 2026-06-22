@@ -1,9 +1,9 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "EffectList.h"
 
 namespace
 {
-	static constexpr int MAX_EFFECT_COUNT = 64; //! �����ɍĐ��ł���G�t�F�N�g���B
+	static constexpr int MAX_EFFECT_COUNT = 64;   //! �����ɍĐ��ł���G�t�F�N�g���B
 }
 
 namespace nsApp
@@ -12,40 +12,44 @@ namespace nsApp
 	{
 		EffectList::~EffectList()
 		{
-			/* �G�t�F�N�g���������B*/
+			/* エフェクトを初期化。*/
 			Clear();
 		}
 
 		void EffectList::Init()
 		{
-			/* �匕�̃G�t�F�N�g�p�X��o�^����B*/
+			/* 大剣のエフェクトパスを登録する。*/
 			StorageGreatSwordEffect();
 
-			/* �n���}�[�̃G�t�F�N�g�p�X��o�^����B*/
+			/* ハンマーのエフェクトパスを登録する。*/
 			StorageHammerEffect();
 
-			/* ��̃G�t�F�N�g�̃p�X��o�^����B*/
+			/* 杖のエフェクトのパスを登録する。*/
 			StorageWandEffect();
 
-			/* �o�e�̃G�t�F�N�g�̃p�X��o�^����B*/
+			/* 双銃のエフェクトのパスを登録する。*/
 			StorageTwinGunEffect();
 
-			/* Boss�G�t�F�N�g�B*/
+			/* Bossエフェクト。*/
 			StorageBossEffect();
+
+			/* ガード用エフェクト。*/
+			StorageGuardEffect();
 		}
 
 		void EffectList::Update(float deltaTime)
 		{
+			/* 再生中のエフェクトのリストをループして、寿命が切れたエフェクトを削除する。*/
 			for (auto iterator = m_playingEffects.begin(); iterator != m_playingEffects.end();)
 			{
-				/* 0�ȉ��̏ꍇ�͕`������Ȃ��B*/
+				/* 0以下の場合は描画しない。*/
 				if (iterator->currentTime >= iterator->lifeTime)
 				{
 					++iterator;
 					continue;
 				}
 
-				/* �^�C�}�[�̉��Z�B*/
+				/* タイマーの加算。*/
 				iterator->currentTime += deltaTime;
 
 				if (iterator->currentTime >= iterator->lifeTime)
@@ -58,7 +62,6 @@ namespace nsApp
 
 					iterator = m_playingEffects.erase(iterator);
 				}
-
 				else
 					++iterator;
 			}
@@ -75,33 +78,36 @@ namespace nsApp
 			m_playingEffects.clear();
 		}
 
-		nsK2EngineLow::EffectEmitter *EffectList::PlayEffect(Effect_ID id, const Vector3 &position, const Quaternion &angle, const Vector3 &scale, float lifeTime)
+
+		nsK2EngineLow::EffectEmitter* EffectList::PlayEffect( Effect_ID id, const Vector3& position, const Quaternion& angle, const Vector3& scale, float lifeTime)
 		{
+			/* 引数のエフェクトIDがエフェクトパスのリストにない場合はnullptrを返す。*/
 			if (m_effectPathList.find(id) == m_effectPathList.end())
 				return nullptr;
 
+			/* 同時に再生できるエフェクト数を超える場合はnullptrを返す。*/
 			if (m_playingEffects.size() >= MAX_EFFECT_COUNT)
 				return nullptr;
 
-			/* �G�t�F�N�g�N���X�̐����B*/
+			/* エフェクトクラスの生成。*/
 			m_effectEmitter = NewGO<nsK2EngineLow::EffectEmitter>(0, "effect");
 
-			/* �G�t�F�N�g������������B*/
+			/* エフェクトを初期化する。*/
 			m_effectEmitter->Init(id);
 
-			/* �G�t�F�N�g�̍��W���Z�b�g����B*/
+			/* エフェクトの座標をセットする。*/
 			m_effectEmitter->SetPosition(position);
 
-			/* �G�t�F�N�g�̊p�x���Z�b�g����B*/
+			/* エフェクトの角度をセットする。*/
 			m_effectEmitter->SetRotation(angle);
 
-			/* �G�t�F�N�g�̑傫�����Z�b�g����B*/
+			/* エフェクトの大きさをセットする。*/
 			m_effectEmitter->SetScale(scale);
 
-			/* �G�t�F�N�g���Đ�����B*/
+			/* エフェクトを再生する。*/
 			m_effectEmitter->Play();
 
-			/* �Đ����̃��X�g�ɓo�^�B*/
+			/* 再生中のリストに登録。*/
 			m_info.emitter = m_effectEmitter;
 			m_info.lifeTime = lifeTime;
 			m_info.currentTime = 0.0f;
@@ -112,6 +118,7 @@ namespace nsApp
 
 		void EffectList::StopEffect(nsK2EngineLow::EffectEmitter *effect)
 		{
+			/* 引数のエフェクトがnullptrの場合は何もしない。*/
 			if (effect == nullptr)
 				return;
 
@@ -128,81 +135,100 @@ namespace nsApp
 				}
 			}
 
-			/* ���X�g�ɂȂ��ꍇ���O�̂��ߍ폜����B*/
+			/* リストにない場合も念のため削除する。*/
 			DeleteGO(effect);
 			effect = nullptr;
 		}
 
 		void EffectList::StorageGreatSwordEffect()
 		{
-			/* �`���[�W���̃G�t�F�N�g�B*/
+			/* チャージ攻撃のエフェクト。*/
 			m_effectPathList[Effect_ID::Charge] = GetEffectFilePath(u"chargeAttackEffect");
 
-			/* �G�t�F�N�g��o�^�B*/
+			/* エフェクトを登録。*/
 			EffectEngine::GetInstance()->ResistEffect(Effect_ID::Charge, m_effectPathList[Effect_ID::Charge].c_str());
 		}
 
 		void EffectList::StorageHammerEffect()
 		{
-			/* �`���[�W����Hammer�ɕt�^����G�t�F�N�g�B*/
+			/* チャージ攻撃時 Hammer に付与するエフェクト。*/
 			m_effectPathList[Effect_ID::Fire] = GetEffectFilePath(u"fire");
 
-			/* �󒆍U�����̒��n���ɕt�^����G�t�F�N�g�B*/
+			/* 空中攻撃時の着地時に付与するエフェクト。*/
 			m_effectPathList[Effect_ID::ShockWave] = GetEffectFilePath(u"airAttack");
 
-			/* �G�t�F�N�g��o�^�B*/
-			EffectEngine::GetInstance()->ResistEffect(Effect_ID::Fire, m_effectPathList[Effect_ID::Fire].c_str());
+			/* エフェクトを登録。*/
+			EffectEngine::GetInstance()->ResistEffect( Effect_ID::Fire, m_effectPathList[Effect_ID::Fire].c_str());
 
-			EffectEngine::GetInstance()->ResistEffect(Effect_ID::ShockWave, m_effectPathList[Effect_ID::ShockWave].c_str());
+			/* 空中攻撃の着地エフェクトを登録。*/
+			EffectEngine::GetInstance()->ResistEffect( Effect_ID::ShockWave, m_effectPathList[Effect_ID::ShockWave].c_str());
 		}
 
 		void EffectList::StorageWandEffect()
 		{
-			/* �񕜖��@(�񕜕���)��o�^�B*/
+			/* 回復魔法（回復部分）を登録。*/
 			m_effectPathList[Effect_ID::HeelMagic] = GetEffectFilePath(u"heelEffect_Heel");
 
-			/* �񕜖��@(�p�[�e�B�N��)��o�^�B*/
+			/* 回復魔法（パーティクル）を登録。*/
 			m_effectPathList[Effect_ID::HeelMagic_Particle] = GetEffectFilePath(u"heelEffect_Particle");
 
-			/* ���@�U����o�^�B*/
+			/* 魔法攻撃を登録。*/
 			m_effectPathList[Effect_ID::MagicAttack] = GetEffectFilePath(u"magicAttack");
 
-			/* �q�b�g�G�t�F�N�g��o�^�B*/
+			/* ヒットエフェクトを登録。*/
 			m_effectPathList[Effect_ID::Hit] = GetEffectFilePath(u"Hit");
 
-			/* �G�t�F�N�g��o�^�B*/
-			/* �񕜃G�t�F�N�g�B*/
-			EffectEngine::GetInstance()->ResistEffect(Effect_ID::HeelMagic, m_effectPathList[Effect_ID::HeelMagic].c_str());
+			/* エフェクトを登録。*/
+			EffectEngine::GetInstance()->ResistEffect( Effect_ID::HeelMagic, m_effectPathList[Effect_ID::HeelMagic].c_str());
 
-			/* �񕜃G�t�F�N�g�̃p�[�e�B�N�������B*/
-			EffectEngine::GetInstance()->ResistEffect(Effect_ID::HeelMagic_Particle, m_effectPathList[Effect_ID::HeelMagic_Particle].c_str());
+			/* 回復魔法のパーティクルエフェクトを登録。*/
+			EffectEngine::GetInstance()->ResistEffect( Effect_ID::HeelMagic_Particle, m_effectPathList[Effect_ID::HeelMagic_Particle].c_str());
 
-			/* ���@�U���G�t�F�N�g�B*/
-			EffectEngine::GetInstance()->ResistEffect(Effect_ID::MagicAttack, m_effectPathList[Effect_ID::MagicAttack].c_str());
+			/* 魔法攻撃エフェクトを登録。*/
+			EffectEngine::GetInstance()->ResistEffect( Effect_ID::MagicAttack, m_effectPathList[Effect_ID::MagicAttack].c_str());
 
-			/* �q�b�g�G�t�F�N�g�B*/
-			EffectEngine::GetInstance()->ResistEffect(Effect_ID::Hit, m_effectPathList[Effect_ID::Hit].c_str());
+			/* ヒットエフェクトを登録。*/
+			EffectEngine::GetInstance()->ResistEffect( Effect_ID::Hit, m_effectPathList[Effect_ID::Hit].c_str());
 		}
 
 		void EffectList::StorageTwinGunEffect()
 		{
-			/* �V���b�g�̃G�t�F�N�g��o�^�B*/
+			/* ショットのエフェクトを登録。*/
 			m_effectPathList[Effect_ID::Shot] = GetEffectFilePath(u"Shot");
 
-			/* �G�t�F�N�g��o�^�B*/
-			EffectEngine::GetInstance()->ResistEffect(Effect_ID::Shot, m_effectPathList[Effect_ID::Shot].c_str());
+			/* エフェクトを登録。*/
+			EffectEngine::GetInstance()->ResistEffect( Effect_ID::Shot, m_effectPathList[Effect_ID::Shot].c_str());
 		}
 
 		void EffectList::StorageBossEffect()
 		{
-			/*�{�X�t�@�C�A�{�[�����ăG�t�F�N�g�B*/
+			/* ボスファイアボール着弾エフェクト。*/
 			m_effectPathList[Effect_ID::FireBall] = GetEffectFilePath(u"fireBall");
 
-			/*�{�X�����e�G�t�F�N�g�i�����j�B*/
+			/* ボス火炎弾着弾エフェクト（地面）。*/
 			m_effectPathList[Effect_ID::BossFireAttack] = GetEffectFilePath(u"fireAttack");
 
-			EffectEngine::GetInstance()->ResistEffect(Effect_ID::FireBall, m_effectPathList[Effect_ID::FireBall].c_str());
-			EffectEngine::GetInstance()->ResistEffect(Effect_ID::BossFireAttack, m_effectPathList[Effect_ID::BossFireAttack].c_str());
+			/* エフェクトを登録。*/
+			EffectEngine::GetInstance()->ResistEffect( Effect_ID::FireBall, m_effectPathList[Effect_ID::FireBall].c_str());
+
+			/* ボス火炎弾着弾エフェクト（地面）を登録。*/
+			EffectEngine::GetInstance()->ResistEffect( Effect_ID::BossFireAttack, m_effectPathList[Effect_ID::BossFireAttack].c_str());
+		}
+
+
+		void EffectList::StorageGuardEffect()
+		{
+			/* ガード用バリア（青）。*/
+			m_effectPathList[Effect_ID::Guard_Blue] = GetEffectFilePath(u"Guard_Blue");
+
+			/* ガード用バリア（赤）。*/
+			m_effectPathList[Effect_ID::Guard_Red] = GetEffectFilePath(u"Guard_Red");
+
+			/* エンジンへ登録。*/
+			EffectEngine::GetInstance()->ResistEffect( Effect_ID::Guard_Blue, m_effectPathList[Effect_ID::Guard_Blue].c_str());
+
+			/* ガード用バリア（赤）を登録。*/
+			EffectEngine::GetInstance()->ResistEffect( Effect_ID::Guard_Red, m_effectPathList[Effect_ID::Guard_Red].c_str());
 		}
 	}
 }

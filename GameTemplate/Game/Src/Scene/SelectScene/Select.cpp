@@ -18,7 +18,6 @@ namespace nsApp
 {
 	namespace nsSelect 
 	{
-		/*デストラクタ。*/
 		Select::~Select()
 		{
 			DeleteGO(m_questSelect);
@@ -27,7 +26,7 @@ namespace nsApp
 			DeleteGO(m_confirmationSelect);
 		}
 
-		/*開始処理。*/
+
 		bool Select::Start()
 		{
 			/*選択シーンの生成。*/
@@ -37,7 +36,7 @@ namespace nsApp
 			InitSprite();
 
 			/*フェードインに切り替える。*/
-			nsApp::nsFade::Fade::GetInstance()->ChangeFadeType(nsApp::nsFade::Fade::EnFadeType::enFadeType_FadeIn);
+			nsFade::Fade::GetInstance()->ChangeFadeType(nsApp::nsFade::Fade::EnFadeType::enFadeType_FadeIn);
 
 			return true;
 		}
