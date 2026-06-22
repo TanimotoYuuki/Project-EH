@@ -1,0 +1,5 @@
+WeaponType	MaxDuration	DamageReduction	BlockKnockback
+Sword	2	0.4	1
+Hammer	3	0.6	1
+Wand	1.5	0.3	1
+TwinGun	1.8	0.35	1
