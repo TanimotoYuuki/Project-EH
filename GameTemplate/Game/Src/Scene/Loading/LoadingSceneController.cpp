@@ -34,7 +34,7 @@ namespace nsApp
 		}
 
 
-		void LoadingSceneController::Initialize(const InGameBuildRequest& request)
+		void LoadingSceneController::Initialize(const InGameBuildRequest& request, nsScene::EnLoadingDestination destination)
 		{
 			/* 初期化 */
 			m_loadingFrame = 0;
@@ -44,6 +44,7 @@ namespace nsApp
 			m_isInGameBuildFinished = false;
 			m_isTransitionReady = false;
 			m_buildRequest = request;
+			m_destination = destination;
 
 			/* ローディング中、カメラを固定する。*/
 			KeepLoadingCamera();
@@ -74,20 +75,25 @@ namespace nsApp
 			/* 非同期ロードを更新 */
 			m_asyncLoadManager.Update();
 
-			/*
-				ローディング画面が表示されているInGame構築を開始する。
-				これにより、Loading画面に居る間のカクつきを緩和する。
-			*/
-			if (!m_isInGameStarted && m_loadingFrame >= INGAME_BUILD_START_FRAME)
+
+			if (m_destination == toInGame)
 			{
-				/* InGame構築を開始する */
-				StartInGameBuild(m_buildRequest);
-				/* InGame構築開始フラグを立てる */
-				m_isInGameStarted = true;
+				/*
+					ローディング画面が表示されているInGame構築を開始する。
+					これにより、Loading画面に居る間のカクつきを緩和する。
+				*/
+				if (!m_isInGameStarted && m_loadingFrame >= INGAME_BUILD_START_FRAME)
+				{
+					/* InGame構築を開始する */
+					StartInGameBuild(m_buildRequest);
+					/* InGame構築開始フラグを立てる */
+					m_isInGameStarted = true;
+				}
+
+				/* InGame構築を1ステップ進める */
+				UpdateInGameBuild();
 			}
 
-			/* InGame構築を1ステップ進める */
-			UpdateInGameBuild();
 
 			/* プログレスバーを更新 */
 			m_loadingProgressUI.Update(GetTotalProgress());
@@ -98,9 +104,16 @@ namespace nsApp
 			/* ランナーをプログレスに合わせて更新 */
 			m_runnerModel.Update(GetTotalProgress());
 
-			/* 遷移準備完了判定 */
+
 			if (IsTransitionReadyToGame())
-				ExecuteGameTransition();
+			{
+				/* 遷移準備完了判定 */
+				if (m_destination == toInGame)
+					ExecuteGameTransition();
+
+				else
+					m_isTransitionReady = true;
+			}
 		}
 
 
@@ -127,10 +140,16 @@ namespace nsApp
 		{
 			/* 非同期ロードの進捗を取得 */
 			float asyncProgress = m_asyncLoadManager.GetProgress();
+
+			/* 遷移先がInGameでない場合は非同期ロードの進捗のみを返す */
+			if (m_destination == toSelect)
+				return asyncProgress;
+
 			float buildProgress = 0.0f;
 
 			if (m_inGameBuildHelper != nullptr)
 				buildProgress = m_inGameBuildHelper->GetProgress();
+
 			else if (m_isInGameBuildFinished)
 				buildProgress = 1.0f;
 
@@ -224,9 +243,30 @@ namespace nsApp
 		bool LoadingSceneController::IsTransitionReadyToGame() const
 		{
 			/* ローディングからゲーム本編への遷移の準備ができているか判定する */
-			return !m_isTransitionReady && m_asyncLoadManager.IsCompleted() &&
-				    m_isInGameBuildFinished && m_loadingProgressUI.IsProgressAnimationFinish() &&
-				    IsRunnerAnimationFinished() && m_loadingFrame >= MIN_LOADING_FRAME;
+			if (m_isTransitionReady)
+				return false;
+
+			/* 遷移先がInGameでない場合は、非同期ロードの完了とランナーのアニメーション完了のみを条件とする */
+			if(!m_asyncLoadManager.IsCompleted())
+				return false;
+
+			/* 遷移先がInGameの場合は、非同期ロードの完了、ランナーのアニメーション完了、ローディング画面の最小表示フレーム数の経過、InGame構築の完了を条件とする */
+			if (!m_loadingProgressUI.IsProgressAnimationFinish())
+				return false;
+
+			/* ランナーのアニメーションが完了しているか判定する */
+			if(!IsRunnerAnimationFinished())
+				return false;
+
+			/* ローディング画面の最小表示フレーム数の経過を判定する */
+			if (m_loadingFrame < MIN_LOADING_FRAME)
+				return false;
+
+			/* InGame構築の完了を判定する */
+			if(m_destination == toInGame && !m_isInGameBuildFinished)
+				return false;
+
+			return true;
 		}
 
 
@@ -271,10 +311,6 @@ namespace nsApp
 
 		void LoadingSceneController::Render(RenderContext& rc)
 		{
-			/* 画面遷移準備完了後は描画しない */
-			if (m_isTransitionReady)
-				return;
-
 			/* ローディングUIの背景を描画 */
 			m_loadingProgressUI.RenderBack(rc);
 

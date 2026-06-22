@@ -106,8 +106,9 @@ namespace nsApp
 			/* ステートを生成する。*/
 			RegisterState();
 
-			/* キャラコンを設定する。*/
-			m_characterController.Init(CHARACON_RADIUS, CHARACON_HEIGHT, m_currentPosition);
+			if(nsScene::SceneLoader::GetInstance() ->GetCurrentSceneID() != IScene::enSceneID_Select)
+				m_characterController.Init(CHARACON_RADIUS, CHARACON_HEIGHT, m_currentPosition);
+
 			m_model.SettRotation(m_angle * m_postureOffset);
 			m_model.SetPosition(m_currentPosition);
 

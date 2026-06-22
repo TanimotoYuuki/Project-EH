@@ -371,6 +371,7 @@
     <ClCompile Include="UIInput.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Src\Scene\Loading\LoadingDestination.h" />
     <ClInclude Include="Src\Actor\Character\Boss\Combat\BossPhaseController.h" />
     <ClInclude Include="Src\Actor\Character\Boss\Combat\BossDamageHandler.h" />
     <ClInclude Include="Src\Actor\Character\Boss\Combat\BossTornadoSystem.h" />

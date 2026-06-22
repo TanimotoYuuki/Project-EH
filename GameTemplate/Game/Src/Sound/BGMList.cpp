@@ -19,6 +19,8 @@ namespace nsApp
 			g_soundEngine->ResistWaveFileBank(BGM_ID::Title, GetBGMFilePath("title").c_str());
 			/* ステージ1BGM。*/
 			g_soundEngine->ResistWaveFileBank(BGM_ID::Stage1, GetBGMFilePath("stage").c_str());
+			/* SelectBGM。*/
+			g_soundEngine->ResistWaveFileBank(BGM_ID::Select, GetBGMFilePath("select").c_str());
 		}
 
 		void BGMList::PlayBGM(BGM_ID id, float volume)
@@ -46,6 +48,7 @@ namespace nsApp
 			/* 今流れているBGMを保存。 */
 			m_currentBGM = id;
 		}
+
 
 		void BGMList::StopBGM()
 		{

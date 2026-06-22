@@ -36,8 +36,10 @@ namespace nsK2EngineLow {
 
 	void RigidBody::Release()
 	{
-		if (m_rigidBody) {
+		if (m_rigidBody) 
+		{
 			PhysicsWorld::GetInstance()->RemoveRigidBody(*this);
+			m_rigidBody.reset();
 		}
 	}
 }

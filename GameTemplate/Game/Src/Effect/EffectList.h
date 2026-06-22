@@ -1,8 +1,8 @@
 ﻿#pragma once
 /**
  * @file   EffectList.h
- * @brief  �G�t�F�N�g���Ǘ����郊�X�g�N���X�B
- * @author YamaguchiHayato�B
+ * @brief  エフェクトを管理するリストクラス。
+ * @author Yamaguchi Hayato
  * @date   2026/03/23
  */
 
@@ -10,83 +10,95 @@ namespace nsApp
 {
 	namespace nsEffect
 	{
-		/*
-		 * @struct EffectInfo�B
-		 * @brief �Đ�����G�t�F�N�g�̏����Ǘ�����B
+		/**
+		 * @struct EffectInfo
+		 * @brief  再生中のエフェクトの情報を管理する。
 		 */
 		struct EffectInfo
 		{
-			nsK2EngineLow::EffectEmitter *emitter; //! �G�t�F�N�g�̃G�~�b�^�B
-			float lifeTime;						   //! �G�t�F�N�g�̎����B
-			float currentTime;					   //! �G�t�F�N�g�̌��݂̌o�ߎ��ԁB
+			nsK2EngineLow::EffectEmitter* emitter; //! エフェクトのエミッター。
+			float lifeTime;                        //! エフェクトの寿命。
+			float currentTime;                     //! エフェクトの現在の経過時間。
 		};
 
 		/**
-		 * @enum  EffectID�B
-		 * @brief �G�t�F�N�g�����ʎq�ŊǗ�����p�̗񋓌^�B
+		 * @enum  Effect_ID
+		 * @brief エフェクトを識別子で管理するための列挙型。
 		 */
 		enum Effect_ID : uint8_t
 		{
-			Attack,	   //! �U���G�t�F�N�g�B
-			Charge,	   //! �`���[�W�G�t�F�N�g�B
-			Fire,	   //! �{�X�����e�G�t�F�N�g�B
-			ShockWave, //! �Ռ��g�G�t�F�N�g�B
-			Hit,	   //! ��e�G�t�F�N�g�B
+			Attack,             //! 攻撃エフェクト。
+			Charge,             //! チャージエフェクト。
+			Fire,               //! チャージ攻撃時の炎エフェクト。
+			ShockWave,          //! 着地時の衝撃波エフェクト。
+			Hit,                //! 被弾エフェクト。
 
-			NormalMagic,		//! �ʏ햂�@�G�t�F�N�g�B
-			RushMagic,			//! �A�Ŗ��@�G�t�F�N�g�B
-			AirMagic,			//! �󒆖��@�G�t�F�N�g�B
-			HeelMagic,			//! �񕜃G�t�F�N�g�B
-			HeelMagic_Particle, //! �񕜃G�t�F�N�g�̃p�[�e�B�N���B
-			MagicAttack,		//! ���@�U���G�t�F�N�g�B
-			Shot,				//! �e�ۃG�t�F�N�g�B
+			NormalMagic,        //! 通常魔法エフェクト。
+			RushMagic,          //! 突進魔法エフェクト。
+			AirMagic,           //! 空中魔法エフェクト。
+			HeelMagic,          //! 回復エフェクト。
+			HeelMagic_Particle, //! 回復エフェクトのパーティクル。
+			MagicAttack,        //! 魔法攻撃エフェクト。
+			Shot,               //! 射撃エフェクト。
 
-			FireBall,		//! �{�X�t�@�C�A�{�[�����ăG�t�F�N�g�B
-			BossFireAttack, //! �{�X�����e�G�t�F�N�g�i�����j�B
+			FireBall,           //! ボスファイアボール着弾エフェクト。
+			BossFireAttack,     //! ボス火炎弾着弾エフェクト（地面）。
+
+			Guard_Blue,         //! ガード用バリア（青）。
+			Guard_Red,          //! ガード用バリア（赤）。
 		};
 
+		/**
+		 * @class EffectList
+		 * @brief エフェクトの登録・再生・停止を管理するクラス。
+		 */
 		class EffectList
 		{
 		public:
-			/* �R���X�g���N�^�ƃf�X�g���N�^�B*/
+			/* コンストラクタとデストラクタ。*/
 			EffectList() = default;
 			virtual ~EffectList();
 
 		public:
-			/* �G�t�F�N�g���������B*/
+			/**
+			 * @brief エフェクトを初期化する。
+			 */
 			void Init();
 
-			/*
-			 * @brief �G�t�F�N�g���X�V����B
-			 * @param deltaTime: �O�t���[������̌o�ߎ��ԁB
+			/**
+			 * @brief エフェクトを更新する。
+			 * @param deltaTime 前フレームからの経過時間。
 			 */
 			void Update(float deltaTime);
 
-			/*
-			 * @brief�@�G�t�F�N�g�̃L���b�V�����������B
+			/**
+			 * @brief エフェクトのキャッシュを初期化する。
 			 */
 			void Clear();
 
-			/*
-			 * @brief �w�肵���G�t�F�N�g���~/�폜����B
-			 * @param effect: ��~/�폜����G�t�F�N�g�̃C���X�^���X�B
+			/**
+			 * @brief 指定したエフェクトを停止/削除する。
+			 * @param effect 停止/削除するエフェクトのインスタンス。
 			 */
-			void StopEffect(nsK2EngineLow::EffectEmitter *effect);
+			void StopEffect(nsK2EngineLow::EffectEmitter* effect);
 
-			/*
-			 * @def �G�t�F�N�g���Đ��B
-			 * @param id: �G�t�F�N�g�̎��ʎq�B
-			 * @param position: �G�t�F�N�g�̏o���ʒu�B
-			 * @param angle: �G�t�F�N�g�̉�]�p�x�B
-			 * @param scale: �G�t�F�N�g�̊g�嗦�B
-			 * @param lifeTime: �G�t�F�N�g�����b�`�悷�邩�B
+			/**
+			 * @brief エフェクトを再生する。
+			 * @param id       エフェクトの識別子。
+			 * @param position エフェクトの出現位置。
+			 * @param angle    エフェクトの回転角度。
+			 * @param scale    エフェクトの拡大率。
+			 * @param lifeTime エフェクトを維持する時間。
+			 * @return 再生したエフェクトのエミッター。失敗時はnullptr。
 			 */
-			nsK2EngineLow::EffectEmitter *PlayEffect(Effect_ID id, const Vector3 &position, const Quaternion &angle = Quaternion::Identity, const Vector3 &scale = Vector3::One, float lifeTime = 2.0f);
+			nsK2EngineLow::EffectEmitter* PlayEffect( Effect_ID id, const Vector3& position, const Quaternion& angle = Quaternion::Identity, const Vector3& scale = Vector3::One, float lifeTime = 2.0f);
+
 
 		public:
-			/*
-			 * @def �t�@�C���p�X��o�^�B
-			 * @pararm name: �G�t�F�N�g�̃t�@�C�����B
+			/**
+			 * @brief エフェクトファイルのパスを取得する。
+			 * @param name エフェクトのファイル名（拡張子なし）。
+			 * @return エフェクトファイルのパス。
 			 */
 			inline const std::u16string GetEffectFilePath(const std::u16string name)
 			{
@@ -95,31 +107,32 @@ namespace nsApp
 			}
 
 		private:
-			/* ���킲�ƂɃG�t�F�N�g��o�^�����𕪂���B*/
-			/* Sword�B*/
+			/* 武器ごとにエフェクト登録処理を分ける。*/
+
+			/** @brief 大剣のエフェクトを登録する。 */
 			void StorageGreatSwordEffect();
 
-			/* Hammer�B*/
+			/** @brief ハンマーのエフェクトを登録する。 */
 			void StorageHammerEffect();
 
-			/* Wand�B*/
+			/** @brief 杖のエフェクトを登録する。 */
 			void StorageWandEffect();
 
-			/* TwinGun�B*/
+			/** @brief 双銃のエフェクトを登録する。 */
 			void StorageTwinGunEffect();
 
-			/* Boss�B*/
+			/** @brief ボスのエフェクトを登録する。 */
 			void StorageBossEffect();
 
-		private:
-			nsK2EngineLow::EffectEmitter *m_effectEmitter; //! �G�t�F�N�g�̃G�~�b�^�̃C���X�^���X�B
+			/** @brief ガード用エフェクトを登録する。 */
+			void StorageGuardEffect();
 
 		private:
-			std::unordered_map<Effect_ID, std::u16string> m_effectPathList; //! �G�t�F�N�g�̎��ʎq�ƃt�@�C���p�X���Ǘ�����}�b�v�B
+			nsK2EngineLow::EffectEmitter* m_effectEmitter = nullptr; //! エフェクトのエミッターのインスタンス。
 
-			std::vector<EffectInfo> m_playingEffects; //! ���ݍĐ����̃G�t�F�N�g�̏����Ǘ����郊�X�g�B
-
-			EffectInfo m_info; //! �G�t�F�N�g�̏����Ǘ�����C���X�^���X�B
+			std::unordered_map<Effect_ID, std::u16string> m_effectPathList; //! エフェクトの識別子とファイルパスを管理するマップ。
+			std::vector<EffectInfo> m_playingEffects;                       //! 現在再生中のエフェクトの情報を管理するリスト。
+			EffectInfo m_info;                                              //! エフェクトの情報を管理するインスタンス。
 		};
 	}
 }
