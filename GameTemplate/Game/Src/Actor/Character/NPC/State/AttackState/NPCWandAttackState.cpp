@@ -4,13 +4,11 @@
 #include "Src/Actor/Character/NPC/State/BasicState/NPCChaseState.h"
 #include "Src/Actor/Character/NPC/State/AttackState/NPCAttackBaseState.h"
 #include "Src/Actor/Character/Player/InputSystem/VirtualInputAdapter.h"
+#include "Src/Actor/Character/NPC/Movement/NPCCombatRangeHelper.h"
+#include "Src/Actor/Character/NPC/Movement/NPCMovementController.h"
 
 namespace
 {
-	/* 乱数関連。*/
-	const auto RANDOM_PATTERN_0 = 0;               //! 乱数のシード値。
-	const auto DIVISOR = 2;                        //! 乱数の分母。
-
 	/* 距離・間合い関連 */
 	const auto CHASE_TRANSITION_DISTANCE = 300.0f; //! 敵がこの距離より離れたら追跡ステートへ戻る。
 	const auto RETREAT_DISTANCE = 100.0f;          //! 攻撃後のクールタイム中に、この距離より近ければ後ろに下がる。
@@ -31,7 +29,6 @@ namespace
 
 	const auto HOLD_FRAME = 3;					   //! ボタンを押し続けるフレーム数（攻撃の持続時間に影響）。
 	const auto STICK_NEUTRAL = 0.0f;			   //! スティックをニュートラル値。
-
 }
 
 namespace nsApp
@@ -40,20 +37,13 @@ namespace nsApp
 	{
 		void NPCWandAttackState::Enter()
 		{
-			/* キャストとキャッシュの取得。*/
+			/* ブレインとコンポーネントの取得。*/
 			NPCAttackBaseState::Enter();
 
-			/* 思考ロジック：HPが半分以下なら回復魔法、それ以外は魔法か空中攻撃 */
-			if (m_getBody->GetCharacterStatus().hp.currentHP <= (m_getBody->GetCharacterStatus().hp.maxHP / 2))
-				m_currentPattern = NPCWandPattern::enMagicHeal;
+			/* タイマーと状態の初期化。*/
+			m_healAttempted = false;
 
-			else
-			{
-				/* 乱数で攻撃パターンを決定。*/
-				m_randomPattern = rand() % DIVISOR;
-				/* 乱数の値に応じて攻撃パターンを設定。*/
-				m_currentPattern = (m_randomPattern == RANDOM_PATTERN_0) ? NPCWandPattern::enMagicAttack : NPCWandPattern::enAir;
-			}
+			/* 攻撃パターンは距離計算後の Update で選択する */
 		}
 
 
@@ -63,55 +53,91 @@ namespace nsApp
 			if (CheckHelpTransition())
 				return;
 
-			/* ターゲットの検索。*/
-			nsActor::ICharacter* target = m_npcBrain->SearchTarget();
-
-			/* 早期リターン。*/
-			if (target == nullptr || m_getBody == nullptr)
+			/* 危険回避が必要かチェック。*/
+			if (CheckEvadeTransition())
 				return;
 
-			/* 距離を計算。*/
-			ComputeDistance(target);
+			if (m_getBody != nullptr && m_getBody->IsCastingHeal())
+			{
+				if (m_virtualInput != nullptr)
+					m_virtualInput->Reset();
+				return;
+			}
 
-			/* 一定の距離以上離れた場合、追跡状態に遷移（杖は遠め）*/
-			if (m_distance > CHASE_TRANSITION_DISTANCE) {
+			/* 回復魔法終了後の処理。*/
+			if (m_currentPattern == NPCWandPattern::enMagicHeal && m_healAttempted
+				&& m_getBody != nullptr && !m_getBody->IsCastingHeal())
+			{
+				if (m_virtualInput != nullptr)
+					m_virtualInput->Reset();
 				m_stateMachine->ChangeState(new NPCChaseState());
 				return;
 			}
 
-			/* タイマーの更新。*/
-			m_attackTimer++;
-
-			/* ベクトルの正規化と攻撃状態の判定。*/
-			m_isAttacking = (m_attackTimer < ATTACK_DURATION);
-
-			/* 実行フロー。*/
-			ExecutionFlow();
-
-			/* めり込み防止。*/
-			PreventClipping(target);
-
-			/* 通常終了。アニメーションが終わっていれば安全に待機へ戻る。*/
-			if (m_attackTimer > ATTACK_RESET_TIME && !m_getBody->IsPlayAnimation())
+			/* 攻撃サイクル中でも回復需要が出たら Heal へ切り替え。*/
+			if (m_npcBrain != nullptr
+				&& (m_npcBrain->ShouldHealSelf() || m_npcBrain->ShouldHealAlly()))
 			{
-				/* 入力値のリセット。*/
-				if (m_virtualInput != nullptr)
-					m_virtualInput->Reset();
+				if (m_currentPattern != NPCWandPattern::enMagicHeal || m_healAttempted)
+				{
+					m_currentPattern = NPCWandPattern::enMagicHeal;
+					m_healAttempted = false;
+					m_attackTimer = 0;
+				}
+			}
 
-				/* 待機状態へ遷移。*/
-				m_stateMachine->ChangeState(new NPCIdleState());
+			/* ターゲットと距離の計算。*/
+			nsActor::ICharacter* target = m_npcBrain->SearchTarget();
+			if (target == nullptr || m_getBody == nullptr)
+				return;
+
+			/* ターゲットとの距離を計算。*/
+			ComputeDistance(target);
+			const NPCBehaviorProfile& profile = m_npcBrain->GetBehaviorProfile();
+
+			/* 近すぎたらその場で後退（Chase には戻さない）。*/
+			if (nsNPC::ShouldRetreatWithHysteresis(m_distance, profile, m_npcBrain->GetIsRetreatingFlag()))
+			{
+				UpdateFacingDirection();
+				UpdateMovement();
+				m_attackTimer++;
 				return;
 			}
 
-			/* 保険。アニメーション終了判定が戻らない場合でも永久停止しないようにする。*/
+			/* 一定の距離以上離れた場合、追跡状態に遷移。*/
+			const float chaseReturn = nsNPC::GetRangedChaseEnterDistance(profile) - 5.0f;
+			if (m_distance > chaseReturn)
+			{
+				m_stateMachine->ChangeState(new NPCChaseState());
+				return;
+			}
+
+			/* 攻撃サイクル開始時にパターンを選択。*/
+			if (m_attackTimer == 0)
+				ChoosePattern();
+
+			/* 攻撃タイマーの加算。*/
+			m_attackTimer++;
+			m_isAttacking = (m_attackTimer < ATTACK_DURATION);
+
+			/* 攻撃の実行。*/
+			ExecutionFlow();
+			PreventClipping(target);
+
+			/* 攻撃終了の判定。*/
+			if (m_attackTimer > ATTACK_RESET_TIME && !m_getBody->IsPlayAnimation())
+			{
+				m_stateMachine->ChangeState(new NPCChaseState());
+				return;
+			}
+
+			/* 念のための強制リセット。*/
 			if (m_attackTimer > ATTACK_FORCE_RESET_TIME)
 			{
-				/* 入力値のリセット。*/
+				/* 攻撃が終わっていない場合は入力をリセットして Chase へ。*/
 				if (m_virtualInput != nullptr)
 					m_virtualInput->Reset();
-
-				/* 待機状態へ遷移。*/
-				m_stateMachine->ChangeState(new NPCIdleState());
+				m_stateMachine->ChangeState(new NPCChaseState());
 				return;
 			}
 		}
@@ -143,9 +169,20 @@ namespace nsApp
 
 		void NPCWandAttackState::ExecuteMagicHeal()
 		{
-			/* 攻撃の最初のフレームでRB2を押す。*/
-			if (m_attackTimer == COMBO_FIRST_INPUT)
-				m_virtualInput->RequestButton(enButtonRB2, HOLD_FRAME);
+			/* 攻撃の最初のフレームで回復魔法を試みる。*/
+			if (m_attackTimer != COMBO_FIRST_INPUT)
+				return;
+
+			/* 回復魔法を試みる。*/
+			if (m_getBody == nullptr)
+				return;
+
+			/* 回復魔法が成功したかどうかでフラグを立てる。
+			   成功していれば攻撃サイクル中は回復モーションを続け、失敗していればすぐに Chase に戻る。*/
+			if (m_getBody->TryBeginHeelMagic())
+				m_healAttempted = true;
+			else if (m_stateMachine != nullptr)
+				m_stateMachine->ChangeState(new NPCChaseState());
 		}
 
 
@@ -163,12 +200,37 @@ namespace nsApp
 
 		void NPCWandAttackState::UpdateMovement()
 		{
-			/* 杖は遠距離職なので、攻撃中は立ち止まる（スティック入力0）*/
-			m_stickX = m_isAttacking ? STICK_NEUTRAL : (m_distance < RETREAT_DISTANCE ? -m_diff.x : STICK_NEUTRAL);
-			m_stickZ = m_isAttacking ? STICK_NEUTRAL : (m_distance < RETREAT_DISTANCE ? -m_diff.z : STICK_NEUTRAL);
+			/* ブレインとコンポーネントがない場合は移動入力を入れられないため、ここで終了する。*/
+			if (m_virtualInput == nullptr || m_npcBrain == nullptr || m_getBody == nullptr)
+				return;
 
-			/* 入力値をセットする。*/
-			m_virtualInput->SetLStick(m_stickX, m_stickZ);
+			/* 攻撃中は移動入力を入れない。*/
+			const NPCBehaviorProfile& profile = m_npcBrain->GetBehaviorProfile();
+
+			/* 攻撃後のクールタイム中に近すぎる場合は後退する。*/
+			if (nsNPC::ShouldRetreatWithHysteresis(m_distance, profile, m_npcBrain->GetIsRetreatingFlag()))
+			{
+				/* ターゲットを取得。*/
+				nsActor::ICharacter* target = m_npcBrain->SearchTarget();
+				if (target != nullptr)
+				{
+					/* ターゲットとの相対位置から、どちら側にいるかを判定して後退する方向を決める。*/
+					const float signX = nsNPC::CalcRetreatStickX(m_getBody->GetPosition(), target->GetPosition());
+
+					/* 距離計算。*/
+					if (fabsf(signX) > 0.001f)
+					{
+						/* 後退する方向に移動入力を入れる。*/
+						Vector3 away(signX, 0.0f, 0.0f);
+						NPCMovementController::Apply(m_virtualInput,NPCMovementController::MakeMoveIntent(away, true));
+
+						return;
+					}
+				}
+			}
+
+			/* 攻撃中は移動入力を入れない。*/
+			NPCMovementController::Stop(m_virtualInput);
 		}
 
 
@@ -186,5 +248,34 @@ namespace nsApp
 			/* 移動/距離の計算。*/
 			UpdateMovement();
 		}
+
+
+		void NPCWandAttackState::ChoosePattern()
+		{
+			/* 回復が必要なときだけ Heal。*/
+			if (m_npcBrain->ShouldHealSelf() || m_npcBrain->ShouldHealAlly())
+			{
+				m_currentPattern = NPCWandPattern::enMagicHeal;
+				return;
+			}
+
+			/* 回復不要なら攻撃（サポート職でもボス戦では攻撃する）。*/
+			const NPCBehaviorProfile& profile = m_npcBrain->GetBehaviorProfile();
+			const float retreatDist = nsNPC::GetRetreatDistanceByProfile(profile);
+
+			/* 攻撃パターンの候補を作成。*/
+			NPCWandPattern candidates[2];
+			int count = 0;
+			candidates[count++] = NPCWandPattern::enMagicAttack;
+
+			/* 空中攻撃は距離が十分に離れている場合のみ候補に入れる。*/
+			const auto AIR_MIN_DISTANCE = 60.0f;
+
+			/* 空中攻撃は距離が十分に離れている場合のみ、入れる。*/
+			if (m_distance >= retreatDist + AIR_MIN_DISTANCE)
+				candidates[count++] = NPCWandPattern::enAir;
+
+			m_currentPattern = candidates[rand() % count];
+		}	
 	}
 }

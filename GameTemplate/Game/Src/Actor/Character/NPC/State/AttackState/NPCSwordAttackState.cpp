@@ -2,6 +2,7 @@
 #include "NPCSwordAttackState.h"
 #include "Src/Actor/Character/Player/InputSystem/VirtualInputAdapter.h"
 #include "Src/Actor/Character/NPC/State/BasicState/NPCChaseState.h"
+#include "Src/Actor/Character/NPC/Movement/NPCCombatRangeHelper.h"
 
 namespace
 {
@@ -46,15 +47,6 @@ namespace nsApp
 		{
 			/* 親クラスで初期化を行う。*/
 			NPCAttackBaseState::Enter();
-
-			/* 乱数の初期化。*/
-			m_randomPattern = rand() % NUM_SWORD_PATTERNS;
-
-			/* 攻撃パターンの初期化。*/
-			m_currentPattern = 
-				(m_randomPattern == PATTERN_ZERO) ? NPCSwordPattern::enAir :
-				(m_randomPattern == PATTERN_ONE) ? NPCSwordPattern::enPush :
-				NPCSwordPattern::enRush;
 		}
 
 
@@ -62,6 +54,10 @@ namespace nsApp
 		{
 			/* 救助要請がないかチェック。*/
 			if (CheckHelpTransition())
+				return;
+
+			/* 危険回避が必要かチェック。*/
+			if (CheckEvadeTransition())
 				return;
 
 			/* 目標を探索する。*/
@@ -78,11 +74,17 @@ namespace nsApp
 			/* 距離を計算。*/
 			ComputeDistance(target);
 
-			/* 一定の距離の場合、待機状態に遷移。*/
-			if (m_distance > CHASE_TRANSITION_DISTANCE) {
+			/* 届かない距離なら追跡へ戻る。*/
+			if (m_distance > nsNPC::GetMeleeMaxAttackRange(m_getBody->GetCurrentWeapon()))
+			{
 				m_stateMachine->ChangeState(new NPCChaseState());
 				return;
 			}
+
+			/* 攻撃パターンの選択。*/
+			if(m_attackTimer == 0)
+				ChoosePattern();
+
 			/* タイマーの更新。*/
 			m_attackTimer++;
 
@@ -185,6 +187,30 @@ namespace nsApp
 
 			/* 移動/距離の計算。*/
 			UpdateMovement();
+		}
+
+
+		void NPCSwordAttackState::ChoosePattern()
+		{
+			NPCSwordPattern candidates[3];
+			int count = 0;
+
+			/* Rush：近距離のみ */
+			if (m_distance <= 70.0f)
+				candidates[count++] = NPCSwordPattern::enRush;
+
+			/* Push：中距離 */
+			if (m_distance <= 85.0f)
+				candidates[count++] = NPCSwordPattern::enPush;
+
+			/* Air：やや離れているとき */
+			if (m_distance >= 50.0f && m_distance <= 95.0f)
+				candidates[count++] = NPCSwordPattern::enAir;
+
+			if (count == 0)
+				candidates[count++] = NPCSwordPattern::enRush;
+
+			m_currentPattern = candidates[rand() % count];
 		}
 	}
 }

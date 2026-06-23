@@ -54,6 +54,7 @@ namespace nsApp
 			g_soundEngine->ResistWaveFileBank(SE_ID::RushAttack_Sword, GetSEFilePath("GreatSword_RushAttack").c_str());
 		}
 
+
 		void SEList::StorageHammerSE()
 		{
 			/* ハンマーのSEファイルパスを登録。*/
@@ -73,6 +74,7 @@ namespace nsApp
 			g_soundEngine->ResistWaveFileBank(SE_ID::DashAttack_Hammer, GetSEFilePath("Hammer_DashAttack").c_str());
 		}
 
+
 		void SEList::StorageOtherSE()
 		{
 			/* チャージ中の効果音。*/
@@ -80,6 +82,9 @@ namespace nsApp
 
 			/* 復活中の効果音。*/
 			g_soundEngine->ResistWaveFileBank(SE_ID::Rescue, GetSEFilePath("rebone").c_str());
+
+			/* ガード中の効果音。*/
+			g_soundEngine->ResistWaveFileBank(SE_ID::Guard, GetSEFilePath("Guard").c_str());
 		}
 
 		void SEList::StorageBossSE()

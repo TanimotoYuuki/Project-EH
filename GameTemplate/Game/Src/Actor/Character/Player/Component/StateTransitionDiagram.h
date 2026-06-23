@@ -64,7 +64,7 @@ namespace nsApp
 					/* 連続攻撃終了判定。*/
 					{ inputClass.IsRushEnd(), nsActor::PlayerStateID::enRushEnd},
 					/* ガード状態。*/
-					{ inputClass.IsGuard(), nsActor::PlayerStateID::enGuard},
+					{ inputClass.IsGuardTrigger(), nsActor::PlayerStateID::enGuard},
 				};
 
 

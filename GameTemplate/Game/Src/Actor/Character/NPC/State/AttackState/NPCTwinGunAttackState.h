@@ -57,6 +57,9 @@ namespace nsApp
 			/* 実行フロー。*/
 			void ExecutionFlow();
 
+			/* 攻撃パターンの選択。*/
+			void ChoosePattern();
+
 
 		private:
 			NPCTwinGunPattern m_currentPattern = NPCTwinGunPattern::enNone; //! 現在の攻撃パターンを保存する変数。

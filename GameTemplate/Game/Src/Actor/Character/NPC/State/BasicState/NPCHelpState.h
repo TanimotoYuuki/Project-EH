@@ -72,17 +72,19 @@ namespace nsApp
 
 		private:
 			NPCBrain* m_brain = nullptr;					//! NPCの思考クラス。
-			nsActor::Player* m_body = nullptr;				//! NPC本体。
-			nsActor::Player* m_helpTarget = nullptr;		//! 救助対象。
 			VirtualInputAdapter* m_vInput = nullptr;		//! NPCの仮想入力。
 			const char* m_helpTargetTag = nullptr;			//! 救助対象のタグ。
+
+			nsActor::Player* m_body = nullptr;				//! NPC本体。
+			nsActor::Player* m_helpTarget = nullptr;		//! 救助対象。
 			nsK2EngineLow::SoundSource* m_helpSE = nullptr; //! 救助中SE。
+
 
 		private:
 			Vector3 m_difference = Vector3::Zero;			//! NPCと救助対象の差分。
 
+			float m_helpRange = 80.0f;						//! 救助を実行する距離。
 			float m_distance = 0.0f;						//! NPCと救助対象の距離。
-			float m_helpRange = 40.0f;						//! 救助を実行する距離。
 
 			bool m_hasRequestedHelp = false;				//! 救助の入力を要求したか。
 		};

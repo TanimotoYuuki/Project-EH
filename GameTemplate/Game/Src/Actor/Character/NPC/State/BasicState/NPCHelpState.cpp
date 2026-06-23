@@ -1,48 +1,47 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "NPCHelpState.h"
 
 #include "Src/Actor/Character/Player/InputSystem/VirtualInputAdapter.h"
 #include "Src/Actor/Character/NPC/State/BasicState/NPCChaseState.h"
 #include "Src/Actor/Character/NPC/State/BasicState/NPCIdleState.h"
+#include "Src/Actor/Character/NPC/Movement/NPCMovementController.h"
 #include "Src/Utilty/ResourceUtility.h"
 #include "Src/Sound/SoundLister.h"
 
 namespace
 {
-	const auto INPUT_STICK_VALUE_X = 1.0f; //! �~���Ώۂɋ߂Â����߂̃X�e�B�b�N���͂�X�l�B
-	const auto INPUT_STICK_VALUE_Y = 1.0f; //! �~���Ώۂɋ߂Â����߂̃X�e�B�b�N���͂�Y�l�B
-											   
-	const auto INPUT_HOLD_FRAME = 3;	   //! �~�����͂�����������t���[�����B
-	const auto VOLUME = 1.0f;			   //! �~��SE�̉��ʁB
-	const auto LIFE_TIME = 2.0f;		   //! �~��SE�̎����B
+	const auto MOVE_DEAD_ZONE = 0.001f;  //! 移動停止とみなす距離。
+	const auto INPUT_HOLD_FRAME = 3;     //! 救助入力を押し続けるフレーム数。
+	const auto VOLUME = 1.0f;            //! 救助 SE の音量。
+	const auto LIFE_TIME = 2.0f;         //! 救助 SE の寿命。
 }
 
 namespace nsApp
 {
 	namespace nsState
 	{
-		NPCHelpState::NPCHelpState(nsActor::Player* helpTarget) : m_helpTarget(helpTarget){}
+		NPCHelpState::NPCHelpState(nsActor::Player* helpTarget) : m_helpTarget(helpTarget)
+		{
+		}
 
 
 		void NPCHelpState::Enter()
 		{
-			/* �L���X�g�B*/
+			/* ブレインとコンポーネントの取得。*/
 			m_brain = static_cast<NPCBrain*>(m_owner);
 			if (m_brain == nullptr)
 				return;
 
-			/* Brain����K�v�ȃR���|�[�l���g���擾����B*/
+			/* ブレインから必要なコンポーネントを取得。*/
 			m_body = m_brain->GetBody();
 			m_vInput = m_brain->GetVirtualInputAdapter();
 
-			/* ���͏������Z�b�g����B*/
+			/* ブレインとコンポーネントがない場合はこの状態を維持できないため、ここで終了する。*/
 			if (m_vInput != nullptr)
 				m_vInput->Reset();
 
-			/* �~���v���͂܂��s���Ă��Ȃ��B*/
+			/* タグで上書きしない。ターゲット未設定時だけ Brain から取得。*/
 			m_hasRequestedHelp = false;
-
-			/* �R���X�g���N�^�œn���ꂽ�~���Ώۂ��g���B*/ 
 			if (m_helpTarget == nullptr)
 				m_helpTarget = m_brain->GetHelpTarget();
 		}
@@ -50,61 +49,57 @@ namespace nsApp
 
 		void NPCHelpState::Update()
 		{
-			/* �~���Ώۂ��L���łȂ��ꍇ�A���͂����Z�b�g���Ēǂ�������ԂɑJ�ڂ���B*/
 			if (m_brain == nullptr || m_body == nullptr || m_vInput == nullptr)
 				return;
 
-			/* ���t���[���^�O�����ŏ㏑�����Ȃ��B*/ 
-			/* �^�[�Q�b�g�����ݒ�̂Ƃ������ABrain���������~���Ώۂ��g���B*/ 
+			/* 毎フレームタグで上書きしない。ターゲット未設定時だけ Brain から取得。*/
 			if (m_helpTarget == nullptr)
 				m_helpTarget = m_brain->GetHelpTarget();
 
-			/* �~���Ώۂ��L���łȂ��ꍇ�A���͂����Z�b�g���Ēǂ�������ԂɑJ�ڂ���B*/
+			/* 救助対象が有効でない場合は待機ステートへ遷移。*/
 			if (!IsValidHelpTarget())
 			{
-				/* ���͏������Z�b�g����B*/
-				m_vInput->Reset();
+				if (m_vInput != nullptr)
+					m_vInput->Reset();
 
-				/* �ǂ�������ԂɑJ�ڂ���B*/
 				if (m_stateMachine != nullptr)
 					m_stateMachine->ChangeState(new NPCChaseState());
 
 				return;
 			}
 
-			/* �~���ΏۂƂ̋������v�Z����B*/
+			/* 救助対象が死亡している場合は救助行動を実行。*/
 			m_difference = m_helpTarget->GetPosition() - m_body->GetPosition();
 			m_difference.y = 0.0f;
-
-			/* �������v�Z����B*/
 			m_distance = m_difference.Length();
 
-			/* ���̋����ȏ㗣�ꂽ�ꍇ�A�~���Ώۂɋ߂Â��B*/
+			/* 救助対象が範囲外にいる場合は接近する。*/
 			if (m_distance > m_helpRange)
 			{
-				/* �߂Â��B*/
+				/* 救助対象が範囲外にいる場合は接近する。*/
 				MoveToHelpTarget();
 				return;
 			}
 
-			/* �~���Ώۂɋ߂Â��Ă���ꍇ�AHelp���͂����s����B*/
+			/* 救助対象が範囲内に入ったら救助行動を実行。*/
 			ExecuteHelp();
 		}
 
 
 		void NPCHelpState::Exit()
 		{
-			/* ���͏������Z�b�g����B*/
+			/* 救助対象が有効でない場合は待機ステートへ遷移。*/
 			if (m_vInput != nullptr)
 				m_vInput->Reset();
 
-			/* �~���Ώۂ̏�Ԃ����Z�b�g����B*/
+			/* 救助対象の救助状態をリセット。*/
 			if (m_helpTarget != nullptr && m_helpTarget != m_body)
 				m_helpTarget->GetRescueStatusManager().SetBeingHelped(false);
 
-			/* SE���~����B*/
+			/* 救助 SE を停止。*/
 			StopHelpSE();
 
+			/* リセット。*/
 			m_brain = nullptr;
 			m_body = nullptr;
 			m_vInput = nullptr;
@@ -116,104 +111,97 @@ namespace nsApp
 
 		void NPCHelpState::MoveToHelpTarget()
 		{
-			/* �~���Ώۂ��L���łȂ��ꍇ�A���͂����Z�b�g���Ēǂ�������ԂɑJ�ڂ���B*/
+			/* ブレインとコンポーネントがない場合は移動入力を入れられないため、ここで終了する。*/
 			if (m_vInput == nullptr)
 				return;
 
-			/* ���̋����ȏ㗣�ꂽ�ꍇ�A�~���Ώۂɋ߂Â��B*/
-			if (m_distance <= 0.001f)
+			/* 救助対象が近すぎる場合は移動入力をクリアして停止する。*/
+			if (m_distance <= MOVE_DEAD_ZONE)
 			{
-				/* �~���Ώۂɔ��ɋ߂��ꍇ�A�j���[�g�����ȃX�e�B�b�N���͂�ݒ肷��B*/
-				m_vInput->SetLStick(INPUT_STICK_VALUE_X, INPUT_STICK_VALUE_Y);
-				m_vInput->SetButton(enButtonLB1, false);
+				NPCMovementController::Stop(m_vInput);
 				return;
 			}
 
-			/* �~���Ώۂɋ߂Â����߂̃X�e�B�b�N���͂�ݒ肷��B*/
-			m_difference.Normalize();
-			m_vInput->SetLStick(m_difference.x, m_difference.z);
-			m_vInput->SetButton(enButtonLB1, true);
+			/* 危険時はガードしながら接近。*/
+			if (m_brain != nullptr && m_brain->ShouldGuard())
+				m_vInput->RequestButton(enButtonLB2, 3);
+
+			/* 救助対象へ走って近づく。*/
+			const NPCMovementIntent intent = NPCMovementController::MakeMoveIntent(m_difference, true);
+			NPCMovementController::Apply(m_vInput, intent);
 		}
 
 
 		void NPCHelpState::ExecuteHelp()
 		{
-			/* �~���Ώۂ��L���łȂ��ꍇ�A���͂����Z�b�g���Ēǂ�������ԂɑJ�ڂ���B*/
+			/* ブレインとコンポーネントがない場合は救助行動を実行できないため、ここで終了する。*/
 			if (m_helpTarget == nullptr || m_body == nullptr || m_vInput == nullptr)
 				return;
 
-			/* ���͏������Z�b�g����B*/
-			m_vInput->SetLStick(INPUT_STICK_VALUE_X, INPUT_STICK_VALUE_Y);
+			/* 救助中は移動を止める。*/
+			NPCMovementController::Stop(m_vInput);
 
-			/* SE�̍Đ��B*/
+			/* 救助時のSEを再生し始める。*/
 			StartHelpSE();
 
-			/* ��������B*/
-			m_vInput->SetButton(enButtonLB1, false);
+			/* 既に誰かが救助中なら上書きしない。*/
+			if (m_helpTarget->GetRescueStatusManager().IsBeingHelped())
+				return;
 
-			/* �~���v���͈�x�����s���B*/ 
-			if (!m_helpTarget->GetRescueStatusManager().IsBeingHelped())
-			{
-				/* Help���́B*/
-				m_vInput->RequestButton(enButtonY, INPUT_HOLD_FRAME);
-			}
+			/* 救助中もガードを維持（LB2 長押し）。*/
+			m_vInput->RequestButton(enButtonLB2, INPUT_HOLD_FRAME);
+
+			/* Player 側を直接救助ステートへ（攻撃中でも開始できる）。*/
+			m_body->TryBeginHelpToTarget(m_helpTarget);
 		}
 
 
 		bool NPCHelpState::IsValidHelpTarget() const
 		{
-			/* �~���Ώۂ��L���łȂ��ꍇ�A���͂����Z�b�g���Ēǂ�������ԂɑJ�ڂ���B*/
+			/* 救助対象が有効でない場合は false を返す。*/
 			if (m_helpTarget == nullptr)
 				return false;
 
-			/* �~���Ώۂ��������g�̏ꍇ�́A���S��Ԃ�HP0�ȉ��̏�Ԃ�L���ȋ~���ΏۂƂ���B*/
+			/* 自分自身を救助対象にすることはないため、false を返す。*/
 			if (m_helpTarget == m_body)
 				return false;
 
+			/* 救助対象が死亡している場合は true を返す。*/
 			return m_helpTarget->IsDeath() || m_helpTarget->GetCharacterStatus().hp.currentHP <= 0;
 		}
 
 
 		void NPCHelpState::StartHelpSE()
 		{
-			/* ���ł�SE���Đ�����Ă���ꍇ�́A�ēx�Đ����Ȃ��B*/
+			/* 既に救助 SE が再生中なら何もしない。*/
 			if (m_helpSE != nullptr)
 				return;
-			
-			/* �����Ǘ��N���X��T������B*/
-			auto* se = FindGO<nsSound::SoundLister>("SoundManager");
 
-			/* �����Ǘ��N���X��������Ȃ��ꍇ�͏����𒆒f����B*/
+			/* 音源クラスを取得する。*/
+			auto* se = FindGO<nsSound::SoundLister>("SoundManager");
 			if (se == nullptr)
 				return;
 
-			/* SE���Đ�����B*/
+			/* 救助 SE を再生する。*/
 			m_helpSE = se->GetSEList().PlaySE(nsSound::SE_ID::Rescue, VOLUME, true, LIFE_TIME);
 		}
 
 
 		void NPCHelpState::StopHelpSE()
 		{
-			/* SE���Đ�����Ă��Ȃ��ꍇ�́A�����𒆒f����B*/
 			if (m_helpSE == nullptr)
 				return;
 
-			/* �����Ǘ��N���X��T������B*/
+			/* 音源クラスを取得する。*/
 			auto* se = FindGO<nsSound::SoundLister>("SoundManager");
-
-			/* �����Ǘ��N���X��������Ȃ��ꍇ�͏����𒆒f����B*/
-			if (se == nullptr)
-				return;
-
 			if (se == nullptr)
 			{
 				m_helpSE = nullptr;
 				return;
 			}
 
-			/* SE���~����B*/
+			/* 停止。*/
 			se->GetSEList().StopSE(m_helpSE);
 		}
 	}
 }
-

@@ -33,30 +33,31 @@ namespace nsApp
 			RushAttack_Sword,		 //! 連続攻撃のSE。
 
 			/* Hammer*/
-			NormalAttack_Hammer, //! 通常攻撃のSE。
-			HeavyAttack_Hammer,	 //! 重攻撃のSE。
-			AirAttack_Hammer,	 //! 空中攻撃のSE。
-			ChargeAttack_Hammer, //! 貯め攻撃のSE。
-			DashAttack_Hammer,	 //! ダッシュ攻撃のSE。
+			NormalAttack_Hammer,	 //! 通常攻撃のSE。
+			HeavyAttack_Hammer,		 //! 重攻撃のSE。
+			AirAttack_Hammer,		 //! 空中攻撃のSE。
+			ChargeAttack_Hammer,	 //! 貯め攻撃のSE。
+			DashAttack_Hammer,		 //! ダッシュ攻撃のSE。
 
 			/* その他。*/
-			Charge, //! チャージ中のSE。
-			Rescue, //! 救助中のSE。
+			Charge,					 //! チャージ中のSE。
+			Rescue,					 //! 救助中のSE。
+			Guard,					 //! ガード中のSE。
 
-			/*ボス専用*/
-			Roar,	   //! ボスの咆哮のSE。
-			Fire,	   //! ボスの火炎攻撃のSE。
-			Bite,	   //! ボスの噛みつき攻撃のSE。
-			BiteSoft,  //! ボスの弱い噛みつき攻撃のSE。
-			Tail,	   //! ボスの尻尾攻撃のSE。
-			HitDamage, //! ボスのダメージを受けたときのSE。
-			Death,	   //! ボスの死亡のSE。
-			Sleep,	   //! ボスの睡眠のSE。
+			/* ボス専用。*/
+			Roar,					 //! ボスの咆哮のSE。
+			Fire,					 //! ボスの火炎攻撃のSE。
+			Bite,					 //! ボスの噛みつき攻撃のSE。
+			BiteSoft,				 //! ボスの弱い噛みつき攻撃のSE。
+			Tail,					 //! ボスの尻尾攻撃のSE。
+			HitDamage,				 //! ボスのダメージを受けたときのSE。
+			Death,					 //! ボスの死亡のSE。
+			Sleep,					 //! ボスの睡眠のSE。
 
-			/*UI専用*/
-			Cursor, //! カーソル移動のSE。
-			Enter,	//! 決定のSE。
-			Exit,	//! キャンセルのSE。
+			/* UI専用*/
+			Cursor,					 //! カーソル移動のSE。
+			Enter,					 //! 決定のSE。
+			Exit,					 //! キャンセルのSE。
 		};
 
 		class SEList

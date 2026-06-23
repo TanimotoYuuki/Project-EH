@@ -17,7 +17,9 @@
 #include "Src/Effect/EffectList.h"
 #include "Src/Effect/EffectListener.h"
 
+#include "Src/Actor/Character/Player/Component/Damage/PlayerDamageInvincibilitySystem.h"
 #include "Src/Actor/Character/NPC/Component/RescueStatusLister.h"
+#include "Src/Actor/Character/Player/Component/Guard/PlayerGuardSystem.h"
 
 
 namespace nsApp
@@ -104,9 +106,6 @@ namespace nsApp
 			/* 攻撃力の初期化処理。*/
 			void InitAttackStatus();
 
-			/* ダミーモデルの初期化。*/
-			void InitDummyModel();
-
 			/* すり抜け計算。*/
 			void ComputeSlipThrough();
 
@@ -134,6 +133,29 @@ namespace nsApp
 
 			/* 起き上がり状態。*/
 			void ReceiveHelp();
+
+			/**
+			 * @brief NPC が救助対象へ蘇生を開始する（VirtualInput の Y 経由は使わない）。
+			 * @param target 救助対象。
+			 * @return 救助開始できた、または既に救助中なら true。
+			 */
+			bool TryBeginHelpToTarget(nsActor::Player* target);
+
+			/**
+			 * @brief NPC が回復魔法を開始する（VirtualInput の RT 経由は使わない）。
+			 * @return 回復開始できた、または既に詠唱中なら true。
+			 */
+			bool TryBeginHeelMagic();
+
+			/**
+			 * @brief 回復魔法を詠唱中か。
+			 * @return 詠唱中なら true。
+			 */
+			inline bool IsCastingHeal() const
+			{
+				return m_playerStateID == PlayerStateID::enHeelMagic;
+			}
+
 
 			/* 助ける対象のキャラクターを探索する。*/
 			nsActor::Player* SearchCharacter();
@@ -189,6 +211,12 @@ namespace nsApp
 			 * @brief 外部から強制的に起き上がり状態へ遷移させる。
 			 */
 			void ForceGetUp();
+
+			/**
+			 * @brief KnockBack から Idle に戻ったときの状態IDを同期する。
+			 */
+			void NotifyReturnedFromKnockBack();
+
 
 			/* セッター。*/
 		public:
@@ -337,6 +365,21 @@ namespace nsApp
 				m_isLoadingPreviewRunStarted = false;
 			}
 
+			/**
+		     * @brief NPC 操作かどうかを設定する。
+		     */
+			inline void SetNpcControlled(bool isNpcControlled)
+			{
+				m_isNpcControlled = isNpcControlled;
+			}
+			/**
+			 * @brief NPC 操作かどうか。
+			 */
+			inline bool IsNpcControlled() const
+			{
+				return m_isNpcControlled;
+			}
+
 
 			/* ゲッター。*/
 		public:
@@ -482,6 +525,22 @@ namespace nsApp
 			}
 
 			/**
+		　　 * @brief ガード中かどうか。
+		 　　*/
+			inline bool IsGuarding() const
+			{
+				return m_playerStateID == PlayerStateID::enGuard;
+			}
+
+			/**
+			 * @brief プレイヤーモデル種別（ガードエフェクトの色分け用）。
+			 */
+			inline CharacterModelType GetModelType() const
+			{
+				return m_modelType;
+			}
+
+			/**
 			 * @brief 救助状態管理クラスを取得する。
 			 * @return 救助状態管理クラスの参照。
 			 */
@@ -499,6 +558,50 @@ namespace nsApp
 				return m_rescueStatusManager;
 			}
 
+			/**
+			 * @brief ガードシステムを取得する。
+			 * @return ガードシステムの参照。
+			 */
+			inline PlayerGuardSystem& GetGuardSystem()
+			{
+				return m_guardSystem;
+			}
+
+			/**
+			 * @brief ガードシステムを取得する（const）。
+			 * @return ガードシステムのconst参照。
+			 */
+			inline const PlayerGuardSystem& GetGuardSystem() const
+			{
+				return m_guardSystem;
+			}
+
+			/**
+			 * @brief ダメージ無敵システムを取得する。
+			 * @return ダメージ無敵システムの参照。
+			 */
+			inline PlayerDamageInvincibilitySystem& GetDamageInvincibilitySystem()
+			{
+				return m_damageInvincibilitySystem;
+			}
+
+			/**
+			 * @brief ダメージ無敵システムを取得する（const）。
+			 * @return ダメージ無敵システムのconst参照。
+			 */
+			inline const PlayerDamageInvincibilitySystem& GetDamageInvincibilitySystem() const
+			{
+				return m_damageInvincibilitySystem;
+			}
+
+			/**
+			 * @brief KnockBack 硬直中か。
+			 */
+			inline bool IsInKnockBackState() const
+			{
+				return m_currentStateID == static_cast<uint8_t>(PlayerStateID::enHit);
+			}
+
 
 		private:
 			nsK2EngineLow::EffectEmitter* m_chargeEffect = nullptr;                                                //! チャージエフェクトのリモコン       
@@ -514,6 +617,7 @@ namespace nsApp
 			WeaponType m_currentWeapon = WeaponType::None;                                                         //! 現在の武器。@TODO 武器の種類を増やす際に要調整。
 			float m_attackDamageRate = 1.0f;                                                                       //! 攻撃ダメージ補正率。
 			RescueStatusLister m_rescueStatusManager;															   //! 救助状態管理クラス
+			PlayerDamageInvincibilitySystem m_damageInvincibilitySystem;										   //! ダメージ無敵システム。
 
 
 			/* ステート生成。*/
@@ -532,7 +636,7 @@ namespace nsApp
 			PlayerStateID m_playerStateID;                                                                         //! プレイヤーの状態ID。
 			GunShooter m_gunShooter;                                                                               //! 銃の発射処理を管理するクラス。
 			EffectListener m_effectListener;																	   //! エフェクトの再生に合わせてSEを鳴らすために使用するクラス
-
+			PlayerGuardSystem m_guardSystem;																	   //! ガードシステム。
 
 		private:
 			CharacterController m_characterController;                                                             //! プレイヤーのキャラコン。
@@ -557,13 +661,13 @@ namespace nsApp
 			float m_airMoveSpeed = 120.0f;																		   //! プレイヤーの空中での移動速度。
 			float m_gravity = 30.0f;																			   //! プレイヤーの重力。
 			float m_maxFallVelocity = -1200.0f;																	   //! プレイヤーの最大落下速度。
-
 			float m_fallVelocity = 0.0f;                                                                           //! 落下速度。
 
 			bool m_isIgnorePlayerSet = false;																	   //! プレイヤーのセットを無視するかどうかのフラグ。
 			bool m_isDown = false;                                                                                 //! プレイヤー専用のダウン状態。IGameObject側の死亡/削除フラグとは分ける。
 			bool m_isLoadingPreview = false;																	   //! ローディング画面用表示モードかどうか。
 			bool m_isLoadingPreviewRunStarted = false;															   //! ローディング用Runアニメーションを開始したか。
+			bool m_isNpcControlled = false;																		   //! true なら Brain が動く。
 		};
 	}
 }

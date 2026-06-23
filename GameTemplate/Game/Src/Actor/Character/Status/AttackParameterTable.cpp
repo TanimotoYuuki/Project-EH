@@ -35,8 +35,10 @@ namespace nsApp
 		return GetDefaultParameter(attackType);
 	}
 
+
 	const AttackParameter& AttackParameterTable::GetDefaultParameter(AttackType attackType)
 	{
+		/* 攻撃タイプごとのデフォルト値を定義する。 */
 		static const std::unordered_map<AttackType, AttackParameter> defaultTable =
 		{
 			{ AttackType::NormalAttack,     { 1.0f,  0.00f, 8.0f, 80.0f, 40.0f, 8, 0, 10 } },
@@ -58,8 +60,10 @@ namespace nsApp
 		return defaultTable.at(AttackType::NormalAttack);
 	}
 
+
 	AttackType AttackParameterTable::ConvertAttackType(const std::string& attackName)
 	{
+		/* 攻撃タイプの文字列をAttackType列挙型に変換する。 */
 		if (attackName == "Normal" || attackName == "NormalAttack" || attackName == "AttackType::NormalAttack")
 			return AttackType::NormalAttack;
 		if (attackName == "Charge" || attackName == "ChargeAttack" || attackName == "AttackType::ChargeAttack")
@@ -84,10 +88,13 @@ namespace nsApp
 		return AttackType::NormalAttack;
 	}
 
+
 	AttackParameter AttackParameterTable::CreateParameterFromRow(const TSVTable& table, int rowIndex, AttackType attackType)
 	{
+		/* 攻撃タイプごとのデフォルト値を取得する。 */
 		const AttackParameter& baseParameter = GetDefaultParameter(attackType);
 
+		/* TSVの1行からAttackParameterを作成する。 */
 		return AttackParameter
 		{
 			table.GetFloat(rowIndex, "DamageMultiplier", baseParameter.damageMultiplier),

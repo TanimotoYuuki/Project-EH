@@ -256,6 +256,7 @@ namespace nsApp
 			 */
 			float GetHPRatio() const;
 
+
 		public:
 			/* ロア・フェーズ。*/
 			/**
@@ -318,8 +319,9 @@ namespace nsApp
 			 */
 			void StopRageEffect();
 
+
+		/* Getter。*/
 		public:
-			/* Getter。*/
 			/**
 			 * @brief ボス座標を取得。
 			 * @return 座標参照。
@@ -381,6 +383,52 @@ namespace nsApp
 			inline WeaponHitDetection &GetFireHit()
 			{
 				return m_fireCombat.GetFireHit();
+			}
+
+			/**
+			 * @brief 着弾炎柱ヒット判定を取得（FireCombatSystem 委譲）。
+			 */
+			inline WeaponHitDetection& GetFireLandingHit()
+			{
+				return m_fireCombat.GetLandingHit();
+			}
+
+			/**
+			 * @brief Rain 関連（FireCombatSystem 委譲）。
+			 */
+			inline int GetFireRainDropCount() const
+			{
+				return m_fireCombat.GetRainDropCount();
+			}
+
+			/**
+			 * @brief Rain 滴の状態を取得。
+			 * @param index 滴のインデックス（0 〜 GetFireRainDropCount() - 1）。
+			 * @return true なら有効な滴、false なら無効な滴またはインデックスエラー。
+			 * @note インデックスエラーも false を返すため、呼び出し元はインデックスの範囲を事前に確認することが望ましい。
+			 */
+			inline bool IsFireRainDropActive(int index) const
+			{
+				return m_fireCombat.IsRainDropActive(index);
+			}
+
+			/**
+			 * @brief Rain 滴の位置を取得。
+			 * @param index 滴のインデックス（0 〜 GetFireRainDropCount() - 1）。呼び出し元はこの範囲内であることを確認すること。
+			 * @return 滴の位置。インデックスエラーの場合は Vector3::Zero を返す。
+			 */
+			inline Vector3 GetFireRainDropPosition(int index) const
+			{
+				return m_fireCombat.GetRainDropPosition(index);
+			}
+
+			/**
+			 * @brief Rain 滴のヒット判定半径を取得。
+			 * @return ヒット判定半径。
+			 */
+			inline float GetFireRainHitRadius() const
+			{
+				return m_fireCombat.GetRainHitRadius();
 			}
 
 			/**
@@ -448,6 +496,7 @@ namespace nsApp
 				return !m_model.IsPlayAnimation();
 			}
 
+
 		private:
 			/* 内部初期化・更新。*/
 			/**
@@ -466,6 +515,7 @@ namespace nsApp
 			 */
 			void UpdateRotation(float deltaTime);
 
+
 		private:
 			std::vector<nsActor::ICharacter *> m_allTargets;				  //! 攻撃対象一覧。
 			ICharacter *m_target = nullptr;									  //! 主ターゲット（最寄り）。
@@ -473,37 +523,37 @@ namespace nsApp
 			nsK2EngineLow::EffectEmitter *m_rageEffectEmitter = nullptr;	  //! 怒りエフェクト。
 
 		private:
-			BossPhaseController m_phaseController; //! HP フェーズ強化。
-			BossDamageHandler m_damageHandler;	   //! 被ダメージ累積・硬直。
-			BossFireCombatSystem m_fireCombat;	   //! 火球・Burst・Rain・着弾炎柱。
-			BossMeleeCombatSystem m_meleeCombat;   //! 噛みつき・尻尾。
-			BossTornadoSystem m_tornadoSystem;	   //! 竜巻（GreenDragon）。
+			BossPhaseController m_phaseController;							  //! HP フェーズ強化。
+			BossDamageHandler m_damageHandler;								  //! 被ダメージ累積・硬直。
+			BossFireCombatSystem m_fireCombat;								  //! 火球・Burst・Rain・着弾炎柱。
+			BossMeleeCombatSystem m_meleeCombat;							  //! 噛みつき・尻尾。
+			BossTornadoSystem m_tornadoSystem;								  //! 竜巻（GreenDragon）。
 
-			std::unique_ptr<BossAnimation> m_BossAnimation; //! アニメーション管理。
-			CharacterController m_BossController;			//! 物理移動。
+			std::unique_ptr<BossAnimation> m_BossAnimation;					  //! アニメーション管理。
+			CharacterController m_BossController;							  //! 物理移動。
 
-			Vector3 m_position = Vector3::Zero;			  //! 論理座標。
-			Vector3 m_forward = Vector3::Zero;			  //! 前方向。
-			Vector3 m_modelOffset = Vector3::Zero;		  //! ボスタイプ別固定オフセット。
-			Vector3 m_modelDynamicOffset = Vector3::Zero; //! ステート等の動的オフセット。
+			Vector3 m_position = Vector3::Zero;								  //! 論理座標。
+			Vector3 m_forward = Vector3::Zero;								  //! 前方向。
+			Vector3 m_modelOffset = Vector3::Zero;							  //! ボスタイプ別固定オフセット。
+			Vector3 m_modelDynamicOffset = Vector3::Zero;					  //! ステート等の動的オフセット。
 
-			Quaternion m_rotation = Quaternion::Identity; //! 回転。
+			Quaternion m_rotation = Quaternion::Identity;					  //! 回転。
 
-			int m_prevHP = 0;			 //! 前フレーム HP。
-			int m_accumulatedDamage = 0; //! 硬直判定用累積ダメージ。
+			int m_prevHP = 0;												  //! 前フレーム HP。
+			int m_accumulatedDamage = 0;									  //! 硬直判定用累積ダメージ。
 
-			float m_damageMultiplier = 1.0f;	//! 攻撃力倍率（未使用なら 1.0）。
-			float m_roarCooldownTimer = 0.0f;	//! ロアクールダウン残り。
-			float m_lastRoarHPThreshold = 1.0f; //! 前回ロア発動時 HP 閾値。
-			float m_dir = 1.0f;					//! 向き補助（左右）。
-			float m_lockedYPosition = 0.0f;		//! Y 固定時の高さ。
+			float m_damageMultiplier = 1.0f;								  //! 攻撃力倍率（未使用なら 1.0）。
+			float m_roarCooldownTimer = 0.0f;								  //! ロアクールダウン残り。
+			float m_lastRoarHPThreshold = 1.0f;								  //! 前回ロア発動時 HP 閾値。
+			float m_dir = 1.0f;												  //! 向き補助（左右）。
+			float m_lockedYPosition = 0.0f;									  //! Y 固定時の高さ。
 
-			bool m_isYLocked = false;		 //! Y 座標固定フラグ。
-			bool m_isRotationLocked = false; //! 回転固定フラグ。
+			bool m_isYLocked = false;										  //! Y 座標固定フラグ。
+			bool m_isRotationLocked = false;								  //! 回転固定フラグ。
 
-			uint8_t m_roarUsageCount = 0;	 //! ロア使用回数。
-			uint8_t m_lastAttackType = 0xFF; //! 直前攻撃種別。
-			uint8_t m_currentStateID = 0;	 //! 現在ステート ID。
+			uint8_t m_roarUsageCount = 0;									  //! ロア使用回数。
+			uint8_t m_lastAttackType = 0xFF;								  //! 直前攻撃種別。
+			uint8_t m_currentStateID = 0;									  //! 現在ステート ID。
 
 			std::unordered_map<BossStateID, std::function<StateType *()>> m_stateFactory; //! ステート生成表。
 		};

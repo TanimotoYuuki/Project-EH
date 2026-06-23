@@ -35,9 +35,7 @@ namespace nsApp
 			m_helpTarget = m_brain->GetHelpTarget();
 
 			/* 救助要請がある場合、要請対象が死亡しているか、HPが0以下であるかを確認。*/
-			if (m_helpTarget != nullptr &&
-				m_helpTarget != m_body &&
-				(m_helpTarget->IsDeath() || m_helpTarget->GetCharacterStatus().hp.currentHP <= 0))
+			if (m_brain->ShouldRespondToHelp())
 			{
 				/* 入力のリセット。*/
 				if (m_vInput != nullptr)

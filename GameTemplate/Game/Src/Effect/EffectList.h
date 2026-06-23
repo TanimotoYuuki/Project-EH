@@ -2,7 +2,7 @@
 /**
  * @file   EffectList.h
  * @brief  エフェクトを管理するリストクラス。
- * @author Yamaguchi Hayato
+ * @author YamaguchiHayato
  * @date   2026/03/23
  */
 
@@ -16,9 +16,9 @@ namespace nsApp
 		 */
 		struct EffectInfo
 		{
-			nsK2EngineLow::EffectEmitter* emitter; //! エフェクトのエミッター。
-			float lifeTime;                        //! エフェクトの寿命。
-			float currentTime;                     //! エフェクトの現在の経過時間。
+			nsK2EngineLow::EffectEmitter* emitter;   //! エフェクトのエミッタ。
+			float lifeTime;                          //! エフェクトの寿命。
+			float currentTime;                       //! エフェクトの現在の経過時間。
 		};
 
 		/**
@@ -27,31 +27,27 @@ namespace nsApp
 		 */
 		enum Effect_ID : uint8_t
 		{
-			Attack,             //! 攻撃エフェクト。
-			Charge,             //! チャージエフェクト。
-			Fire,               //! チャージ攻撃時の炎エフェクト。
-			ShockWave,          //! 着地時の衝撃波エフェクト。
-			Hit,                //! 被弾エフェクト。
+			Attack,              //! 攻撃エフェクト。
+			Charge,              //! チャージエフェクト。
+			Fire,                //! ボス火炎弾エフェクト。
+			ShockWave,           //! 衝撃波エフェクト。
+			Hit,                 //! 被弾エフェクト。
 
-			NormalMagic,        //! 通常魔法エフェクト。
-			RushMagic,          //! 突進魔法エフェクト。
-			AirMagic,           //! 空中魔法エフェクト。
-			HeelMagic,          //! 回復エフェクト。
-			HeelMagic_Particle, //! 回復エフェクトのパーティクル。
-			MagicAttack,        //! 魔法攻撃エフェクト。
-			Shot,               //! 射撃エフェクト。
+			NormalMagic,         //! 通常魔法エフェクト。
+			RushMagic,           //! 連射魔法エフェクト。
+			AirMagic,            //! 空中魔法エフェクト。
+			HeelMagic,           //! 回復エフェクト。
+			HeelMagic_Particle,  //! 回復エフェクトのパーティクル。
+			MagicAttack,         //! 魔法攻撃エフェクト。
+			Shot,                //! 弾丸エフェクト。
 
-			FireBall,           //! ボスファイアボール着弾エフェクト。
-			BossFireAttack,     //! ボス火炎弾着弾エフェクト（地面）。
+			FireBall,            //! ボスファイアボール着弾エフェクト。
+			BossFireAttack,      //! ボス火炎弾着弾エフェクト（地面）。
 
-			Guard_Blue,         //! ガード用バリア（青）。
-			Guard_Red,          //! ガード用バリア（赤）。
+			Guard_Blue,          //! ガード用半円バリア（青）。
+			Guard_Red,           //! ガード用半円バリア（赤）。
 		};
 
-		/**
-		 * @class EffectList
-		 * @brief エフェクトの登録・再生・停止を管理するクラス。
-		 */
 		class EffectList
 		{
 		public:
@@ -91,7 +87,7 @@ namespace nsApp
 			 * @param lifeTime エフェクトを維持する時間。
 			 * @return 再生したエフェクトのエミッター。失敗時はnullptr。
 			 */
-			nsK2EngineLow::EffectEmitter* PlayEffect( Effect_ID id, const Vector3& position, const Quaternion& angle = Quaternion::Identity, const Vector3& scale = Vector3::One, float lifeTime = 2.0f);
+			nsK2EngineLow::EffectEmitter* PlayEffect( Effect_ID id, const Vector3& position, const Quaternion& angle = Quaternion::Identity, const Vector3& scale = Vector3::One,float lifeTime = 2.0f);
 
 
 		public:
@@ -106,30 +102,43 @@ namespace nsApp
 				return path;
 			}
 
-		private:
-			/* 武器ごとにエフェクト登録処理を分ける。*/
+			/**
+			 * @brief .efkefc 用のファイルパスを組み立てる。
+			 * @param fileName 拡張子を含むファイル名（例: "Guard_Blue.efkefc"）。
+			 */
+			inline const std::u16string GetEffectFilePathEfkefc(const std::u16string fileName)
+			{
+				return u"Assets/effect/" + fileName;
+			}
 
-			/** @brief 大剣のエフェクトを登録する。 */
+
+		private:
+			/* 武器ごとにエフェクトを登録する処理を分ける。*/
+
+			/* 大剣。*/
 			void StorageGreatSwordEffect();
 
-			/** @brief ハンマーのエフェクトを登録する。 */
+			/* ハンマー。*/
 			void StorageHammerEffect();
 
-			/** @brief 杖のエフェクトを登録する。 */
+			/* 杖。*/
 			void StorageWandEffect();
 
-			/** @brief 双銃のエフェクトを登録する。 */
+			/* 双銃。*/
 			void StorageTwinGunEffect();
 
-			/** @brief ボスのエフェクトを登録する。 */
+			/* Boss。*/
 			void StorageBossEffect();
 
-			/** @brief ガード用エフェクトを登録する。 */
+			/* ガード。*/
 			void StorageGuardEffect();
 
-		private:
-			nsK2EngineLow::EffectEmitter* m_effectEmitter = nullptr; //! エフェクトのエミッターのインスタンス。
 
+		private:
+			nsK2EngineLow::EffectEmitter* m_effectEmitter = nullptr;        //! エフェクトのエミッタのインスタンス。
+
+
+		private:
 			std::unordered_map<Effect_ID, std::u16string> m_effectPathList; //! エフェクトの識別子とファイルパスを管理するマップ。
 			std::vector<EffectInfo> m_playingEffects;                       //! 現在再生中のエフェクトの情報を管理するリスト。
 			EffectInfo m_info;                                              //! エフェクトの情報を管理するインスタンス。

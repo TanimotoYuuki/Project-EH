@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Option.h"
 #include "Src/Sound/SoundLister.h"
-#include "UIInput.h"
+#include "Src/Sound/UIInput.h"
 
 namespace
 {

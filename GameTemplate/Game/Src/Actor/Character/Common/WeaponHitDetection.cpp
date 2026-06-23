@@ -1,46 +1,43 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "WeaponHitDetection.h"
 
 namespace
 {
-	const auto HIT_RADIUS = 30.0f; //! ����̓����蔻��̔��a�B
+	const auto DEFAULT_HIT_RADIUS = 30.0f;      //! デフォルトの当たり判定半径。
+	const auto TARGET_HIT_PADDING = 30.0f;      //! ターゲット側の当たり判定余白。
 }
-
 
 namespace nsApp
 {
 	void WeaponHitDetection::Init(float radius)
 	{
-		/* �����蔻����Z�b�g����B*/
 		m_radius = radius;
-		/* �������蔻����Z�b�g����B*/
 		SetRadius(m_radius);
 	}
 
 
 	bool WeaponHitDetection::IsHit(nsActor::ICharacter* target)
 	{
-		/* ���킪�L���łȂ��A�������͓G�����Ȃ��ꍇ�͓�����Ȃ��B*/
-		if(!m_isActive || !target)
+		/* 判定が無効、またはターゲットがいない場合はヒットしない。*/
+		if (!m_isActive || target == nullptr)
 			return false;
 
-		/* ���łɎa�������X�g�̓G�����邩�`�F�b�N�B*/
-		for (auto hitTarget : m_hitTargets)
+		/* 既にヒット済みリストに入っているターゲットかチェック。*/
+		for (auto* hitTarget : m_hitTargets)
 		{
 			if (hitTarget == target)
 				return false;
 		}
 
-		/* �G�̍��W�ƕ���̍��W��}��B*/
+		/* ターゲットの座標と武器の座標の差分を求める。*/
 		m_targetPosition = target->GetPosition();
 		m_diffVector = m_position - m_targetPosition;
-
-		/* �������v��B*/
 		m_diff = m_diffVector.Length();
 
-		if (m_diff < (m_radius + 30.0f))
+		/* ターゲットの半径を考慮して、ヒット判定を行う。*/
+		if (m_diff < (m_radius + TARGET_HIT_PADDING))
 		{
-			/* ���������G�����X�g�ɓo�^�B*/
+			/* ヒットしたターゲットをリストに登録。*/
 			m_hitTargets.push_back(target);
 			return true;
 		}
