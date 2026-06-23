@@ -44,6 +44,14 @@ namespace nsApp
 		 */
 		void SwitchActivePlayers(int targetIndex);
 
+		/**
+		 * @brief NPCの攻撃間隔を計算する。
+		 * @param player Playerクラス。
+		 * @param partyIndex パーティインデックス。
+		 * @return 計算された攻撃間隔。
+		 */
+		int CalcNpcAttackInterval(nsActor::Player* player, int partyIndex);
+
 
 	private:
 		unique_ptr<GamePadInputAdapter> m_gamePad;		 //! ゲームパッドアダプターを管理する。

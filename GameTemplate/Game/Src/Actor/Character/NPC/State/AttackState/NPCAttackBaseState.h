@@ -66,6 +66,12 @@ namespace nsApp
 			 */
 			bool CheckHelpTransition();
 
+			/**
+		     * @brief 危険なら Evade へ遷移する。
+		     * @return 遷移したら true。
+		     */
+			bool CheckEvadeTransition();
+
 
 		protected:
 			/* 共通インスタンス。*/

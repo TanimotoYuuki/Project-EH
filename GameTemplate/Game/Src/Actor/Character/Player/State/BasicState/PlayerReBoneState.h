@@ -1,9 +1,10 @@
-#pragma once
+﻿#pragma once
 /**
- * @file   PlayerReBoneState.h
- * @brief  �v���C���[�̃��{�[����ԃN���X
- * @author YamaguchiHayato
- * @date   202/03/24
+ * @file    PlayerReBoneState.h
+ * @brief   プレイヤーの蘇生（リボーン）状態を管理するクラス。
+ * @author  Yamaguchi Hayato
+ * @date    2026/03/24
+ * @details ダウン味方への移動と蘇生進行を担当するステート。
  */
 
 #include "Src/Actor/Character/Common/IState.h"
@@ -16,23 +17,26 @@ namespace nsApp
 		class PlayerReBoneState : public IState<nsActor::Actor>
 		{
 		public:
-			/* �R���X�g���N�^�ƃf�X�g���N�^�B*/
+			/* コンストラクタとデストラクタ。*/
 			PlayerReBoneState() = default;
 			virtual ~PlayerReBoneState() = default;
 
 
 		public:
-			/* ���C�t�T�C�N���B*/
+			/* ライフサイクル。*/
 			void Enter() override;
 			void Update() override;
 			void Exit() override;
-			bool RequestID(uint8_t& id) override { return false; };
+			bool RequestID(uint8_t& id) override
+			{
+				return false; 
+			}
 
 
 		public:
 			/**
-			 * @brief ������Ώۂ�ݒ肷��B
-			 * @param target ������Ώۂ̃v���C���[
+			 * @brief 蘇生対象を外部から指定する（NPC 救助用）。
+			 * @param target 蘇生対象のプレイヤー。
 			 */
 			inline void SetTargetCharacter(nsActor::Player* target)
 			{
@@ -42,41 +46,58 @@ namespace nsApp
 
 		private:
 			/**
-			 * @brief �~���Ώۂ���������B
+			 * @brief 蘇生対象を解決する。
 			 */
 			void ResolveTargetCharacter();
 
 			/**
-			 * @brief �~���ΏۂƂ��ėL�������肷��B
-			 * @return �L���ȋ~���ΏۂȂ�true�B
+			 * @brief 蘇生対象として有効か判定する。
+			 * @return 有効な蘇生対象なら true。
 			 */
 			bool IsValidTargetCharacter() const;
 
 			/**
-			 * @brief �~���i�s���J�n����B
+			 * @brief 蘇生進行を開始する。
 			 */
 			void BeginHelpProgress();
 
 			/**
-			 * @brief �~��������̏����B
+			 * @brief 蘇生完了時の処理。
 			 */
 			void CompleteHelp();
 
 			/**
-			 * @brief �ҋ@��Ԃ֖߂�B
+			 * @brief 待機ステートへ戻る。
 			 */
 			void ChangeIdleState();
 
+			/**
+			 * @brief 蘇生対象へ近づく。
+			 * @return 移動したら true。
+			 */
+			bool MoveTowardTarget();
+
+			/**
+			 * @brief 蘇生対象までの水平距離を更新する。
+			 */
+			void UpdateDistanceToTarget();
+
 
 		private:
-			nsActor::Player* m_player = nullptr;       //! �v���C���[�̃|�C���^�B
-			nsActor::Player* m_targetPlayer = nullptr; //! ������Ώۂ̃v���C���[�̃|�C���^�B
+			nsActor::Player* m_player = nullptr;       //! プレイヤー本体。
+			nsActor::Player* m_targetPlayer = nullptr; //! 蘇生対象のプレイヤー。
 
 
 		private:
-			bool m_isHelpStarted = false;              //! �~���i�s���J�n�������B
-			bool m_isHelpCompleted = false;            //! �~�������ς݂��B
-			bool m_shouldReturnIdle = false;           //! ����Update�őҋ@��Ԃ֖߂����B
+			Vector3 m_difference = Vector3::Zero;      //! 対象への差分ベクトル。
+
+			float m_distance = 0.0f;				   //! 対象までの水平距離。
+			float m_helpRange = 80.0f;				   //! 蘇生開始距離（NPCHelpState と合わせる）。
+			float m_searchRange = 120.0f;			   //! 蘇生対象として認識する最大距離。
+
+			bool m_isHelpStarted = false;			   //! 蘇生進行を開始したか。
+			bool m_isHelpCompleted = false;			   //! 蘇生を完了したか。
+			bool m_shouldReturnIdle = false;		   //! 次 Update で待機へ戻るか。
 		};
 	}
 }

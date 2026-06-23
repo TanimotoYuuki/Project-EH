@@ -576,6 +576,7 @@
     <ClCompile Include="Src\Actor\Character\NPC\Brain\NPCLocomotonMind.cpp" />
     <ClCompile Include="Src\Actor\Character\NPC\Brain\NPCSupportMind.cpp" />
     <ClCompile Include="Src\Actor\Character\Player\Component\Damage\PlayerDamageInvincibilitySystem.cpp" />
+    <ClCompile Include="Src\Actor\Character\NPC\Movement\NPCCombatRangeHelper.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />

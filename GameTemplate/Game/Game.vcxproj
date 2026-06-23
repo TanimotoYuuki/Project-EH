@@ -226,6 +226,7 @@
     <ClCompile Include="Src\Actor\Character\NPC\Brain\NPCSupportMind.cpp" />
     <ClCompile Include="Src\Actor\Character\NPC\Brain\NPCLocomotonMind.cpp" />
     <ClCompile Include="Src\Actor\Character\NPC\Brain\NPCCombatMind.cpp" />
+    <ClCompile Include="Src\Actor\Character\NPC\Movement\NPCCombatRangeHelper.cpp" />
     <ClCompile Include="Src\Actor\Character\NPC\Social\NPCSocialEvaluator.cpp" />
     <ClCompile Include="Src\Actor\Character\NPC\Threat\BossFireThreatProvider.cpp" />
     <ClCompile Include="Src\Actor\Character\NPC\Component\NPCBehaviorProfileTable.cpp" />

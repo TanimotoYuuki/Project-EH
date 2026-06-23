@@ -384,6 +384,52 @@ namespace nsApp
 			}
 
 			/**
+			 * @brief 着弾炎柱ヒット判定を取得（FireCombatSystem 委譲）。
+			 */
+			inline WeaponHitDetection& GetFireLandingHit()
+			{
+				return m_fireCombat.GetLandingHit();
+			}
+
+			/**
+			 * @brief Rain 関連（FireCombatSystem 委譲）。
+			 */
+			inline int GetFireRainDropCount() const
+			{
+				return m_fireCombat.GetRainDropCount();
+			}
+
+			/**
+			 * @brief Rain 滴の状態を取得。
+			 * @param index 滴のインデックス（0 〜 GetFireRainDropCount() - 1）。
+			 * @return true なら有効な滴、false なら無効な滴またはインデックスエラー。
+			 * @note インデックスエラーも false を返すため、呼び出し元はインデックスの範囲を事前に確認することが望ましい。
+			 */
+			inline bool IsFireRainDropActive(int index) const
+			{
+				return m_fireCombat.IsRainDropActive(index);
+			}
+
+			/**
+			 * @brief Rain 滴の位置を取得。
+			 * @param index 滴のインデックス（0 〜 GetFireRainDropCount() - 1）。呼び出し元はこの範囲内であることを確認すること。
+			 * @return 滴の位置。インデックスエラーの場合は Vector3::Zero を返す。
+			 */
+			inline Vector3 GetFireRainDropPosition(int index) const
+			{
+				return m_fireCombat.GetRainDropPosition(index);
+			}
+
+			/**
+			 * @brief Rain 滴のヒット判定半径を取得。
+			 * @return ヒット判定半径。
+			 */
+			inline float GetFireRainHitRadius() const
+			{
+				return m_fireCombat.GetRainHitRadius();
+			}
+
+			/**
 			 * @brief 主ターゲットまでの距離を取得。
 			 * @return 距離。ターゲットなしは 10000.0f。
 			 */

@@ -14,6 +14,7 @@ namespace nsApp
 	{
 		class Boss;
 
+
 		/**
 		 * @enum FirePattern
 		 * @brief 火炎攻撃のパターン種別。
@@ -44,6 +45,8 @@ namespace nsApp
 		class BossFireCombatSystem
 		{
 		public:
+			static const int MAX_RAIN_DROPS = 16;
+
 			/** @brief ヒット判定の初期化。Boss::Start() から呼ぶ。 */
 			void Init();
 
@@ -66,6 +69,60 @@ namespace nsApp
 			inline WeaponHitDetection& GetFireHit()
 			{
 				return m_FireHit;
+			}
+
+			/**
+			 * @brief 着弾炎柱のヒット判定を取得する。
+			 */
+			inline WeaponHitDetection& GetLandingHit()
+			{
+				return m_LandingHit;
+			}
+
+			/**
+			 * @brief Rain 滴 1 個分のヒット判定参照（半径取得用）。
+			 */
+			inline WeaponHitDetection& GetRainHit()
+			{
+				return m_RainHit;
+			}
+
+			/**
+			 * @brief Rain 滴の最大数を返す。
+			 */
+			inline int GetRainDropCount() const
+			{
+				return MAX_RAIN_DROPS;
+			}
+
+			/**
+			 * @brief 指定 index の Rain 滴が有効か。
+			 */
+			inline bool IsRainDropActive(int index) const
+			{
+				if (index < 0 || index >= MAX_RAIN_DROPS)
+					return false;
+
+				return m_rainDrops[index].active;
+			}
+
+			/**
+			 * @brief 指定 index の Rain 滴の論理座標。
+			 */
+			inline Vector3 GetRainDropPosition(int index) const
+			{
+				if (index < 0 || index >= MAX_RAIN_DROPS)
+					return Vector3::Zero;
+
+				return m_rainDrops[index].pos;
+			}
+
+			/**
+			 * @brief Rain 滴の当たり半径（Threat 用）。
+			 */
+			inline float GetRainHitRadius() const
+			{
+				return m_RainHit.GetRadius();
 			}
 
 

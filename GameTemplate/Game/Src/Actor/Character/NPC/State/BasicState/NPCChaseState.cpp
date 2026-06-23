@@ -1,49 +1,41 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "NPCChaseState.h"
-#include "Src/Actor/Character/Boss/Boss.h"
-#include "Src/Actor/Character/NPC/State/BasicState/NPCIdleState.h"
-#include "Src/Actor/Character/Player/Player.h"
 
+/* Player。*/
+#include "Src/Actor/Character/Player/Player.h"
+#include "Src/Actor/Character/Player/InputSystem/VirtualInputAdapter.h"
+
+/* NPC。*/
+#include "Src/Actor/Character/NPC/State/BasicState/NPCIdleState.h"
 #include "Src/Actor/Character/NPC/State/AttackState/NPCSwordAttackState.h"
 #include "Src/Actor/Character/NPC/State/AttackState/NPCHammerAttackState.h"
 #include "Src/Actor/Character/NPC/State/AttackState/NPCWandAttackState.h"
 #include "Src/Actor/Character/NPC/State/AttackState/NPCTwinGunAttackState.h"
-#include "Src/Actor/Character/Player/InputSystem/VirtualInputAdapter.h"
 #include "Src/Actor/Character/NPC/State/BasicState/NPCHelpState.h"
-#include "Src/Actor/Character/NPC/Component/NPCCombatHelper.h"
-#include "Src/Actor/Character/NPC/Component/NPCActionParameterTable.h"
+#include "Src/Actor/Character/NPC/Movement/NPCMovementController.h"
+#include "Src/Actor/Character/NPC/Movement/NPCCombatRangeHelper.h"
+#include "Src/Actor/Character/NPC/State/BasicState/NPCEvadeState.h"
+#include "Src/Actor/Heel/HeelArea.h"
+
+#include "Src/Actor/Character/NPC/Social/NPCSocialEvaluator.h"
+#include "Src/Actor/Character/NPC/Social/NPCSocialContext.h"
 
 namespace
 {
-	/* ���͒l�B*/
-	const auto INPUT_STICK_X = 0.0f;           //! �X�e�B�b�N��X���͒l�B
-	const auto INPUT_STICK_Y = 0.0f;           //! �X�e�B�b�N��Y���͒l�B
-
-	/* �����E�ԍ����֘A�B*/ 
-	const auto ATTACK_RANGE_BASE = 150.0f;     //! ��U�������B
-	const auto ATTACK_RANGE_MELEE = 150.0f;    //! �ߐڐE�̊�U�������B
-	const auto ATTACK_RANGE_MAGIC = 250.0f;    //! �������E�̊�U�������B
-
-	const auto ATTACK_RANGE_SWORD = 20.0f;     //! ���̍U�������B
-	const auto ATTACK_RANGE_HAMMER = 40.0f;    //! �n���}�[�̍U�������B
-	const auto ATTACK_RANGE_WAND = 80.0f;      //! ��̍U�������B
-	const auto ATTACK_RANGE_GUN = 130.0f;      //! �e�̍U�������B
-	
-	const auto HELP_RANGE = 90.0f;             //! �������~���\�ȋ����B
-	const auto MOVE_DEAD_ZONE = 0.001f;        //! ���K���O�̈��S����B
-	const auto HOLD_FRAME = 3;				   //! �{�^��������������t���[�����i�U���̎������Ԃɉe���j�B
+	const auto MOVE_DEAD_ZONE = 0.001f;         //! 正規化前の安全閾値。
+	const auto SEPARATION_BLEND_WEIGHT = 0.20f; //! 味方分離を移動方向に混ぜる強さ。
 }
 
 namespace nsApp
 {
-	/* ���u���C���c NPCBrain�N���X���w���܂��B�@NPC�̔��f(�])���i���Ă��܂��B*/
 	namespace nsState
 	{
 		void NPCChaseState::Enter()
 		{
-			/* �u���C���ƃR���|�[�l���g�̎擾�B*/
+			/* ブレインとコンポーネントの取得。*/
 			m_brain = static_cast<NPCBrain*>(m_owner);
-			/* �u���C�����Ȃ��ꍇ�͂��̏�Ԃ��ێ��ł��Ȃ����߁A�����ɔ�����B*/
+
+			/* ブレインがない場合はこの状態を維持できないため、ここで終了する。*/
 			if (m_brain == nullptr)
 			{
 				m_body = nullptr;
@@ -51,79 +43,87 @@ namespace nsApp
 				return;
 			}
 
-			/* �u���C������K�v�ȃR���|�[�l���g���擾�B*/
+			/* ブレインから必要なコンポーネントを取得。*/
 			m_body = m_brain->GetBody();
 			m_vInput = m_brain->GetVirtualInputAdapter();
 
-			/* �R���|�[�l���g���Ȃ��ꍇ�͂��̏�Ԃ��ێ��ł��Ȃ����߁A�����ɔ�����B*/
+			/* 移動入力をクリアしてから追跡を開始する。*/
 			ClearMoveInput();
 		}
 
 
 		void NPCChaseState::Update()
 		{
-			/* �u���C���ƃR���|�[�l���g���Ȃ��ꍇ�͂��̏�Ԃ��ێ��ł��Ȃ����߁A�����ɔ�����B*/
 			if (!m_body || !m_vInput || !m_brain)
 				return;
 
-			/* �����̋~����D�悷��B*/
+			/* HELP優先。*/
 			auto* helpTarget = m_brain->GetHelpTarget();
-
-			/* �~���Ώۂ����݂�����ꍇ�B*/
 			if (helpTarget != nullptr)
 			{
-				/* ���A�����ȊO�ŁA�����S���Ă��邩HP��0�ȉ��̏ꍇ�͋~���s���Ɉڂ�B*/
-				if (helpTarget != m_body && (helpTarget->IsDeath() || helpTarget->GetCharacterStatus().hp.currentHP <= 0))
+				if (m_brain->ShouldRespondToHelp())
 				{
-					/* �~���s�������s�B*/
 					ClearMoveInput();
-
-					/* �~���s���Ɉڂ�B*/
 					if (m_stateMachine != nullptr)
 						m_stateMachine->ChangeState(new NPCHelpState(helpTarget));
-
 					return;
 				}
 			}
 
-			/* �~���Ώۂ����݂��Ȃ��A�������͋~���̕K�v���Ȃ��ꍇ�́A�U���Ώۂ�ǂ�������B*/
+			const bool wandNeedsMagicHeal =
+				m_body->GetCurrentWeapon() == WeaponType::Wand
+				&& (m_brain->ShouldHealSelf() || m_brain->ShouldHealAlly());
+
+			/* 杖が魔法回復すべきときは HeelArea より魔法を優先。*/
+			if (!wandNeedsMagicHeal && TryMoveToHealArea())
+				return;
+
+			if (wandNeedsMagicHeal)
+			{
+				auto* ally = m_brain->FindAllyNeedingHeal();
+				if (ally != nullptr && m_brain->ShouldHealAlly())
+				{
+					const float dx = ally->GetPosition().x - m_body->GetPosition().x;
+					if (fabsf(dx) > 80.0f)
+					{
+						const float signX = (dx > 0.0f) ? 1.0f : -1.0f;
+						Vector3 dir(signX, 0.0f, 0.0f);
+						NPCMovementController::Apply(
+							m_vInput,
+							NPCMovementController::MakeMoveIntent(dir, true));
+						return;
+					}
+				}
+
+				ClearMoveInput();
+				if (m_stateMachine != nullptr)
+					m_stateMachine->ChangeState(new NPCWandAttackState());
+				return;
+			}
+
+			/* 回避。*/
+			if (m_brain->ShouldEvade())
+			{
+				ClearMoveInput();
+				if (m_stateMachine != nullptr)
+					m_stateMachine->ChangeState(new NPCEvadeState());
+				return;
+			}
+
+			/* 追跡。*/
 			auto* target = m_brain->SearchTarget();
 			ExecuteChaseAction(target);
 		}
 
-
 		void NPCChaseState::Exit()
 		{
-			/* �u���C���ƃR���|�[�l���g���Ȃ��ꍇ�͂��̏�Ԃ��ێ��ł��Ȃ����߁A�����ɔ�����B*/
+			/* ブレインとコンポーネントがない場合は移動入力をクリアできないため、ここで終了する。*/
 			ClearMoveInput();
 
+			/* ブレインとコンポーネントのポインタをクリアする。*/
 			m_brain = nullptr;
 			m_body = nullptr;
 			m_vInput = nullptr;
-		}
-
-
-		bool NPCChaseState::ExecuteHelpAction(nsActor::Player* helpTarget)
-		{
-			/* �~���ΏۂƃR���|�[�l���g���Ȃ��ꍇ�͋~���s�������s�ł��Ȃ����߁Afalse��Ԃ��B*/
-			if (helpTarget == nullptr || m_body == nullptr || m_vInput == nullptr)
-				return false;
-
-			/* �~���ΏۂƂ̋������v�Z�B*/
-			ComputeDistance(helpTarget);
-			
-			/* �~���Ώۂ��~���\�ȋ�����艓���ꍇ�́A�~���Ώۂɋ߂Â��B*/
-			if (m_distance > HELP_RANGE)
-				MoveTowardTarget();
-
-			else
-			{
-				/* �~���Ώۂ��~���\�ȋ����ɂ���ꍇ�́A�~���s�������s����B*/
-				ClearMoveInput();
-				m_vInput->RequestButton(enButtonY, HOLD_FRAME);
-			}
-
-			return true;
 		}
 
 
@@ -131,53 +131,112 @@ namespace nsApp
 		{
 			if (target == nullptr)
 			{
-				/* �ڕW�����Ȃ��ꍇ�͒ǐՏ�ԂɑJ�ڂ���B*/
 				ClearMoveInput();
-
-				/* �ڕW�����Ȃ��ꍇ�͑ҋ@��ԂɑJ�ڂ���B*/
 				if (m_stateMachine != nullptr)
 					m_stateMachine->ChangeState(new NPCIdleState());
-
 				return;
 			}
 
-			m_myWeapon = m_body->GetCurrentWeapon();
-			m_attackRange = CharacterToBeChosen(m_myWeapon);
+
+			const NPCBehaviorProfile& profile = m_brain->GetBehaviorProfile();
+			const WeaponType weapon = m_body->GetCurrentWeapon();
 
 			ComputeDistance(target);
 
-			if (m_distance > m_attackRange)
+			/* 遠距離武器：帯の外だけ動く。帯内は止まって攻撃。*/
+			if (nsNPC::IsRangedWeaponByProfile(profile))
 			{
+				/* 攻撃可能なら後退より先に Attack へ */
+				if (nsNPC::CanBeginAttack(m_distance, weapon, profile))
+				{
+					TransitionToAttackState();
+					return;
+				}
+				if (nsNPC::ShouldRetreatWithHysteresis(m_distance, profile, m_brain->GetIsRetreatingFlag()))
+				{
+					MoveAwayFromTarget();
+					return;
+				}
+
+
+
+				/* ヒステリシス帯の外なら、フラグなしでも動く */
+				if (!m_brain->GetIsApproachingFlag() && !m_brain->GetIsRetreatingFlag())
+				{
+					if (m_distance > nsNPC::GetRangedAttackMaxDistanceByProfile(profile))
+					{
+						MoveTowardTarget();
+						return;
+					}
+					if (m_distance < nsNPC::GetRangedRetreatEnterDistance(profile))
+					{
+						MoveAwayFromTarget();
+						return;
+					}
+				}
+
+				/* 杖：回復需要があれば攻撃インターバルより優先。*/
+				if (weapon == WeaponType::Wand)
+				{
+					if (m_brain->ShouldHealSelf() || m_brain->ShouldHealAlly())
+					{
+						TransitionToAttackState();
+						return;
+					}
+				}
+
+				/* 攻撃帯に入ったらインターバル待ちでも攻撃ステートへ（棒立ち防止）。*/
+				if (nsNPC::CanBeginAttack(m_distance, weapon, profile))
+				{
+					TransitionToAttackState();
+					return;
+				}
+				/* まだ遠い／近すぎる場合のみ移動。*/
+				if (m_distance > nsNPC::GetRangedAttackMaxDistanceByProfile(profile))
+				{
+					MoveTowardTarget();
+					return;
+				}
+				if (m_distance < nsNPC::GetRangedRetreatEnterDistance(profile))
+				{
+					MoveAwayFromTarget();
+					return;
+				}
+				/* 帯の端：微調整。*/
 				MoveTowardTarget();
 				return;
 			}
 
-			/* �U���͈͓��ł͕K���~�܂�B
-			 * �ȑO�̉��ړ������́A�U���ҋ@���ɖ��t���[�����͂����葱���邽�߁A
-			 * NPC�������ō��E�ɂ��낤�낷�錴���ɂȂ�₷���B
-			 */
-			ClearMoveInput();
-
-			if (!m_brain->CanAttack())
+			
+			const float meleeMax = nsNPC::GetMeleeMaxAttackRange(weapon);
+			if (nsNPC::CanBeginAttack(m_distance, weapon, profile))
+			{
+				TransitionToAttackState();
 				return;
-
-			TransitionToAttackState();
+			}
+			if (m_distance < meleeMax * 0.6f)
+			{
+				MoveAwayFromTarget();
+				return;
+			}
+			MoveTowardTarget();
+			return;
 		}
-		
+
 
 		void NPCChaseState::TransitionToAttackState()
 		{
-			/* �u���C���ƃR���|�[�l���g���Ȃ��ꍇ�͍U����ԂɑJ�ڂł��Ȃ����߁A�����ɔ�����B*/
+			/* ブレインとコンポーネントがない場合は攻撃状態に遷移できないため、ここで終了する。*/
 			if (m_stateMachine == nullptr || m_body == nullptr)
 				return;
 
-			/* �U����ԂɑJ�ڂ���O�ɁA�ړ����͂����Z�b�g����NPC���U�����ɕs���R�ɓ������̂�h�~����B*/
+			/* 攻撃状態に遷移する前に、移動入力をリセットして NPC が攻撃中に不自然に動くのを防ぐ。*/
 			ClearMoveInput();
 
-			/* ���݂̕�����擾���āA�U����ԂɑJ�ڂ���B*/
+			/* 現在の武器の種類を取得する。*/
 			m_myWeapon = m_body->GetCurrentWeapon();
 
-			/* ����̎�ނɉ����āA�Ή�����U����ԂɑJ�ڂ���B*/
+			/* 武器の種類に応じて、対応する攻撃状態に遷移する。*/
 			if (m_myWeapon == WeaponType::Wand)
 				m_stateMachine->ChangeState(new NPCWandAttackState());
 
@@ -194,58 +253,136 @@ namespace nsApp
 
 		void NPCChaseState::ClearMoveInput()
 		{
-			/* �R���|�[�l���g���Ȃ��ꍇ�͈ړ����͂��N���A�ł��Ȃ����߁A�����ɔ�����B*/
-			if (m_vInput == nullptr)
-				return;
-
-			/* �ړ����͂��j���[�g�����Ƀ��Z�b�g����B*/
-			m_vInput->SetLStick(INPUT_STICK_X, INPUT_STICK_Y);
-			/* ���ړ��̓��͂����Z�b�g����B*/
-			m_vInput->SetButton(enButtonLB1, false);
+			/* ブレインとコンポーネントがない場合は移動入力をクリアできないため、ここで終了する。*/
+			NPCMovementController::Stop(m_vInput);
 		}
 
 
 		void NPCChaseState::MoveTowardTarget()
 		{
-			/* �u���C���ƃR���|�[�l���g���Ȃ��ꍇ�͈ړ����͂������ł��Ȃ����߁A�����ɔ�����B*/
+			/* ブレインとコンポーネントがない場合は移動入力を入れられないため、ここで終了する。*/
 			if (m_vInput == nullptr)
 				return;
 
-			/* �ڕW�Ƃ̋������v�Z�B*/
+			/* 目標までの距離が閾値以下の場合は移動入力をクリアする。*/
 			if (m_distance <= MOVE_DEAD_ZONE || m_difference.LengthSq() <= MOVE_DEAD_ZONE)
 			{
-				/* �ڕW�Ƃ̋��������ɋ߂��ꍇ�́A�ړ����͂��N���A���Ē�~����B*/
+				/* 目標が近すぎる場合は移動入力をクリアして停止する。*/
 				ClearMoveInput();
 				return;
 			}
 
-			/* �ڕW�Ƃ̋������\���ɂ���ꍇ�́A�ڕW�̕����Ɍ������Ĉړ�����B*/
-			m_difference.Normalize();
-			m_vInput->SetLStick(m_difference.x, m_difference.z);
-			m_vInput->SetButton(enButtonLB1, false);
+			/* 目標方向へ走って移動する（味方分離を少し混ぜる）。*/
+			const auto signX = (m_difference.x > 0.0f) ? 1.0f : -1.0f;
+			Vector3 direction(signX, 0.0f, 0.0f);
+
+			/* 移動入力を入れる。*/
+			const NPCMovementIntent intent = NPCMovementController::MakeMoveIntent(direction, true);
+			NPCMovementController::Apply(m_vInput, intent);
 		}
 
 
-		float NPCChaseState::CharacterToBeChosen(WeaponType type) const
+		void NPCChaseState::MoveAwayFromTarget()
 		{
-			/* ����̎�ނɉ����āA�U���͈͂𒲐�����B*/
-			switch (type)
+			if (m_vInput == nullptr)
+				return;
+
+			float signX = 0.0f;
+			if (fabsf(m_difference.x) > MOVE_DEAD_ZONE)
+				signX = (m_difference.x > 0.0f) ? -1.0f : 1.0f;
+			else
+				signX = (m_body->GetPosition().x >= m_difference.x + m_body->GetPosition().x) ? 1.0f : -1.0f;
+			/* 上が分かりにくい場合は単純に: */
+			// else signX = (m_partyIndex % 2 == 0) ? -1.0f : 1.0f;
+
+			/* より安全: ボスより右にいれば左へ、左にいれば右へ */
+			// （target は ExecuteChaseAction から渡すか、差分符号で判定）
+
+			Vector3 awayDirection(signX, 0.0f, 0.0f);
+			const NPCMovementIntent intent = NPCMovementController::MakeMoveIntent(awayDirection, true);
+			NPCMovementController::Apply(m_vInput, intent);
+		}
+
+
+		bool NPCChaseState::TryMoveToHealArea()
+		{
+			if (m_body == nullptr || m_vInput == nullptr || m_brain == nullptr)
+				return false;
+
+			const auto& hp = m_body->GetCharacterStatus().hp;
+			if (hp.maxHP <= 0)
+				return false;
+
+			const float rate = static_cast<float>(hp.currentHP) / static_cast<float>(hp.maxHP);
+			if (rate > 0.65f)
+				return false;
+
+			auto* heelArea = FindGO<nsApp::HeelArea>("HeelArea");
+			if (heelArea == nullptr || !heelArea->IsAlive())
+				return false;
+
+			const float dx = heelArea->GetAreaPosition().x - m_body->GetPosition().x;
+			if (fabsf(dx) <= heelArea->GetRadius())
 			{
-			case WeaponType::GreatSword:
-				return ATTACK_RANGE_BASE - ATTACK_RANGE_SWORD;
-
-			case WeaponType::Hammer:
-				return ATTACK_RANGE_BASE - ATTACK_RANGE_HAMMER;
-
-			case WeaponType::Wand:
-				return ATTACK_RANGE_BASE + ATTACK_RANGE_WAND;
-
-			case WeaponType::TwinGun:
-				return ATTACK_RANGE_BASE + ATTACK_RANGE_GUN;
-
-			default:
-				return ATTACK_RANGE_BASE;
+				ClearMoveInput();
+				return true;
 			}
+
+			const float signX = (dx > 0.0f) ? 1.0f : -1.0f;
+			Vector3 dir(signX, 0.0f, 0.0f);
+			NPCMovementController::Apply(
+				m_vInput,
+				NPCMovementController::MakeMoveIntent(dir, true));
+			return true;
+		}
+
+
+		void NPCChaseState::ComputeDistance(nsActor::ICharacter* targetObject)
+		{
+			m_difference = targetObject->GetPosition() - m_body->GetPosition();
+			m_difference.y = 0.0f;
+			m_difference.z = 0.0f;
+			m_distance = fabsf(m_difference.x);
+		}
+
+
+		Vector3 NPCChaseState::BlendSeparation(const Vector3& moveDirection) const
+		{
+			if (m_body == nullptr || moveDirection.LengthSq() <= MOVE_DEAD_ZONE)
+				return moveDirection;
+
+			nsNPC::NPCSocialContext context;
+			context.self = m_body;
+
+			const Vector3 separation = nsNPC::NPCSocialEvaluator::CalcSeparationVector(m_body->GetPosition(), context);
+			if (separation.LengthSq() <= MOVE_DEAD_ZONE)
+				return moveDirection;
+
+			/* 前後移動のときは「横成分だけ」分離する（左右カタカタ防止）。*/
+			Vector3 forward = moveDirection;
+			forward.y = 0.0f;
+			forward.Normalize();
+
+			const float dot = separation.x * forward.x + separation.z * forward.z;
+			Vector3 lateral;
+			lateral.x = separation.x - forward.x * dot;
+			lateral.z = separation.z - forward.z * dot;
+			lateral.y = 0.0f;
+
+			if (lateral.LengthSq() <= MOVE_DEAD_ZONE)
+				return moveDirection;
+
+			lateral.Normalize();
+
+			Vector3 blended = forward;
+			blended += lateral * SEPARATION_BLEND_WEIGHT;
+			blended.y = 0.0f;
+
+			if (blended.LengthSq() <= MOVE_DEAD_ZONE)
+				return moveDirection;
+
+			blended.Normalize();
+			return blended;
 		}
 	}
 }

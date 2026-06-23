@@ -7,10 +7,11 @@
 
 namespace
 {
-	const auto PLAYER_ATTACK_DAMAGE_RATE = 1.0f; //! 操作中キャラクターの攻撃補正。
-	const auto NPC_ATTACK_DAMAGE_RATE = 0.4f;    //! NPC操作キャラクターの攻撃補正。
-	const auto NPC_ATTACK_INTERVAL = 60;         //! NPCの攻撃間隔。
+	const auto PLAYER_ATTACK_DAMAGE_RATE = 1.0f;	  //! 操作中キャラクターの攻撃補正。
+	const auto NPC_ATTACK_DAMAGE_RATE = 0.4f;		  //! NPC操作キャラクターの攻撃補正。
+	const auto ATTACK_INTERVAL_STAGGER_PER_INDEX = 3; //! 0,3,6,9 フレームずらす
 }
+
 
 namespace nsApp
 {
@@ -33,6 +34,7 @@ namespace nsApp
 				/* NPC操作キャラクターの攻撃補正を設定。*/
 				auto* vAdapter = static_cast<VirtualInputAdapter*>(m_adapters[i].get());
 				brain->SetVirtualInputAdapter(vAdapter);
+				brain->SetPartyIndex(i);
 			}
 
 			/* 1P操作に割り当てるプレイヤーのインデックスを取得。*/
@@ -40,11 +42,8 @@ namespace nsApp
 				m_target1PIndex = i;
 		}
 
-		//////////////////////////////////////////////////////////////////
-		// ゲーム開始時は強制的に n番目 をプレイヤー操作にする
-		// （※キャラ選択画面ができたら、ここで「選ばれた番号」を渡すようにします）
+		/* 初期状態では1P操作キャラクターを操作する。*/
 		SwitchActivePlayers(m_target1PIndex);
-		///////////////////////////////////////////////////////////////////
 	}
 
 
@@ -87,21 +86,37 @@ namespace nsApp
 				/* 操作キャラの入力デバイスをゲームパッドに設定。*/
 				m_players[i]->GetInputClass().SetInputDevice(m_gamePad.get());
 				m_players[i]->SetAttackDamageRate(PLAYER_ATTACK_DAMAGE_RATE);
+				m_players[i]->SetNpcControlled(!isActivePlayer);
 			}
 			else
 			{
 				/* NPCの入力デバイスを仮想入力アダプターに設定。*/
 				m_players[i]->GetInputClass().SetInputDevice(m_adapters[i].get());
 				m_players[i]->SetAttackDamageRate(NPC_ATTACK_DAMAGE_RATE);
+				m_players[i]->SetNpcControlled(!isActivePlayer);
 
 				/* NPCの攻撃間隔を設定。*/
 				auto* brain = m_players[i]->GetBrain();
 				if (brain != nullptr)
-					brain->SetAttackInterval(NPC_ATTACK_INTERVAL);
+					brain->SetAttackInterval(CalcNpcAttackInterval(m_players[i],i));
 			}
 		}
 
 		/* インデックスを更新。*/
 		m_activePlayerIndex = targetIndex;
+	}
+
+
+	int PlayerControlerHub::CalcNpcAttackInterval(nsActor::Player* player, int partyIndex)
+	{
+		/* プレイヤーがnullptrの場合はデフォルトの攻撃間隔を返す。*/
+		if(player == nullptr)
+			return 60;
+
+		/* 攻撃間隔の計算。*/
+		const NPCStatusParameter& param = NPCStatusParameterTable::GetParameter(player->GetCurrentWeapon());
+
+		/* 攻撃間隔を計算して返す。*/
+		return param.attackInterval + partyIndex * ATTACK_INTERVAL_STAGGER_PER_INDEX;
 	}
 }

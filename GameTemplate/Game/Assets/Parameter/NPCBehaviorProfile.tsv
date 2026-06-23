@@ -1,0 +1,5 @@
+WeaponType	PreferredAttackRange	EvadeThreshold	EvadeExitThreshold	EvadeReactionDelayMin	EvadeReactionDelayMax	ThreatMarginScale	Aggression	PreferRunInEvade
+Sword	170	0.30	0.18	0	2	0.8	1	1
+Hammer	190	0.28	0.17	1	4	0.7	1.2	1
+Wand	280	0.25	0.15	2	6	0.8	0.45	1
+TwinGun	300	0.22	0.13	1	5	0.8	0.7	1

@@ -619,6 +619,13 @@ namespace nsApp
 
 			/* ダウンカウントをリセットする。*/
 			m_stateMachine->ChangeState(m_stateFactory[PlayerStateID::enIdle]());
-		}	
+		}
+
+
+		void Player::NotifyReturnedFromKnockBack()
+		{
+			m_playerStateID = PlayerStateID::enIdle;
+			m_currentStateID = static_cast<uint8_t>(PlayerStateID::enIdle);
+		}
 	}
 }

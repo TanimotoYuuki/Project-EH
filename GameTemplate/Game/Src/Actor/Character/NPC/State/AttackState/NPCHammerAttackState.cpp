@@ -42,13 +42,6 @@ namespace nsApp
 		{
 			/* キャストとキャッシュの取得 */
 			NPCAttackBaseState::Enter();
-
-			/* 攻撃パターンの抽選 */
-			m_randomPattern = rand() % NUM_HAMMER_PATTERNS;
-			m_currentPattern =
-				(m_randomPattern == 0) ? NPCHammerPattern::enHeavy :
-				(m_randomPattern == 1) ? NPCHammerPattern::enPush :
-				NPCHammerPattern::enAir;
 		}
 
 
@@ -56,6 +49,10 @@ namespace nsApp
 		{
 			/* 救助要請がないかチェック。*/
 			if (CheckHelpTransition())
+				return;
+
+			/* 危険回避が必要かチェック。*/
+			if (CheckEvadeTransition())
 				return;
 
 			/* 目標を探索する。*/
@@ -71,11 +68,22 @@ namespace nsApp
 			/* 距離を計算 */
 			ComputeDistance(target);
 
+			/* 届かない距離なら追跡へ戻る。*/
+			if (m_distance > nsNPC::GetMeleeMaxAttackRange(m_getBody->GetCurrentWeapon()))
+			{
+				m_stateMachine->ChangeState(new NPCChaseState());
+				return;
+			}
+
 			/* 一定の距離以上離れた場合、追跡状態に遷移 */
 			if (m_distance > CHASE_TRANSITION_DISTANCE) {
 				m_stateMachine->ChangeState(new NPCChaseState());
 				return;
 			}
+
+			/* 攻撃パターンの選択（攻撃開始時に一度だけ） */
+			if(m_attackTimer == 0)
+				ChoosePattern();
 
 			/* タイマーの更新 */
 			m_attackTimer++;
@@ -175,6 +183,29 @@ namespace nsApp
 
 			/* 移動/距離の計算 */
 			UpdateMovement();
+		}
+
+		void NPCHammerAttackState::ChoosePattern()
+		{
+			NPCHammerPattern candidates[3];
+			int count = 0;
+
+			/* Heavy：近距離 */
+			if (m_distance <= 75.0f)
+				candidates[count++] = NPCHammerPattern::enHeavy;
+
+			/* Push：中距離 */
+			if (m_distance <= 95.0f)
+				candidates[count++] = NPCHammerPattern::enPush;
+
+			/* Air：離れ気味 */
+			if (m_distance >= 55.0f && m_distance <= 110.0f)
+				candidates[count++] = NPCHammerPattern::enAir;
+
+			if (count == 0)
+				candidates[count++] = NPCHammerPattern::enHeavy;
+
+			m_currentPattern = candidates[rand() % count];
 		}
 	}
 }

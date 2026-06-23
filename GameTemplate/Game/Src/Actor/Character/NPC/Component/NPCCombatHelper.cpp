@@ -13,20 +13,14 @@ namespace nsApp
 {
 	float NPCCombatHelper::ComputeDistance(const Vector3& myPos, const Vector3& targetPos, Vector3& outDiff)
 	{
-		/* 距離の計算。*/
 		outDiff = targetPos - myPos;
-		outDiff.y = OUT_DIR_Y;
-
-		/* 計算した距離を流さベクトルとして置き換える。*/
-		float dist = outDiff.Length();
-
-		/* 正規化。*/
+		outDiff.y = 0.0f;
+		outDiff.z = 0.0f;
+		const float dist = fabsf(outDiff.x);
 		if (dist > ZERO_THRESHOLD)
-			outDiff.Normalize();
-		/* 距離が近すぎる場合は、ベクトルをゼロにする。*/
+			outDiff.x = (outDiff.x > 0.0f) ? 1.0f : -1.0f;
 		else
 			outDiff = Vector3::Zero;
-
 		return dist;
 	}
 

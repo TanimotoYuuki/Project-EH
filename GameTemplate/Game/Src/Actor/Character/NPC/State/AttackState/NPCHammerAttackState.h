@@ -64,6 +64,9 @@ namespace nsApp
 			/* 実行フロー。*/
 			void ExecutionFlow();
 
+			/* 距離に応じた攻撃パターン選択。*/
+			void ChoosePattern();
+
 
 		private:
 			NPCHammerPattern m_currentPattern = NPCHammerPattern::enNone;   //! 現在の攻撃パターンを保存する変数。
