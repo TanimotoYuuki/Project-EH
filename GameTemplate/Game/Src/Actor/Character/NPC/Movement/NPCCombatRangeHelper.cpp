@@ -145,18 +145,21 @@ namespace nsApp
 
 		bool IsRangedWeaponByProfile(const NPCBehaviorProfile& profile)
 		{
+			/* 遠距離武器かどうかを判定する。遠距離武器の定義は、攻撃範囲が一定以上であること。*/
 			return IsRangedWeapon(profile, RANGED_ATTACK_RANGE);
 		}
 
 
 		float GetRetreatDistanceByProfile(const NPCBehaviorProfile& profile)
 		{
+			/* 遠距離武器の後退距離を計算する。後退距離は、NPCの好む攻撃範囲にマージンを加えた値である。*/
 			return GetRetreatDistance(profile, RETREAT_RANGE_MARGIN);
 		}
 
 
 		float GetRangedAttackMaxDistanceByProfile(const NPCBehaviorProfile& profile)
 		{
+			/* 遠距離武器の最大攻撃距離を計算する。最大攻撃距離は、NPCの好む攻撃範囲にマージンを加えた値である。*/
 			return profile.preferredAttackRange + RANGED_ATTACK_RANGE_MARGIN;
 		}
 	}

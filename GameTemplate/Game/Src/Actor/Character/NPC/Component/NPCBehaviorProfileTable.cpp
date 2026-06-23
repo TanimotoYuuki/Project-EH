@@ -54,8 +54,10 @@ namespace nsApp
 		return fallbackParameter;
 	}
 
+
 	WeaponType NPCBehaviorProfileTable::ConvertWeaponType(const std::string& weaponName)
 	{
+		/* weaponNameの値をWeaponTypeに変換する。複数の表記に対応する。*/
 		if (weaponName == "Sword" || weaponName == "GreatSword" || weaponName == "WeaponType::GreatSword")
 			return WeaponType::GreatSword;
 		if (weaponName == "Hammer" || weaponName == "WeaponType::Hammer")

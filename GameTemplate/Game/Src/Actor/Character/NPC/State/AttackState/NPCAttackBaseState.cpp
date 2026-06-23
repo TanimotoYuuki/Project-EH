@@ -52,6 +52,7 @@ namespace nsApp
 					virtualInput->Reset();
 			}
 
+			/* リセット。*/
 			m_virtualInput = nullptr;
 			m_getBody = nullptr;
 			m_npcBrain = nullptr;
@@ -60,9 +61,13 @@ namespace nsApp
 
 		void NPCAttackBaseState::ComputeDistance(nsActor::ICharacter *targetObject)
 		{
+			/* Playerクラスが居ないなら処理を止める。*/
 			if (m_getBody == nullptr || targetObject == nullptr)
 			{
+				/* 距離と差分をリセットして処理を終了する。*/
 				m_distance = 0.0f;
+
+				/* 差分をリセット。*/
 				m_diff = Vector3::Zero;
 				return;
 			}
@@ -133,9 +138,11 @@ namespace nsApp
 
 		bool NPCAttackBaseState::CheckEvadeTransition()
 		{
+			/* NPCBrainクラスが存在しない場合は、以降の処理を行わない。*/
 			if (m_npcBrain == nullptr || m_stateMachine == nullptr)
 				return false;
 
+			/* 回避すべきかどうかを判定する。*/
 			if (!m_npcBrain->ShouldEvade())
 				return false;
 
@@ -143,6 +150,7 @@ namespace nsApp
 			if (m_isAttacking && !m_npcBrain->IsDangerous())
 				return false;
 
+			/* 回避状態に遷移する。*/
 			m_stateMachine->ChangeState(new NPCEvadeState());
 			return true;
 		}

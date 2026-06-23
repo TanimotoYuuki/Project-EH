@@ -38,9 +38,11 @@ namespace nsApp
 	{
 		void NPCTwinGunAttackState::ChoosePattern()
 		{
+			/* 攻撃パターンの候補を選択する。 */
 			const NPCBehaviorProfile& profile = m_npcBrain->GetBehaviorProfile();
 			const float retreatDist = nsNPC::GetRetreatDistanceByProfile(profile);
 
+			/* 攻撃パターンの配列を設定。*/
 			NPCTwinGunPattern candidates[3];
 			int count = 0;
 
@@ -181,6 +183,7 @@ namespace nsApp
 
 		void NPCTwinGunAttackState::UpdateMovement()
 		{
+			/* ブレインとコンポーネントがない場合は移動入力を入れられないため、ここで終了する。*/
 			if (m_virtualInput == nullptr || m_npcBrain == nullptr)
 				return;
 
@@ -197,6 +200,7 @@ namespace nsApp
 				return;
 			}
 
+			/* 攻撃中は移動しない。*/
 			NPCMovementController::Stop(m_virtualInput);
 		}
 

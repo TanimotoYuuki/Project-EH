@@ -4,7 +4,7 @@
 
 namespace
 {
-	const float MOVE_DEAD_ZONE = 0.001f; //! �ړ����͂̃f�b�h�]�[���B����ȉ��̓��͖͂�������B
+	const float MOVE_DEAD_ZONE = 0.001f; //! 正規化前の安全閾値。
 }
 
 namespace nsApp
@@ -18,7 +18,7 @@ namespace nsApp
 		/* 移動入力がない場合は停止する。*/
 		if (intent.stop || intent.direction.LengthSq() <= MOVE_DEAD_ZONE)
 		{
-			/* ��~����B*/
+			/* 移動入力をクリアして停止する。*/
 			Stop(vInput);
 			return;
 		}
@@ -27,16 +27,17 @@ namespace nsApp
 		Vector3 dir = intent.direction;
 		dir.y = 0.0f;
 
+		/* 移動入力がデッドゾーン内の場合は停止する。*/
 		if (fabsf(dir.x) <= MOVE_DEAD_ZONE)
 		{
 			Stop(vInput);
 			return;
 		}
 
-
+		/* 正規化。*/
 		dir.Normalize();
 
-		/* ���z���͂ɓK�p����B*/
+		/* 移動入力をセットする。*/
 		const float signX = (dir.x > 0.0f) ? 1.0f : -1.0f;
 		vInput->SetLStick(dir.x, dir.z);
 		vInput->SetButton(enButtonLB1, intent.useRun);

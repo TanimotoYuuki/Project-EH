@@ -185,6 +185,7 @@ namespace nsApp
 			UpdateMovement();
 		}
 
+
 		void NPCHammerAttackState::ChoosePattern()
 		{
 			NPCHammerPattern candidates[3];

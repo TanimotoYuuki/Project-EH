@@ -4,7 +4,7 @@
 namespace
 {
 	const auto DEFAULT_HIT_RADIUS = 30.0f;      //! デフォルトの当たり判定半径。
-	const auto TARGET_HIT_PADDING = 30.0f;    //! ターゲット側の当たり判定余白。
+	const auto TARGET_HIT_PADDING = 30.0f;      //! ターゲット側の当たり判定余白。
 }
 
 namespace nsApp
@@ -32,9 +32,9 @@ namespace nsApp
 		/* ターゲットの座標と武器の座標の差分を求める。*/
 		m_targetPosition = target->GetPosition();
 		m_diffVector = m_position - m_targetPosition;
-
 		m_diff = m_diffVector.Length();
 
+		/* ターゲットの半径を考慮して、ヒット判定を行う。*/
 		if (m_diff < (m_radius + TARGET_HIT_PADDING))
 		{
 			/* ヒットしたターゲットをリストに登録。*/

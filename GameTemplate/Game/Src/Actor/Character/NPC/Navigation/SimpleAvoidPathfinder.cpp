@@ -5,14 +5,14 @@
 
 namespace
 {
-	const auto SAMPLE_DISTANCE = 80.0f;        //! 各方向の先をどれだけ進めて評価するか。
-	const auto MOVE_DEAD_ZONE = 0.001f;        //! 移動方向の長さがこの値以下なら無効とみなす。
-	const auto COST_TIE_EPSILON = 0.0001f;     //! 同コスト判定の誤差。
-	const auto COST_STABILITY_EPSILON = 0.02f; //! この範囲なら「ほぼ同じ危険度」とみなす。
-	const auto DIRECTION_SIMILARITY = 0.85f;   //! 前回方向とこれ以上似ていれば維持する。
-	const auto MAX_PARTY_SLOTS = 4;            //! 前回方向を保持するパーティ枠数。
+	const auto SAMPLE_DISTANCE = 80.0f;            //! 各方向の先をどれだけ進めて評価するか。
+	const auto MOVE_DEAD_ZONE = 0.001f;            //! 移動方向の長さがこの値以下なら無効とみなす。
+	const auto COST_TIE_EPSILON = 0.0001f;         //! 同コスト判定の誤差。
+	const auto COST_STABILITY_EPSILON = 0.02f;     //! この範囲なら「ほぼ同じ危険度」とみなす。
+	const auto DIRECTION_SIMILARITY = 0.85f;       //! 前回方向とこれ以上似ていれば維持する。
+	const auto MAX_PARTY_SLOTS = 4;                //! 前回方向を保持するパーティ枠数。
 
-	Vector3 s_lastDirection[MAX_PARTY_SLOTS];  //! パーティごとの前回回避方向。
+	Vector3 s_lastDirection[MAX_PARTY_SLOTS];      //! パーティごとの前回回避方向。
 	bool s_hasLastDirection[MAX_PARTY_SLOTS] = {}; //! 前回方向が有効か。
 }
 
@@ -22,24 +22,32 @@ namespace nsApp
 	{
 		AvoidPathResult SimpleAvoidPathfinder::Compute(const Vector3& currentPosition, const std::vector<IThreatZone*>& zones, int partyIndex, const NPCSocialContext& socialContext)
 		{
+			/* 結果の初期化。*/
 			AvoidPathResult result;
 			if (zones.empty())
 				return result;
 
+			/* パーティ番号を 0 から MAX_PARTY_SLOTS-1 の範囲に収める。*/
 			const int partySlot = (partyIndex < 0) ? 0 : ((partyIndex >= MAX_PARTY_SLOTS) ? (MAX_PARTY_SLOTS - 1) : partyIndex);
 
+			/* 各方向のサンプル位置の危険度を計算するラムダ。*/
 			auto CalcSampleCost = [&](const Vector3& dir) -> float
 				{
+					/* サンプル位置を計算する。*/
 					Vector3 samplePos = currentPosition + dir * SAMPLE_DISTANCE;
 					samplePos.y = 0.0f;
 
+					/* サンプル位置の危険度を計算する。*/
 					float cost = 0.0f;
 					for (IThreatZone* zone : zones)
 					{
+						/* ゾーンが無効ならスキップする。*/
 						if (zone == nullptr || !zone->IsActive())
 							continue;
 						cost += zone->GetDangerCost(samplePos);
 					}
+					
+					/* 社会的な位置ペナルティを加算する。*/
 					cost += NPCSocialEvaluator::CalcPositionPenalty(samplePos, socialContext);
 					return cost;
 				};

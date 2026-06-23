@@ -80,8 +80,11 @@ namespace nsApp
 		/* 回避中：退出閾値を下回るまで継続する。*/
 		if (m_isEvading)
 		{
+			/* 最低継続タイマーを消化。*/
 			if (m_evadeMinTimer > 0)
 				--m_evadeMinTimer;
+
+			/* 危険度が退出閾値以下で、最低継続タイマーも消化していれば回避終了。*/
 			if (cost <= exitThreshold && m_evadeMinTimer <= 0)
 			{
 				m_isEvading = false;
@@ -133,16 +136,13 @@ namespace nsApp
 		socialContext.self = ctx.outer;
 
 		/* パーティメンバーを避ける必要があるか。*/
-		return nsNPC::SimpleAvoidPathfinder::Compute(
-			ctx.outer->GetPosition(),
-			ctx.threats->GetActiveZones(),
-			ctx.partyIndex,
-			socialContext);
+		return nsNPC::SimpleAvoidPathfinder::Compute(ctx.outer->GetPosition(), ctx.threats->GetActiveZones(), ctx.partyIndex, socialContext);
 	}
 
 
 	int NPCLocomotionMind::CalcEvadeReactionDelay(const NPCBehaviorProfile& profile) const
 	{
+		/* 最小値と最大値が同じならその値を返す。*/
 		return RandomRange(profile.evadeReactionDelayMin, profile.evadeReactionDelayMax);
 	}
 }

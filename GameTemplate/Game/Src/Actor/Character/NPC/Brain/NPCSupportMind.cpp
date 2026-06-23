@@ -60,9 +60,9 @@ namespace nsApp
 			return false;
 
 		/* 自分の救助優先度を取得（TSV: 数値が小さいほど優先）。*/
-		const int myPriority =
-			NPCStatusParameterTable::GetParameter(ctx.outer->GetCurrentWeapon()).helpPriority;
+		const int myPriority = NPCStatusParameterTable::GetParameter(ctx.outer->GetCurrentWeapon()).helpPriority;
 
+		/* 救助対象のプレイヤー名をハードコードで列挙。*/
 		const char* playerNames[] = { "player1", "player2", "player3", "player4" };
 
 		/* 生存中の他プレイヤーと優先度を比較する。*/
@@ -83,8 +83,8 @@ namespace nsApp
 			if (other->GetBrain() == nullptr)
 				continue;
 
-			const int otherPriority =
-				NPCStatusParameterTable::GetParameter(other->GetCurrentWeapon()).helpPriority;
+			/* 他プレイヤーの救助優先度を取得。*/
+			const int otherPriority = NPCStatusParameterTable::GetParameter(other->GetCurrentWeapon()).helpPriority;
 
 			/* より優先度の高い NPC がいれば自分は行かない（Hammer=1 が最優先）。*/
 			if (otherPriority < myPriority)
@@ -171,12 +171,15 @@ namespace nsApp
 		/* 早期リターン。*/
 		if (ctx.outer == nullptr)
 			return false;
+
 		/* 杖以外は味方回復しない。*/
 		if (ctx.outer->GetCurrentWeapon() != WeaponType::Wand)
 			return false;
+
 		/* ダウン救助の方が優先。*/
 		if (ctx.helpTarget != nullptr && ShouldRespondToHelp(ctx))
 			return false;
+
 		/* 回復対象が1人でもいれば true。*/
 		return FindAllyNeedingHeal(ctx) != nullptr;
 	}
@@ -184,9 +187,11 @@ namespace nsApp
 
 	bool NPCSupportMind::ShouldGuard(const NPCMindContext& ctx) const
 	{
+		/* 早期リターン。*/
 		if (ctx.outer == nullptr || ctx.profile == nullptr || ctx.threats == nullptr)
 			return false;
 
+		/* 危険度を取得し、回避閾値の 35% 〜 85% の範囲ならガード。*/
 		const float cost = ctx.threats->GetTotalDangerCost(ctx.outer->GetPosition());
 		const float enter = ctx.profile->evadeThreshold;
 
@@ -197,24 +202,34 @@ namespace nsApp
 
 	int NPCSupportMind::CountAlliesNeedingHeal(const NPCMindContext& ctx) const
 	{
+		/* 早期リターン。*/
 		if (ctx.outer == nullptr)
 			return 0;
 
+		/* 味方プレイヤー名をハードコードで列挙。*/
 		const char* playerNames[] = { "player1", "player2", "player3", "player4" };
 		int count = 0;
 
+		/* 範囲内で HP が低い味方の人数を数える。*/
 		for (const char* name : playerNames)
 		{
+			/* Player達を探索。*/
 			auto* other = FindGO<nsActor::Player>(name);
+
+			/* 自分自身はカウントしない。*/
 			if (other == nullptr || other == ctx.outer)
 				continue;
+
+			/* ダウン・死亡は回復対象外（救助が別途担当）。*/
 			if (other->IsDeath() || other->GetCharacterStatus().hp.currentHP <= 0)
 				continue;
 
+			/* HP 割合が閾値以下で、かつ水平距離が範囲内ならカウント。*/ 
 			const auto& hp = other->GetCharacterStatus().hp;
 			if (hp.maxHP <= 0)
 				continue;
 
+			/* 閾値より HP が高い味方はスキップ。*/
 			const float rate = static_cast<float>(hp.currentHP) / static_cast<float>(hp.maxHP);
 			if (rate > ALLY_HEAL_HP_RATE)
 				continue;

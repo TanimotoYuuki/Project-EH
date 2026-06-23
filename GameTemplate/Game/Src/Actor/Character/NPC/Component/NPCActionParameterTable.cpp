@@ -50,6 +50,7 @@ namespace nsApp
 		return fallbackParameter;
 	}
 
+
 	NPCActionType NPCActionParameterTable::ConvertActionType(const std::string& actionName)
 	{
 		/* アクション名をアクションタイプに変換する。*/

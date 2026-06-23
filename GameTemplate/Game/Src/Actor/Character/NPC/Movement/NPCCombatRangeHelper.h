@@ -150,9 +150,25 @@ namespace nsApp
 		 */
 		bool ShouldApproachWithHysteresis(float distance, const NPCBehaviorProfile& profile, bool& isApproaching);
 
-
+		/**
+		 * @brief NPCが遠距離武器を使用しているかどうかを判定する。
+		 * @param profile NPCの行動プロファイル。
+		 * @return 遠距離武器を使用している場合は true、そうでない場合は false。
+		 */
 		bool IsRangedWeaponByProfile(const NPCBehaviorProfile& profile);
+
+		/**
+		 * @brief NPCの行動プロファイルに基づいて後退距離を取得する。
+		 * @param profile NPCの行動プロファイル。
+		 * @return 後退距離。
+		 */
 		float GetRetreatDistanceByProfile(const NPCBehaviorProfile& profile);
+
+		/**
+		 * @brief NPCの行動プロファイルに基づいて遠距離攻撃の最大距離を取得する。
+		 * @param profile NPCの行動プロファイル。
+		 * @return 遠距離攻撃の最大距離。
+		 */
 		float GetRangedAttackMaxDistanceByProfile(const NPCBehaviorProfile& profile);
 	}
 }

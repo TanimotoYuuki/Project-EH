@@ -70,32 +70,36 @@ namespace nsApp
 				}
 			}
 
-			const bool wandNeedsMagicHeal =
-				m_body->GetCurrentWeapon() == WeaponType::Wand
-				&& (m_brain->ShouldHealSelf() || m_brain->ShouldHealAlly());
+			/* 杖が魔法回復すべきときは HeelArea より魔法を優先。*/
+			const bool wandNeedsMagicHeal = m_body->GetCurrentWeapon() == WeaponType::Wand && (m_brain->ShouldHealSelf() || m_brain->ShouldHealAlly());
 
 			/* 杖が魔法回復すべきときは HeelArea より魔法を優先。*/
 			if (!wandNeedsMagicHeal && TryMoveToHealArea())
 				return;
 
+			/* 杖の回復が必要なときは、攻撃インターバルより優先して回復行動を取る。*/
 			if (wandNeedsMagicHeal)
 			{
+				/* 回復が必要か判断。*/
 				auto* ally = m_brain->FindAllyNeedingHeal();
 				if (ally != nullptr && m_brain->ShouldHealAlly())
 				{
+					/* 味方が回復範囲外なら近づく。*/
 					const float dx = ally->GetPosition().x - m_body->GetPosition().x;
 					if (fabsf(dx) > 80.0f)
 					{
+						/* 目標方向へ走って移動する。*/
 						const float signX = (dx > 0.0f) ? 1.0f : -1.0f;
 						Vector3 dir(signX, 0.0f, 0.0f);
-						NPCMovementController::Apply(
-							m_vInput,
-							NPCMovementController::MakeMoveIntent(dir, true));
+						NPCMovementController::Apply(m_vInput, NPCMovementController::MakeMoveIntent(dir, true));
 						return;
 					}
 				}
 
+				/* 入力値をリセット。*/
 				ClearMoveInput();
+
+				/* 遷移。*/
 				if (m_stateMachine != nullptr)
 					m_stateMachine->ChangeState(new NPCWandAttackState());
 				return;
@@ -131,16 +135,20 @@ namespace nsApp
 		{
 			if (target == nullptr)
 			{
+				/* 入力値をリセット。*/
 				ClearMoveInput();
+
+				/* 待機ステートに遷移。*/
 				if (m_stateMachine != nullptr)
 					m_stateMachine->ChangeState(new NPCIdleState());
 				return;
 			}
 
-
+			/* ブレインとコンポーネントがない場合は追跡行動を実行できないため、ここで終了する。*/
 			const NPCBehaviorProfile& profile = m_brain->GetBehaviorProfile();
 			const WeaponType weapon = m_body->GetCurrentWeapon();
 
+			/* 目標との距離を計算。*/
 			ComputeDistance(target);
 
 			/* 遠距離武器：帯の外だけ動く。帯内は止まって攻撃。*/

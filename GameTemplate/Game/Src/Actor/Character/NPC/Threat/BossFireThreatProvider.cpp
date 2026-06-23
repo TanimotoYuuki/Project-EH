@@ -70,6 +70,7 @@ namespace nsApp
 
 		void BossFireThreatProvider::SyncHitZone(WeaponHitDetection& hit, ThreatZoneCircle& zone, float dangerWeight)
 		{
+			/* ヒット判定が非アクティブなら ThreatZoneCircle も非アクティブにする。*/
 			if (!hit.IsActive())
 			{
 				zone.SetActive(false);
@@ -86,6 +87,7 @@ namespace nsApp
 
 		void BossFireThreatProvider::SyncRainDropZone(const Vector3& position, float radius, ThreatZoneCircle& zone, float dangerWeight)
 		{
+			/* Rain Drop の位置と半径に応じて ThreatZoneCircle を同期してアクティブにする。*/
 			zone.SetCenter(position);
 			zone.SetRadius(radius + THREAT_MARGIN);
 			zone.SetDangerWeight(dangerWeight);
