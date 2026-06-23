@@ -38,8 +38,11 @@ namespace nsApp
 			if (!CanHeal(player))
 				continue;
 
-			const float distance = (player->GetPosition() - m_position).Length();
-
+			Vector3 playerPos = player->GetPosition();
+			Vector3 areaPos = m_position;
+			playerPos.y = 0.0f;
+			areaPos.y = 0.0f;
+			const float distance = (playerPos - areaPos).Length();
 			if (distance <= m_radius)
 				player->ApplyDamage(-m_healAmount);
 		}

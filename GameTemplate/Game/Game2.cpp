@@ -4,7 +4,7 @@
 #include "Src/Fade/Fade.h"
 
 #include "Src/Actor/Stage/LoadStageData.h"
-#include "CharacterHP.h"
+#include "Src/UI/Character/CharacterHP.h"
 #include "GameTimeLimit.h"
 #include "Src/Direction/GameStartDirection.h"
 #include "Src/Direction/GameClearDirection.h"
@@ -28,7 +28,7 @@
 #include "Src/UI/Commentary/CommentaryUIManager.h"
 #include "Src/Parameter/ParameterSystem.h"
 #include <Windows.h>
-
+#include "Src/UI/GuardGage/GuardGageUIManager.h"
 
 namespace
 {
@@ -57,6 +57,13 @@ namespace nsApp
 				m_reboneGaugeUIManager->ClearPlayers();
 				delete m_reboneGaugeUIManager;
 				m_reboneGaugeUIManager = nullptr;
+			}
+
+			if (m_guardGaugeUIManager != nullptr)
+			{
+				m_guardGaugeUIManager->ClearPlayers();
+				delete m_guardGaugeUIManager;
+				m_guardGaugeUIManager = nullptr;
 			}
 
 			if (m_soundLister != nullptr)
@@ -197,8 +204,6 @@ namespace nsApp
 							}
 						}
 					}
-
-					/* TODO: キャラクター全員のHPが0になったら演出を流すようにする。 */
 				}
 				/* ポーズ画面表示しているとき。 */
 				else
@@ -213,6 +218,9 @@ namespace nsApp
 
 			if (m_reboneGaugeUIManager != nullptr)
 				m_reboneGaugeUIManager->Update();
+
+			if (m_guardGaugeUIManager != nullptr)
+				m_guardGaugeUIManager->Update();
 		}
 
 
@@ -226,6 +234,9 @@ namespace nsApp
 
 			if (m_reboneGaugeUIManager != nullptr)
 				m_reboneGaugeUIManager->Render(rc);
+
+			if (m_guardGaugeUIManager != nullptr)
+				m_guardGaugeUIManager->Render(rc);
 		}
 
 
@@ -247,6 +258,7 @@ namespace nsApp
 			m_gameStartDirection = result.gameStartDirection;
 			m_pause = result.pause;
 			m_generator = result.generator;
+			m_guardGaugeUIManager = result.guardGaugeUIManager;
 		}
 
 

@@ -93,7 +93,11 @@ namespace nsApp
 
 					/* 起き上がりアニメーションが終わっていたら待機状態に戻る。*/
 					else if (m_isGetUP)
+					{
+						m_player->GetDamageInvincibilitySystem().BeginAfterKnockBack();
+						m_player->NotifyReturnedFromKnockBack();
 						m_stateMachine->ChangeState(new PlayerIdleState());
+					}
 				}
 			}
 		}

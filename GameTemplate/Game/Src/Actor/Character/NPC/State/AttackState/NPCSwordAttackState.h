@@ -62,6 +62,9 @@ namespace nsApp
 			/* 移動処理。*/
 			void UpdateMovement();
 
+			/* 距離に応じた攻撃パターン選択。*/
+			void ChoosePattern();
+
 
 		private:
 			NPCSwordPattern m_currentPattern = NPCSwordPattern::enNone; //! 現在の攻撃パターンを保存する変数。

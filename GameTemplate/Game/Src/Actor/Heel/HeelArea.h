@@ -77,6 +77,36 @@ namespace nsApp
 		}
 
 
+	/* ゲッター。*/
+	public:
+		/**
+		 * @brief 回復エリアの位置を取得する。
+		 * @return 回復エリアの中心位置。
+		 */
+		inline const Vector3& GetAreaPosition() const 
+		{
+			return m_position; 
+		}
+
+		/**
+		 * @brief 回復エリアの半径を取得する。
+		 * @return 回復エリアの半径。
+		 */
+		inline float GetRadius() const
+		{
+			return m_radius; 
+		}
+
+		/**
+		 * @brief 回復エリアの寿命を取得する。
+		 * @return 回復エリアの寿命。
+		 */
+		inline bool IsAlive() const 
+		{
+			return m_timer < m_lifeTime; 
+		}
+
+
 	private:
 		/**
 		 * @brief 回復エリア内のプレイヤーを回復する。

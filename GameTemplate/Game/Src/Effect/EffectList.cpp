@@ -3,7 +3,7 @@
 
 namespace
 {
-	static constexpr int MAX_EFFECT_COUNT = 64;   //! �����ɍĐ��ł���G�t�F�N�g���B
+	static constexpr int MAX_EFFECT_COUNT = 64; //! 同時に再生できるエフェクト数。
 }
 
 namespace nsApp

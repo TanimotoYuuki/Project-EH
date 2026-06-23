@@ -1,10 +1,11 @@
 #pragma once
+
 /**
-* @file   WeaponHitDetection.h
-* @brief  ����̓����蔻����Ǘ�����N���X�B
-* @author Yamaguchi Hayato
-* @date   2026/05/29
-*/
+ * @file   WeaponHitDetection.h
+ * @brief  武器の当たり判定を管理するクラス。
+ * @author Yamaguchi Hayato
+ * @date   2026/05/29
+ */
 
 #include "Src/Actor/Character/Common/ICharacter.h"
 
@@ -13,38 +14,37 @@ namespace nsApp
 	class WeaponHitDetection
 	{
 	public:
-		/* �R���X�g���N�^�ƃf�X�g���N�^�B*/
+		/* コンストラクタとデストラクタ。*/
 		WeaponHitDetection() = default;
 		virtual ~WeaponHitDetection() = default;
 
 
 	public:
-		/** 
-		 * @brief�����蔻��̏����������B
-		 * @param radius ����̓����蔻��̔��a�B
-		 **/
+		/**
+		 * @brief 当たり判定の初期化処理。
+		 * @param radius 武器の当たり判定の半径。
+		 */
 		void Init(float radius);
 
 		/**
-		 * @brief�����蔻��̍X�V�����B
-		 * @param weaponPosition ����̌��݂̍��W�B
+		 * @brief 当たり判定の更新処理。
+		 * @param weaponPosition 武器の現在の座標。
 		 */
 		inline void Update(const Vector3& weaponPosition)
 		{
-			/* ���W��ێ�����B*/
 			m_position = weaponPosition;
 		}
 
 		/**
-		 * @brief�`�揈���B
-		 * @param rc �����_�����O�R���e�L�X�g�B
+		 * @brief 描画処理。
+		 * @param rc レンダリングコンテキスト。
 		 */
 		void Render(RenderContext& rc);
 
 
 	public:
 		/**
-		 * @brief �����蔻����I���B
+		 * @brief 当たり判定を有効にする。
 		 */
 		inline void Enable()
 		{
@@ -52,7 +52,7 @@ namespace nsApp
 		}
 
 		/**
-		 * @brief �����蔻����I�t�B
+		 * @brief 当たり判定を無効にする。
 		 */
 		inline void Disable()
 		{
@@ -61,11 +61,11 @@ namespace nsApp
 		}
 
 
-	/* �Z�b�^�[�B*/
+		/* セッター。*/
 	public:
 		/**
-		 * @brief �����蔻��̔��a��ݒ�B
-		 * @param radius �����蔻��̔��a�B
+		 * @brief 当たり判定の半径を設定する。
+		 * @param radius 当たり判定の半径。
 		 */
 		inline void SetRadius(float radius)
 		{
@@ -73,38 +73,55 @@ namespace nsApp
 		}
 
 
-	/* �Q�b�^�[�B*/
+		/* ゲッター。*/
 	public:
-        /**
-		 * @brief �w�肵���^�[�Q�b�g�������蔻��Ƀq�b�g���Ă��邩�ǂ����𔻒�B
-		 * @param target ����Ώۂ̃L�����N�^�[�B
-		 * @return �^�[�Q�b�g�������蔻��Ƀq�b�g���Ă���ꍇ��true�A�����łȂ��ꍇ��false�B
-         */
-        bool IsHit(nsActor::ICharacter* target);
+		/**
+		 * @brief 指定したターゲットが当たり判定にヒットしているかどうかを判定する。
+		 * @param target 判定対象のキャラクター。
+		 * @return ヒットしている場合は true、そうでない場合は false。
+		 */
+		bool IsHit(nsActor::ICharacter* target);
 
 		/**
-		 * @brief �����蔻��̒��S���W���擾�B
-		 * @return �����蔻��̒��S���W�B
+		 * @brief 当たり判定の中心座標を取得する。
+		 * @return 当たり判定の中心座標。
 		 */
-		inline const Vector3& GetPosition()
+		inline const Vector3& GetPosition() const
 		{
 			return m_position;
 		}
 
+		/**
+		 * @brief 当たり判定が有効かどうかを取得する。
+		 * @return 有効な場合は true。
+		 */
+		inline bool IsActive() const
+		{
+			return m_isActive;
+		}
+
+		/**
+		 * @brief 当たり判定の半径を取得する。
+		 * @return 当たり判定の半径。
+		 */
+		inline float GetRadius() const
+		{
+			return m_radius;
+		}
+
 
 	private:
-		std::vector<nsActor::ICharacter*> m_hitTargets; //! ���������Ώۂ̃��X�g�B
+		std::vector<nsActor::ICharacter*> m_hitTargets; //! 既にヒットした対象のリスト。
 
 
 	private:
-		Vector3 m_position = Vector3::Zero;             //! �����蔻��̒��S���W�B
-		Vector3 m_targetPosition = Vector3::Zero;       //! �^�[�Q�b�g�̍��W�B
-		Vector3 m_diffVector = Vector3::Zero;           //! ����ƃ^�[�Q�b�g�̋����x�N�g���B
+		Vector3 m_position = Vector3::Zero;             //! 当たり判定の中心座標。
+		Vector3 m_targetPosition = Vector3::Zero;		//! ターゲットの座標。
+		Vector3 m_diffVector = Vector3::Zero;			//! 武器とターゲットの距離ベクトル。
 
-		float m_radius = 0.0f;                          //! �����蔻��̔��a�B
-		float m_diff = 0.0f;                            //! ����ƃ^�[�Q�b�g�̋����B
+		float m_radius = 0.0f;							//! 当たり判定の半径。
+		float m_diff = 0.0f;							//! 武器とターゲットの距離。
 
-		bool m_isActive = false;                        //! �����蔻�肪�L�����ǂ����B
+		bool m_isActive = false;						//! 当たり判定が有効かどうか。
 	};
 }
-

@@ -1,7 +1,8 @@
 ﻿#include "stdafx.h"
 #include "Player.h"
-#include "Src/Actor/Character/Status/PlayerStatusParameterTable.h"
-
+#include "Src/Parameter/PlayerStatusParameterTable.h"
+#include "Src/UI/Character/CharacterHP.h"
+#include "Src/SceneLoader/SceneLoader.h"
 /* 基本動作ステート。*/
 #include "Src/Actor/Character/Player/State/BasicState/PlayerIdleState.h"
 #include "Src/Actor/Character/Player/State/BasicState/PlayerWalkState.h"
@@ -28,8 +29,8 @@
 #include "Src/Actor/Character/NPC/NPCBrain.h"
 #include "Src/Actor/Character/NPC/State/BasicState/NPCHelpState.h"
 #include "Src/Utilty/ResourceUtility.h"
-
-#include "Src/SceneLoader/SceneLoader.h""
+#include "Src/Direction/GameStartDirection.h"
+#include "Src/Actor/Character/Player/InputSystem/VirtualInputAdapter.h"
 
 namespace
 {
@@ -106,6 +107,10 @@ namespace nsApp
 			/* ステートを生成する。*/
 			RegisterState();
 
+			/* 
+				ローディング中は当たり判定を作らない。
+				2026/06/20追記: 出撃時のクラッシュの原因となっていました。
+			*/
 			if(nsScene::SceneLoader::GetInstance() ->GetCurrentSceneID() != IScene::enSceneID_Select)
 				m_characterController.Init(CHARACON_RADIUS, CHARACON_HEIGHT, m_currentPosition);
 
@@ -124,7 +129,7 @@ namespace nsApp
 			m_effectListener.Initialize(this);
 			m_gunShooter.Subscribe(&m_effectListener);
 
-			/* */
+			/* ステートマシーンを初期化する。*/
 			m_stateMachine->ChangeState(m_stateFactory[PlayerStateID::enIdle]());
 			return true;
 		}
@@ -154,6 +159,9 @@ namespace nsApp
 			/* ヒットストップタイマー。*/
 			UpdateHitStioTImer();
 
+			/* 無敵時間タイマーを加算。*/
+			m_damageInvincibilitySystem.Update(g_gameTime->GetFrameDeltaTime());
+
 			/* すり抜け判定。*/
 			if (!m_isIgnorePlayerSet)
 				ComputeSlipThrough();
@@ -161,6 +169,27 @@ namespace nsApp
 			/* ヒットストップ状態なら*/
 			if (IsHitStop())
 				return;
+
+			/* 開始演出中（GO! まで）は動かない。*/
+			if (auto* startDir = FindGO<nsGame::GameStartDirection>("gameStartDirection"))
+			{
+				if (!startDir->IsDirectionFinished())
+				{
+					if (m_brain != nullptr && m_isNpcControlled)
+					{
+						auto* vInput = m_brain->GetVirtualInputAdapter();
+						if (vInput != nullptr)
+							vInput->Reset();
+					}
+					m_playerInput.SetInputEnable(false);
+					m_model.SettRotation(m_angle * m_postureOffset);
+					m_model.SetPosition(m_currentPosition);
+					m_model.Update();
+					return;
+				}
+			}
+
+
 
 			/*選択シーンではないとき。*/
 			if (nsApp::nsScene::SceneLoader::GetInstance()->GetCurrentSceneID() != nsApp::IScene::enSceneID_Select)
@@ -178,9 +207,8 @@ namespace nsApp
 			else/*選択シーンでは操作を受け付けないようにする。*/
 				m_playerInput.SetInputEnable(false);
 
-
-			/* NPCの場合、仮想のコントローラーによる判定を行う。*/
-			if (m_brain != nullptr)
+			/* NPC 操作キャラだけ Brain を動かす。*/
+			if (m_brain != nullptr && m_isNpcControlled)
 				m_brain->Update();
 
 			/* モデルの更新より先に入力判定を更新する。*/
@@ -235,33 +263,27 @@ namespace nsApp
 
 		void Player::InitAttackStatus()
 		{
-			/* TSV導入前の基礎ステータスに戻す。*/
-			m_characterStatus.attack.normalDamage = 40.0f;
+			/* TSVから武器種別ごとのステータスを取得。*/
+			const auto& param = PlayerStatusParameterTable::GetParameter(m_currentWeapon);
+			m_characterStatus.attack.normalDamage = param.normalDamage;
 			m_characterStatus.attack.criticalRate = 0.05f;
-			m_characterStatus.attack.criticalDamage = 1.5f;
-
-			m_characterStatus.hp.maxHP = 1000;
+			m_characterStatus.attack.criticalDamage = param.criticalDamage;
+			m_characterStatus.hp.maxHP = param.maxHP;
 			m_characterStatus.hp.currentHP = m_characterStatus.hp.maxHP;
 
+			/* 歩き・走りは従来どおり固定（TSVのWalkSpeed/RunSpeedは倍率想定のため）。*/
 			m_walkSpeed = 50.0f;
 			m_runSpeed = 120.0f;
-			m_jumpPower = 500.0f;
-			m_airMoveSpeed = 120.0f;
-			m_gravity = 30.0f;
-			m_maxFallVelocity = -1200.0f;
-		}
+			m_jumpPower = param.jumpPower;
+			m_airMoveSpeed = param.airMoveSpeed;
+			m_gravity = param.gravity;
+			m_maxFallVelocity = param.maxFallVelocity;
 
+			/* ガードパラメータの取得。*/
+			m_guardSystem.Initialize(m_currentWeapon);
 
-		void Player::InitDummyModel()
-		{
-			/* 座標をメインプレイヤーからずらす。*/
-			m_currentPosition.x -= 150.0f;
-
-			/* HPを0にしておく。*/
-			m_characterStatus.hp.currentHP = 0;
-
-			/* 最初から死亡ステートへ遷移させる。*/
-			m_stateMachine->ChangeState(m_stateFactory[PlayerStateID::enIdle]());
+			/* 無敵時間の付与。*/
+			m_damageInvincibilitySystem.Initialize(m_currentWeapon);
 		}
 
 
@@ -441,15 +463,86 @@ namespace nsApp
 			/* 最大HPを参照する。*/
 			m_characterStatus.hp.currentHP = m_characterStatus.hp.maxHP;
 
-			/* 自分のHPを回復させる。*/
+			/* 蘇生直後に HPBarUI を満タン同期する。*/
+			if (auto* characterHP = FindGO<nsGame::CharacterHP>("characterHP"))
+				characterHP->SyncPlayerHP(this);
+
 			/* 起き上がりステート（PlayerGetUpState）へ強制移行。*/
 			m_stateMachine->ChangeState(m_stateFactory[PlayerStateID::enGetUp]());
 		}
 
 
+		bool Player::TryBeginHelpToTarget(nsActor::Player* target)
+		{
+			/* NPC 以外、または救助対象が無い場合は開始しない。*/
+			if (m_brain == nullptr || target == nullptr)
+				return false;
+
+			/* 自分がダウン中は救助できない。*/
+			if (IsDeath() || GetCharacterStatus().hp.currentHP <= 0)
+				return false;
+
+			/* 自分自身は救助対象にできない。*/
+			if (target == this)
+				return false;
+
+			/* 救助対象がダウンしていない場合は開始しない。*/
+			if (!target->IsDeath() && target->GetCharacterStatus().hp.currentHP > 0)
+				return false;
+
+			/* 既に救助中ならそのまま継続。*/
+			if (m_playerStateID == PlayerStateID::enHelp)
+				return true;
+
+			/* 救助ステートへ直接遷移する。*/
+			auto* helpState = static_cast<nsState::PlayerReBoneState*>(m_stateFactory[PlayerStateID::enHelp]());
+			helpState->SetTargetCharacter(target);
+
+			m_playerStateID = PlayerStateID::enHelp;
+			m_currentStateID = static_cast<uint8_t>(PlayerStateID::enHelp);
+			m_stateMachine->ChangeState(helpState);
+
+			return true;
+		}
+
+
+		bool Player::TryBeginHeelMagic()
+		{
+			/* NPC 以外は Brain 経由で呼ばない想定。*/
+			if (m_brain == nullptr)
+				return false;
+
+			/* 杖以外は回復不可。*/
+			if (GetCurrentWeapon() != WeaponType::Wand)
+				return false;
+
+			/* ダウン中は詠唱不可。*/
+			if (IsDeath() || GetCharacterStatus().hp.currentHP <= 0)
+				return false;
+
+			/* 救助中は回復より救助優先。*/
+			if (m_playerStateID == PlayerStateID::enHelp)
+				return false;
+
+			/* 既に詠唱中ならそのまま継続。*/
+			if (m_playerStateID == PlayerStateID::enHeelMagic)
+				return true;
+
+			/* チャージ省略。最低レベル 1 で HeelMagic が発動する。*/
+			SetChargeLevel(1);
+
+			/* 回復魔法ステートへ直接遷移する。*/
+			m_playerStateID = PlayerStateID::enHeelMagic;
+			m_currentStateID = static_cast<uint8_t>(PlayerStateID::enHeelMagic);
+			m_stateMachine->ChangeState(m_stateFactory[PlayerStateID::enHeelMagic]());
+
+			return true;
+		}
+
+
 		nsActor::Player* Player::SearchCharacter()
 		{
-			return ResourceUtility::SearchNearestDownCharacter(this, 150.0f);
+			return ResourceUtility::SearchNearestDownCharacter(this, 120.0f);
 		}
 
 
@@ -470,9 +563,6 @@ namespace nsApp
 			/* ダメージ状態。*/
 			m_stateFactory[PlayerStateID::enHit] = []() { return new nsState::PlayerHitState(); };
 
-			/* 死亡状態。*/
-//			m_stateFactory[PlayerStateID::enDeath] = [this]() { return new nsState::PlayerDethState(); };
-
 			/* ガード状態。*/
 			m_stateFactory[PlayerStateID::enGuard] = []() { return new nsState::PlayerGuardState(); };
 
@@ -486,25 +576,56 @@ namespace nsApp
 
 		void Player::ForceBlowAway(float knockbackVelocity, float dirX)
 		{
+			/* すでに死亡している場合は吹き飛ばさない。*/
 			if (m_currentStateID == static_cast<uint8_t>(PlayerStateID::enDeath))
 				return;
 
-			auto* hitState = static_cast<nsState::PlayerHitState*>(
-				m_stateFactory[PlayerStateID::enHit]()
-				);
+			/* ガード中でノックバック無効なら吹き飛ばさない。*/
+			if (GetGuardSystem().BlocksKnockback())
+				return;
+
+			/* 無敵時間中でノックバック無効なら吹き飛ばさない。*/
+			if (m_damageInvincibilitySystem.BlocksKnockback())
+				return;
+
+			/* すでにノックバック状態なら吹き飛ばさない。*/
+			if (IsInKnockBackState())
+				return;
+
+
+			/* ノックバック状態に遷移する。*/
+			auto* hitState = static_cast<nsState::PlayerHitState*>( m_stateFactory[PlayerStateID::enHit]());
+
+			/* ノックバックの初速をセットする。*/
 			hitState->SetKnockBackVelocity(knockbackVelocity);
 			hitState->SetKnockBackSpeed(Vector3(dirX * 100.0f, 50.0f, 0.0f));
 			hitState->SetHitTimer(90);
-			hitState->SetGetUpFlag(false);  /* 移動させる。*/
+			hitState->SetGetUpFlag(false);  
+			m_playerStateID = PlayerStateID::enHit;
 			m_currentStateID = static_cast<uint8_t>(PlayerStateID::enHit);
 			m_stateMachine->ChangeState(hitState);
+
 		}
+
 
 		void Player::ForceGetUp()
 		{
+			/* ダウンフラグを解除する。*/
 			if (m_currentStateID == static_cast<uint8_t>(PlayerStateID::enDeath))
 				return;
+
+			/* ダウンフラグを解除する。*/
 			m_currentStateID = static_cast<uint8_t>(PlayerStateID::enIdle);
+
+			/* ダウンカウントをリセットする。*/
 			m_stateMachine->ChangeState(m_stateFactory[PlayerStateID::enIdle]());
-		}	}
+		}
+
+
+		void Player::NotifyReturnedFromKnockBack()
+		{
+			m_playerStateID = PlayerStateID::enIdle;
+			m_currentStateID = static_cast<uint8_t>(PlayerStateID::enIdle);
+		}
+	}
 }

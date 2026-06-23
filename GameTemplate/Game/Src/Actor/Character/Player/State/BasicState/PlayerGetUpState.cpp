@@ -20,7 +20,10 @@ namespace nsApp
 		{
 			/* アニメーションが終わったら待機状態へ。*/
 			if (!m_player->IsPlayAnimation())
+			{
+				m_player->NotifyReturnedFromKnockBack();
 				m_stateMachine->ChangeState(new PlayerIdleState());
+			}
 		}
 	}
 }

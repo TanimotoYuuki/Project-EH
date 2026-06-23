@@ -57,6 +57,7 @@ namespace nsApp
 
 	RescueTimeParameter RescueTimeTable::CreateParameterFromRow(const TSVTable& table, int rowIndex)
 	{
+		/* TSVの1行からRescueTimeParameterを作成する。必要な列がない場合は、デフォルト値を使用する。*/
 		return RescueTimeParameter
 		{
 			table.GetInt(rowIndex, "RequiredHelpTime", 20),

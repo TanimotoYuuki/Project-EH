@@ -8,7 +8,7 @@
 #include "Src/Actor/Character/Boss/Strategy/BossRoarState.h"
 #include "Src/Actor/Character/Boss/State/BossDethState.h"
 #include "Src/Actor/Character/Boss/Status/BossManager.h"
-
+#include "Src/Direction/GameStartDirection.h"
 
 namespace
 {
@@ -142,6 +142,19 @@ namespace nsApp
 			/* ヒットストップ中は以降の更新を行わない */
 			if (IsHitStop())
 				return;
+
+			/* 開始演出中は戦闘だけ止め、モデルは毎フレーム更新する。*/
+			if (auto* startDir = FindGO<nsGame::GameStartDirection>("gameStartDirection"))
+			{
+				if (!startDir->IsDirectionFinished())
+				{
+					m_position.z = 0.0f;
+					m_model.SetPosition(m_position + m_modelOffset);
+					m_model.SettRotation(m_rotation);
+					m_model.Update();
+					return;
+				}
+			}
 
 			/* 主ターゲット更新・ロアクールダウン更新 */
 			UpdatePrimaryTarget();

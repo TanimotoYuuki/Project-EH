@@ -3,6 +3,7 @@
 #include "Src/Actor/Character/Player/InputSystem/VirtualInputAdapter.h"
 #include "Src/Actor/Character/NPC/State/BasicState/NPCHelpState.h"
 #include "Src/Actor/Character/NPC/Component/NPCCombatHelper.h"
+#include "Src/Actor/Character/NPC/State/BasicState/NPCEvadeState.h"
 
 namespace
 {
@@ -36,6 +37,7 @@ namespace nsApp
 			SetAttackTimer(0);
 		}
 
+
 		void NPCAttackBaseState::Exit()
 		{
 			/* 攻撃インターバルを開始。*/
@@ -50,16 +52,22 @@ namespace nsApp
 					virtualInput->Reset();
 			}
 
+			/* リセット。*/
 			m_virtualInput = nullptr;
 			m_getBody = nullptr;
 			m_npcBrain = nullptr;
 		}
 
+
 		void NPCAttackBaseState::ComputeDistance(nsActor::ICharacter *targetObject)
 		{
+			/* Playerクラスが居ないなら処理を止める。*/
 			if (m_getBody == nullptr || targetObject == nullptr)
 			{
+				/* 距離と差分をリセットして処理を終了する。*/
 				m_distance = 0.0f;
+
+				/* 差分をリセット。*/
 				m_diff = Vector3::Zero;
 				return;
 			}
@@ -67,6 +75,7 @@ namespace nsApp
 			/* ヘルパークラスから距離計算処理を呼び出す。*/
 			m_distance = NPCCombatHelper::ComputeDistance(m_getBody->GetPosition(), targetObject->GetPosition(), m_diff);
 		}
+
 
 		void NPCAttackBaseState::PreventClipping(nsActor::ICharacter *target)
 		{
@@ -78,6 +87,7 @@ namespace nsApp
 			NPCCombatHelper::PreventClipping(m_getBody, target, m_distance, 40.0f);
 		}
 
+
 		void NPCAttackBaseState::UpdateFacingDirection()
 		{
 			/* Playerクラスが居ないなら処理を止める。*/
@@ -88,6 +98,7 @@ namespace nsApp
 			NPCCombatHelper::UpdateFacing(m_getBody, m_diff, m_isAttacking);
 		}
 
+
 		void NPCAttackBaseState::ResetVirtualInputs()
 		{
 			/* 入力情報が無いなら処理を止める。*/
@@ -97,6 +108,7 @@ namespace nsApp
 			/* VirtualInputAdapterクラスのResetメソッドを呼び出す。*/
 			m_virtualInput->Reset();
 		}
+
 
 		bool NPCAttackBaseState::CheckHelpTransition()
 		{
@@ -109,17 +121,37 @@ namespace nsApp
 			if (helpTarget == nullptr)
 				return false;
 
-			/* ヘルプ対象が自分自身であれば、ヘルプ状態に遷移しない。*/
-			if (helpTarget == m_getBody)
-				return false;
-
 			/* ヘルプ対象が死亡していない、またはHPが0より大きい場合は、ヘルプ状態に遷移しない。*/
 			if (!helpTarget->IsDeath() && helpTarget->GetCharacterStatus().hp.currentHP > 0)
+				return false;
+
+			/* この NPC が救助役かどうかを判定する。*/
+			if (!m_npcBrain->ShouldRespondToHelp())
 				return false;
 
 			/* ヘルプ状態に遷移する。*/
 			m_stateMachine->ChangeState(new NPCHelpState(helpTarget));
 
+			return true;
+		}
+
+
+		bool NPCAttackBaseState::CheckEvadeTransition()
+		{
+			/* NPCBrainクラスが存在しない場合は、以降の処理を行わない。*/
+			if (m_npcBrain == nullptr || m_stateMachine == nullptr)
+				return false;
+
+			/* 回避すべきかどうかを判定する。*/
+			if (!m_npcBrain->ShouldEvade())
+				return false;
+
+			/* 攻撃モーション中は致命圏以外 Evade しない。*/
+			if (m_isAttacking && !m_npcBrain->IsDangerous())
+				return false;
+
+			/* 回避状態に遷移する。*/
+			m_stateMachine->ChangeState(new NPCEvadeState());
 			return true;
 		}
 	}

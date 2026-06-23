@@ -143,6 +143,7 @@ namespace nsApp
 		float m_lifeTime = 0.8f;                    //! 表示寿命。
 		float m_alphaValue = 1.0f;                  //! 現在の透明度。
 		float m_scaleValue = 1.0f;                  //! 現在の拡大率。
+		float m_finalLifeRate = 0.0f;               //! 最終的な寿命の進行率。
 
 		bool m_isActive = false;					//! 使用中か。
 

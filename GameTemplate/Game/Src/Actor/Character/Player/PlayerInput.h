@@ -79,6 +79,18 @@ namespace nsApp
 		}
 
 
+	public:
+		/**
+		 * @brief ガードトリガー判定を返す。
+		 * @return ガードトリガー判定。
+		 */
+		inline bool IsGuardTrigger() const 
+		{
+			return m_isGuardTrigger; 
+		}
+
+
+
 	private:
 		/**
 		 *  @brief Bボタンの入力判定をまとめる。
@@ -97,6 +109,7 @@ namespace nsApp
 		{
 			/* ガード判定。*/
 			m_isGuard = CheckButtonPress(enButtonLB2);
+			m_isGuardTrigger = CheckButtonTrigger(enButtonLB2);
 
 			/* 救出判定。*/
 			m_isHelp = CheckButtonTrigger(enButtonY);
@@ -113,7 +126,6 @@ namespace nsApp
 			/* RTボタン判定。*/
 			m_isPressRT = CheckButtonPress(BUTTON_RT);
 		}
-
 
 		/**
 		 * @brief 仮チャージ判定を更新する。。
@@ -279,6 +291,7 @@ namespace nsApp
 		bool m_isPressX = false;				//! Xボタンが押されているかどうかを判定。
 		bool m_isPressRB = false;				//! RBボタンが押されているかどうかを判定。
 		bool m_isPressRT = false;				//! RTボタンが押されているかどうかを判定。
+		bool m_isGuardTrigger = false;			//! ガードの入力を検知。
 
 		float m_stickX = 0.0f;					//! スティックのX軸の値。
 		float m_stickY = 0.0f;					//! スティックのY軸の値。

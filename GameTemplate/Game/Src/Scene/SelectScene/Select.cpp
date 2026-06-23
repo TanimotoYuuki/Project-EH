@@ -4,7 +4,7 @@
 #include "MemberSelect.h"
 #include "RoleSelect.h"
 #include "Src/Select/ConfirmationSelect.h"
-#include "Option.h"
+#include "Src/UI/GameFlow/Option.h"
 #include "Src/Fade/Fade.h"
 
 namespace {

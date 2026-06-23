@@ -1,69 +1,70 @@
-#pragma once
-
-#include <string>
-#include <unordered_map>
-
+ï»¿#pragma once
 #include "Src/Actor/Character/Common/CharacterAnimation.h"
+#include <unordered_map>
+#include <string>
 
 namespace nsApp
 {
+	class TSVTable;
+
 	/**
 	 * @struct PlayerStatusParameter
-	 * @brief Player‚Ìó‘Ôƒpƒ‰ƒ[ƒ^B
+	 * @detail ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’è¡¨ã™æ§‹é€ ä½“ã€‚
 	 */
 	struct PlayerStatusParameter
 	{
-		int maxHP;				 //! Player‚ÌÅ‘åHPB
-		float normalDamage;		 //! Player‚Ì’ÊíUŒ‚‚Ìƒ_ƒ[ƒWB
-		float criticalDamage;	 //! Player‚ÌƒNƒŠƒeƒBƒJƒ‹UŒ‚‚Ìƒ_ƒ[ƒWB
-		float criticalRate;      //! Player‚ÌƒNƒŠƒeƒBƒJƒ‹—¦B
-
-		float walkSpeed;		 //! Player‚Ì•às‘¬“xB 
-		float runSpeed;		     //! Player‚Ì‘–s‘¬“xB
-		float jumpPower;		 //! Player‚ÌƒWƒƒƒ“ƒv—ÍB
-		float airMoveSpeed;		 //! Player‚Ì‹ó’†‚Å‚ÌˆÚ“®‘¬“xB
-		float gravity;			 //! Player‚Ìd—ÍBƒWƒƒƒ“ƒv—Í‚â—‰º‘¬“x‚É‰e‹¿‚·‚éB
-		float maxFallVelocity;   //! Player‚ÌÅ‘å—‰º‘¬“xB—‰º‘¬“x‚ª‚±‚Ì’l‚ğ’´‚¦‚È‚¢‚æ‚¤‚É‚·‚éB
+		int maxHP = 1000;					  //! ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã®æœ€å¤§HPã€‚
+		float normalDamage = 40.0f;			  //! é€šå¸¸æ”»æ’ƒã®ãƒ€ãƒ¡ãƒ¼ã‚¸ã€‚åŸºæœ¬ãƒ€ãƒ¡ãƒ¼ã‚¸ã¨ã—ã¦è¡¨ç¾ã€‚
+		float criticalDamage = 1.5f;		  //! ã‚¯ãƒªãƒ†ã‚£ã‚«ãƒ«ãƒ€ãƒ¡ãƒ¼ã‚¸å€ç‡ã€‚åŸºæœ¬ãƒ€ãƒ¡ãƒ¼ã‚¸ã«å¯¾ã™ã‚‹å€ç‡ã§è¡¨ç¾ã€‚
+		float walkSpeed = 1.0f;				  //! æ­©ãé€Ÿåº¦ã®å€ç‡ã€‚åŸºæœ¬ç§»å‹•é€Ÿåº¦ã«å¯¾ã™ã‚‹å€ç‡ã§è¡¨ç¾ã€‚
+		float runSpeed = 1.5f;				  //! èµ°ã‚Šé€Ÿåº¦ã®å€ç‡ã€‚åŸºæœ¬ç§»å‹•é€Ÿåº¦ã«å¯¾ã™ã‚‹å€ç‡ã§è¡¨ç¾ã€‚
+		float jumpPower = 500.0f;			  //! ã‚¸ãƒ£ãƒ³ãƒ—åŠ›ã€‚
+		float airMoveSpeed = 120.0f;	      //! ç©ºä¸­ç§»å‹•é€Ÿåº¦ã€‚
+		float gravity = 30.0f;				  //! é‡åŠ›åŠ é€Ÿåº¦ã€‚
+		float maxFallVelocity = -1200.0f;	  //! æœ€å¤§è½ä¸‹é€Ÿåº¦ã€‚ï¼ˆè² ã®å€¤ã§è¡¨ç¾ï¼‰
+		float guardMaxDuration = 2.0f;        //! ã‚¬ãƒ¼ãƒ‰æœ€å¤§æ™‚é–“ã€‚ï¼ˆç§’ï¼‰
+		float guardDamageReduction = 0.5f;    //! ãƒ€ãƒ¡ãƒ¼ã‚¸è»½æ¸›ç‡ã€‚ï¼ˆ0.0ã€œ1.0ï¼‰
 	};
 
-
-	class TSVTable;
 	class PlayerStatusParameterTable
 	{
 	public:
 		/**
-		 * @brief TSVƒtƒ@ƒCƒ‹‚Ì“Ç‚İ‚İˆ—B
-		 * @param filePath TSVƒtƒ@ƒCƒ‹‚ÌƒpƒXB
-		 * @return TSVƒtƒ@ƒCƒ‹‚Ì“Ç‚İ‚İ‚É¬Œ÷‚µ‚½ê‡‚ÍtrueB
+		 * @brief TSVãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’èª­ã¿è¾¼ã‚€
+		 * @param filePath TSVãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ‘ã‚¹
+		 * @return èª­ã¿è¾¼ã¿æˆåŠŸãªã‚‰trueã€å¤±æ•—ãªã‚‰false
 		 */
 		static bool LoadTSVFile(const char* filePath);
 
 		/**
-		 * @brief WeaponType‚É‘Î‰‚·‚éPlayerStatusParameter‚ğæ“¾‚·‚éB
-		 * @param weaponType WeaponTypeBPlayer‚Ìó‘Ôƒpƒ‰ƒ[ƒ^‚ğæ“¾‚·‚é‚½‚ß‚ÌƒL[B
-		 * @return WeaponType‚É‘Î‰‚·‚éPlayerStatusParameterBWeaponType‚É‘Î‰‚·‚éPlayerStatusParameter‚ª‘¶İ‚µ‚È‚¢ê‡‚ÍAƒfƒtƒHƒ‹ƒg‚ÌPlayerStatusParameter‚ğ•Ô‚·B
+		 * @brief æ­¦å™¨ã‚¿ã‚¤ãƒ—ã«å¯¾å¿œã™ã‚‹ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚’å–å¾—ã™ã‚‹
+		 * @param weaponType æ­¦å™¨ã‚¿ã‚¤ãƒ—
+		 * @return å¯¾å¿œã™ã‚‹ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã®å‚ç…§
+		 * @throws std::out_of_range æŒ‡å®šã•ã‚ŒãŸæ­¦å™¨ã‚¿ã‚¤ãƒ—ãŒãƒ†ãƒ¼ãƒ–ãƒ«ã«å­˜åœ¨ã—ãªã„å ´åˆ
 		 */
 		static const PlayerStatusParameter& GetParameter(WeaponType weaponType);
 
 
 	private:
 		/**
-		 * @brief TSV‚Ì•¶š—ñ‚ğWeaponType‚É•ÏŠ·‚·‚éB
-		 * @param weaponName TSV‚Ì•¶š—ñBWeaponType‚É•ÏŠ·‚·‚é‚½‚ß‚ÌƒL[B
-		 * @return TSV‚Ì•¶š—ñ‚É‘Î‰‚·‚éWeaponTypeBTSV‚Ì•¶š—ñ‚É‘Î‰‚·‚éWeaponType‚ª‘¶İ‚µ‚È‚¢ê‡‚ÍAWeaponType::None‚ğ•Ô‚·B
+		 * @brief æ­¦å™¨åã‹ã‚‰WeaponTypeã‚’å¤‰æ›ã™ã‚‹
+		 * @param weaponName æ­¦å™¨åï¼ˆä¾‹: "Sword", "Axe", "Bow"ãªã©ï¼‰
+		 * @return å¯¾å¿œã™ã‚‹WeaponType
 		 */
 		static WeaponType ConvertWeaponType(const std::string& weaponName);
 
 		/**
-		 * @brief TSV‚Ì1s‚©‚çPlayerStatusParameter‚ğì¬‚·‚éB
-		 * @param table TSVƒe[ƒuƒ‹BPlayerStatusParameter‚ğì¬‚·‚é‚½‚ß‚Ìƒf[ƒ^‚ªŠi”[‚³‚ê‚Ä‚¢‚éƒe[ƒuƒ‹B
-		 * @param rowIndex sƒCƒ“ƒfƒbƒNƒXBPlayerStatusParameter‚ğì¬‚·‚é‚½‚ß‚Ìƒf[ƒ^‚ªŠi”[‚³‚ê‚Ä‚¢‚és‚ÌƒCƒ“ƒfƒbƒNƒXB
-		 * @return	
+		 * @brief TSVãƒ†ãƒ¼ãƒ–ãƒ«ã®è¡Œã‹ã‚‰PlayerStatusParameterã‚’ä½œæˆã™ã‚‹
+		 * @param table TSVãƒ†ãƒ¼ãƒ–ãƒ«ã®å‚ç…§
+		 * @param rowIndex è¡Œã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹
+		 * @return ä½œæˆã•ã‚ŒãŸPlayerStatusParameter
+		 * @throws std::out_of_range æŒ‡å®šã•ã‚ŒãŸè¡Œã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ãŒãƒ†ãƒ¼ãƒ–ãƒ«ã®ç¯„å›²å¤–ã®å ´åˆ
+		 * @throws std::invalid_argument TSVã®ãƒ‡ãƒ¼ã‚¿å½¢å¼ãŒä¸æ­£ãªå ´åˆ
 		 */
 		static PlayerStatusParameter CreateParameterFromRow(const TSVTable& table, int rowIndex);
 
 
 	private:
-		static std::unordered_map<WeaponType, PlayerStatusParameter> m_table; //! WeaponType‚É‘Î‰‚·‚éPlayerStatusParameter‚Ìƒe[ƒuƒ‹B
+		static std::unordered_map<WeaponType, PlayerStatusParameter> m_table; //! æ­¦å™¨ã‚¿ã‚¤ãƒ—ã¨ãƒ—ãƒ¬ã‚¤ãƒ¤ãƒ¼ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã®ãƒãƒƒãƒ”ãƒ³ã‚°ãƒ†ãƒ¼ãƒ–ãƒ«
 	};
 }

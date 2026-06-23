@@ -3,10 +3,12 @@
 #include "Src/Actor/Gun/Parameter/BulletParameterTable.h"
 #include "Src/Actor/Magic/Parameter/MagicParameterTable.h"
 #include "Src/Actor/Character/Status/AttackParameterTable.h"
-#include "Src/Actor/Character/Status/PlayerStatusParameterTable.h"
+#include "Src/Parameter/PlayerStatusParameterTable.h"
 #include "Src/Actor/Character/Status/NPCStatusParameterTable.h"
 #include "Src/Actor/Character/NPC/Component/NPCActionParameterTable.h"
 #include "Src/Actor/Character/NPC/Component/RescueTimeTable.h"
+#include "Src/Actor/Character/Player/Component/Guard/GuardParameterTable.h"
+#include "Src/Actor/Character/NPC/Component/NPCBehaviorProfileTable.h"
 
 namespace nsApp
 {
@@ -34,7 +36,11 @@ namespace nsApp
 		m_isSuccess &= PlayerStatusParameterTable::LoadTSVFile(MakeParameterPath("PlayerStatusParameter.tsv").c_str());
 		/* 救助時間テーブルを読み込む。*/
 		m_isSuccess &= RescueTimeTable::LoadTSVFile(MakeParameterPath("RescueTimeTable.tsv").c_str());
-
+		/* ガードパラメーターを読み込む。*/
+		m_isSuccess &= GuardParameterTable::LoadTSVFile(MakeParameterPath("GuardParameter.tsv").c_str());
+		/* NPCの行動プロファイルを読み込む。*/
+		m_isSuccess &= NPCBehaviorProfileTable::LoadTSVFile(MakeParameterPath("NPCBehaviorProfile.tsv").c_str());
+	
 		return m_isSuccess;
 	}
 

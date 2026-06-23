@@ -29,8 +29,10 @@ namespace nsApp
 		class NPCWandAttackState : public NPCAttackBaseState
 		{
 		public:
+			/* コンストラクタとデストラクタ。*/
 			NPCWandAttackState() = default;
 			virtual ~NPCWandAttackState() = default;
+
 
 		public:
 			/* ライフサイクル。*/
@@ -58,8 +60,13 @@ namespace nsApp
 			/* 実行フロー。*/
 			void ExecutionFlow();
 
+			/* 攻撃パターンの選択。*/
+			void ChoosePattern();
+
 
 		private:
+			bool m_healAttempted = false;							        //! 今サイクルで回復開始を試みたか。
+
 			NPCWandPattern m_currentPattern = NPCWandPattern::enNone;       //! 現在の攻撃パターンを保存する変数。
 		};
 	}

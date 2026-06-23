@@ -1,82 +1,71 @@
 #include "stdafx.h"
 #include "PlayerStatusParameterTable.h"
-
-#include "Src/Utilty/TSVTableLoder.h"
-
-
-namespace
-{
-	const auto ROW_INDEX_NUM = 0;
-}
+#include "Src/Utilty/TSVTable.h"
 
 namespace nsApp
 {
+	/* テーブルを初期化。*/
 	std::unordered_map<WeaponType, PlayerStatusParameter> PlayerStatusParameterTable::m_table;
 
 
 	bool PlayerStatusParameterTable::LoadTSVFile(const char* filePath)
 	{
-		return TSVTableLoder::LoadTable<WeaponType, PlayerStatusParameter>
-			(
-				/* TSVファイルのパス。*/
-				filePath,
-				/* キー列名。*/
-				"WeaponType",
-				/* 読み込んだデータを格納するテーブル。*/
-				m_table,
-				/* キー列の文字列をWeaponTypeに変換する関数。*/
-				PlayerStatusParameterTable::ConvertWeaponType,
-				[](const TSVTable& table, int rowIndex, WeaponType)
-				{
-					/* TSVの1行からPlayerStatusParameterを作成する。 */
-					return PlayerStatusParameterTable::CreateParameterFromRow(table, rowIndex);
-				}
-			);
+		/* TSVファイルを読み込む。*/
+		TSVTable table;
+		/* ファイルの読み込みに失敗した場合はfalseを返す。*/
+		if (!table.LoadTSVFile(filePath))
+			return false;
+
+		/* 読み込んだテーブルからパラメータを作成し、テーブルに格納する。*/
+		std::unordered_map<WeaponType, PlayerStatusParameter> loadedTable;
+		for (int rowIndex = 0; rowIndex < table.GetRowCount(); ++rowIndex)
+		{
+			/* 武器タイプを取得する。*/
+			const std::string weaponName = table.GetString(rowIndex, "WeaponType");
+			/* 武器タイプが空の場合はスキップする。*/
+			if (weaponName.empty())
+				continue;
+
+			/* 武器タイプを変換し、パラメータを作成してテーブルに格納する。*/
+			loadedTable[ConvertWeaponType(weaponName)] = CreateParameterFromRow(table, rowIndex);
+		}
+
+		/* 読み込んだテーブルが空の場合はfalseを返す。*/
+		if (loadedTable.empty())
+			return false;
+
+		/* 読み込んだテーブルをメンバーテーブルにスワップする。*/
+		m_table.swap(loadedTable);
+		return true;
 	}
 
 
 	const PlayerStatusParameter& PlayerStatusParameterTable::GetParameter(WeaponType weaponType)
 	{
-		/* WeaponTypeに対応するPlayerStatusParameterをテーブルから取得する。*/
+		/* 指定された武器タイプに対応するパラメータをテーブルから取得する。*/
 		auto iterator = m_table.find(weaponType);
-
-		/* WeaponTypeに対応するPlayerStatusParameterが存在する場合、PlayerStatusParameterを返す。*/
 		if (iterator != m_table.end())
 			return iterator->second;
 
-		/* WeaponTypeに対応するPlayerStatusParameterが存在しない場合、デフォルトのPlayerStatusParameterを返す。*/
-		static const PlayerStatusParameter fallBackParameter =
-		{
-			1000,     //! maxHP。
-			20.0f,    //! normalDamage。
-			1.5f,     //! criticalDamage。
-			0.05f,    //! criticalRate。
-
-			1.0f,     //! walkSpeed。
-			1.5f,     //! runSpeed。
-			500.0f,   //! jumpPower。
-			120.0f,   //! airMoveSpeed。
-			30.0f,    //! gravity。
-			-1200.0f  //! maxFallVelocity。
-		};
-
-		return fallBackParameter;
+		/* 対応するパラメータが見つからない場合は、デフォルトのパラメータを返す。*/
+		static const PlayerStatusParameter fallbackParameter;
+		return fallbackParameter;
 	}
 
 
 	WeaponType PlayerStatusParameterTable::ConvertWeaponType(const std::string& weaponName)
 	{
-		/* TSVの文字列をWeaponTypeに変換する。*/
-		if (weaponName == "Sword")
+		/* 武器名を武器タイプに変換する。*/
+		if (weaponName == "Sword" || weaponName == "GreatSword" || weaponName == "WeaponType::GreatSword")
 			return WeaponType::GreatSword;
 
-		if (weaponName == "Hammer")
+		if (weaponName == "Hammer" || weaponName == "WeaponType::Hammer")
 			return WeaponType::Hammer;
 
-		if (weaponName == "Wand")
+		if (weaponName == "Wand" || weaponName == "WeaponType::Wand")
 			return WeaponType::Wand;
 
-		if (weaponName == "TwinGun")
+		if (weaponName == "TwinGun" || weaponName == "Gun" || weaponName == "WeaponType::TwinGun")
 			return WeaponType::TwinGun;
 
 		return WeaponType::None;
@@ -85,20 +74,18 @@ namespace nsApp
 
 	PlayerStatusParameter PlayerStatusParameterTable::CreateParameterFromRow(const TSVTable& table, int rowIndex)
 	{
-		/* TSVの行からPlayerStatusParameterを作成する。*/
+		/* テーブルの行からパラメータを作成する。*/
 		return PlayerStatusParameter
 		{
-			table.GetInt(rowIndex, "MaxHP", 1000),
-			table.GetFloat(rowIndex, "NormalDamage", 20.0f),
-			table.GetFloat(rowIndex, "CriticalDamage", 1.5f),
-			table.GetFloat(rowIndex, "CriticalRate", 0.05f),
-
-			table.GetFloat(rowIndex, "WalkSpeed", 1.0f),
-			table.GetFloat(rowIndex, "RunSpeed", 1.5f),
-			table.GetFloat(rowIndex, "JumpPower", 500.0f),
-			table.GetFloat(rowIndex, "AirMoveSpeed", 120.0f),
-			table.GetFloat(rowIndex, "Gravity", 30.0f),
-			table.GetFloat(rowIndex, "MaxFallVelocity", -1200.0f)
+			table.GetInt(rowIndex, "MaxHP", 1000),					//! プレイヤーの最大HP。デフォルトは1000。
+			table.GetFloat(rowIndex, "NormalDamage", 40.0f),		//! 通常攻撃のダメージ。基本ダメージとして表現。デフォルトは40.0f。
+			table.GetFloat(rowIndex, "CriticalDamage", 1.5f),		//! クリティカルダメージ倍率。基本ダメージに対する倍率で表現。デフォルトは1.5f。
+			table.GetFloat(rowIndex, "WalkSpeed", 1.0f),			//! 歩き速度の倍率。基本移動速度に対する倍率で表現。デフォルトは1.0f。
+			table.GetFloat(rowIndex, "RunSpeed", 1.5f),				//! 走り速度の倍率。基本移動速度に対する倍率で表現。デフォルトは1.5f。
+			table.GetFloat(rowIndex, "JumpPower", 500.0f),			//! ジャンプ力。デフォルトは500.0f。
+			table.GetFloat(rowIndex, "AirMoveSpeed", 120.0f),		//! 空中移動速度。デフォルトは120.0f。
+			table.GetFloat(rowIndex, "Gravity", 30.0f),				//! 重力加速度。デフォルトは30.0f。
+			table.GetFloat(rowIndex, "MaxFallVelocity", -1200.0f),  //! 最大落下速度。（負の値で表現）。デフォルトは-1200.0f。
 		};
 	}
 }
