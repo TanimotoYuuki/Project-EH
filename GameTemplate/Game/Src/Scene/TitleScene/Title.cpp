@@ -3,7 +3,7 @@
 #include "Src/SceneLoader/SceneLoader.h"
 #include "Src/Sound/SoundLister.h"
 #include "Src/Fade/Fade.h"
-#include "UIInput.h"
+#include "Src/Sound/UIInput.h"
 
 namespace
 {
