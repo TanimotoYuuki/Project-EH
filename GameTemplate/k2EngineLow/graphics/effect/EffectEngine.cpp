@@ -2,20 +2,21 @@
 
 #include "EffectEngine.h"
 
-namespace nsK2EngineLow {
-	EffectEngine* EffectEngine::m_instance = nullptr;	//唯一のインスタンス。
+namespace nsK2EngineLow
+{
+	EffectEngine *EffectEngine::m_instance = nullptr; // 唯一のインスタンス。
 
 	EffectEngine::EffectEngine()
 	{
 		K2_ASSERT(
 			m_instance == nullptr,
-			"EffectEngineのインスタンスを複数作ることはできません。"
-		);
-		//auto format = DXGI_FORMAT_R8G8B8A8_UNORM;
+			"EffectEngineのインスタンスを複数作ることはできません。");
+		// auto format = DXGI_FORMAT_R8G8B8A8_UNORM;
 		auto format = DXGI_FORMAT_R16G16B16A16_FLOAT;
 		auto d3dDevice = g_graphicsEngine->GetD3DDevice();
 		auto commandQueue = g_graphicsEngine->GetCommandQueue();
-		for (int i = 0; i < 2; i++) {
+		for (int i = 0; i < 2; i++)
+		{
 			// レンダラーを作成。
 			m_renderer[i] = ::EffekseerRendererDX12::Create(
 				d3dDevice,
@@ -25,9 +26,8 @@ namespace nsK2EngineLow {
 				1,
 				DXGI_FORMAT_D32_FLOAT,
 				false,
-				8000
-			);
-			//メモリプールの作成。
+				8000);
+			// メモリプールの作成。
 			m_memoryPool[i] = EffekseerRenderer::CreateSingleFrameMemoryPool(m_renderer[i]->GetGraphicsDevice());
 			// コマンドリストの作成
 			m_commandList[i] = EffekseerRenderer::CreateCommandList(m_renderer[i]->GetGraphicsDevice(), m_memoryPool[i]);
@@ -35,27 +35,27 @@ namespace nsK2EngineLow {
 		// エフェクトマネージャーの作成。
 		m_manager = ::Effekseer::Manager::Create(8000);
 
-		
 		m_manager->SetCurveLoader(Effekseer::MakeRefPtr<Effekseer::CurveLoader>());
 	}
 	Effekseer::EffectRef EffectEngine::LoadEffect(const int number)
 	{
 		Effekseer::EffectRef effect;
 		auto it = m_effectMap.find(number);
-		if (it != m_effectMap.end()) {
-			//ロード済み。
+		if (it != m_effectMap.end())
+		{
+			// ロード済み。
 			effect = it->second;
 		}
-		else {
-			//ロードできない。
-			//ResistEffectでエフェクト読み込んでね！
+		else
+		{
+			// ロードできない。
+			// ResistEffectでエフェクト読み込んでね！
 			std::abort();
 		}
 		return effect;
 	}
 	EffectEngine::~EffectEngine()
 	{
-
 	}
 	int EffectEngine::Play(Effekseer::EffectRef effect)
 	{
@@ -65,7 +65,6 @@ namespace nsK2EngineLow {
 	{
 		m_manager->StopEffect(effectHandle);
 	}
-
 
 	void EffectEngine::Update(float deltaTime)
 	{
@@ -77,10 +76,10 @@ namespace nsK2EngineLow {
 
 		m_manager->Update();
 
-		//レンダラーにカメラ行列を設定。
-		m_renderer[backBufferNo]->SetCameraMatrix(*(const Effekseer::Matrix44*)&g_camera3D->GetViewMatrix());
-		//レンダラーにプロジェクション行列を設定。
-		m_renderer[backBufferNo]->SetProjectionMatrix(*(const Effekseer::Matrix44*)&g_camera3D->GetProjectionMatrix());
+		// レンダラーにカメラ行列を設定。
+		m_renderer[backBufferNo]->SetCameraMatrix(*(const Effekseer::Matrix44 *)&g_camera3D->GetViewMatrix());
+		// レンダラーにプロジェクション行列を設定。
+		m_renderer[backBufferNo]->SetProjectionMatrix(*(const Effekseer::Matrix44 *)&g_camera3D->GetProjectionMatrix());
 
 		m_renderer[backBufferNo]->SetTime(deltaTime);
 	}
@@ -122,14 +121,15 @@ namespace nsK2EngineLow {
 		EffekseerRendererDX12::EndCommandList(m_commandList[backBufferNo]);
 	}
 
-	void EffectEngine::ResistEffect(const int number, const char16_t* filePath)
+	void EffectEngine::ResistEffect(const int number, const char16_t *filePath)
 	{
 		Effekseer::EffectRef effect;
 		auto it = m_effectMap.find(number);
-		if (it == m_effectMap.end()) {
-			//新規。
+		if (it == m_effectMap.end())
+		{
+			// 新規。
 			effect = Effekseer::Effect::Create(m_manager, filePath);
-			m_effectMap.insert({ number, effect });
+			m_effectMap.insert({number, effect});
 		}
 	}
 }
