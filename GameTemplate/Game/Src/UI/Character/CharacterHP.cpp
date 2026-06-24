@@ -66,6 +66,15 @@ namespace nsApp
 
 		void CharacterHP::Update()
 		{
+			if (m_characterHP[0] <= 0 &&
+				m_characterHP[1] <= 0 &&
+				m_characterHP[2] <= 0 &&
+				m_characterHP[3] <= 0)
+			{
+				m_isAllNoneCharacterHP = true;
+				return;
+			}
+
 			/* プレイヤーの実HP比率をUIのHPスケールに変換して同期する。*/
 			for (int i = 0; i < enCharacter_Num; i++)
 			{

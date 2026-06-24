@@ -71,6 +71,7 @@ namespace nsApp
 		{
 			for (auto &effectInfo : m_playingEffects)
 			{
+				if (effectInfo.emitter->IsDead()) { continue; }
 				DeleteGO(effectInfo.emitter);
 				effectInfo.emitter = nullptr;
 			}

@@ -84,13 +84,19 @@ namespace nsApp
 			DeleteGO(m_pause);
 
 			m_commentaryUIManager = nullptr;
+
+			for (auto* player : m_players)
+			{
+				DeleteGO(player);
+			}
+			m_players.clear();
 			m_player = nullptr;
+
+			DeleteGO(m_boss);
 
 			DamageProcessor::SetDamageIndicatorPool(nullptr);
 			DeleteGO(m_damageIndicatorPool);
 			m_damageIndicatorPool = nullptr;
-
-			m_players.clear();
 
 			delete m_generator;
 			delete m_playerHub;
@@ -175,7 +181,7 @@ namespace nsApp
 					/* TODO: ボスのHPが0になったら演出を流すようにする。 */
 					if (m_gameClearDirection == nullptr)
 					{
-						if (g_pad[0]->IsTrigger(enButtonLeft))
+						if (m_boss->GetCurrentHP() <= 0)
 						{
 							m_gameClearDirection = NewGO<GameClearDirection>(2, "gameClearDirection");
 							m_characterHP->Deactivate();
@@ -200,6 +206,28 @@ namespace nsApp
 							if (m_gameTimeUpDirection->IsDirectionFinished())
 							{
 								m_gameTimeUpDirection->Deactivate();
+								m_gameEndSelect = NewGO<GameEndSelect>(2, "gameEndSelect");
+							}
+						}
+					}
+
+					/*ゲームオーバー演出。*/
+					if (m_gameOverDirection == nullptr)
+					{
+						if (m_characterHP->IsAllNoneCharacterHP())
+						{
+							m_gameOverDirection = NewGO<GameOverDirection>(2, "gameOverDirection");
+							m_characterHP->Deactivate();
+							m_gameTimeLimit->Deactivate();
+						}
+					}
+					else
+					{
+						if (m_gameEndSelect == nullptr)
+						{
+							if (m_gameOverDirection->IsDirectionFinished())
+							{
+								m_gameOverDirection->Deactivate();
 								m_gameEndSelect = NewGO<GameEndSelect>(2, "gameEndSelect");
 							}
 						}

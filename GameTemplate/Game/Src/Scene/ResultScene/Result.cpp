@@ -36,7 +36,7 @@ namespace {
 
 	const float SCORE_UI_HEIGHT = 128.0f;/*スコアUIの高さ。*/
 
-	const Vector3 SCORE_UI_INIT_POSITION = Vector3(0.0f, 0.0f, 0.0f);/*スコアUIの初期位置。*/
+	const Vector3 SCORE_UI_INIT_POSITION = Vector3(-100.0f, 0.0f, 0.0f);/*スコアUIの初期位置。*/
 
 	const float SCORE_UI_POSITION_INTERVAL = 55.0f;/*スコアUIの位置の間隔。*/
 
@@ -122,6 +122,23 @@ namespace {
 
 	const Vector3 SPEED_CLEAR_NO_BONUS_UI_INIT_SCALE = Vector3(1.0f, 1.0f, 1.0f);/*スピードクリアノーボーナスUIの初期大きさ。*/
 
+	/*ボーナス用のテキストUI。(共通)*/
+	const Vector3 BONUS_TEXT_UI_INIT_POSITION = Vector3(125.0f, 100.0f, 0.0f);/*ボーナス用のテキストUIの初期位置。*/
+
+	const Vector3 BONUS_TEXT_UI_INIT_SCALE = Vector3(1.0f,1.0f,1.0f);/*ボーナス用のテキストUIの初期大きさ。*/
+
+	const Vector4 BONUS_TEXT_UI_MUL_COLOR = Vector4(1.0f, 1.0f, 1.0f, 0.0f);/*ボーナス用のテキストUIの乗算色。*/
+
+	/*ボーナス用のテキストUI。(撃墜)*/
+	const float SHOT_DOWN_BONUS_TEXT_UI_WIDTH = 407;/*撃墜ボーナス用のテキストUIの幅。*/
+
+	const float SHOT_DOWN_BONUS_TEXT_UI_HEIGHT = 59;/*撃墜ボーナス用のテキストUIの高さ。*/
+
+	/*ボーナス用のテキストUI。(スピードクリア)*/
+	const float SPEED_CLEAR_BONUS_TEXT_UI_WIDTH = 667;/*スピードクリアボーナス用のテキストUIの幅。*/
+
+	const float SPEED_CLEAR_BONUS_TEXT_UI_HEIGHT = 60;/*スピードクリアボーナス用のテキストUIの高さ。*/
+
 	/*UIアニメーション。*/
 	const Vector3 AFTER_SCORE_UI_ANIMATION_POSITION[nsApp::nsResult::Result::EnScore::enScore_Num] = {
 		Vector3{-400.0f, 75.0f, 0.0f},/*〇万点。*/
@@ -152,6 +169,18 @@ namespace {
 		Vector2{ 1.0f, 1.0f },/*2回目。*/ 
 	};/*ランクUIの大きさを変えるアニメーションの後の大きさ。*/
 
+	const Vector3 START_BONUS_DIRECTION_SLIDE_ANIMATION_POSITION = { 125.0f,100.0f,0.0f };/*ボーナス演出アニメーション(スライド)の開始位置。*/
+
+	const Vector3 MIDDLE_BONUS_DIRECTION_SLIDE_ANIMATION_POSITION = { 0.0f,100.0f,0.0f };/*ボーナス演出アニメーション(スライド)の中間位置。*/
+
+	const Vector3 END_BONUS_DIRECTION_SLIDE_ANIMATION_POSITION = { -125.0f,100.0f,0.0f };/*ボーナス演出アニメーション(スライド)の終了位置。*/
+
+	const Vector3 START_BONUS_DIRECTION_DOWN_ANIMATION_POSITION = { 0.0f,100.0f,0.0f };/*ボーナス演出アニメーション(下降)の前の位置。*/
+
+	const Vector3 END_BONUS_DIRECTION_DOWN_ANIMATION_POSITION = { 0.0f,50.0f,0.0f };/*ボーナス演出アニメーション(下降)の後の位置。*/
+
+	const float MIDDLE_BONUS_DIRECTION_ANIMATION_ALPHA = 1.0f;/*ボーナス演出アニメーションの中間透明度*/
+
 	const float SLIDE_UI_ANIMATION_PLAY_SPEED = 2.5f;/*UIをスライドさせるアニメーションの再生速度。*/
 
 	const float ALPHA_UI_ANIMATION_PLAY_SPEED = 4.0f;/*UIの透明度を変えるアニメーションの再生速度。*/
@@ -159,6 +188,8 @@ namespace {
 	const float SCALE_UP_UI_ANIMATION_PLAY_SPEED = 2.3f;/*UIの大きさを変えるアニメーションの再生速度。*/
 
 	const float SCALE_DOWN_UI_ANIMATION_PLAY_SPEED = 2.3f;/*UIの大きさを元に戻すアニメーションの再生速度。*/
+
+	const float BONUS_DIRECTION_ANIMATION_PLAY_SPEED = 2.5f;/*ボーナス演出アニメーションの再生速度。*/
 }
 
 namespace nsApp
@@ -174,6 +205,15 @@ namespace nsApp
 		/*開始処理。*/
 		bool Result::Start()
 		{
+			/*リザルトで表示するスコア関連のデータの設定。*/
+			SetScoreData(m_bossType, m_calcClearTimeData);
+
+			/*スコア計算。*/
+			CalcScore();
+
+			/*リザルトで表示するランクの設定。*/
+			SetRank();
+
 			/*リザルトで表示するためのデータの計算。*/
 			CalcResultDisplayData();
 
@@ -236,7 +276,7 @@ namespace nsApp
 			for (int i = 0; i < enScore_Num; i++)
 			{
 				/*スコアUIの描画。*/
-				m_scoreUI[i].Draw(rc);
+				m_scoreUI[i][m_score[i]].Draw(rc);
 			}
 
 			/*クリア時間枠UIの描画。*/
@@ -263,6 +303,9 @@ namespace nsApp
 				{
 					/*ボーナスUIの描画。*/
 					m_bonusUI[k].Draw(rc);
+
+					/*ボーナス用のテキストUIの描画。*/
+					m_bonusTextUI[k].Draw(rc);
 				}
 				else
 				{
@@ -272,37 +315,113 @@ namespace nsApp
 			}
 		}
 
+		/*リザルトで表示するスコア関連のデータの設定。*/
+		void Result::SetScoreData(int bossType, int clearTime)
+		{
+			switch (bossType)//撃墜したボスごとのスコアの設定。
+			{
+			case 0://チュートリアルドラゴン
+				m_shotDownBossScore = 1000;
+				break;
+			case 1://グレイドラゴン
+				m_shotDownBossScore = 2000;
+				break;
+			case 2://グリーンドラゴン
+				m_shotDownBossScore = 3000;
+				break;
+			case 3://レッドドラゴン
+				m_shotDownBossScore = 4000;
+				break;
+			default:
+				break;
+			}
+
+			m_calcClearTimeData = clearTime;//クリア時間の設定。
+
+			m_bonusScore[enBonus_ShotDown] = 10000;//撃墜ボーナススコアの設定。
+			m_isGetBonus[enBonus_ShotDown] = true;
+
+			if (m_calcClearTimeData >= 120)//スピードクリアボーナススコアの設定。
+			{
+				m_bonusScore[enBonus_SpeedClear] = 10000;
+				m_isGetBonus[enBonus_SpeedClear] = true;
+			}
+		}
+
+		/*スコア計算。*/
+		void Result::CalcScore()
+		{
+			m_calcScoreData += m_shotDownBossScore;
+			m_progressScore[enProgressScore_ShotDownBossScore] = m_calcScoreData;
+
+			m_calcScoreData += m_calcClearTimeData * 50;
+			m_progressScore[enProgressScore_ClearTime] = m_calcScoreData;
+
+			if (m_isGetBonus[enBonus_ShotDown])
+			{
+				m_calcScoreData += m_bonusScore[enBonus_ShotDown];
+				m_progressScore[enProgressScore_ShotDownBonus] = m_calcScoreData;
+			}
+
+			if (m_isGetBonus[enBonus_SpeedClear])
+			{
+				m_calcScoreData += m_bonusScore[enBonus_SpeedClear];
+				m_progressScore[enProgressScore_SpeedClearBonus] = m_calcScoreData;
+			}
+		}
+
+		/*リザルトで表示するランクの設定。*/
+		void Result::SetRank()
+		{
+			if (m_calcClearTimeData < 30)
+			{
+				m_rank = enRankUI_Bronze;
+			}
+			else if (m_calcClearTimeData < 60)
+			{
+				m_rank = enRankUI_Silver;
+			}
+			else if (m_calcClearTimeData < 120)
+			{
+				m_rank = enRankUI_Gold;
+			}
+			else 
+			{
+				m_rank = enRankUI_Platinum;
+			}
+		}
+
 		/*リザルトで表示するためのデータの計算。*/
 		void Result::CalcResultDisplayData()
 		{
 			/*スコアを表示するためのデータ。*/
-			CalcScoreDisplayData();
+			CalcScoreDisplayData(m_progressScore[enProgressScore_ClearTime]);
 
 			/*クリア時間を表示するためのデータ。*/
 			CalcClearTimeDisplayData();
 		}
 
 		/*スコアを表示するためのデータの計算。*/
-		void Result::CalcScoreDisplayData()
+		void Result::CalcScoreDisplayData(const int scoreData)
 		{
 			/*万の位を算出するための計算。*/
-			int tenThousand = m_calcScoreData / 10000;
+			int tenThousand = scoreData / 10000;
 			m_score[enScore_TenThousand] = tenThousand;
 
 			/*千の位を算出するための計算。*/
-			int thousand = (m_calcScoreData % 10000) / 1000;
+			int thousand = (scoreData % 10000) / 1000;
 			m_score[enScore_Thousand] = thousand;
 
 			/*百の位を算出するための計算。*/
-			int hundred = (m_calcScoreData % 1000) / 100;
+			int hundred = (scoreData % 1000) / 100;
 			m_score[enScore_Hundred] = hundred;
 
 			/*十の位を算出するための計算。*/
-			int ten = (m_calcScoreData % 100) / 10;
+			int ten = (scoreData % 100) / 10;
 			m_score[enScore_Ten] = ten;
 
 			/*一の位を算出するための計算。*/
-			int one = m_calcScoreData % 10;
+			int one = scoreData % 10;
 			m_score[enScore_One] = one;
 		}
 
@@ -340,8 +459,11 @@ namespace nsApp
 
 			for (int i = 0; i < enScore_Num; i++)
 			{
-				/*スコアUI*/
-				InitScoreUI((EnScore)i, i);
+				for (int j = 0; j < enScoreDisplayUI_Num; j++)
+				{
+					/*スコアUI*/
+					InitScoreUI((EnScore)i, (EnScoreDisplayUI)j, i);
+				}
 			}
 
 			/*クリア時間枠UI。*/
@@ -364,6 +486,9 @@ namespace nsApp
 
 			/*ノーボーナスUI。*/
 			InitNoBonusUI();
+
+			/*ボーナス用のテキストUI。*/
+			InitBonusTextUI();
 		}
 
 		/*背景の初期化。*/
@@ -393,15 +518,15 @@ namespace nsApp
 		}
 
 		/*スコアUIの初期化。*/
-		void Result::InitScoreUI(EnScore score, int scoreIndex)
+		void Result::InitScoreUI(EnScore score, EnScoreDisplayUI scoreDisplayUI, int scoreIndex)
 		{
 			Vector3 initPosition = SCORE_UI_INIT_POSITION;/*初期位置。*/
 			initPosition.x += SCORE_UI_POSITION_INTERVAL * scoreIndex;/*位置の間隔を加算。*/
 
-			m_scoreUI[score].Init(m_scoreUIFilePath[m_score[score]].c_str(), SCORE_UI_WIDTH, SCORE_UI_HEIGHT);/*初期化。*/
-			m_scoreUI[score].SetPosition(initPosition);/*位置設定。*/
-			m_scoreUI[score].SetScale(SCORE_UI_INIT_SCALE);/*大きさ設定。*/
-			m_scoreUI[score].Update();/*更新処理。*/
+			m_scoreUI[score][scoreDisplayUI].Init(m_scoreUIFilePath[scoreDisplayUI].c_str(), SCORE_UI_WIDTH, SCORE_UI_HEIGHT);/*初期化。*/
+			m_scoreUI[score][scoreDisplayUI].SetPosition(initPosition);/*位置設定。*/
+			m_scoreUI[score][scoreDisplayUI].SetScale(SCORE_UI_INIT_SCALE);/*大きさ設定。*/
+			m_scoreUI[score][scoreDisplayUI].Update();/*更新処理。*/
 		}
 
 		/*クリア時間枠UIの初期化。*/
@@ -494,18 +619,45 @@ namespace nsApp
 			}
 		}
 
+		/*ボーナスようのテキストUI。*/
+		void Result::InitBonusTextUI()
+		{
+			if (m_isGetBonus[enBonus_ShotDown])
+			{
+				m_bonusTextUI[enBonus_ShotDown].Init(m_bonusTextUIFilePath[enBonus_ShotDown].c_str(), SHOT_DOWN_BONUS_TEXT_UI_WIDTH, SHOT_DOWN_BONUS_TEXT_UI_HEIGHT);/*初期化。*/
+				m_bonusTextUI[enBonus_ShotDown].SetPosition(BONUS_TEXT_UI_INIT_POSITION);/*位置設定。*/
+				m_bonusTextUI[enBonus_ShotDown].SetScale(BONUS_TEXT_UI_INIT_SCALE);/*大きさ設定。*/
+				m_bonusTextUI[enBonus_ShotDown].SetMulColor(BONUS_TEXT_UI_MUL_COLOR);/*乗算色設定。*/
+				m_bonusTextUI[enBonus_ShotDown].Update();/*更新処理。*/
+
+				m_bonusDirectionAnimationSprite.push_back(&m_bonusTextUI[enBonus_ShotDown]);/*ボーナス演出アニメーションのスプライトに追加。*/
+			}
+
+			if (m_isGetBonus[enBonus_SpeedClear])
+			{
+				m_bonusTextUI[enBonus_SpeedClear].Init(m_bonusTextUIFilePath[enBonus_SpeedClear].c_str(), SPEED_CLEAR_BONUS_TEXT_UI_WIDTH, SPEED_CLEAR_BONUS_TEXT_UI_HEIGHT);/*初期化。*/
+				m_bonusTextUI[enBonus_SpeedClear].SetPosition(BONUS_TEXT_UI_INIT_POSITION);/*位置設定。*/
+				m_bonusTextUI[enBonus_SpeedClear].SetScale(BONUS_TEXT_UI_INIT_SCALE);/*大きさ設定。*/
+				m_bonusTextUI[enBonus_SpeedClear].SetMulColor(BONUS_TEXT_UI_MUL_COLOR);/*乗算色設定。*/
+				m_bonusTextUI[enBonus_SpeedClear].Update();/*更新処理。*/
+
+				m_bonusDirectionAnimationSprite.push_back(&m_bonusTextUI[enBonus_SpeedClear]);/*ボーナス演出アニメーションのスプライトに追加。*/
+			}
+		}
+
 		/*UIアニメーションの初期化。*/
 		void Result::InitUIAnimation()
 		{
 			for (int i = 0; i < enScore_Num; i++)
 			{
-				if (m_score[i] == 0) { continue; };
+				for (int j = 0; j < enScoreDisplayUI_Num; j++)
+				{
+					/*UIをスライドさせるアニメーション。*/
+					InitSlideScoreUIAnimation((EnScore)i, (EnScoreDisplayUI)j);
 
-				/*UIをスライドさせるアニメーション。*/
-				InitSlideScoreUIAnimation((EnScore)i);
-
-				/*スコアUIの大きさを変えるアニメーション。*/
-				InitScaleScoreUIAnimation((EnScore)i);
+					/*スコアUIの大きさを変えるアニメーション。*/
+					InitScaleScoreUIAnimation((EnScore)i, (EnScoreDisplayUI)j);
+				}
 			}
 
 			/*UIをスライドさせるアニメーション。*/
@@ -516,18 +668,26 @@ namespace nsApp
 
 			/*ランクUIの大きさを変えるアニメーション。*/
 			InitScaleRankUIAnimation();
+
+			for (int i = 0; i < m_bonusDirectionAnimationSprite.size(); i++)
+			{
+				if (m_isGetBonus[i] == false) { continue; }
+
+				/*ボーナス演出アニメーション。*/
+				InitBonusDirectionAnimation(m_bonusDirectionAnimationSprite[i]);
+			}
 		}
 
 		/*スコアUIをスライドさせるアニメーション。*/
-		void Result::InitSlideScoreUIAnimation(EnScore score)
+		void Result::InitSlideScoreUIAnimation(EnScore score, EnScoreDisplayUI scoreDisplayUI)
 		{
 			/*UIをスライドさせるアニメーションの値の設定。*/
-			Vector3 basePosition = m_scoreUI[score].GetPosition();/*元の位置。*/
+			Vector3 basePosition = m_scoreUI[score][scoreDisplayUI].GetPosition();/*元の位置。*/
 			Vector3 targetPosition = AFTER_SCORE_UI_ANIMATION_POSITION[score];/*ターゲット位置。*/
 
 			/*初期化。*/
-			m_slideScoreUIAnimation[score] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
-				&m_scoreUI[score],/*アニメーションをさせるスプライト。*/
+			m_slideScoreUIAnimation[score][scoreDisplayUI] = std::make_unique<nsApp::nsUI::PositionUIAnimation>(
+				&m_scoreUI[score][scoreDisplayUI],/*アニメーションをさせるスプライト。*/
 				1.0f,/*ターゲットの割合。*/
 				SLIDE_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
 				false,/*ループするか？*/
@@ -539,15 +699,15 @@ namespace nsApp
 		}
 
 		/*スコアUIの大きさを変えるアニメーション。*/
-		void Result::InitScaleScoreUIAnimation(EnScore score)
+		void Result::InitScaleScoreUIAnimation(EnScore score, EnScoreDisplayUI scoreDisplayUI)
 		{
 			/*UIの大きさを変えるアニメーションの値の設定。*/
-			Vector2 baseScale = { m_scoreUI[score].GetScale().x, m_scoreUI[score].GetScale().y };/*元の大きさ。*/
+			Vector2 baseScale = { m_scoreUI[score][scoreDisplayUI].GetScale().x, m_scoreUI[score][scoreDisplayUI].GetScale().y };/*元の大きさ。*/
 			Vector2 targetScale = AFTER_SCORE_UI_ANIMATION_SCALE;/*ターゲットの大きさ。*/
 
 			/*初期化。*/
-			m_scaleUpScoreUIAnimation[score] = std::make_unique<nsApp::nsUI::ScaleUIAnimation>(
-				&m_scoreUI[score],/*アニメーションをさせるスプライト。*/
+			m_scaleUpScoreUIAnimation[score][scoreDisplayUI] = std::make_unique<nsApp::nsUI::ScaleUIAnimation>(
+				&m_scoreUI[score][scoreDisplayUI],/*アニメーションをさせるスプライト。*/
 				1.0f,/*ターゲットの割合。*/
 				SCALE_UP_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
 				false,/*ループするか？*/
@@ -559,11 +719,11 @@ namespace nsApp
 
 			/*UIの大きさを変えるアニメーションの値の設定。*/
 			baseScale = AFTER_SCORE_UI_ANIMATION_SCALE;/*元の大きさ。*/
-			targetScale = { m_scoreUI[score].GetScale().x, m_scoreUI[score].GetScale().y };/*ターゲットの大きさ。*/
+			targetScale = { m_scoreUI[score][scoreDisplayUI].GetScale().x, m_scoreUI[score][scoreDisplayUI].GetScale().y };/*ターゲットの大きさ。*/
 
 			/*初期化。*/
-			m_scaleDownScoreUIAnimation[score] = std::make_unique<nsApp::nsUI::ScaleUIAnimation>(
-				&m_scoreUI[score],/*アニメーションをさせるスプライト。*/
+			m_scaleDownScoreUIAnimation[score][scoreDisplayUI] = std::make_unique<nsApp::nsUI::ScaleUIAnimation>(
+				&m_scoreUI[score][scoreDisplayUI],/*アニメーションをさせるスプライト。*/
 				1.0f,/*ターゲットの割合。*/
 				SCALE_DOWN_UI_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
 				false,/*ループするか？*/
@@ -942,28 +1102,165 @@ namespace nsApp
 			);
 		}
 
+		/*ボーナス演出アニメーションの初期化。*/
+		void Result::InitBonusDirectionAnimation(SpriteRender* spriteData)
+		{
+			/*ボーナス演出アニメーション(位置変更前)の値の設定。*/
+			Vector3 basePosition = START_BONUS_DIRECTION_SLIDE_ANIMATION_POSITION;
+			Vector3 targetPosition = MIDDLE_BONUS_DIRECTION_SLIDE_ANIMATION_POSITION;
+
+			/*初期化。*/
+			m_bonusDirectionSlideStartAnimation.push_back(std::make_unique<nsApp::nsUI::PositionUIAnimation>(
+				spriteData,/*アニメーションをさせるスプライト。*/
+				1.0f,/*ターゲットの割合。*/
+				BONUS_DIRECTION_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
+				false,/*ループするか？*/
+				0.0f,/*アニメーションを開始する前の遅延時間。*/
+				0.0f,/*アニメーションを終了した後の遅延時間。*/
+				basePosition,/*元の位置*/
+				targetPosition/*ターゲットの位置。*/));
+
+			/*ボーナス演出アニメーション(位置変更後)の値の設定。*/
+			basePosition = MIDDLE_BONUS_DIRECTION_SLIDE_ANIMATION_POSITION;
+			targetPosition = END_BONUS_DIRECTION_SLIDE_ANIMATION_POSITION;
+
+			/*初期化。*/
+			m_bonusDirectionSlideEndAnimation.push_back(std::make_unique<nsApp::nsUI::PositionUIAnimation>(
+				spriteData,/*アニメーションをさせるスプライト。*/
+				1.0f,/*ターゲットの割合。*/
+				BONUS_DIRECTION_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
+				false,/*ループするか？*/
+				0.0f,/*アニメーションを開始する前の遅延時間。*/
+				0.0f,/*アニメーションを終了した後の遅延時間。*/
+				basePosition,/*元の位置*/
+				targetPosition/*ターゲットの位置。*/));
+
+
+			/*ボーナス演出アニメーション(下降)の値の設定。*/
+			basePosition = START_BONUS_DIRECTION_DOWN_ANIMATION_POSITION;
+			targetPosition = END_BONUS_DIRECTION_DOWN_ANIMATION_POSITION;
+
+			/*初期化。*/
+			m_bonusDirectionDownAnimation.push_back(std::make_unique<nsApp::nsUI::PositionUIAnimation>(
+				spriteData,/*アニメーションをさせるスプライト。*/
+				1.0f,/*ターゲットの割合。*/
+				BONUS_DIRECTION_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
+				false,/*ループするか？*/
+				0.0f,/*アニメーションを開始する前の遅延時間。*/
+				0.0f,/*アニメーションを終了した後の遅延時間。*/
+				basePosition,/*元の位置*/
+				targetPosition/*ターゲットの位置。*/));
+
+			/*ボーナス演出アニメーション(上昇)の値の設定。*/
+			basePosition = END_BONUS_DIRECTION_DOWN_ANIMATION_POSITION;
+			targetPosition = START_BONUS_DIRECTION_DOWN_ANIMATION_POSITION;
+
+			/*初期化。*/
+			m_bonusDirectionUpAnimation.push_back(std::make_unique<nsApp::nsUI::PositionUIAnimation>(
+				spriteData,/*アニメーションをさせるスプライト。*/
+				1.0f,/*ターゲットの割合。*/
+				BONUS_DIRECTION_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
+				false,/*ループするか？*/
+				0.0f,/*アニメーションを開始する前の遅延時間。*/
+				0.0f,/*アニメーションを終了した後の遅延時間。*/
+				basePosition,/*元の位置*/
+				targetPosition/*ターゲットの位置。*/));
+
+
+			/*ボーナス演出アニメーション(透明度変更前)の値の設定。*/
+			float baseAlpha = spriteData->GetMulColor().a;
+			float targetAlpha = MIDDLE_BONUS_DIRECTION_ANIMATION_ALPHA;
+
+			/*初期化。*/
+			m_bonusDirectionAlphaStartAnimation.push_back(std::make_unique<nsApp::nsUI::AlphaUIAnimation>(
+				spriteData,/*アニメーションをさせるスプライト。*/
+				1.0f,/*ターゲットの割合。*/
+				BONUS_DIRECTION_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
+				false,/*ループするか？*/
+				0.0f,/*アニメーションを開始する前の遅延時間。*/
+				0.0f,/*アニメーションを開始する後の遅延時間。*/
+				baseAlpha,/*元の透明度。*/
+				targetAlpha/*ターゲットの透明度。*/));
+
+			/*ボーナス演出アニメーション(透明度変更後)の値の設定。*/
+			baseAlpha = MIDDLE_BONUS_DIRECTION_ANIMATION_ALPHA;
+			targetAlpha = spriteData->GetMulColor().a;
+
+			/*初期化。*/
+			m_bonusDirectionAlphaEndAnimation.push_back(std::make_unique<nsApp::nsUI::AlphaUIAnimation>(
+				spriteData,/*アニメーションをさせるスプライト。*/
+				1.0f,/*ターゲットの割合。*/
+				BONUS_DIRECTION_ANIMATION_PLAY_SPEED,/*アニメーションの再生速度。*/
+				false,/*ループするか？*/
+				0.0f,/*アニメーションを開始する前の遅延時間。*/
+				0.0f,/*アニメーションを開始する後の遅延時間。*/
+				baseAlpha,/*元の透明度。*/
+				targetAlpha/*ターゲットの透明度。*/));
+		}
+
 		/*UIアニメーションの更新処理。*/
 		void Result::UpdateUIAnimation()
 		{
-			if (!m_slideScoreUIAnimation[enScore_One]->IsEnd())
+			if (!IsBonusDirectionFinished())
+			{
+				if (!m_bonusDirectionSlideStartAnimation[m_bonusType]->IsEnd())
+				{
+					m_bonusDirectionSlideStartAnimation[m_bonusType]->Update();
+					m_bonusDirectionAlphaStartAnimation[m_bonusType]->Update();
+				}
+				else if (!m_bonusDirectionDownAnimation[m_bonusType]->IsEnd())
+				{
+					m_bonusDirectionDownAnimation[m_bonusType]->Update();
+
+					if (m_bonusDirectionDownAnimation[m_bonusType]->IsEnd())
+					{
+						CalcScoreDisplayData(m_progressScore[m_bonusType + 2]);
+						return;
+					}
+				}
+				else if (!m_bonusDirectionUpAnimation[m_bonusType]->IsEnd())
+				{
+					m_bonusDirectionUpAnimation[m_bonusType]->Update();
+				}
+				else if (!m_bonusDirectionSlideEndAnimation[m_bonusType]->IsEnd())
+				{
+					m_bonusDirectionSlideEndAnimation[m_bonusType]->Update();
+					m_bonusDirectionAlphaEndAnimation[m_bonusType]->Update();
+				}
+				else
+				{
+					m_bonusType++;
+					if (m_bonusType == m_bonusDirectionAnimationSprite.size())
+					{
+						m_isBonusDirectionFinished = true;/*ボーナス演出終了。*/
+					}
+				}
+				return;
+			}
+
+			if (!m_slideScoreUIAnimation[enScore_One][enScoreDisplayUI_Nine]->IsEnd())
 			{
 				for (int i = 0; i < enScore_Num; i++)
 				{
-					if (m_score[i] == 0) { continue; };
-					/*スコアUIをスライドさせるアニメーション。*/
-					m_slideScoreUIAnimation[i]->Update();
+					for (int j = 0; j < enScoreDisplayUI_Num; j++)
+					{
+						/*スコアUIをスライドさせるアニメーション。*/
+						m_slideScoreUIAnimation[i][j]->Update();
+					}
 				}
 			}
-			else if (!m_scaleUpScoreUIAnimation[enScore_One]->IsEnd())
+			else if (!m_scaleUpScoreUIAnimation[enScore_One][enScoreDisplayUI_Nine]->IsEnd())
 			{
 				for (int i = 0; i < enScore_Num; i++)
 				{
-					if (m_score[i] == 0) { continue; };
-					/*UIをスライドさせるアニメーション。*/
-					m_scaleUpScoreUIAnimation[i]->Update();
+					for (int j = 0; j < enScoreDisplayUI_Num; j++)
+					{
+						/*UIをスライドさせるアニメーション。*/
+						m_scaleUpScoreUIAnimation[i][j]->Update();
+					}
 				}
 			}
-			else if (!m_scaleDownScoreUIAnimation[enScore_One]->IsEnd())
+			else if (!m_scaleDownScoreUIAnimation[enScore_One][enScoreDisplayUI_Nine]->IsEnd())
 			{
 				for (int i = 0; i < enSlideUIAnimationSprite_Num; i++)
 				{
@@ -984,10 +1281,11 @@ namespace nsApp
 
 				for (int k = 0; k < enScore_Num; k++)
 				{
-					if (m_score[k] == 0) { continue; };
-
-					/*UIをスライドさせるアニメーション。*/
-					m_scaleDownScoreUIAnimation[k]->Update();
+					for (int j = 0; j < enScoreDisplayUI_Num; j++)
+					{
+						/*UIをスライドさせるアニメーション。*/
+						m_scaleDownScoreUIAnimation[k][j]->Update();
+					}
 				}
 			}
 			else if (!m_scaleDownRankUIAnimation[enScaleRankUIAnimationCount_One]->IsEnd())
@@ -1026,16 +1324,19 @@ namespace nsApp
 			/*スコア枠UI。*/
 			m_scoreFrameUI.Update();
 
-			for (int i = 0; i < enBonus_Num; i++)
+			for (int i = 0; i < enScore_Num; i++)
 			{
-				/*スコアUI。*/
-				m_scoreUI[i].Update();
+				for (int j = 0; j < enScoreDisplayUI_Num; j++)
+				{
+					/*スコアUI。*/
+					m_scoreUI[i][j].Update();
+				}
 			}
 
 			/*クリア時間枠UI。*/
 			m_clearTimeFrameUI.Update();
 
-			for (int j = 0; j < enBonus_Num; j++)
+			for (int j = 0; j < enTime_Num; j++)
 			{
 				/*クリア時間UI。*/
 				m_clearTimeUI[j].Update();
@@ -1057,6 +1358,9 @@ namespace nsApp
 
 				/*ノーボーナスUI。*/
 				m_noBonusUI[k].Update();
+
+				/*ボーナス用のテキストUI。*/
+				m_bonusTextUI[k].Update();
 			}
 		}
 	}

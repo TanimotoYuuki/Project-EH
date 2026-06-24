@@ -700,6 +700,7 @@ namespace nsApp
 				if (m_gameClearDirection->IsDirectionFinished())
 				{
 					m_gameClearDirection->Deactivate();
+					SetClearTime(m_game2->GetTimeLimit());
 					/*フェード処理が終わったらリザルトシーンに遷移する。*/
 					if (nsApp::nsFade::Fade::GetInstance()->IsEnd())
 					{
@@ -762,6 +763,7 @@ namespace nsApp
 		{
 			m_result = NewGO<Result>(0, "result");
 			m_result->SetBossType(GetBossType());
+			m_result->SetClearTime(GetClearTime());
 			return true;
 		}
 
@@ -930,6 +932,8 @@ namespace nsApp
 				if (m_currentSceneID == IScene::enSceneID_Select || m_currentSceneID == IScene::enSceneID_Loading || m_currentSceneID == IScene::enSceneID_InGame)
 					m_bossType = m_currentScene->GetBossType();
 
+				if (m_currentSceneID == IScene::enSceneID_InGame)
+					m_clearTime = m_currentScene->GetClearTime();
 
 				/* タイトルシーン、もしくは選択シーンのときは音量の割合を保存する。*/
 				if (m_currentSceneID == IScene::enSceneID_Select ||
@@ -992,6 +996,7 @@ namespace nsApp
 				m_currentSceneID = IScene::enSceneID_Result;
 				m_currentScene = NewGO<nsResult::ResultScene>(0, "resultScene");
 				m_currentScene->SetBossType(m_bossType);
+				m_currentScene->SetClearTime(m_clearTime);
 				break;
 			default:
 				break;
@@ -1012,6 +1017,9 @@ namespace nsApp
 			/*音量の割合をデフォルトに戻す。*/
 			for (int j = 0; j < nsApp::nsOption::Option::EnGaugeUI::enGaugeUI_Num; j++)
 				m_volumeRate[j] = 100;
+
+			/*クリア時間をデフォルトに戻す。*/
+			m_clearTime = 0;
 
 			/*プレイヤーが操作するキャラクターをデフォルトに戻す。*/
 			for (int k = 0; k < nsApp::nsSelect::MemberSelect::EnCharacterFrameUI::enCharacterFrameUI_Num; k++)

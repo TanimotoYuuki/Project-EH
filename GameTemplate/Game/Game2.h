@@ -11,6 +11,7 @@
 #include "Src/Parameter/ParameterSystem.h"
 #include "Src/Build/InGameBuildHelper.h"
 #include "Src/Actor/Character/Boss/Status/BossPhaseEventController.h"
+#include "GameTimeLimit.h"
 
 namespace nsApp
 {
@@ -157,6 +158,24 @@ namespace nsApp
 			inline int GetBossType() const
 			{
 				return m_bossType + 5;
+			}
+
+			/**
+			 * @brief 制限時間の設定。
+			 * @param timeLimit 制限時間。
+			 */
+			inline void SetTimeLimit(int timeLimit)
+			{
+				m_gameTimeLimit->SetTimeLimit(timeLimit);
+			}
+
+			/**
+			 * @brief 制限時間の取得。
+			 * @return 制限時間。
+			 */
+			inline int GetTimeLimit() const
+			{
+				return m_gameTimeLimit->GetTimeLimit();
 			}
 
 			/**
