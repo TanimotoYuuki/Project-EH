@@ -112,6 +112,12 @@ namespace nsApp
 				return m_hitStopFlame > 0;
 			}
 
+			/* 現在のHPを取得する。*/
+			inline int GetCurrentHP() const
+			{
+				return m_characterStatus.hp.currentHP;
+			}
+
 
 		protected:
 			CharacterStatus m_characterStatus; //! キャラクターのステータス。

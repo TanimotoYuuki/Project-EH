@@ -111,6 +111,23 @@ namespace nsApp
 			return m_volumeRate[index];
 		}
 
+		/**
+		* @brief クリア時間の設定。
+		* @param clearTime クリア時間。
+		*/
+		inline void SetClearTime(int clearTime)
+		{
+			m_clearTime = clearTime;
+		}
+
+		/**
+		* @brief クリア時間の取得。
+		* @return クリア時間。
+		*/
+		inline int GetClearTime() const
+		{
+			return m_clearTime;
+		}
 
 	public:
 		EnSceneID m_sceneID = enSceneID_Num;				//! シーンID。
@@ -118,6 +135,7 @@ namespace nsApp
 		int m_characterRole[4] = { 0 };/*キャラクターごとの役割。*/
 		bool m_isPlayerControle[4] = { true };/*プレイヤーがキャラクターを操作するか？*/
 		int m_volumeRate[3] = { 100,100,100 };/*各音量の割合。*/
+		int m_clearTime = 0;/*クリア時間。*/
 	};
 
 
@@ -400,6 +418,7 @@ namespace nsApp
 			int m_bossType = 0;												//! ボスの種類。
 			int m_characterRole[4] = { 0 };									//! キャラクターごとの役割。
 			int m_volumeRate[3] = { 100,100,100 };						    //!各音量の割合。
+			int m_clearTime = 0;											//!クリア時間。
 
 			bool m_isPlayerControle[4] = { true };							//! プレイヤーがキャラクターを操作するか。
 		};

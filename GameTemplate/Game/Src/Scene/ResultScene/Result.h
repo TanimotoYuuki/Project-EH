@@ -116,6 +116,16 @@ namespace nsApp
 				enBoss_Num/*ボスの数。*/
 			};
 
+			/*経過スコア。*/
+			enum EnProgressScore : uint8_t
+			{
+				enProgressScore_ShotDownBossScore,/*撃墜したボスごとのスコアまで。*/
+				enProgressScore_ClearTime,/*クリア時間まで。*/
+				enProgressScore_ShotDownBonus,/*撃墜ボーナスまで。*/
+				enProgressScore_SpeedClearBonus,/*スピードクリアボーナスまで。*/
+				enProgressScore_Num/*経過スコア数。*/
+			};
+
 			/*UIをスライドさせるアニメーションに適用するスプライト。*/
 			enum EnSlideUIAnimationSprite : uint8_t
 			{
@@ -157,14 +167,32 @@ namespace nsApp
 		private:/*メンバ関数。*/
 
 			/**
+			* @brief リザルトで表示するスコア関連のデータの設定。
+			* @param bossType ボスの種類。
+			* @param clearTime クリア時間。
+			*/
+			void SetScoreData(int bossType, int clearTime);
+
+			/**
+			* @brief スコアの計算。
+			*/
+			void CalcScore();
+
+			/**
+			* @brief リザルトで表示するランクの設定。
+			*/
+			void SetRank();
+
+			/**
 			* @brief リザルトで表示するためのデータの計算。
 			*/
 			void CalcResultDisplayData();
 
 			/**
 			* @brief スコアを表示するためのデータの計算。
+			* @param scoreData スコアデータ。
 			*/
-			void CalcScoreDisplayData();
+			void CalcScoreDisplayData(const int scoreData);
 
 			/**
 			* @brief クリア時間を表示するためのデータの計算。
@@ -194,9 +222,10 @@ namespace nsApp
 			/**
 			* @brief スコアUIの初期化。
 			* @param score スコア。
+			* @param scoreDisplayUI スコアを表示するUI。
 			* @param scoreIndex スコアのインデックス。
 			*/
-			void InitScoreUI(EnScore score, int scoreIndex);
+			void InitScoreUI(EnScore score, EnScoreDisplayUI scoreDisplayUI, int scoreIndex);
 
 			/**
 			* @brief クリア時間枠UIの初期化。
@@ -231,6 +260,11 @@ namespace nsApp
 			void InitNoBonusUI();
 
 			/**
+			* @brief ボーナス用のテキストUI。
+			*/
+			void InitBonusTextUI();
+
+			/**
 			* @brief UIアニメーションの初期化。
 			*/
 			void InitUIAnimation();
@@ -238,14 +272,16 @@ namespace nsApp
 			/**
 			* @brief スコアUIをスライドさせるアニメーションの初期化。
 			* @param score スコア。
+			* @param scoreDisplayUI スコアを表示するUI。
 			*/
-			void InitSlideScoreUIAnimation(EnScore score);
+			void InitSlideScoreUIAnimation(EnScore score, EnScoreDisplayUI scoreDisplayUI);
 
 			/**
 			* @brief スコアUIの大きさを変えるアニメーション。
 			* @param score スコア。
+			* @param scoreDisplayUI スコアを表示するUI。
 			*/
-			void InitScaleScoreUIAnimation(EnScore score);
+			void InitScaleScoreUIAnimation(EnScore score, EnScoreDisplayUI scoreDisplayUI);
 
 			/**
 			* @brief UIをスライドさせるアニメーションの初期化。
@@ -261,6 +297,12 @@ namespace nsApp
 			* @brief ランクUIの大きさを変えるアニメーション。
 			*/
 			void InitScaleRankUIAnimation();
+
+			/**
+			* @brief ボーナス演出アニメーションの初期化。
+			* @param spriteData ボーナス演出アニメーション用のスプライトデータ。
+			*/
+			void InitBonusDirectionAnimation(SpriteRender* spriteData);
 
 			/**
 			* @brief UIアニメーションの更新処理。
@@ -290,6 +332,24 @@ namespace nsApp
 			inline EnBoss GetBossType() const
 			{
 				return (EnBoss)m_bossType;
+			}
+
+			/**
+			* @brief クリア時間の設定。
+			* @param clearTime クリア時間
+			*/
+			inline void SetClearTime(int clearTime)
+			{
+				m_calcClearTimeData = clearTime;
+			}
+
+			/**
+			* @brief クリア時間の取得。
+			* @return クリア時間。
+			*/
+			inline int GetClearTime() const
+			{
+				return m_calcClearTimeData;
 			}
 
 			/**
@@ -327,6 +387,15 @@ namespace nsApp
 			}
 
 			/**
+			* @brief ボーナス演出が終了したか？
+			* @return trueなら終了している。
+			*/
+			bool IsBonusDirectionFinished() const
+			{
+				return m_isBonusDirectionFinished;
+			}
+
+			/**
 			* @brief 演出が終了したか？
 			* @return trueなら終了している。
 			*/
@@ -339,29 +408,42 @@ namespace nsApp
 			SpriteRender m_backGround;/*背景。*/
 			SpriteRender m_targetUI;/*ターゲットUI。*/
 			SpriteRender m_scoreFrameUI;/*スコア枠UI。*/
-			SpriteRender m_scoreUI[enScore_Num];/*スコアUI。*/
+			SpriteRender m_scoreUI[enScore_Num][enScoreDisplayUI_Num];/*スコアUI。*/
 			SpriteRender m_clearTimeFrameUI;/*クリア時間枠UI。*/
 			SpriteRender m_clearTimeUI[enTime_Num];/*クリア時間UI。*/
 			SpriteRender m_rankFrameUI;/*ランク枠UI。*/
 			SpriteRender m_rankUI;/*ランクUI。*/
 			SpriteRender m_bonusUI[enBonus_Num];/*ボーナスUI。*/
 			SpriteRender m_noBonusUI[enBonus_Num];/*ノーボーナスUI。*/
+			SpriteRender m_bonusTextUI[enBonus_Num];/*ボーナス用のテキストUI。*/
+			int m_shotDownBossScore = 0;/*撃墜したボスごとのスコア。*/
+			int m_bonusScore[enBonus_Num] = { 0,0 };/*ボーナススコア。*/
+			int m_progressScore[enProgressScore_Num] = { 0,0,0,0 };/*経過スコア。*/
+			int m_bonusType = 0;/*ボーナスの種類。*/
 			int m_bossType = enBoss_One;/*ボスの種類。*/
-			int m_calcScoreData = 12345;/*スコアを表示するためのデータ。*/
+			int m_calcScoreData = 0;/*スコアを表示するためのデータ。*/
 			int m_score[enScore_Num] = { 0,0,0,0,0 };/*スコア。*/
 			int m_calcClearTimeData = 180;/*クリア時間を表示するためのデータ。*/
 			int m_clearTime[enTime_Num] = { 0,0,0,0 };/*クリア時間。*/
-			int m_rank = enRankUI_Gold;/*ランク。*/
-			std::unique_ptr<nsApp::nsUI::PositionUIAnimation> m_slideScoreUIAnimation[enScore_Num];/*スコアUIをスライドさせるアニメーション。*/
-			std::unique_ptr<nsApp::nsUI::ScaleUIAnimation> m_scaleUpScoreUIAnimation[enScore_Num];/*スコアUIの大きさを大きくするアニメーション。*/
-			std::unique_ptr<nsApp::nsUI::ScaleUIAnimation> m_scaleDownScoreUIAnimation[enScore_Num];/*スコアUIの大きさを小さくするアニメーション。*/
+			int m_rank = enRankUI_None;/*ランク。*/
+			std::unique_ptr<nsApp::nsUI::PositionUIAnimation> m_slideScoreUIAnimation[enScore_Num][enScoreDisplayUI_Num];/*スコアUIをスライドさせるアニメーション。*/
+			std::unique_ptr<nsApp::nsUI::ScaleUIAnimation> m_scaleUpScoreUIAnimation[enScore_Num][enScoreDisplayUI_Num];/*スコアUIの大きさを大きくするアニメーション。*/
+			std::unique_ptr<nsApp::nsUI::ScaleUIAnimation> m_scaleDownScoreUIAnimation[enScore_Num][enScoreDisplayUI_Num];/*スコアUIの大きさを小さくするアニメーション。*/
 			std::unique_ptr<nsApp::nsUI::PositionUIAnimation> m_slideUIAnimation[enSlideUIAnimationSprite_Num];/*UIをスライドさせるアニメーション。*/
 			std::unique_ptr<nsApp::nsUI::AlphaUIAnimation> m_alphaUIAnimation[enAlphaUIAnimationSprite_Num];/*UIの透明度を変えるアニメーション。*/
 			std::unique_ptr<nsApp::nsUI::ScaleUIAnimation> m_scaleDownRankUIAnimation[enScaleRankUIAnimationCount_Num];/*ランクUIの大きさを小さくするアニメーション。*/
 			std::unique_ptr<nsApp::nsUI::ScaleUIAnimation> m_scaleUpRankUIAnimation[enScaleRankUIAnimationCount_Num];/*ランクUIの大きさを大きくするアニメーション。*/
+			std::vector<std::unique_ptr<nsApp::nsUI::PositionUIAnimation>> m_bonusDirectionSlideStartAnimation;/*ボーナス演出アニメーション(スライド前)。*/
+			std::vector<std::unique_ptr<nsApp::nsUI::PositionUIAnimation>> m_bonusDirectionSlideEndAnimation;/*ボーナス演出アニメーション(スライド後)。*/
+			std::vector<std::unique_ptr<nsApp::nsUI::PositionUIAnimation>> m_bonusDirectionDownAnimation;/*ボーナス演出アニメーション(下降)。*/
+			std::vector<std::unique_ptr<nsApp::nsUI::PositionUIAnimation>> m_bonusDirectionUpAnimation;/*ボーナス演出アニメーション(上昇)。*/
+			std::vector<std::unique_ptr<nsApp::nsUI::AlphaUIAnimation>> m_bonusDirectionAlphaStartAnimation;/*ボーナス演出アニメーション(透明度変更前)。*/
+			std::vector<std::unique_ptr<nsApp::nsUI::AlphaUIAnimation>> m_bonusDirectionAlphaEndAnimation;/*ボーナス演出アニメーション(透明度変更後)。*/
+			std::vector<SpriteRender*> m_bonusDirectionAnimationSprite;/*ボーナス演出アニメーション用のスプライト。*/
 			GameEndSelect* m_gameEndSelect = nullptr;/*ゲームが終了した時に選択する用のインスタンス。*/
-			bool m_isGetBonus[enBonus_Num] = { true,false };/*ボーナス獲得フラグ。*/
+			bool m_isGetBonus[enBonus_Num] = { false,false };/*ボーナス獲得フラグ。*/
 			bool m_didSelect = false;/*選択できたか？*/
+			bool m_isBonusDirectionFinished = false;/*ボーナス演出が終了したか。*/
 			bool m_isDirectionFinished = false;/*演出が終了したか。*/
 
 		private:/*スプライトを表示するファイルパス用のメンバ変数。*/
@@ -414,6 +496,10 @@ namespace nsApp
 				"Assets/sprite/result/bonus/noShotDownBonus.dds",/*撃墜なし。*/
 				"Assets/sprite/result/bonus/noSpeedClearBonus.dds",/*スピードクリアなし。*/
 			};/*ノーボーナスUIのファイルパス。*/
+			std::string m_bonusTextUIFilePath[enBonus_Num] = {
+				"Assets/sprite/result/text/shotDownBonus.dds",/*撃墜ボーナス。*/
+				"Assets/sprite/result/text/speedClearBonus.dds"/*スピードクリアボーナス。*/
+			};/*ボーナス用のテキストUIのファイルパス。*/
 		};
 	}
 }
