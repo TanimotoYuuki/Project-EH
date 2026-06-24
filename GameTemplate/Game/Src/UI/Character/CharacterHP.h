@@ -118,6 +118,14 @@ namespace nsApp
 				return m_characterRole[playerIndex];
 			}
 
+			/**
+			 * @brief 全キャラクターのHPが無いか？
+			 * @return trueなら全キャラクターのHPはない。
+			 */
+			inline bool IsAllNoneCharacterHP() const
+			{
+				return m_isAllNoneCharacterHP;
+			}
 
 		private:
 			/**
@@ -196,6 +204,9 @@ namespace nsApp
 			int m_characterMaxHP[enCharacter_Num] = { 0, 0, 0, 0 };  //! キャラクターの最大HP。
 			int m_characterDamage[enCharacter_Num] = { 0, 0, 0, 0 }; //! キャラクターのダメージ。
 			int m_characterRole[enCharacter_Num] = { 0, 0, 0, 0 };   //! キャラクターの役割。
+
+			/* bool 型。 */
+			bool m_isAllNoneCharacterHP = false;/*全キャラクターのHPが無いか？*/
 
 			/* ポインタ型。*/
 			nsActor::Player* m_players[enCharacter_Num] = {}; //! 各キャラクターのプレイヤーポインタ。
