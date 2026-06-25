@@ -2,11 +2,10 @@
     // IntelliSense を使用して利用可能な属性を学べます。
     // 既存の属性の説明をホバーして表示します。
     // 詳細情報は次を確認してください: https://go.microsoft.com/fwlink/?linkid=830387
-
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "(Windows) 起動",
+            "name": "(Windows) 起動 - Debug",
             "type": "cppvsdbg",
             "request": "launch",
             "program": "${workspaceFolder}/Game/x64/Debug/Game.exe",
@@ -15,7 +14,19 @@
             "cwd": "${workspaceFolder}/Game",
             "environment": [],
             "console": "internalConsole",
-            "preLaunchTask": "Build with MSBuild"
+            "preLaunchTask": "Build with MSBuild (Debug)"
+        },
+        {
+            "name": "(Windows) 起動 - Release",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/Game/x64/Release/Game.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/Game",
+            "environment": [],
+            "console": "internalConsole",
+            "preLaunchTask": "Build with MSBuild (Release)"
         }
     ]
 }
