@@ -92,6 +92,7 @@ namespace nsK2EngineLow {
 	void K2EngineLow::ExecuteUpdate()
 	{
 		for (auto& pad : m_pad) {
+
 			pad.Update();
 		}
 		g_soundEngine->Update();

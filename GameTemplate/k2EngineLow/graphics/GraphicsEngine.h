@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include <d3d12.h>
 #include <dxgi.h>
 #include <dxgi1_2.h>
@@ -16,28 +15,32 @@
 #include "FrameBuffer.h"
 #include <pix.h>
 
-namespace nsK2EngineLow {
+namespace nsK2EngineLow
+{
 	/// <summary>
 	/// モデルの上方向。
 	/// </summary>
-	enum EnModelUpAxis {
-		enModelUpAxisY,		//モデルの上方向がY軸。
-		enModelUpAxisZ,		//モデルの上方向がZ軸。
+	enum EnModelUpAxis
+	{
+		enModelUpAxisY, // モデルの上方向がY軸。
+		enModelUpAxisZ, // モデルの上方向がZ軸。
 	};
 	/// <summary>
 	/// アルファブレンディングモード
 	/// </summary>
-	enum AlphaBlendMode {
-		AlphaBlendMode_None,	//アルファブレンディングなし(上書き)。
-		AlphaBlendMode_Trans,	//半透明合成
-		AlphaBlendMode_Add,		//加算合成
-		AlphaBlendMode_Multiply	//乗算合成
+	enum AlphaBlendMode
+	{
+		AlphaBlendMode_None,	// アルファブレンディングなし(上書き)。
+		AlphaBlendMode_Trans,	// 半透明合成
+		AlphaBlendMode_Add,		// 加算合成
+		AlphaBlendMode_Multiply // 乗算合成
 	};
 
 	/// <summary>
 	/// DirectX12に依存するグラフィックスエンジン
 	/// </summary>
-	class GraphicsEngine : public Noncopyable {
+	class GraphicsEngine : public Noncopyable
+	{
 	public:
 		/// <summary>
 		/// デストラクタ。
@@ -55,11 +58,10 @@ namespace nsK2EngineLow {
 		/// <param name="raytracingInitData">レイトレの初期化情報</param>
 		/// <returns>falseが返ってきたら作成に失敗。</returns>
 		bool Init(
-			HWND hwnd, 
-			UINT frameBufferWidth, 
+			HWND hwnd,
+			UINT frameBufferWidth,
 			UINT frameBufferHeight,
-			const raytracing::InitData& raytracingInitData
-		);
+			const raytracing::InitData &raytracingInitData);
 		/// <summary>
 		/// レンダリング開始。
 		/// </summary>
@@ -75,10 +77,14 @@ namespace nsK2EngineLow {
 		/// </remarks>
 		void EndRender();
 		/// <summary>
+		/// 描画の完了待ち。
+		/// </summary>
+		void WaitDraw();
+		/// <summary>
 		/// D3Dデバイスを取得。
 		/// </summary>
 		/// <returns></returns>
-		ID3D12Device5* GetD3DDevice()
+		ID3D12Device5 *GetD3DDevice()
 		{
 			return m_d3dDevice;
 		}
@@ -94,7 +100,7 @@ namespace nsK2EngineLow {
 		/// コマンドキューを取得。
 		/// </summary>
 		/// <returns></returns>
-		ID3D12CommandQueue* GetCommandQueue() const
+		ID3D12CommandQueue *GetCommandQueue() const
 		{
 			return m_commandQueue;
 		}
@@ -102,7 +108,7 @@ namespace nsK2EngineLow {
 		/// コマンドリストを取得。
 		/// </summary>
 		/// <returns></returns>
-		ID3D12GraphicsCommandList4* GetCommandList() const
+		ID3D12GraphicsCommandList4 *GetCommandList() const
 		{
 			return m_commandList[m_frameIndex];
 		}
@@ -126,7 +132,7 @@ namespace nsK2EngineLow {
 		/// レンダリングコンテキストを取得。
 		/// </summary>
 		/// <returns></returns>
-		RenderContext& GetRenderContext()
+		RenderContext &GetRenderContext()
 		{
 			return m_renderContext;
 		}
@@ -150,7 +156,7 @@ namespace nsK2EngineLow {
 		/// レンダリングターゲットをフレームバッファに変更する。
 		/// </summary>
 		/// <param name="rc"></param>
-		void ChangeRenderTargetToFrameBuffer(RenderContext& rc);
+		void ChangeRenderTargetToFrameBuffer(RenderContext &rc);
 		/// <summary>
 		/// 現在のフレームバッファのレンダリングターゲットビューを取得。
 		/// </summary>
@@ -171,7 +177,7 @@ namespace nsK2EngineLow {
 		/// レイトレの結果のテクスチャを取得。
 		/// </summary>
 		/// <returns></returns>
-		Texture& GetRaytracingOutputTexture()
+		Texture &GetRaytracingOutputTexture()
 		{
 			return m_raytracingEngine.GetOutputTexture();
 		}
@@ -179,9 +185,10 @@ namespace nsK2EngineLow {
 		/// 3DModelをレイトレワールドに登録。
 		/// </summary>
 		/// <param name="model">追加するモデル</param>
-		void RegistModelToRaytracingWorld(Model& model)
+		void RegistModelToRaytracingWorld(Model &model)
 		{
-			if (m_isPossibleRaytracing) {
+			if (m_isPossibleRaytracing)
+			{
 				// ハードウェアレイトレーシングがサポートされている場合のみ
 				m_raytracingEngine.RegistGeometry(model);
 			}
@@ -191,7 +198,8 @@ namespace nsK2EngineLow {
 		/// </summary>
 		void RequestRebuildRaytracingWorld()
 		{
-			if (m_isPossibleRaytracing) {
+			if (m_isPossibleRaytracing)
+			{
 				m_raytracingEngine.RequestRebuildRaytracingWorld();
 			}
 		}
@@ -199,9 +207,10 @@ namespace nsK2EngineLow {
 		/// 3Dモデルをレイトレワールドから削除。
 		/// </summary>
 		/// <param name="model">削除するモデル</param>
-		void RemoveModelFromRaytracingWorld(Model& model)
+		void RemoveModelFromRaytracingWorld(Model &model)
 		{
-			if (m_isPossibleRaytracing) {
+			if (m_isPossibleRaytracing)
+			{
 				// ハードウェアレイトレーシングがサポートされている場合のみ。
 				m_raytracingEngine.RemoveGeometry(model);
 			}
@@ -210,19 +219,20 @@ namespace nsK2EngineLow {
 		/// レイトレーシングをディスパッチ。
 		/// </summary>
 		/// <param name="rc"></param>
-		void DispatchRaytracing(RenderContext& rc)
+		void DispatchRaytracing(RenderContext &rc)
 		{
-			if (m_isPossibleRaytracing) {
+			if (m_isPossibleRaytracing)
+			{
 				// ハードウェアレイトレーシングがサポートされている場合のみ
 				m_raytracingEngine.Dispatch(rc);
 			}
 		}
-		
+
 		/// <summary>
 		/// レイトレ用のスカイキューブボックスを設定。
 		/// </summary>
 		/// <param name="skycubeBox"></param>
-		void SetRaytracingSkyCubeBox(Texture& skycubeBox)
+		void SetRaytracingSkyCubeBox(Texture &skycubeBox)
 		{
 			m_raytracingEngine.SetSkyCubeBox(skycubeBox);
 		}
@@ -230,7 +240,7 @@ namespace nsK2EngineLow {
 		/// フレームバッファにコピー。
 		/// </summary>
 		/// <param name="pDst"></param>
-		void CopyToFrameBuffer(RenderContext& rc, ID3D12Resource* pSrc)
+		void CopyToFrameBuffer(RenderContext &rc, ID3D12Resource *pSrc)
 		{
 			D3D12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(
 				m_frameBuffer.GetCurrentRenderTarget(),
@@ -249,7 +259,7 @@ namespace nsK2EngineLow {
 		/// ヌルテクスチャマップを取得。
 		/// </summary>
 		/// <returns></returns>
-		const NullTextureMaps& GetNullTextureMaps() const
+		const NullTextureMaps &GetNullTextureMaps() const
 		{
 			return m_nullTextureMaps;
 		}
@@ -257,7 +267,7 @@ namespace nsK2EngineLow {
 		/// フォントエンジンを取得。
 		/// </summary>
 		/// <returns></returns>
-		FontEngine& GetFontEngine()
+		FontEngine &GetFontEngine()
 		{
 			return m_fontEngine;
 		}
@@ -265,7 +275,7 @@ namespace nsK2EngineLow {
 		/// フレームバッファに描画するときのビューポートを取得。
 		/// </summary>
 		/// <returns></returns>
-		D3D12_VIEWPORT& GetFrameBufferViewport()
+		D3D12_VIEWPORT &GetFrameBufferViewport()
 		{
 			return m_frameBuffer.GetViewport();
 		}
@@ -273,26 +283,27 @@ namespace nsK2EngineLow {
 		/// ID3D12Objectの解放。
 		/// </summary>
 		/// <param name="res"></param>
-		void ReleaseD3D12Object(IUnknown* res)
+		void ReleaseD3D12Object(IUnknown *res)
 		{
-			if(res == nullptr){
+			if (res == nullptr)
+			{
 				return;
 			}
 			// D3Dオブジェクトは解放までに1フレームの時間をかける。
 			// 描画コマンドは１フレーム遅れて実行されるように実装されているため、即座に開放すると描画中に
 			// リソースが解放されてしまう。そのため、１フレーム遅延して開放する必要がある。
-			m_reqDelayRelease3d12ObjectList.push_back({ res, 1 });
+			m_reqDelayRelease3d12ObjectList.push_back({res, 1});
 		}
 		/// <summary>
 		/// レイトレーシングを行うことが可能か判定。
 		/// </summary>
 		/// <returns>trueが返ってきたらレイトレを行える。</returns>
-		bool IsPossibleRaytracing() const 
+		bool IsPossibleRaytracing() const
 		{
 			return m_isPossibleRaytracing;
 		}
 #ifdef K2_DEBUG
-		void BeginGPUEvent(const char* eventName)
+		void BeginGPUEvent(const char *eventName)
 		{
 			PIXBeginEvent(m_commandList[m_frameIndex], 0xffffffffffffffff, eventName);
 		}
@@ -301,9 +312,8 @@ namespace nsK2EngineLow {
 			PIXEndEvent(m_commandList[m_frameIndex]);
 		}
 #else
-		void BeginGPUEvent(const char*)
+		void BeginGPUEvent(const char *)
 		{
-
 		}
 		void EndGPUEvent()
 		{
@@ -314,7 +324,7 @@ namespace nsK2EngineLow {
 		/// D3Dデバイスの作成。
 		/// </summary>
 		/// <returns>trueが返ってきたら作成に成功。</returns>
-		bool CreateD3DDevice(IDXGIFactory4* dxgiFactory);
+		bool CreateD3DDevice(IDXGIFactory4 *dxgiFactory);
 		/// <summary>
 		/// コマンドキューの作成。
 		/// </summary>
@@ -325,10 +335,10 @@ namespace nsK2EngineLow {
 		/// </summary>
 		/// <remarks>
 		/// DirectX グラフィックス インフラストラクチャーは
-		/// カーネル モード ドライバーおよびシステム ハードウェアと通信するためのインターフェースです。 
+		/// カーネル モード ドライバーおよびシステム ハードウェアと通信するためのインターフェースです。
 		/// </remarks>
 		/// <returns>作成されたDXGI</returns>
-		IDXGIFactory4* CreateDXGIFactory();
+		IDXGIFactory4 *CreateDXGIFactory();
 		/// <summary>
 		/// フレームバッファ用のディスクリプタヒープを作成。
 		/// </summary>
@@ -357,19 +367,17 @@ namespace nsK2EngineLow {
 		/// <returns>trueが返ってきたら作成に成功。</returns>
 		bool CreateSynchronizationWithGPUObject();
 		/// <summary>
-		/// 描画の完了待ち。
-		/// </summary>
-		void WaitDraw();
-		/// <summary>
 		/// ID3D12Objectの解放リクエストを処理する。
 		/// </summary>
 		void ExecuteRequestReleaseD3D12Object();
+
 	private:
-		//GPUベンダー定義。
-		enum GPU_Vender {
-			GPU_VenderNvidia,	//NVIDIA
-			GPU_VenderAMD,		//Intel
-			GPU_VenderIntel,	//AMD
+		// GPUベンダー定義。
+		enum GPU_Vender
+		{
+			GPU_VenderNvidia, // NVIDIA
+			GPU_VenderAMD,	  // Intel
+			GPU_VenderIntel,  // AMD
 			Num_GPUVender,
 		};
 		/// <summary>
@@ -377,62 +385,64 @@ namespace nsK2EngineLow {
 		/// </summary>
 		struct RequestDelayReleaseD3D12Object
 		{
-			IUnknown* d3dObject;	// リリースするD3Dオブジェクト
-			int delayTime;				// 遅延フレーム。この値は毎フレームデクリメントされ、0になると解放されます。
+			IUnknown *d3dObject; // リリースするD3Dオブジェクト
+			int delayTime;		 // 遅延フレーム。この値は毎フレームデクリメントされ、0になると解放されます。
 		};
-		ID3D12Device5* m_d3dDevice = nullptr;							//D3Dデバイス。
-		ID3D12CommandQueue* m_commandQueue = nullptr;					// コマンドキュー。
-		ID3D12CommandAllocator* m_commandAllocator[2] = { nullptr };	//コマンドアロケータ。
-		ID3D12GraphicsCommandList4* m_commandList[2] = { nullptr };		//コマンドリスト。
-		ID3D12PipelineState* m_pipelineState = nullptr;					//パイプラインステート。
-		UINT m_cbrSrvDescriptorSize = 0;								//CBR_SRVのディスクリプタのサイズ。
-		UINT m_samplerDescriptorSize = 0;								//サンプラのディスクリプタのサイズ。			
-		RenderContext m_renderContext;									//レンダリングコンテキスト。
-		FrameBuffer m_frameBuffer;										//フレームバッファ
-		
+		ID3D12Device5 *m_d3dDevice = nullptr;					   // D3Dデバイス。
+		ID3D12CommandQueue *m_commandQueue = nullptr;			   // コマンドキュー。
+		ID3D12CommandAllocator *m_commandAllocator[2] = {nullptr}; // コマンドアロケータ。
+		ID3D12GraphicsCommandList4 *m_commandList[2] = {nullptr};  // コマンドリスト。
+		ID3D12PipelineState *m_pipelineState = nullptr;			   // パイプラインステート。
+		UINT m_cbrSrvDescriptorSize = 0;						   // CBR_SRVのディスクリプタのサイズ。
+		UINT m_samplerDescriptorSize = 0;						   // サンプラのディスクリプタのサイズ。
+		RenderContext m_renderContext;							   // レンダリングコンテキスト。
+		FrameBuffer m_frameBuffer;								   // フレームバッファ
+
 		// GPUとの同期で使用する変数。
 		UINT m_frameIndex = 0;
 		HANDLE m_fenceEvent = nullptr;
-		ID3D12Fence* m_fence = nullptr;
+		ID3D12Fence *m_fence = nullptr;
 		UINT64 m_fenceValue = 0;
-		UINT m_frameBufferWidth = 0;				// フレームバッファの幅。
-		UINT m_frameBufferHeight = 0;				// フレームバッファの高さ。
-		Camera m_camera2D;							// 2Dカメラ。
-		Camera m_camera3D;							// 3Dカメラ。
-		raytracing::Engine m_raytracingEngine;		// レイトレエンジン。
-		NullTextureMaps m_nullTextureMaps;			// ヌルテクスチャマップ。
-		FontEngine m_fontEngine;					// フォントエンジン。
-		std::unique_ptr<DirectX::GraphicsMemory> m_directXTKGfxMemroy;					//DirectXTKのグラフィックメモリシステム。
-		bool m_isExecuteCommandList = false;											//コマンドリストをGPUに流した？
-		std::list< RequestDelayReleaseD3D12Object > m_reqDelayRelease3d12ObjectList;	// D3D12オブジェクトの遅延解放リクエストのリスト。
-		bool m_isPossibleRaytracing = false;		// レイトレーシングを行うことが可能？
+		UINT m_frameBufferWidth = 0;											   // フレームバッファの幅。
+		UINT m_frameBufferHeight = 0;											   // フレームバッファの高さ。
+		Camera m_camera2D;														   // 2Dカメラ。
+		Camera m_camera3D;														   // 3Dカメラ。
+		raytracing::Engine m_raytracingEngine;									   // レイトレエンジン。
+		NullTextureMaps m_nullTextureMaps;										   // ヌルテクスチャマップ。
+		FontEngine m_fontEngine;												   // フォントエンジン。
+		std::unique_ptr<DirectX::GraphicsMemory> m_directXTKGfxMemroy;			   // DirectXTKのグラフィックメモリシステム。
+		bool m_isExecuteCommandList = false;									   // コマンドリストをGPUに流した？
+		std::list<RequestDelayReleaseD3D12Object> m_reqDelayRelease3d12ObjectList; // D3D12オブジェクトの遅延解放リクエストのリスト。
+		bool m_isPossibleRaytracing = false;									   // レイトレーシングを行うことが可能？
 	};
-	extern GraphicsEngine* g_graphicsEngine;	//グラフィックスエンジン
-	extern Camera* g_camera2D;					//2Dカメラ。
-	extern Camera* g_camera3D;					//3Dカメラ。
+	extern GraphicsEngine *g_graphicsEngine; // グラフィックスエンジン
+	extern Camera *g_camera2D;				 // 2Dカメラ。
+	extern Camera *g_camera3D;				 // 3Dカメラ。
 
 	/// <summary>
 	/// D3D12オブジェクトを解放。
 	/// </summary>
 	/// <param name="obj">開放したいオブジェクト</param>
-	template < class TD3D12Obj > 
-	static inline void ReleaseD3D12Object(TD3D12Obj*& obj)
+	template <class TD3D12Obj>
+	static inline void ReleaseD3D12Object(TD3D12Obj *&obj)
 	{
-		if (obj == nullptr) {
+		if (obj == nullptr)
+		{
 			return;
 		}
-		if (g_graphicsEngine) {
+		if (g_graphicsEngine)
+		{
 			g_graphicsEngine->ReleaseD3D12Object(obj);
 		}
-		else {
+		else
+		{
 			obj->Release();
 		}
 		obj = nullptr;
 	}
-	static inline void BeginGPUEvent(const char* eventName)
+	static inline void BeginGPUEvent(const char *eventName)
 	{
 		g_graphicsEngine->BeginGPUEvent(eventName);
-		
 	}
 	static inline void EndGPUEvent()
 	{
@@ -440,4 +450,3 @@ namespace nsK2EngineLow {
 	}
 
 }
-

@@ -223,6 +223,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BossFlyState.cpp" />
     <ClCompile Include="Src\Actor\Character\NPC\Brain\NPCSupportMind.cpp" />
     <ClCompile Include="Src\Actor\Character\NPC\Brain\NPCLocomotonMind.cpp" />
     <ClCompile Include="Src\Actor\Character\NPC\Brain\NPCCombatMind.cpp" />
@@ -388,6 +389,7 @@
     <ClCompile Include="Src\Sound\UIInput.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BossFlyState.h" />
     <ClInclude Include="Src\Actor\Character\NPC\Brain\NPCSupportMind.h" />
     <ClInclude Include="Src\Actor\Character\NPC\Brain\NPCLocomotonMind.h" />
     <ClInclude Include="Src\Actor\Character\NPC\Brain\NPCCombatMind.h" />

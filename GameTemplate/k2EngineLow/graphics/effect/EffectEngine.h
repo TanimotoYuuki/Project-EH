@@ -3,24 +3,39 @@
 #include <map>
 #include <string>
 
-namespace nsK2EngineLow {
+namespace nsK2EngineLow
+{
 	/// <summary>
 	/// エフェクトエンジンクラス。
 	/// </summary>
-	class EffectEngine : public Noncopyable {
-		static EffectEngine* m_instance;	//唯一のインスタンス。
-		EffekseerRenderer::RendererRef m_renderer[2];	//レンダラー。
-		Effekseer::RefPtr<EffekseerRenderer::SingleFrameMemoryPool> m_memoryPool[2];	//メモリプール。
-		Effekseer::RefPtr<EffekseerRenderer::CommandList> m_commandList[2];			//コマンドリスト。
+	class EffectEngine : public Noncopyable
+	{
+		static EffectEngine *m_instance;											 // 唯一のインスタンス。
+		EffekseerRenderer::RendererRef m_renderer[2];								 // レンダラー。
+		Effekseer::RefPtr<EffekseerRenderer::SingleFrameMemoryPool> m_memoryPool[2]; // メモリプール。
+		Effekseer::RefPtr<EffekseerRenderer::CommandList> m_commandList[2];			 // コマンドリスト。
 		Effekseer::ManagerRef m_manager;
-		std::map< int, Effekseer::EffectRef > m_effectMap;
+		std::map<int, Effekseer::EffectRef> m_effectMap;
+
+		// コンパイルエラーを解消するために追加する各種レンダラーとローダー
+		Effekseer::SpriteRendererRef m_spriteRenderer[2];
+		Effekseer::RibbonRendererRef m_ribbonRenderer[2];
+		Effekseer::RingRendererRef m_ringRenderer[2];
+		Effekseer::TrackRendererRef m_trackRenderer[2];
+		Effekseer::ModelRendererRef m_modelRenderer[2];
+
+		Effekseer::TextureLoaderRef m_textureLoader[2];
+		Effekseer::ModelLoaderRef m_modelLoader[2];
+		Effekseer::MaterialLoaderRef m_materialLoader[2];
+
 	public:
 		/// <summary>
 		/// インスタンスの作成。
 		/// </summary>
 		static void CreateInstance()
 		{
-			if (m_instance == nullptr) {
+			if (m_instance == nullptr)
+			{
 				m_instance = new EffectEngine;
 			}
 		}
@@ -28,7 +43,7 @@ namespace nsK2EngineLow {
 		/// インスタンスの取得。
 		/// </summary>
 		/// <returns></returns>
-		static EffectEngine* GetInstance()
+		static EffectEngine *GetInstance()
 		{
 			return m_instance;
 		}
@@ -39,7 +54,6 @@ namespace nsK2EngineLow {
 		{
 			delete m_instance;
 			m_instance = nullptr;
-
 		}
 		/// <summary>
 		/// エフェクトが再生中か判定。
@@ -114,11 +128,12 @@ namespace nsK2EngineLow {
 		/// </summary>
 		/// <param name="number">登録番号。</param>
 		/// <param name="filePath">ファイルパス。</param>
-		void ResistEffect(const int number, const char16_t* filePath);
+		void ResistEffect(const int number, const char16_t *filePath);
 		/// <summary>
 		/// フレームの開始時に呼び出す必要がある処理。
 		/// </summary>
 		void BeginFrame();
+
 	private:
 		EffectEngine();
 		~EffectEngine();

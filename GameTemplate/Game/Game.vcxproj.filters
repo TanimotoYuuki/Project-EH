@@ -577,6 +577,7 @@
     <ClCompile Include="Src\Actor\Character\NPC\Brain\NPCSupportMind.cpp" />
     <ClCompile Include="Src\Actor\Character\Player\Component\Damage\PlayerDamageInvincibilitySystem.cpp" />
     <ClCompile Include="Src\Actor\Character\NPC\Movement\NPCCombatRangeHelper.cpp" />
+    <ClCompile Include="BossFlyState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -1057,6 +1058,7 @@
     <ClInclude Include="Src\Actor\Character\NPC\Brain\NPCSupportMind.h" />
     <ClInclude Include="Src\Actor\Character\Player\Component\Damage\DamageInvincibilityParameter.h" />
     <ClInclude Include="Src\Actor\Character\Player\Component\Damage\PlayerDamageInvincibilitySystem.h" />
+    <ClInclude Include="BossFlyState.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Src\Utilty\TSVTableLoder.inl">

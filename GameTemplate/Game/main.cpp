@@ -43,7 +43,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLi
 
 	//////////////////////////////////////
 	// 初期化を行うコードを書くのはここまで！！！
-	//////////////////////////////////////
+	///////////////////////////////////	//
 	
 	// ここからゲームループ。
 	while (DispatchWindowMessage() && g_gameLoop.m_isLoop == true)

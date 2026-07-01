@@ -1,6 +1,6 @@
 #pragma once
 /**
- * @file    VirtualInputAdapter.h 
+ * @file    VirtualInputAdapter.h
  * @brief   仮想入力アダプタークラス。
  * @author  Yamaguchi Hayato。
  * @detail  プレイヤーの入力を抽象化するための仮想入力アダプタークラス。
@@ -8,6 +8,7 @@
 
 #include "IInputDevice.h"
 #include <unordered_map>
+#include <mutex>
 
 namespace nsApp
 {
@@ -29,6 +30,8 @@ namespace nsApp
 		 */
 		inline bool IsPress(nsK2EngineLow::EnButton button) const override
 		{
+			/*ロック。*/
+			std::lock_guard<std::mutex> lock(m_mutex);
 			/* 現在の入力状態を取得。*/
 			auto inputIterator = m_currentButtons.find(static_cast<int>(button));
 			return (inputIterator != m_currentButtons.end()) ? inputIterator->second : false;
@@ -44,6 +47,7 @@ namespace nsApp
 		 */
 		inline float GetLStickX() const override
 		{
+			std::lock_guard<std::mutex> lock(m_mutex);
 			return m_stickX;
 		}
 
@@ -52,9 +56,10 @@ namespace nsApp
 		 */
 		inline float GetLStickY() const override
 		{
+			std::lock_guard<std::mutex> lock(m_mutex);
 			return m_stickY;
 		}
-		
+
 		/**
 		 * @brief ボタンの入力をリクエストするためのメソッド。
 		 * @param button リクエストするボタン。
@@ -62,20 +67,23 @@ namespace nsApp
 		 */
 		inline void RequestButton(nsK2EngineLow::EnButton button, int holdFrame)
 		{
+			/*ロック。*/
+			std::lock_guard<std::mutex> lock(m_mutex);
 			m_buttonIndex = static_cast<int>(button);
 			m_buttonHoldFrames[m_buttonIndex] = holdFrame;
 			m_currentButtons[m_buttonIndex] = true;
 		}
 
-
 	public:
-		/** 
+		/**
 		 * @brief NPCBrainクラスへの判断を書き込むためのメソッド。
 		 * @param button 判定するボタン。
 		 * @param isPress ボタンが押されているかどうかの状態。
 		 */
 		inline void SetButton(nsK2EngineLow::EnButton button, bool isPress)
 		{
+			/*ロック。*/
+			std::lock_guard<std::mutex> lock(m_mutex);
 			/* ボタンの状態を更新。*/
 			m_currentButtons[static_cast<int>(button)] = isPress;
 		}
@@ -87,19 +95,21 @@ namespace nsApp
 		 */
 		inline void SetLStick(float stickX, float stickY)
 		{
+			std::lock_guard<std::mutex> lock(m_mutex);
 			m_stickX = stickX;
 			m_stickY = stickY;
 		}
 
-
 	private:
-		std::unordered_map<int, bool> m_currentButtons;		//! 現在のボタンの状態を保存するマップ。
-		std::unordered_map<int, bool> m_previousButtons;	//! 前フレームのボタンの状態を保存するマップ。
-		std::unordered_map<int, int> m_buttonHoldFrames;    //! ボタンのホールドフレーム数を管理するマップ。
+		std::unordered_map<int, bool> m_currentButtons;	 //! 現在のボタンの状態を保存するマップ。
+		std::unordered_map<int, bool> m_previousButtons; //! 前フレームのボタンの状態を保存するマップ。
+		std::unordered_map<int, int> m_buttonHoldFrames; //! ボタンのホールドフレーム数を管理するマップ。
 
-		float m_stickX = 0.0f;								//! 現在の左スティックのX軸の値。
-		float m_stickY = 0.0f;								//! 現在の左スティックのY軸の値。
+		float m_stickX = 0.0f; //! 現在の左スティックのX軸の値。
+		float m_stickY = 0.0f; //! 現在の左スティックのY軸の値。
 
-		int m_buttonIndex = 0;								//! ボタンのインデックスを管理する変数。
+		int m_buttonIndex = 0; //! ボタンのインデックスを管理する変数。
+
+		mutable std::mutex m_mutex; //! マルチスレッド衝突防止用のミューテックス。
 	};
 }
