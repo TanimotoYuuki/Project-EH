@@ -29,12 +29,13 @@
 #include "Src/Parameter/ParameterSystem.h"
 #include <Windows.h>
 #include "Src/UI/GuardGage/GuardGageUIManager.h"
+#include "graphics/GraphicsEngine.h"
 
 namespace
 {
 	bool IsTriggerKey(int keyCode)
 	{
-		static SHORT prevKeyState[256] = { 0 };
+		static SHORT prevKeyState[256] = {0};
 
 		SHORT currentKeyState = GetAsyncKeyState(keyCode);
 		bool isCurrentDown = (currentKeyState & 0x8000) != 0;
@@ -52,6 +53,14 @@ namespace nsApp
 	{
 		Game2::~Game2()
 		{
+			/*[最重要]　GPUが現在の描画命令を全て終えるのを同期して待つ。
+			これにより、GPUが使用中のメモリをCPU側でフライング破棄してDevice Removedを起こすのを防ぐ。*/
+			if (g_graphicsEngine != nullptr)
+			{
+				g_graphicsEngine->WaitDraw();
+			}
+
+			/*あとは安全になった状態で各グラフィクスリリースやオブジェクトを解体。*/
 			if (m_reboneGaugeUIManager != nullptr)
 			{
 				m_reboneGaugeUIManager->ClearPlayers();
@@ -72,10 +81,12 @@ namespace nsApp
 				m_soundLister = nullptr;
 			}
 
+			/*ステージデータお及び背景・カメラの削除。*/
 			nsApp::nsStage::LoadStageData::GetInstance().ChangeStage(nsApp::nsStage::StageID::Invalid);
 			DeleteGO(m_backGround);
 			DeleteGO(m_camera);
 
+			/*各演出・UIのインスタンスを削除。*/
 			DeleteGO(m_gameClearDirection);
 			DeleteGO(m_gameTimeUpDirection);
 			DeleteGO(m_gameOverDirection);
@@ -85,7 +96,7 @@ namespace nsApp
 
 			m_commentaryUIManager = nullptr;
 
-			for (auto* player : m_players)
+			for (auto *player : m_players)
 			{
 				DeleteGO(player);
 			}
@@ -103,7 +114,6 @@ namespace nsApp
 			delete m_bossPhaseController;
 		}
 
-
 		bool Game2::Start()
 		{
 			/* ゲーム画面は非アクティブな状態から開始する。 */
@@ -111,7 +121,6 @@ namespace nsApp
 
 			return true;
 		}
-
 
 		void Game2::Update()
 		{
@@ -251,8 +260,7 @@ namespace nsApp
 				m_guardGaugeUIManager->Update();
 		}
 
-
-		void Game2::Render(RenderContext& rc)
+		void Game2::Render(RenderContext &rc)
 		{
 			if (!m_isGameActive)
 				return;
@@ -267,8 +275,7 @@ namespace nsApp
 				m_guardGaugeUIManager->Render(rc);
 		}
 
-
-		void Game2::ApplyBuildResult(const InGameBuildResult& result)
+		void Game2::ApplyBuildResult(const InGameBuildResult &result)
 		{
 			/* ビルド結果を反映。 */
 			m_soundLister = result.soundLister;
@@ -289,7 +296,6 @@ namespace nsApp
 			m_guardGaugeUIManager = result.guardGaugeUIManager;
 		}
 
-
 		void Game2::ActivateGame()
 		{
 			m_isGameActive = true;
@@ -306,7 +312,7 @@ namespace nsApp
 			if (m_commentaryUIManager != nullptr)
 				m_commentaryUIManager->Activate();
 
-			for (auto* player : m_players)
+			for (auto *player : m_players)
 			{
 				if (player != nullptr)
 					player->Activate();
@@ -326,9 +332,7 @@ namespace nsApp
 				m_commentaryUIManager,
 				m_gameTimeLimit,
 				m_playerHub,
-				m_players
-			);
-
+				m_players);
 
 			/* Bossのターゲットを最終保証する。 */
 			if (m_boss != nullptr && m_player != nullptr)
@@ -337,7 +341,7 @@ namespace nsApp
 			/* ボスに全プレイヤーを登録。 */
 			if (m_boss != nullptr && !m_players.empty())
 			{
-				std::vector<nsActor::ICharacter*> allTargets(m_players.begin(), m_players.end());
+				std::vector<nsActor::ICharacter *> allTargets(m_players.begin(), m_players.end());
 				m_boss->SetAllTargets(allTargets);
 			}
 

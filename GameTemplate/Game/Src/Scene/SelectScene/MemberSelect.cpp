@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "MemberSelect.h"
 #include "Src/Fade/Fade.h"
-#include "UIInput.h"
+#include "Src/Sound/UIInput.h"
 #include "Src/Sound/SoundLister.h"
 
 #include "Src/Actor/Character/Player/CharacterByWeapon/SwordCharacter.h"

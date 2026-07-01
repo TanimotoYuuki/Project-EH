@@ -9,19 +9,19 @@
 #include "Src/Actor/Character/Boss/State/BossDethState.h"
 #include "Src/Actor/Character/Boss/Status/BossManager.h"
 #include "Src/Direction/GameStartDirection.h"
+#include "BossFlyState.h"
 
 namespace
 {
 	/* 初期配置・回転 */
-	const Vector3 START_POSITION{ 200.0, 50.0f, 0.0f };				//! ボス初期配置座標。
-	const float   ROT_SPEED = 5.0f;									//! ターゲット方向への回転速度（大きいほど素早く向く）。
+	const Vector3 START_POSITION{200.0, 50.0f, 0.0f}; //! ボス初期配置座標。
+	const float ROT_SPEED = 5.0f;					  //! ターゲット方向への回転速度（大きいほど素早く向く）。
 
 	/* ステータス初期値（TSV 未使用部分のフォールバック） */
-	static constexpr float BASE_ATTACK_DAMAGE = 50.0f;				//! 通常攻撃ダメージ。
-	static constexpr float BASE_CRITICAL_DAMAGE = 80.0f;			//! 会心攻撃ダメージ。
-	static constexpr float BASE_CRITICAL_RATE = 0.1f;				//! 会心発生率。
+	static constexpr float BASE_ATTACK_DAMAGE = 50.0f;	 //! 通常攻撃ダメージ。
+	static constexpr float BASE_CRITICAL_DAMAGE = 80.0f; //! 会心攻撃ダメージ。
+	static constexpr float BASE_CRITICAL_RATE = 0.1f;	 //! 会心発生率。
 }
-
 
 namespace nsApp
 {
@@ -29,47 +29,50 @@ namespace nsApp
 	{
 		/* ボスタイプごとのモデル表示オフセット */
 		const std::unordered_map<CharacterModelType, Vector3> BOSS_OFFSETS =
-		{
-			{ CharacterModelType::GrayDragon,   Vector3(0.0f, 0.0f, 0.0f) },
-			{ CharacterModelType::TutorialBoss, Vector3(0.0f, 0.0f, 0.0f) },
-			{ CharacterModelType::RedDragon,    Vector3(0.0f, 0.0f, 0.0f) },
-			{ CharacterModelType::GreenDragon,  Vector3(0.0f, 0.0f, 0.0f) },
+			{
+				{CharacterModelType::GrayDragon, Vector3(0.0f, 0.0f, 0.0f)},
+				{CharacterModelType::TutorialBoss, Vector3(0.0f, 0.0f, 0.0f)},
+				{CharacterModelType::RedDragon, Vector3(0.0f, 0.0f, 0.0f)},
+				{CharacterModelType::GreenDragon, Vector3(0.0f, 0.0f, 0.0f)},
 		};
 
 		/* ボスタイプごとのモデルスケール */
 		const std::unordered_map<CharacterModelType, float> BOSS_SCALES =
-		{
-			{ CharacterModelType::GrayDragon,   0.2f  },
-			{ CharacterModelType::TutorialBoss, 0.2f  },
-			{ CharacterModelType::RedDragon,    0.17f },
-			{ CharacterModelType::GreenDragon,  0.2f  },
+			{
+				{CharacterModelType::GrayDragon, 0.2f},
+				{CharacterModelType::TutorialBoss, 0.2f},
+				{CharacterModelType::RedDragon, 0.17f},
+				{CharacterModelType::GreenDragon, 0.2f},
 		};
 
 		/* ボスタイプを文字列に変換（アニメーション・モデル読み込み用） */
-		static const char* BossTypeToString(CharacterModelType bossType)
+		static const char *BossTypeToString(CharacterModelType bossType)
 		{
 			switch (bossType)
 			{
-			case CharacterModelType::GrayDragon:   return "GrayDragon";
-			case CharacterModelType::GreenDragon:  return "GreenDragon";
-			case CharacterModelType::RedDragon:    return "RedDragon";
-			case CharacterModelType::TutorialBoss: return "TutorialBoss";
-			default:                               return "TutorialBoss";
+			case CharacterModelType::GrayDragon:
+				return "GrayDragon";
+			case CharacterModelType::GreenDragon:
+				return "GreenDragon";
+			case CharacterModelType::RedDragon:
+				return "RedDragon";
+			case CharacterModelType::TutorialBoss:
+				return "TutorialBoss";
+			default:
+				return "TutorialBoss";
 			}
 		}
 
-
 		/* 特定ステート時に加算するモデル浮きオフセット */
 		const std::unordered_map<BossStateID, Vector3> STATE_OFFSETS =
-		{
-			{ BossStateID::enDamage, Vector3(0.0f, 5.0f, 0.0f) },
+			{
+				{BossStateID::enDamage, Vector3(0.0f, 5.0f, 0.0f)},
 		};
-
 
 		void Boss::InitStatus()
 		{
 			/* TSV から HP を算出して設定 */
-			const auto& params = nsAI::BossTypeManager::GetBossTypeParameters(m_bossType);
+			const auto &params = nsAI::BossTypeManager::GetBossTypeParameters(m_bossType);
 			int bossHP = static_cast<int>(params.m_baseHP * params.m_Multiplier);
 
 			m_characterStatus.hp.maxHP = bossHP;
@@ -82,7 +85,6 @@ namespace nsApp
 			m_characterStatus.attack.criticalRate = BASE_CRITICAL_RATE;
 			m_hitStopFlame = 0;
 		}
-
 
 		bool Boss::Start()
 		{
@@ -134,7 +136,6 @@ namespace nsApp
 			return true;
 		}
 
-
 		void Boss::Update()
 		{
 			ICharacter::Update();
@@ -144,7 +145,7 @@ namespace nsApp
 				return;
 
 			/* 開始演出中は戦闘だけ止め、モデルは毎フレーム更新する。*/
-			if (auto* startDir = FindGO<nsGame::GameStartDirection>("gameStartDirection"))
+			if (auto *startDir = FindGO<nsGame::GameStartDirection>("gameStartDirection"))
 			{
 				if (!startDir->IsDirectionFinished())
 				{
@@ -234,17 +235,16 @@ namespace nsApp
 			m_model.Update();
 		}
 
-
 		void Boss::UpdatePrimaryTarget()
 		{
 			if (m_allTargets.empty())
 				return;
 
-			ICharacter* nearest = nullptr;
+			ICharacter *nearest = nullptr;
 			float bestDistSq = FLT_MAX;
 
 			/* 生存中の最寄りターゲットを探索 */
-			for (auto* target : m_allTargets)
+			for (auto *target : m_allTargets)
 			{
 				if (target == nullptr || target->IsDead())
 					continue;
@@ -260,7 +260,6 @@ namespace nsApp
 			if (nearest != nullptr)
 				m_target = nearest;
 		}
-
 
 		void Boss::UpdateRotation(float deltaTime)
 		{
@@ -294,13 +293,11 @@ namespace nsApp
 			}
 		}
 
-
 		void Boss::AttackBite()
 		{
 			/* 噛みつき判定の配置を MeleeCombatSystem へ委譲 */
 			m_meleeCombat.AttackBite(this);
 		}
-
 
 		void Boss::AttackTail()
 		{
@@ -312,13 +309,11 @@ namespace nsApp
 				m_tornadoSystem.SpawnFromTail(this, attackPos);
 		}
 
-
 		void Boss::ShotFireBall()
 		{
 			/* 火球発射を FireCombatSystem へ委譲 */
 			m_fireCombat.ShotFireBall(this);
 		}
-
 
 		bool Boss::IsDamage()
 		{
@@ -328,24 +323,29 @@ namespace nsApp
 			return isDamage;
 		}
 
-
-		void Boss::Render(RenderContext& rc)
+		void Boss::Render(RenderContext &rc)
 		{
 			ICharacter::Render(rc);
 		}
 
-
 		void Boss::RegisterState()
 		{
 			/* 全 BossStateID に対応するステート生成関数を登録 */
-			m_stateFactory[BossStateID::enIdle] = []() { return new nsState::BossIdleState(); };
-			m_stateFactory[BossStateID::enMove] = []() { return new nsState::BossMoveState(); };
-			m_stateFactory[BossStateID::enAttack] = []() { return new nsState::BossAttackState(); };
-			m_stateFactory[BossStateID::enRoar] = []() { return new nsState::BossRoarState(); };
-			m_stateFactory[BossStateID::enDamage] = []() { return new nsState::BossDamageState(); };
-			m_stateFactory[BossStateID::enDeath] = []() { return new nsState::BossDethState(); };
+			m_stateFactory[BossStateID::enIdle] = []()
+			{ return new nsState::BossIdleState(); };
+			m_stateFactory[BossStateID::enMove] = []()
+			{ return new nsState::BossMoveState(); };
+			m_stateFactory[BossStateID::enAttack] = []()
+			{ return new nsState::BossAttackState(); };
+			m_stateFactory[BossStateID::enRoar] = []()
+			{ return new nsState::BossRoarState(); };
+			m_stateFactory[BossStateID::enDamage] = []()
+			{ return new nsState::BossDamageState(); };
+			m_stateFactory[BossStateID::enDeath] = []()
+			{ return new nsState::BossDethState(); };
+			m_stateFactory[BossStateID::enFly] = []()
+			{ return new nsState::BossFlyState(); };
 		}
-
 
 		float Boss::GetHPRatio() const
 		{
@@ -356,7 +356,6 @@ namespace nsApp
 			return static_cast<float>(m_characterStatus.hp.currentHP) / static_cast<float>(m_characterStatus.hp.maxHP);
 		}
 
-
 		void Boss::UpdateRoarCooldown(float deltaTime)
 		{
 			/* ロアクールダウンタイマーを減算 */
@@ -364,16 +363,14 @@ namespace nsApp
 				m_roarCooldownTimer -= deltaTime;
 		}
 
-
 		void Boss::UseRoar()
 		{
 			/* ボスタイプ別クールダウンをセットし、使用回数と発動時 HP を記録 */
-			const auto& params = nsAI::BossTypeManager::GetBossTypeParameters(m_bossType);
+			const auto &params = nsAI::BossTypeManager::GetBossTypeParameters(m_bossType);
 			m_roarCooldownTimer = params.m_roarCooldown;
 			m_roarUsageCount++;
 			m_lastRoarHPThreshold = GetHPRatio();
 		}
-
 
 		void Boss::ForceRoar()
 		{
@@ -385,19 +382,17 @@ namespace nsApp
 			m_stateMachine->ChangeState(m_stateFactory[BossStateID::enRoar]());
 		}
 
-
 		float Boss::GetEffectiveIdleTime() const
 		{
 			/* TSV の待機時間にフェーズ補正倍率を掛け合わせる */
-			const auto& params = nsAI::BossTypeManager::GetBossTypeParameters(m_bossType);
+			const auto &params = nsAI::BossTypeManager::GetBossTypeParameters(m_bossType);
 			return params.m_idleTime * m_phaseController.GetIdleTimeMultiplier();
 		}
-
 
 		void Boss::StartRageEffect()
 		{
 			/* 怒りエフェクトを生成して再生（TODO: m_rageEffectEmitter への代入が必要） */
-			auto* emitter = NewGO<nsK2EngineLow::EffectEmitter>(0, "bossRageEffect");
+			auto *emitter = NewGO<nsK2EngineLow::EffectEmitter>(0, "bossRageEffect");
 			emitter->Init(nsEffect::Effect_ID::Charge);
 			emitter->SetPosition(m_position);
 			emitter->SetScale(Vector3::One * 3.0f);
@@ -405,14 +400,12 @@ namespace nsApp
 			m_rageEffectEmitter = nullptr;
 		}
 
-
 		void Boss::UpdateRageEffect()
 		{
 			/* 怒りエフェクトが存在する場合、ボス位置へ追従 */
 			if (m_rageEffectEmitter != nullptr)
 				m_rageEffectEmitter->SetPosition(m_position);
 		}
-
 
 		void Boss::StopRageEffect()
 		{
@@ -423,7 +416,6 @@ namespace nsApp
 			DeleteGO(m_rageEffectEmitter);
 			m_rageEffectEmitter = nullptr;
 		}
-
 
 		void Boss::CheckHitAndDamagePlayers()
 		{

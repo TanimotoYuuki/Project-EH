@@ -4,13 +4,15 @@
 
 namespace
 {
-	const auto INPUT_VOLUME = 0.0f;  //! 入力量。
+	const auto INPUT_VOLUME = 0.0f; //! 入力量。
 }
 
 namespace nsApp
 {
 	void VirtualInputAdapter::BeginFlame()
 	{
+		std::lock_guard<std::mutex> lock(m_mutex);
+
 		/* 現在の入力情報を前フレーム入力として一括辞退。*/
 		m_previousButtons = m_currentButtons;
 
@@ -32,12 +34,13 @@ namespace nsApp
 		}
 	}
 
-
 	void VirtualInputAdapter::Reset()
 	{
+		std::lock_guard<std::mutex> lock(m_mutex);
+
 		/* 入力情報の初期化。*/
 		/* 現在の入力状態。*/
-		m_currentButtons.clear();  
+		m_currentButtons.clear();
 		/* 前フレームの入力状態。*/
 		m_previousButtons.clear();
 		/* 入力の保持フレーム数。*/
@@ -49,15 +52,24 @@ namespace nsApp
 		m_stickY = INPUT_VOLUME;
 	}
 
-
 	bool VirtualInputAdapter::IsTrigger(nsK2EngineLow::EnButton button) const
 	{
+		std::lock_guard<std::mutex> lock(m_mutex);
+
 		/* 現在の入力状態を取得。*/
-		bool current = IsPress(button);
-		/* 前フレームの入力状態を取得。*/
-		auto inputIterator = m_previousButtons.find(static_cast<int>(button));
-		/* 前フレームの入力状態が存在する場合はその値を、存在しない場合はfalseを使用。*/
-		bool previos = (inputIterator != m_previousButtons.end()) ? inputIterator->second : false;
+		bool current = false;
+		auto itCurrent = m_currentButtons.find(static_cast<int>(button));
+		if (itCurrent != m_currentButtons.end())
+		{
+			current = itCurrent->second;
+		}
+
+		bool previos = false;
+		auto itPrevious = m_previousButtons.find(static_cast<int>(button));
+		if (itPrevious != m_previousButtons.end())
+		{
+			previos = itPrevious->second;
+		}
 
 		/* トリガー入力は、現在の入力が押されていて、前フレームの入力が押されていない場合にtrueを返す。*/
 		return current && !previos;

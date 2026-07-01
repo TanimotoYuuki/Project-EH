@@ -31,6 +31,19 @@ namespace nsK2EngineLow
 			m_memoryPool[i] = EffekseerRenderer::CreateSingleFrameMemoryPool(m_renderer[i]->GetGraphicsDevice());
 			// コマンドリストの作成
 			m_commandList[i] = EffekseerRenderer::CreateCommandList(m_renderer[i]->GetGraphicsDevice(), m_memoryPool[i]);
+
+			// 　初期化時に一回だけCreateする。
+			m_spriteRenderer[i] = m_renderer[i]->CreateSpriteRenderer();
+			m_ribbonRenderer[i] = m_renderer[i]->CreateRibbonRenderer();
+			m_ringRenderer[i] = m_renderer[i]->CreateRingRenderer();
+			m_trackRenderer[i] = m_renderer[i]->CreateTrackRenderer();
+			m_modelRenderer[i] = m_renderer[i]->CreateModelRenderer();
+			// ここでnullptrチェック。
+			K2_ASSERT(m_modelRenderer[i] != nullptr, "ModelRendererの生成に失敗しました。");
+
+			m_textureLoader[i] = m_renderer[i]->CreateTextureLoader();
+			m_modelLoader[i] = m_renderer[i]->CreateModelLoader();
+			m_materialLoader[i] = m_renderer[i]->CreateMaterialLoader();
 		}
 		// エフェクトマネージャーの作成。
 		m_manager = ::Effekseer::Manager::Create(8000);
@@ -88,18 +101,19 @@ namespace nsK2EngineLow
 	{
 		int backBufferNo = g_graphicsEngine->GetBackBufferIndex();
 		m_memoryPool[backBufferNo]->NewFrame();
-		// 描画モジュールの設定。
-		m_manager->SetSpriteRenderer(m_renderer[backBufferNo]->CreateSpriteRenderer());
-		m_manager->SetRibbonRenderer(m_renderer[backBufferNo]->CreateRibbonRenderer());
-		m_manager->SetRingRenderer(m_renderer[backBufferNo]->CreateRingRenderer());
-		m_manager->SetTrackRenderer(m_renderer[backBufferNo]->CreateTrackRenderer());
-		m_manager->SetModelRenderer(m_renderer[backBufferNo]->CreateModelRenderer());
 
-		// ローダーの設定。
-		m_manager->SetTextureLoader(m_renderer[backBufferNo]->CreateTextureLoader());
-		m_manager->SetModelLoader(m_renderer[backBufferNo]->CreateModelLoader());
-		m_manager->SetMaterialLoader(m_renderer[backBufferNo]->CreateMaterialLoader());
+		m_manager->SetSpriteRenderer(m_spriteRenderer[backBufferNo]);
+		m_manager->SetRibbonRenderer(m_ribbonRenderer[backBufferNo]);
+		m_manager->SetRingRenderer(m_ringRenderer[backBufferNo]);
+		m_manager->SetTrackRenderer(m_trackRenderer[backBufferNo]);
+		m_manager->SetModelRenderer(m_modelRenderer[backBufferNo]);
+
+		// ローダーの設定も同様にメンバー変数をセットする
+		m_manager->SetTextureLoader(m_textureLoader[backBufferNo]);
+		m_manager->SetModelLoader(m_modelLoader[backBufferNo]);
+		m_manager->SetMaterialLoader(m_materialLoader[backBufferNo]);
 	}
+
 	void EffectEngine::Draw()
 	{
 		int backBufferNo = g_graphicsEngine->GetBackBufferIndex();
