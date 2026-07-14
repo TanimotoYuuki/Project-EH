@@ -68,7 +68,7 @@ namespace nsApp
 		InitUIAnimation();
 
 		auto *SoundManager = FindGO<nsSound::SoundLister>("SoundManager");
-		if (SoundManager)
+		if (SoundManager == nullptr)
 		{
 			SoundManager = NewGO<nsSound::SoundLister>(0, "SoundManager");
 			SoundManager->InitSound();

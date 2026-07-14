@@ -6,7 +6,7 @@
 
 namespace
 {
-	const auto ATTACK_TIMER_500 = 500;	//! 攻撃終了タイマーの値。
+	const auto ATTACK_TIMER_500 = 500; //! 攻撃終了タイマーの値。
 }
 
 namespace nsApp
@@ -21,7 +21,6 @@ namespace nsApp
 			/* 再生するアニメーションの種類をセット。*/
 			m_player->PlayWeaponAnimation(AttackType::MagicAttack);
 		}
-
 
 		void PlayerMagicAttackState::OnEnterAttack()
 		{
@@ -43,7 +42,6 @@ namespace nsApp
 			/* エフェクト生成フラグを初期化。*/
 			m_hasSpawnedLaserEffect = false;
 		}
-
 
 		bool PlayerMagicAttackState::OnUpdateAttack()
 		{
@@ -85,17 +83,16 @@ namespace nsApp
 			return true;
 		}
 
-
 		void PlayerMagicAttackState::OnExitAttack()
 		{
 			/* 終了時にエフェクトを安全に消去 */
 			if (m_laserEffect != nullptr)
 			{
 				m_laserEffect->Stop();
+				m_player->GetEffectList().StopEffect(m_laserEffect);
 				m_laserEffect = nullptr;
 			}
 		}
-
 
 		void PlayerMagicAttackState::SpawnLaserEffect()
 		{

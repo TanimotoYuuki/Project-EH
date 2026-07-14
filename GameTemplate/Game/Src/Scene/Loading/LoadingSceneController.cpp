@@ -7,18 +7,18 @@
 
 namespace
 {
-	const int MIN_LOADING_FRAME = 180;																//! ローディング画面の最小表示フレーム数。これ未満の場合はローディング完了していても遷移しない。
-	const auto VIEWPORT_WIDTH = 1280.0f;															//! ビューポートの幅。
-	const auto VIEWPORT_HEIGHT = 720.0f;															//! ビューポートの高さ。
-	const auto CAMERA_FOV_DEG = 45.0f;																//! カメラの垂直方向の画角。
-	const auto INGAME_BUILD_START_FRAME = 30;														//! ローディング画面の開始から何フレームでInGame構築を開始するか。これにより、ローディング画面の開始直後のカクつきを緩和する。
-	const auto RUNNER_UI_OFFSET_Y = 35.0f;															//! UI上のプログレスバーとランナーの間の余白。これをもとにランナーのワールド座標Yが計算される。
-	const auto RUNNER_WORLD_Z = 150.0f;															    //! ランナーのワールド座標Z。カメラ(350)と注視点(0)の中間に設定することで、UI上の位置とワールド上の位置が自然に対応するようになる。
-	const auto RUNNER_WORLD_Y = 25.0f;																//! ランナーのワールド座標Y。これをもとにランナーのワールド座標Xが計算される。
-	const auto START = Vector3(50.0f, 25.0f, 250.0f);												//! ランナーの移動開始位置。これをもとにランナーの移動範囲が設定される。YはRUNNER_WORLD_Y。ZはRUNNER_WORLD_Z。Xは適当に右端から少し内側に設定する。
-	const auto END = Vector3(-50.0f, 25.0f, 250.0f);												//! ランナーの移動終了位置。これをもとにランナーの移動範囲が設定される。YはRUNNER_WORLD_Y。ZはRUNNER_WORLD_Z。Xは適当に左端から少し内側に設定する。
-	const Vector3 RUNNER_PROGRESS_START = Vector3(105.0f, RUNNER_WORLD_Y, RUNNER_WORLD_Z);			//! ランナーの進捗0%のときのワールド座標。Xはプログレスバーの右端に対応させる。YはRUNNER_WORLD_Y。ZはRUNNER_WORLD_Z。
-	const Vector3 RUNNER_PROGRESS_END = Vector3(-105.0f, RUNNER_WORLD_Y, RUNNER_WORLD_Z);			//! ランナーの進捗100%のときのワールド座標。Xはプログレスバーの左端に対応させる。YはRUNNER_WORLD_Y。ZはRUNNER_WORLD_Z。
+	const int MIN_LOADING_FRAME = 180;													   //! ローディング画面の最小表示フレーム数。これ未満の場合はローディング完了していても遷移しない。
+	const auto VIEWPORT_WIDTH = 1280.0f;												   //! ビューポートの幅。
+	const auto VIEWPORT_HEIGHT = 720.0f;												   //! ビューポートの高さ。
+	const auto CAMERA_FOV_DEG = 45.0f;													   //! カメラの垂直方向の画角。
+	const auto INGAME_BUILD_START_FRAME = 30;											   //! ローディング画面の開始から何フレームでInGame構築を開始するか。これにより、ローディング画面の開始直後のカクつきを緩和する。
+	const auto RUNNER_UI_OFFSET_Y = 35.0f;												   //! UI上のプログレスバーとランナーの間の余白。これをもとにランナーのワールド座標Yが計算される。
+	const auto RUNNER_WORLD_Z = 150.0f;													   //! ランナーのワールド座標Z。カメラ(350)と注視点(0)の中間に設定することで、UI上の位置とワールド上の位置が自然に対応するようになる。
+	const auto RUNNER_WORLD_Y = 25.0f;													   //! ランナーのワールド座標Y。これをもとにランナーのワールド座標Xが計算される。
+	const auto START = Vector3(50.0f, 25.0f, 250.0f);									   //! ランナーの移動開始位置。これをもとにランナーの移動範囲が設定される。YはRUNNER_WORLD_Y。ZはRUNNER_WORLD_Z。Xは適当に右端から少し内側に設定する。
+	const auto END = Vector3(-50.0f, 25.0f, 250.0f);									   //! ランナーの移動終了位置。これをもとにランナーの移動範囲が設定される。YはRUNNER_WORLD_Y。ZはRUNNER_WORLD_Z。Xは適当に左端から少し内側に設定する。
+	const Vector3 RUNNER_PROGRESS_START = Vector3(105.0f, RUNNER_WORLD_Y, RUNNER_WORLD_Z); //! ランナーの進捗0%のときのワールド座標。Xはプログレスバーの右端に対応させる。YはRUNNER_WORLD_Y。ZはRUNNER_WORLD_Z。
+	const Vector3 RUNNER_PROGRESS_END = Vector3(-105.0f, RUNNER_WORLD_Y, RUNNER_WORLD_Z);  //! ランナーの進捗100%のときのワールド座標。Xはプログレスバーの左端に対応させる。YはRUNNER_WORLD_Y。ZはRUNNER_WORLD_Z。
 
 }
 
@@ -33,8 +33,7 @@ namespace nsApp
 			m_inGameBuildHelper = nullptr;
 		}
 
-
-		void LoadingSceneController::Initialize(const InGameBuildRequest& request, nsScene::EnLoadingDestination destination)
+		void LoadingSceneController::Initialize(const InGameBuildRequest &request, nsScene::EnLoadingDestination destination)
 		{
 			/* 初期化 */
 			m_loadingFrame = 0;
@@ -66,7 +65,6 @@ namespace nsApp
 			m_asyncLoadManager.Start();
 		}
 
-
 		void LoadingSceneController::Update()
 		{
 			/* ローディング画面の経過フレームをカウント */
@@ -75,14 +73,13 @@ namespace nsApp
 			/* 非同期ロードを更新 */
 			m_asyncLoadManager.Update();
 
-
 			if (m_destination == toInGame)
 			{
 				/*
 					ローディング画面が表示されているInGame構築を開始する。
 					これにより、Loading画面に居る間のカクつきを緩和する。
 				*/
-				if (!m_isInGameStarted && m_loadingFrame >= INGAME_BUILD_START_FRAME)
+				if (!m_isInGameStarted && m_loadingFrame >= INGAME_BUILD_START_FRAME && m_asyncLoadManager.IsCompleted())
 				{
 					/* InGame構築を開始する */
 					StartInGameBuild(m_buildRequest);
@@ -94,7 +91,6 @@ namespace nsApp
 				UpdateInGameBuild();
 			}
 
-
 			/* プログレスバーを更新 */
 			m_loadingProgressUI.Update(GetTotalProgress());
 
@@ -103,7 +99,6 @@ namespace nsApp
 
 			/* ランナーをプログレスに合わせて更新 */
 			m_runnerModel.Update(GetTotalProgress());
-
 
 			if (IsTransitionReadyToGame())
 			{
@@ -115,7 +110,6 @@ namespace nsApp
 					m_isTransitionReady = true;
 			}
 		}
-
 
 		void LoadingSceneController::UpdateInGameBuild()
 		{
@@ -134,7 +128,6 @@ namespace nsApp
 			if (m_inGameBuildHelper->IsFinished())
 				m_isInGameBuildFinished = true;
 		}
-
 
 		float LoadingSceneController::GetTotalProgress() const
 		{
@@ -156,13 +149,11 @@ namespace nsApp
 			return asyncProgress * 0.5f + buildProgress * 0.5f;
 		}
 
-
 		void LoadingSceneController::SetupRunnerMoveRange()
 		{
 			/* ランナーの移動範囲を設定する */
 			m_runnerModel.SetMoveRange(START, END);
 		}
-
 
 		Vector3 LoadingSceneController::ConvertLoadingUIToWorld(float uiX, float uiY) const
 		{
@@ -175,9 +166,9 @@ namespace nsApp
 			float cameraZ = 350.0f;
 
 			// 簡略化：Z値から逆算するスケール計算
-			float distance = cameraZ - targetZ;  // 300
-			float halfHeight = distance * tanf(45.0f * 3.14159f / 360.0f);  // FOV 45度の半高さ
-			float halfWidth = halfHeight * (1280.0f / 720.0f);              // アスペクト比
+			float distance = cameraZ - targetZ;							   // 300
+			float halfHeight = distance * tanf(45.0f * 3.14159f / 360.0f); // FOV 45度の半高さ
+			float halfWidth = halfHeight * (1280.0f / 720.0f);			   // アスペクト比
 
 			float worldX = ndcX * halfWidth;
 			float worldY = ndcY * halfHeight;
@@ -185,7 +176,6 @@ namespace nsApp
 
 			return Vector3(worldX, worldY, worldZ);
 		}
-
 
 		Vector3 LoadingSceneController::GetRunnerWorldPosition(float progress) const
 		{
@@ -199,10 +189,8 @@ namespace nsApp
 			return Vector3(
 				RUNNER_PROGRESS_START.x + (RUNNER_PROGRESS_END.x - RUNNER_PROGRESS_START.x) * progress,
 				RUNNER_PROGRESS_START.y + (RUNNER_PROGRESS_END.y - RUNNER_PROGRESS_START.y) * progress,
-				RUNNER_PROGRESS_START.z + (RUNNER_PROGRESS_END.z - RUNNER_PROGRESS_START.z) * progress
-			);
+				RUNNER_PROGRESS_START.z + (RUNNER_PROGRESS_END.z - RUNNER_PROGRESS_START.z) * progress);
 		}
-
 
 		void LoadingSceneController::KeepLoadingCamera()
 		{
@@ -221,7 +209,6 @@ namespace nsApp
 			m_camera->ChangeToLoading();
 		}
 
-
 		void LoadingSceneController::ChangeToBattleCamera()
 		{
 			/* カメラを戦闘用に切り替える */
@@ -239,7 +226,6 @@ namespace nsApp
 			m_camera->ChangeToBattle();
 		}
 
-
 		bool LoadingSceneController::IsTransitionReadyToGame() const
 		{
 			/* ローディングからゲーム本編への遷移の準備ができているか判定する */
@@ -247,7 +233,7 @@ namespace nsApp
 				return false;
 
 			/* 遷移先がInGameでない場合は、非同期ロードの完了とランナーのアニメーション完了のみを条件とする */
-			if(!m_asyncLoadManager.IsCompleted())
+			if (!m_asyncLoadManager.IsCompleted())
 				return false;
 
 			/* 遷移先がInGameの場合は、非同期ロードの完了、ランナーのアニメーション完了、ローディング画面の最小表示フレーム数の経過、InGame構築の完了を条件とする */
@@ -255,7 +241,7 @@ namespace nsApp
 				return false;
 
 			/* ランナーのアニメーションが完了しているか判定する */
-			if(!IsRunnerAnimationFinished())
+			if (!IsRunnerAnimationFinished())
 				return false;
 
 			/* ローディング画面の最小表示フレーム数の経過を判定する */
@@ -263,17 +249,16 @@ namespace nsApp
 				return false;
 
 			/* InGame構築の完了を判定する */
-			if(m_destination == toInGame && !m_isInGameBuildFinished)
+			if (m_destination == toInGame && !m_isInGameBuildFinished)
 				return false;
 
 			return true;
 		}
 
-
 		void LoadingSceneController::ExecuteGameTransition()
 		{
 			/* ゲーム本編への遷移を実行する */
-			if (m_inGameBuildHelper == nullptr) 
+			if (m_inGameBuildHelper == nullptr)
 				return;
 
 			/* ゲーム本編のクラスを生成して初期化する */
@@ -286,7 +271,7 @@ namespace nsApp
 				m_game2->SetBossType(m_buildRequest.bossType);
 
 				/* プレイヤーの役割と操作設定を適用する */
-				for (int i = 0; i < 4; i++) 
+				for (int i = 0; i < 4; i++)
 				{
 					/* プレイヤーの役割を適用する */
 					m_game2->SetCharacterRole(i, m_buildRequest.characterRole[i]);
@@ -308,8 +293,7 @@ namespace nsApp
 			m_isTransitionReady = true;
 		}
 
-
-		void LoadingSceneController::Render(RenderContext& rc)
+		void LoadingSceneController::Render(RenderContext &rc)
 		{
 			/* ローディングUIの背景を描画 */
 			m_loadingProgressUI.RenderBack(rc);

@@ -9,7 +9,6 @@ namespace
 	const auto PAD_INDEX_NAM = 0;
 }
 
-
 namespace nsApp
 {
 	void PlayerInput::Update()
@@ -49,7 +48,6 @@ namespace nsApp
 		UpdateChargeTranslation();
 	}
 
-
 	bool PlayerInput::CheckButtonPress(nsK2EngineLow::EnButton inputButtonType)
 	{
 		if (!m_inputDevice)
@@ -59,7 +57,6 @@ namespace nsApp
 		return m_inputDevice->IsPress(inputButtonType);
 	}
 
-
 	bool PlayerInput::CheckButtonTrigger(nsK2EngineLow::EnButton inputButtonType)
 	{
 		if (!m_inputDevice)
@@ -67,7 +64,6 @@ namespace nsApp
 
 		return m_inputDevice->IsTrigger(inputButtonType);
 	}
-
 
 	void PlayerInput::EvaluateJumpAndSlashUp()
 	{
@@ -85,24 +81,26 @@ namespace nsApp
 		}
 
 		/* LB2ボタンがトリガーされた場合、斬り上げフラグを立てる。*/
-		if(CheckButtonTrigger(enButtonLB2))
+		if (CheckButtonTrigger(enButtonLB2))
 			SetSlashUpFlag(true);
 	}
 
-
 	void PlayerInput::InitInputJudgment()
 	{
-		m_isAttack = false;          //! 攻撃フラグ。
-		m_isMove = false;            //! 移動フラグ。
-		m_isJump = false;            //! ジャンプフラグ。
-		m_isRun = false;             //! 走りフラグ。
-		m_isDamage = false;          //! ダメージフラグ。
-		m_isNormalAttack = false;    //! 通常攻撃フラグ。
-		m_isChargeAttack = false;    //! チャージ攻撃フラグ。
-		m_isAirAttack = false;       //! 空中攻撃フラグ。
-		m_isComboAttack = false;     //! コンボ攻撃フラグ。
-		m_isRushStart = false;       //! 連続攻撃開始フラグ。
-		m_isRushEnd = false;         //! 連続攻撃終了フラグ。
-		m_moveVec = Vector3::Zero;   //! 移動ベクトル。
+		m_isAttack = false;			//! 攻撃フラグ。
+		m_isMove = false;			//! 移動フラグ。
+		m_isJump = false;			//! ジャンプフラグ。
+		m_isRun = false;			//! 走りフラグ。
+		m_isDamage = false;			//! ダメージフラグ。
+		m_isNormalAttack = false;	//! 通常攻撃フラグ。
+		m_isChargeAttack = false;	//! チャージ攻撃フラグ。
+		m_isAirAttack = false;		//! 空中攻撃フラグ。
+		m_isComboAttack = false;	//! コンボ攻撃フラグ。
+		m_isRushStart = false;		//! 連続攻撃開始フラグ。
+		m_isRushEnd = false;		//! 連続攻撃終了フラグ。
+		m_moveVec = Vector3::Zero;	//! 移動ベクトル。
+		m_isPressButton = false;	//! ボタン押下状態を確実に解除する。
+		m_isChargeStart = false;	//! チャージ開始判定。
+		m_chargeButtonTimer = 0.0f; //! チャージタイマー。
 	}
 }

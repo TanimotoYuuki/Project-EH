@@ -12,7 +12,6 @@ namespace nsApp
 		m_timer += deltaTime;
 		m_healTimer += deltaTime;
 
-
 		if (m_timer >= m_lifeTime)
 		{
 			StopHeelEffect();
@@ -27,12 +26,11 @@ namespace nsApp
 		}
 	}
 
-
 	void HeelArea::HeelPlayersInArea()
 	{
-		const char* playerNames[] = { "player1","player2","player3","player4" };
+		const char *playerNames[] = {"player1", "player2", "player3", "player4"};
 
-		for (const char* name : playerNames)
+		for (const char *name : playerNames)
 		{
 			auto player = FindGO<nsActor::Player>(name);
 			if (!CanHeal(player))
@@ -48,13 +46,12 @@ namespace nsApp
 		}
 	}
 
-
-	bool HeelArea::CanHeal(nsActor::Player* target) const
+	bool HeelArea::CanHeal(nsActor::Player *target) const
 	{
 		if (target == nullptr)
 			return false;
 
-		const auto& hp = target->GetCharacterStatus().hp;
+		const auto &hp = target->GetCharacterStatus().hp;
 
 		if (hp.currentHP <= 0)
 			return false;
@@ -64,7 +61,6 @@ namespace nsApp
 
 		return true;
 	}
-
 
 	void HeelArea::PlayHeelEffect()
 	{
@@ -80,30 +76,37 @@ namespace nsApp
 			nsEffect::HeelMagic,
 			m_effectPosition,
 			Quaternion::Identity,
-			Vector3::One * 20.0f
-		);
+			Vector3::One * 20.0f);
 
 		/* 回復エフェクトのパーティクル。*/
 		m_particleEffect = owner->GetEffectList().PlayEffect(
 			nsEffect::HeelMagic_Particle,
 			m_effectPosition,
 			Quaternion::Identity,
-			Vector3::One * 20.0f
-		);
+			Vector3::One * 20.0f);
 	}
-
 
 	void HeelArea::StopHeelEffect()
 	{
+		auto owner = FindGO<nsActor::Player>("Player1");
+
 		if (m_healEffect != nullptr)
 		{
 			m_healEffect->Stop();
+			if (owner != nullptr)
+			{
+				owner->GetEffectList().StopEffect(m_healEffect);
+			}
 			m_healEffect = nullptr;
 		}
 
 		if (m_particleEffect != nullptr)
 		{
 			m_particleEffect->Stop();
+			if (owner != nullptr)
+			{
+				owner->GetEffectList().StopEffect(m_particleEffect);
+			}
 			m_particleEffect = nullptr;
 		}
 	}

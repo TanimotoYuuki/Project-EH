@@ -218,8 +218,6 @@ namespace nsApp
 			void StopBGM()
 			{
 				m_bgm->GetBGMList().StopBGM(); //! BGMを停止する。
-				DeleteGO(m_bgm);			   //! BGMクラスを削除する。
-				m_bgm = nullptr;			   //! 再初期化する。
 			}
 
 			/**

@@ -7,21 +7,20 @@
 
 namespace
 {
-	const auto ATTACK_TIMER_EXECUTE = 25;      //! 回復エリアを出すフレーム。
-	const auto ATTACK_TIMER_END = 80;          //! 通常終了フレーム。
-	const auto ATTACK_TIMER_FORCE_END = 120;   //! 保険終了フレーム。
+	const auto ATTACK_TIMER_EXECUTE = 25;	 //! 回復エリアを出すフレーム。
+	const auto ATTACK_TIMER_END = 80;		 //! 通常終了フレーム。
+	const auto ATTACK_TIMER_FORCE_END = 120; //! 保険終了フレーム。
 
-	const auto EFFECT_Y_OFFSET = 2.0f;         //! エフェクトのY座標オフセット。
+	const auto EFFECT_Y_OFFSET = 2.0f; //! エフェクトのY座標オフセット。
 
-	const auto HEAL_AMOUNT_BASE = 100;         //! 回復量の基本値。
-	const auto HEAL_AREA_RADIUS = 60.0f;       //! 回復エリアの半径。
-	const auto HEAL_AREA_LIFETIME = 5.0f;      //! 回復エリアの寿命。
-	const auto HEAL_AREA_INTERVAL = 0.5f;      //! 回復エリアの回復間隔。
-	const auto HEEL_AREA_Y_OFFSET = 2.0f;      //! 回復エリアのY座標オフセット。
+	const auto HEAL_AMOUNT_BASE = 100;	  //! 回復量の基本値。
+	const auto HEAL_AREA_RADIUS = 60.0f;  //! 回復エリアの半径。
+	const auto HEAL_AREA_LIFETIME = 5.0f; //! 回復エリアの寿命。
+	const auto HEAL_AREA_INTERVAL = 0.5f; //! 回復エリアの回復間隔。
+	const auto HEEL_AREA_Y_OFFSET = 2.0f; //! 回復エリアのY座標オフセット。
 
-	const auto BOSS_AWAY_OFFSET = 40.0f;       //! 自己回復時、ボスから離す距離。
+	const auto BOSS_AWAY_OFFSET = 40.0f; //! 自己回復時、ボスから離す距離。
 }
-
 
 namespace nsApp
 {
@@ -35,7 +34,6 @@ namespace nsApp
 			/* 再生するアニメーションをセット。*/
 			m_player->PlayWeaponAnimation(AttackType::HeelMagic);
 		}
-
 
 		void PlayerHeelMagicState::OnEnterAttack()
 		{
@@ -54,7 +52,6 @@ namespace nsApp
 			m_canExecuteHeelMagic = true;
 			m_hasExecutedHeelMagic = false;
 		}
-
 
 		bool PlayerHeelMagicState::OnUpdateAttack()
 		{
@@ -96,20 +93,22 @@ namespace nsApp
 			return true;
 		}
 
-
 		void PlayerHeelMagicState::OnExitAttack()
 		{
 			/* 2種類のエフェクトの再生を止める。*/
-			if (m_heelEffect != nullptr) {
+			if (m_heelEffect != nullptr)
+			{
 				m_heelEffect->Stop();
+				m_player->GetEffectList().StopEffect(m_heelEffect);
 				m_heelEffect = nullptr;
 			}
-			if (m_particleEffect != nullptr) {
+			if (m_particleEffect != nullptr)
+			{
 				m_particleEffect->Stop();
+				m_player->GetEffectList().StopEffect(m_particleEffect);
 				m_particleEffect = nullptr;
 			}
 		}
-
 
 		void PlayerHeelMagicState::PlayHeelMagicEffect()
 		{
@@ -117,9 +116,8 @@ namespace nsApp
 			m_heelEffectPosition = m_player->GetPosition();
 			m_heelEffectPosition.y += EFFECT_Y_OFFSET;
 			/* エフェクトを再生。*/
-			m_heelEffect =  m_player->GetEffectList().PlayEffect(nsEffect::HeelMagic, m_heelEffectPosition, Quaternion::Identity, Vector3::One  *20.0f);
+			m_heelEffect = m_player->GetEffectList().PlayEffect(nsEffect::HeelMagic, m_heelEffectPosition, Quaternion::Identity, Vector3::One * 20.0f);
 		}
-
 
 		void PlayerHeelMagicState::PlayHeelMagicParticleEffect()
 		{
@@ -127,9 +125,8 @@ namespace nsApp
 			m_particleEffectPosition = m_player->GetPosition();
 			m_particleEffectPosition.y += EFFECT_Y_OFFSET;
 			/* エフェクトを再生。*/
-			m_particleEffect = m_player->GetEffectList().PlayEffect(nsEffect::HeelMagic_Particle, m_particleEffectPosition, Quaternion::Identity, Vector3::One * 20.0f);		
+			m_particleEffect = m_player->GetEffectList().PlayEffect(nsEffect::HeelMagic_Particle, m_particleEffectPosition, Quaternion::Identity, Vector3::One * 20.0f);
 		}
-
 
 		void PlayerHeelMagicState::ExecuteAreaHeal()
 		{
@@ -139,7 +136,7 @@ namespace nsApp
 			/* 回復量。*/
 			m_healAmount = HEAL_AMOUNT_BASE * static_cast<int>(m_chargeLevel);
 
-			nsActor::Player* healTarget = nullptr;
+			nsActor::Player *healTarget = nullptr;
 
 			/* 回復ゾーンの中心位置を決める。*/
 			m_areaPosition = m_player->GetPosition();
@@ -157,7 +154,7 @@ namespace nsApp
 			/* 自己回復のときだけ、ボスから少し離す。*/
 			if (healTarget == nullptr)
 			{
-				if (auto* boss = FindGO<nsActor::Boss>("boss"))
+				if (auto *boss = FindGO<nsActor::Boss>("boss"))
 				{
 					Vector3 away = m_areaPosition - boss->GetPosition();
 					away.y = 0.0f;
@@ -172,7 +169,7 @@ namespace nsApp
 			m_areaPosition.y += HEEL_AREA_Y_OFFSET;
 
 			/* 既存ゾーンがあれば消してから作り直す。*/
-			if (auto* existingArea = FindGO<HeelArea>("HeelArea"))
+			if (auto *existingArea = FindGO<HeelArea>("HeelArea"))
 				DeleteGO(existingArea);
 
 			m_healArea = NewGO<HeelArea>(0, "HeelArea");
@@ -185,6 +182,6 @@ namespace nsApp
 			m_healArea->SetLifeTime(HEAL_AREA_LIFETIME);
 			m_healArea->SetInterval(HEAL_AREA_INTERVAL);
 			m_healArea->SpawnArea();
-		}	
+		}
 	}
 }

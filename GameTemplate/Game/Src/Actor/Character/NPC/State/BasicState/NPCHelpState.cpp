@@ -10,25 +10,24 @@
 
 namespace
 {
-	const auto MOVE_DEAD_ZONE = 0.001f;  //! 移動停止とみなす距離。
-	const auto INPUT_HOLD_FRAME = 3;     //! 救助入力を押し続けるフレーム数。
-	const auto VOLUME = 1.0f;            //! 救助 SE の音量。
-	const auto LIFE_TIME = 2.0f;         //! 救助 SE の寿命。
+	const auto MOVE_DEAD_ZONE = 0.001f; //! 移動停止とみなす距離。
+	const auto INPUT_HOLD_FRAME = 3;	//! 救助入力を押し続けるフレーム数。
+	const auto VOLUME = 1.0f;			//! 救助 SE の音量。
+	const auto LIFE_TIME = 2.0f;		//! 救助 SE の寿命。
 }
 
 namespace nsApp
 {
 	namespace nsState
 	{
-		NPCHelpState::NPCHelpState(nsActor::Player* helpTarget) : m_helpTarget(helpTarget)
+		NPCHelpState::NPCHelpState(nsActor::Player *helpTarget) : m_helpTarget(helpTarget)
 		{
 		}
-
 
 		void NPCHelpState::Enter()
 		{
 			/* ブレインとコンポーネントの取得。*/
-			m_brain = static_cast<NPCBrain*>(m_owner);
+			m_brain = static_cast<NPCBrain *>(m_owner);
 			if (m_brain == nullptr)
 				return;
 
@@ -45,7 +44,6 @@ namespace nsApp
 			if (m_helpTarget == nullptr)
 				m_helpTarget = m_brain->GetHelpTarget();
 		}
-
 
 		void NPCHelpState::Update()
 		{
@@ -85,9 +83,14 @@ namespace nsApp
 			ExecuteHelp();
 		}
 
-
 		void NPCHelpState::Exit()
 		{
+			/* 破棄処理等でBrain側の参照が切られている可能性があるため、使用前に取得し直す。*/
+			if (m_brain != nullptr)
+			{
+				m_vInput = m_brain->GetVirtualInputAdapter();
+			}
+
 			/* 救助対象が有効でない場合は待機ステートへ遷移。*/
 			if (m_vInput != nullptr)
 				m_vInput->Reset();
@@ -107,7 +110,6 @@ namespace nsApp
 			m_difference = Vector3::Zero;
 			m_distance = 0.0f;
 		}
-
 
 		void NPCHelpState::MoveToHelpTarget()
 		{
@@ -130,7 +132,6 @@ namespace nsApp
 			const NPCMovementIntent intent = NPCMovementController::MakeMoveIntent(m_difference, true);
 			NPCMovementController::Apply(m_vInput, intent);
 		}
-
 
 		void NPCHelpState::ExecuteHelp()
 		{
@@ -155,7 +156,6 @@ namespace nsApp
 			m_body->TryBeginHelpToTarget(m_helpTarget);
 		}
 
-
 		bool NPCHelpState::IsValidHelpTarget() const
 		{
 			/* 救助対象が有効でない場合は false を返す。*/
@@ -170,7 +170,6 @@ namespace nsApp
 			return m_helpTarget->IsDeath() || m_helpTarget->GetCharacterStatus().hp.currentHP <= 0;
 		}
 
-
 		void NPCHelpState::StartHelpSE()
 		{
 			/* 既に救助 SE が再生中なら何もしない。*/
@@ -178,7 +177,7 @@ namespace nsApp
 				return;
 
 			/* 音源クラスを取得する。*/
-			auto* se = FindGO<nsSound::SoundLister>("SoundManager");
+			auto *se = FindGO<nsSound::SoundLister>("SoundManager");
 			if (se == nullptr)
 				return;
 
@@ -186,14 +185,13 @@ namespace nsApp
 			m_helpSE = se->GetSEList().PlaySE(nsSound::SE_ID::Rescue, VOLUME, true, LIFE_TIME);
 		}
 
-
 		void NPCHelpState::StopHelpSE()
 		{
 			if (m_helpSE == nullptr)
 				return;
 
 			/* 音源クラスを取得する。*/
-			auto* se = FindGO<nsSound::SoundLister>("SoundManager");
+			auto *se = FindGO<nsSound::SoundLister>("SoundManager");
 			if (se == nullptr)
 			{
 				m_helpSE = nullptr;

@@ -10,13 +10,19 @@ namespace nsApp
 {
 	NPCBrain::~NPCBrain()
 	{
-		/* NPC ステートマシンを解放する。*/
-		delete m_npcStateMachine;
-		m_npcStateMachine = nullptr;
+		/*ステートマシンを破棄する前に依存ポインタを切る。*/
+		m_outer = nullptr;
+		m_virtualInputAdapter = nullptr;
+
+		if (m_npcStateMachine != nullptr)
+		{
+			/* NPC ステートマシンを解放する。*/
+			delete m_npcStateMachine;
+			m_npcStateMachine = nullptr;
+		}
 	}
 
-
-	void NPCBrain::Init(nsActor::Player* outer)
+	void NPCBrain::Init(nsActor::Player *outer)
 	{
 		/* NPC 本体を保持する。*/
 		m_outer = outer;
@@ -40,7 +46,6 @@ namespace nsApp
 		RefreshMindContext();
 	}
 
-
 	void NPCBrain::SetPartyIndex(int partyIndex)
 	{
 		/* 負数は 0 に補正する。*/
@@ -53,12 +58,10 @@ namespace nsApp
 		RefreshMindContext();
 	}
 
-
 	bool NPCBrain::ShouldGuard() const
 	{
 		return m_supportMind.ShouldGuard(BuildMindContext());
 	}
-
 
 	void NPCBrain::RefreshMindContext()
 	{
@@ -69,19 +72,17 @@ namespace nsApp
 		m_mindContext.helpTarget = m_helpTarget;
 	}
 
-
 	NPCMindContext NPCBrain::BuildMindContext() const
 	{
 		/* const メソッドから Mind を呼ぶためのスナップショット。*/
 		NPCMindContext ctx;
 		ctx.outer = m_outer;
 		ctx.profile = &m_profile;
-		ctx.threats = const_cast<nsNPC::ThreatCollector*>(&m_threatCollector);
+		ctx.threats = const_cast<nsNPC::ThreatCollector *>(&m_threatCollector);
 		ctx.partyIndex = m_partyIndex;
 		ctx.helpTarget = m_helpTarget;
 		return ctx;
 	}
-
 
 	void NPCBrain::Update()
 	{
@@ -96,9 +97,8 @@ namespace nsApp
 			m_helpTarget = nullptr;
 			return;
 		}
-		/* KnockBack 中・被ダメ無敵中は NPC 思考を止める。*/   /* ← ここから追加 */
-		if (m_outer->IsInKnockBackState()
-			|| m_outer->GetDamageInvincibilitySystem().IsActive())
+		/* KnockBack 中・被ダメ無敵中は NPC 思考を止める。*/ /* ← ここから追加 */
+		if (m_outer->IsInKnockBackState() || m_outer->GetDamageInvincibilitySystem().IsActive())
 		{
 			m_virtualInputAdapter->Reset();
 			return;
@@ -122,7 +122,6 @@ namespace nsApp
 			m_npcStateMachine->Update();
 	}
 
-
 	/* --- CombatMind へ委譲 --- */
 
 	void NPCBrain::SetAttackInterval(int intervalFrame)
@@ -134,38 +133,32 @@ namespace nsApp
 		m_combatMind.SetAttackInterval(intervalFrame, aggression);
 	}
 
-
 	void NPCBrain::StartAttackInterval()
 	{
 		m_combatMind.StartAttackInterval();
 	}
-
 
 	bool NPCBrain::CanAttack() const
 	{
 		return m_combatMind.CanAttack();
 	}
 
-
 	void NPCBrain::UpdateAttackInterval()
 	{
 		m_combatMind.UpdateAttackInterval();
 	}
-
 
 	bool NPCBrain::IsBossAttackWindow() const
 	{
 		return m_combatMind.IsBossAttackWindow();
 	}
 
-
 	/* --- LocomotionMind へ委譲 --- */
 
-	nsActor::ICharacter* NPCBrain::SearchTarget()
+	nsActor::ICharacter *NPCBrain::SearchTarget()
 	{
 		return m_locomotionMind.SearchTarget();
 	}
-
 
 	bool NPCBrain::ShouldEvade()
 	{
@@ -174,46 +167,39 @@ namespace nsApp
 		return m_locomotionMind.ShouldEvade(m_mindContext);
 	}
 
-
 	nsNPC::AvoidPathResult NPCBrain::GetEvadeDirection() const
 	{
 		return m_locomotionMind.GetEvadeDirection(BuildMindContext());
 	}
 
-
 	/* --- SupportMind へ委譲 --- */
 
-	nsActor::Player* NPCBrain::SearchHelpTarget() const
+	nsActor::Player *NPCBrain::SearchHelpTarget() const
 	{
 		return m_supportMind.SearchHelpTarget(BuildMindContext());
 	}
 
-
-	bool NPCBrain::IsDownedAllyNeedingHelp(nsActor::Player* target) const
+	bool NPCBrain::IsDownedAllyNeedingHelp(nsActor::Player *target) const
 	{
 		return m_supportMind.IsDownedAllyNeedingHelp(BuildMindContext(), target);
 	}
-
 
 	bool NPCBrain::ShouldRespondToHelp() const
 	{
 		return m_supportMind.ShouldRespondToHelp(BuildMindContext());
 	}
 
-
 	bool NPCBrain::ShouldHealSelf() const
 	{
 		return m_supportMind.ShouldHealSelf(BuildMindContext());
 	}
-
 
 	bool NPCBrain::ShouldHealAlly() const
 	{
 		return m_supportMind.ShouldHealAlly(BuildMindContext());
 	}
 
-
-	nsActor::Player* NPCBrain::FindAllyNeedingHeal() const
+	nsActor::Player *NPCBrain::FindAllyNeedingHeal() const
 	{
 		return m_supportMind.FindAllyNeedingHeal(BuildMindContext());
 	}
