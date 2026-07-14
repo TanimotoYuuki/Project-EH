@@ -54,7 +54,6 @@ namespace nsApp
 			g_soundEngine->ResistWaveFileBank(SE_ID::RushAttack_Sword, GetSEFilePath("GreatSword_RushAttack").c_str());
 		}
 
-
 		void SEList::StorageHammerSE()
 		{
 			/* ハンマーのSEファイルパスを登録。*/
@@ -73,7 +72,6 @@ namespace nsApp
 			/* ダッシュ攻撃。*/
 			g_soundEngine->ResistWaveFileBank(SE_ID::DashAttack_Hammer, GetSEFilePath("Hammer_DashAttack").c_str());
 		}
-
 
 		void SEList::StorageOtherSE()
 		{
@@ -121,15 +119,9 @@ namespace nsApp
 
 				if (it->currentTime >= it->lifeTime)
 				{
-					if (it->source != nullptr)
-					{
-						DeleteGO(it->source);
-						it->source = nullptr;
-					}
-
+					/*単発SEは再生終了時にエンジン側で自破するためDeleteGOせずに、追跡リストから外す。*/
 					it = m_playingSEs.erase(it);
 				}
-
 				else
 				{
 					++it;
@@ -143,7 +135,13 @@ namespace nsApp
 			{
 				if (se.source != nullptr)
 				{
-					DeleteGO(se.source);
+					if (se.isLoop)
+					{
+						/*ループSEは明示的に停止、削除する。*/
+						se.source->Stop();
+						DeleteGO(se.source);
+					}
+					/*単発SEはすでに自破している可能性があるので触らない。*/
 					se.source = nullptr;
 				}
 			}
@@ -226,8 +224,8 @@ namespace nsApp
 			}
 
 			/* リストに無い場合でも、念のため削除する。*/
-			soundSource->Stop();
-			DeleteGO(soundSource);
+			// soundSource->Stop();
+			// DeleteGO(soundSource);
 			soundSource = nullptr;
 		}
 

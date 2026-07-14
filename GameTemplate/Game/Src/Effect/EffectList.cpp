@@ -13,7 +13,9 @@ namespace nsApp
 		EffectList::~EffectList()
 		{
 			/* エフェクトを初期化。*/
-			Clear();
+			// Clear();
+
+			m_playingEffects.clear();
 		}
 
 		void EffectList::Init()
@@ -69,18 +71,26 @@ namespace nsApp
 
 		void EffectList::Clear()
 		{
-			for (auto &effectInfo : m_playingEffects)
-			{
-				if (effectInfo.emitter->IsDead()) { continue; }
-				DeleteGO(effectInfo.emitter);
-				effectInfo.emitter = nullptr;
-			}
+			const bool isManagerAvailable = nsK2EngineLow::GameObjectManager::IsActive();
 
+			for (auto &EffectInfo : m_playingEffects)
+			{
+				if (EffectInfo.emitter == nullptr)
+				{
+					continue;
+				}
+
+				if (isManagerAvailable)
+				{
+					DeleteGO(EffectInfo.emitter);
+				}
+
+				EffectInfo.emitter = nullptr;
+			}
 			m_playingEffects.clear();
 		}
 
-
-		nsK2EngineLow::EffectEmitter* EffectList::PlayEffect( Effect_ID id, const Vector3& position, const Quaternion& angle, const Vector3& scale, float lifeTime)
+		nsK2EngineLow::EffectEmitter *EffectList::PlayEffect(Effect_ID id, const Vector3 &position, const Quaternion &angle, const Vector3 &scale, float lifeTime)
 		{
 			/* 引数のエフェクトIDがエフェクトパスのリストにない場合はnullptrを返す。*/
 			if (m_effectPathList.find(id) == m_effectPathList.end())
@@ -137,7 +147,7 @@ namespace nsApp
 			}
 
 			/* リストにない場合も念のため削除する。*/
-			DeleteGO(effect);
+			// DeleteGO(effect);
 			effect = nullptr;
 		}
 
@@ -159,10 +169,10 @@ namespace nsApp
 			m_effectPathList[Effect_ID::ShockWave] = GetEffectFilePath(u"airAttack");
 
 			/* エフェクトを登録。*/
-			EffectEngine::GetInstance()->ResistEffect( Effect_ID::Fire, m_effectPathList[Effect_ID::Fire].c_str());
+			EffectEngine::GetInstance()->ResistEffect(Effect_ID::Fire, m_effectPathList[Effect_ID::Fire].c_str());
 
 			/* 空中攻撃の着地エフェクトを登録。*/
-			EffectEngine::GetInstance()->ResistEffect( Effect_ID::ShockWave, m_effectPathList[Effect_ID::ShockWave].c_str());
+			EffectEngine::GetInstance()->ResistEffect(Effect_ID::ShockWave, m_effectPathList[Effect_ID::ShockWave].c_str());
 		}
 
 		void EffectList::StorageWandEffect()
@@ -180,16 +190,16 @@ namespace nsApp
 			m_effectPathList[Effect_ID::Hit] = GetEffectFilePath(u"Hit");
 
 			/* エフェクトを登録。*/
-			EffectEngine::GetInstance()->ResistEffect( Effect_ID::HeelMagic, m_effectPathList[Effect_ID::HeelMagic].c_str());
+			EffectEngine::GetInstance()->ResistEffect(Effect_ID::HeelMagic, m_effectPathList[Effect_ID::HeelMagic].c_str());
 
 			/* 回復魔法のパーティクルエフェクトを登録。*/
-			EffectEngine::GetInstance()->ResistEffect( Effect_ID::HeelMagic_Particle, m_effectPathList[Effect_ID::HeelMagic_Particle].c_str());
+			EffectEngine::GetInstance()->ResistEffect(Effect_ID::HeelMagic_Particle, m_effectPathList[Effect_ID::HeelMagic_Particle].c_str());
 
 			/* 魔法攻撃エフェクトを登録。*/
-			EffectEngine::GetInstance()->ResistEffect( Effect_ID::MagicAttack, m_effectPathList[Effect_ID::MagicAttack].c_str());
+			EffectEngine::GetInstance()->ResistEffect(Effect_ID::MagicAttack, m_effectPathList[Effect_ID::MagicAttack].c_str());
 
 			/* ヒットエフェクトを登録。*/
-			EffectEngine::GetInstance()->ResistEffect( Effect_ID::Hit, m_effectPathList[Effect_ID::Hit].c_str());
+			EffectEngine::GetInstance()->ResistEffect(Effect_ID::Hit, m_effectPathList[Effect_ID::Hit].c_str());
 		}
 
 		void EffectList::StorageTwinGunEffect()
@@ -198,7 +208,7 @@ namespace nsApp
 			m_effectPathList[Effect_ID::Shot] = GetEffectFilePath(u"Shot");
 
 			/* エフェクトを登録。*/
-			EffectEngine::GetInstance()->ResistEffect( Effect_ID::Shot, m_effectPathList[Effect_ID::Shot].c_str());
+			EffectEngine::GetInstance()->ResistEffect(Effect_ID::Shot, m_effectPathList[Effect_ID::Shot].c_str());
 		}
 
 		void EffectList::StorageBossEffect()
@@ -210,12 +220,11 @@ namespace nsApp
 			m_effectPathList[Effect_ID::BossFireAttack] = GetEffectFilePath(u"fireAttack");
 
 			/* エフェクトを登録。*/
-			EffectEngine::GetInstance()->ResistEffect( Effect_ID::FireBall, m_effectPathList[Effect_ID::FireBall].c_str());
+			EffectEngine::GetInstance()->ResistEffect(Effect_ID::FireBall, m_effectPathList[Effect_ID::FireBall].c_str());
 
 			/* ボス火炎弾着弾エフェクト（地面）を登録。*/
-			EffectEngine::GetInstance()->ResistEffect( Effect_ID::BossFireAttack, m_effectPathList[Effect_ID::BossFireAttack].c_str());
+			EffectEngine::GetInstance()->ResistEffect(Effect_ID::BossFireAttack, m_effectPathList[Effect_ID::BossFireAttack].c_str());
 		}
-
 
 		void EffectList::StorageGuardEffect()
 		{
@@ -226,10 +235,10 @@ namespace nsApp
 			m_effectPathList[Effect_ID::Guard_Red] = GetEffectFilePath(u"Guard_Red");
 
 			/* エンジンへ登録。*/
-			EffectEngine::GetInstance()->ResistEffect( Effect_ID::Guard_Blue, m_effectPathList[Effect_ID::Guard_Blue].c_str());
+			EffectEngine::GetInstance()->ResistEffect(Effect_ID::Guard_Blue, m_effectPathList[Effect_ID::Guard_Blue].c_str());
 
 			/* ガード用バリア（赤）を登録。*/
-			EffectEngine::GetInstance()->ResistEffect( Effect_ID::Guard_Red, m_effectPathList[Effect_ID::Guard_Red].c_str());
+			EffectEngine::GetInstance()->ResistEffect(Effect_ID::Guard_Red, m_effectPathList[Effect_ID::Guard_Red].c_str());
 		}
 	}
 }

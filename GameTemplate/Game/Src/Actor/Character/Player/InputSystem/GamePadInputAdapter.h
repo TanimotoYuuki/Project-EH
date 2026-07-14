@@ -1,7 +1,5 @@
 #pragma once
 
-
-
 #include "IInputDevice.h"
 
 namespace nsApp
@@ -12,9 +10,8 @@ namespace nsApp
 		/* コンストラクタ。*/
 		GamePadInputAdapter(int padIndex) : m_padIndex(padIndex) {}
 
-
 	public:
-		/** 
+		/**
 		 * @brief リセット処理。
 		 */
 		void Reset() override {};
@@ -40,7 +37,7 @@ namespace nsApp
 		 */
 		inline float GetLStickX() const override
 		{
-			return g_pad[m_padIndex]->GetLStickXF();
+			return -g_pad[m_padIndex]->GetLStickXF();
 		}
 
 		/**
@@ -51,8 +48,7 @@ namespace nsApp
 			return g_pad[m_padIndex]->GetLStickYF();
 		}
 
-
 	private:
-		int m_padIndex = 0;	//! gamepadの要素数。
+		int m_padIndex = 0; //! gamepadの要素数。
 	};
 }

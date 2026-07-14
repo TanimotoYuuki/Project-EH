@@ -5,9 +5,7 @@ namespace nsApp
 {
 	namespace nsActor
 	{
-		AnimationClip BossAnimation::m_clips[(int)BossAnimationID::Max];
-
-		/* A j   [ V     ̃p X   擾 B*/
+		/* アニメーションのパスを取得。*/
 		std::string BossAnimation::GetAnimName(BossAnimationID id)
 		{
 			std::string name;
@@ -99,32 +97,6 @@ namespace nsApp
 				return false;
 			}
 		}
-
-		/*       B*/
-		/*void BossAnimation::Init(const char* type)
-		{
-			/*std::string ւ̑
-			m_type = type;
-
-			for (int i = 0; i < (int)BossAnimationID::Max; i++)
-			{
-				BossAnimationID id=(BossAnimationID) i;
-
-				std::string path = GetPath(id);
-
-				/* t @ C       ݂  Ă  邩 ` F b N B
-				if (PathFileExistsA(path.c_str()))
-				{
-					m_clips[i].Load(path.c_str());
-					m_clips[i].SetLoopFlag(IsLoop(id));
-				}
-				else
-				{
-					std::string idlePath = GetPath(BossAnimationID::Idle);
-					m_clips[i].Load(idlePath.c_str());
-				}
-			}
-		}*/
 
 		void BossAnimation::Init(const char *type)
 		{

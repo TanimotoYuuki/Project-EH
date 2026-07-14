@@ -17,22 +17,22 @@ namespace nsApp
 		 */
 		enum class BossAnimationID : uint8_t
 		{
-			Idle,       //! 待機。
-			Walk,       //! 歩行。
-			TakeOff,    //! 離陸。
-			Land,       //! 着陸。
+			Idle,	 //! 待機。
+			Walk,	 //! 歩行。
+			TakeOff, //! 離陸。
+			Land,	 //! 着陸。
 
 			BiteAttack, //! 噛みつき攻撃。
 			TailAttack, //! 尻尾攻撃。
 			FireAttack, //! 火炎攻撃。
 
-			GetHit,     //! 被弾。
-			Death,      //! 死亡。
+			GetHit, //! 被弾。
+			Death,	//! 死亡。
 
-			Scream,     //! 咆哮。
-			Sleep,      //! 睡眠。
+			Scream, //! 咆哮。
+			Sleep,	//! 睡眠。
 
-			Max,		//! 最大数。
+			Max, //! 最大数。
 		};
 
 		/**
@@ -43,19 +43,19 @@ namespace nsApp
 		{
 		public:
 			/** @brief ボスタイプ名を指定して全クリップを読み込む。 */
-			void Init(const char* type);
+			void Init(const char *type);
 
 			/** @brief 指定アニメーションをモデルに再生させる。 */
-			void PlayAnimation(BossAnimationID id, ModelRender& model);
+			void PlayAnimation(BossAnimationID id, ModelRender &model);
 
 			/** @brief Model へ渡す AnimationClip 配列を返す。 */
-			AnimationClip* GetAnimationClips()
+			AnimationClip *GetAnimationClips()
 			{
 				return m_clips;
 			}
 
 		private:
-			static AnimationClip m_clips[(int)BossAnimationID::Max];
+			AnimationClip m_clips[(int)BossAnimationID::Max];
 
 			std::string m_type;
 			std::string GetAnimName(BossAnimationID id);

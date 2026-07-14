@@ -22,7 +22,7 @@
 
 namespace
 {
-	const auto MOVE_DEAD_ZONE = 0.001f;         //! 正規化前の安全閾値。
+	const auto MOVE_DEAD_ZONE = 0.001f;			//! 正規化前の安全閾値。
 	const auto SEPARATION_BLEND_WEIGHT = 0.20f; //! 味方分離を移動方向に混ぜる強さ。
 }
 
@@ -33,7 +33,7 @@ namespace nsApp
 		void NPCChaseState::Enter()
 		{
 			/* ブレインとコンポーネントの取得。*/
-			m_brain = static_cast<NPCBrain*>(m_owner);
+			m_brain = static_cast<NPCBrain *>(m_owner);
 
 			/* ブレインがない場合はこの状態を維持できないため、ここで終了する。*/
 			if (m_brain == nullptr)
@@ -51,14 +51,13 @@ namespace nsApp
 			ClearMoveInput();
 		}
 
-
 		void NPCChaseState::Update()
 		{
 			if (!m_body || !m_vInput || !m_brain)
 				return;
 
 			/* HELP優先。*/
-			auto* helpTarget = m_brain->GetHelpTarget();
+			auto *helpTarget = m_brain->GetHelpTarget();
 			if (helpTarget != nullptr)
 			{
 				if (m_brain->ShouldRespondToHelp())
@@ -81,7 +80,7 @@ namespace nsApp
 			if (wandNeedsMagicHeal)
 			{
 				/* 回復が必要か判断。*/
-				auto* ally = m_brain->FindAllyNeedingHeal();
+				auto *ally = m_brain->FindAllyNeedingHeal();
 				if (ally != nullptr && m_brain->ShouldHealAlly())
 				{
 					/* 味方が回復範囲外なら近づく。*/
@@ -115,14 +114,23 @@ namespace nsApp
 			}
 
 			/* 追跡。*/
-			auto* target = m_brain->SearchTarget();
+			auto *target = m_brain->SearchTarget();
 			ExecuteChaseAction(target);
 		}
 
 		void NPCChaseState::Exit()
 		{
+			/*破棄処理等でBrain側の参照が切られている可能性があるため、使用前に取得する。*/
+			if (m_brain != nullptr)
+			{
+				m_vInput = m_brain->GetVirtualInputAdapter();
+			}
+
 			/* ブレインとコンポーネントがない場合は移動入力をクリアできないため、ここで終了する。*/
-			ClearMoveInput();
+			if (m_brain != nullptr && m_vInput != nullptr)
+			{
+				ClearMoveInput();
+			}
 
 			/* ブレインとコンポーネントのポインタをクリアする。*/
 			m_brain = nullptr;
@@ -130,8 +138,7 @@ namespace nsApp
 			m_vInput = nullptr;
 		}
 
-
-		void NPCChaseState::ExecuteChaseAction(nsActor::ICharacter* target)
+		void NPCChaseState::ExecuteChaseAction(nsActor::ICharacter *target)
 		{
 			if (target == nullptr)
 			{
@@ -145,7 +152,7 @@ namespace nsApp
 			}
 
 			/* ブレインとコンポーネントがない場合は追跡行動を実行できないため、ここで終了する。*/
-			const NPCBehaviorProfile& profile = m_brain->GetBehaviorProfile();
+			const NPCBehaviorProfile &profile = m_brain->GetBehaviorProfile();
 			const WeaponType weapon = m_body->GetCurrentWeapon();
 
 			/* 目標との距離を計算。*/
@@ -165,8 +172,6 @@ namespace nsApp
 					MoveAwayFromTarget();
 					return;
 				}
-
-
 
 				/* ヒステリシス帯の外なら、フラグなしでも動く */
 				if (!m_brain->GetIsApproachingFlag() && !m_brain->GetIsRetreatingFlag())
@@ -215,7 +220,6 @@ namespace nsApp
 				return;
 			}
 
-			
 			const float meleeMax = nsNPC::GetMeleeMaxAttackRange(weapon);
 			if (nsNPC::CanBeginAttack(m_distance, weapon, profile))
 			{
@@ -230,7 +234,6 @@ namespace nsApp
 			MoveTowardTarget();
 			return;
 		}
-
 
 		void NPCChaseState::TransitionToAttackState()
 		{
@@ -258,13 +261,11 @@ namespace nsApp
 				m_stateMachine->ChangeState(new NPCSwordAttackState());
 		}
 
-
 		void NPCChaseState::ClearMoveInput()
 		{
 			/* ブレインとコンポーネントがない場合は移動入力をクリアできないため、ここで終了する。*/
 			NPCMovementController::Stop(m_vInput);
 		}
-
 
 		void NPCChaseState::MoveTowardTarget()
 		{
@@ -289,7 +290,6 @@ namespace nsApp
 			NPCMovementController::Apply(m_vInput, intent);
 		}
 
-
 		void NPCChaseState::MoveAwayFromTarget()
 		{
 			if (m_vInput == nullptr)
@@ -311,13 +311,12 @@ namespace nsApp
 			NPCMovementController::Apply(m_vInput, intent);
 		}
 
-
 		bool NPCChaseState::TryMoveToHealArea()
 		{
 			if (m_body == nullptr || m_vInput == nullptr || m_brain == nullptr)
 				return false;
 
-			const auto& hp = m_body->GetCharacterStatus().hp;
+			const auto &hp = m_body->GetCharacterStatus().hp;
 			if (hp.maxHP <= 0)
 				return false;
 
@@ -325,7 +324,7 @@ namespace nsApp
 			if (rate > 0.65f)
 				return false;
 
-			auto* heelArea = FindGO<nsApp::HeelArea>("HeelArea");
+			auto *heelArea = FindGO<nsApp::HeelArea>("HeelArea");
 			if (heelArea == nullptr || !heelArea->IsAlive())
 				return false;
 
@@ -344,8 +343,7 @@ namespace nsApp
 			return true;
 		}
 
-
-		void NPCChaseState::ComputeDistance(nsActor::ICharacter* targetObject)
+		void NPCChaseState::ComputeDistance(nsActor::ICharacter *targetObject)
 		{
 			m_difference = targetObject->GetPosition() - m_body->GetPosition();
 			m_difference.y = 0.0f;
@@ -353,8 +351,7 @@ namespace nsApp
 			m_distance = fabsf(m_difference.x);
 		}
 
-
-		Vector3 NPCChaseState::BlendSeparation(const Vector3& moveDirection) const
+		Vector3 NPCChaseState::BlendSeparation(const Vector3 &moveDirection) const
 		{
 			if (m_body == nullptr || moveDirection.LengthSq() <= MOVE_DEAD_ZONE)
 				return moveDirection;
