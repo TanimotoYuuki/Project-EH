@@ -2,6 +2,7 @@
 #include "LoadingSceneController.h"
 
 #include "Src/AsyncLoad/ParameterAsyncLoadTask.h"
+#include "Src/AsyncLoad/JobQueue.h"
 #include "Src/Camera/Camera.h"
 #include "Game2.h"
 
@@ -31,10 +32,17 @@ namespace nsApp
 			/* 削除判定。*/
 			delete m_inGameBuildHelper;
 			m_inGameBuildHelper = nullptr;
+
+			/* JobQueueを終了する。*/
+			nsJob::JobQueue::GetInstance().Shutdown();
 		}
+
 
 		void LoadingSceneController::Initialize(const InGameBuildRequest &request, nsScene::EnLoadingDestination destination)
 		{
+			/* JobQueueを起動する。*/
+			nsJob::JobQueue::GetInstance().Startup(2);
+
 			/* 初期化 */
 			m_loadingFrame = 0;
 			m_runnerBarProgress = 0.0f;
@@ -61,12 +69,15 @@ namespace nsApp
 			SetupRunnerMoveRange();
 
 			/* 非同期ロードタスクを追加して開始 */
-			m_asyncLoadManager.AddTask(std::make_unique<nsApp::ParameterAsyncLoadTask>());
+			m_asyncLoadManager.AddTask(std::make_unique<ParameterAsyncLoadTask>());
 			m_asyncLoadManager.Start();
 		}
 
 		void LoadingSceneController::Update()
 		{
+			/* メインスレッドのJobタスクを消化する。*/
+			nsJob::JobQueue::GetInstance().PumpMain();
+
 			/* ローディング画面の経過フレームをカウント */
 			++m_loadingFrame;
 

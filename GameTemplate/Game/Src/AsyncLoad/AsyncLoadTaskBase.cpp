@@ -1,7 +1,8 @@
 #include "stdafx.h"
 #include "AsyncLoadTaskBase.h"
-#include <chrono>
+#include "Src/AsyncLoad/JobQueue.h"
 #include <exception>
+#include <thread>
 
 namespace nsApp
 {
@@ -9,6 +10,18 @@ namespace nsApp
 	{
 		/*タスクがまだ実行中の場合は、完了を待つ。*/
 		Wait();
+	}
+
+
+	void AsyncLoadTaskBase::Wait()
+	{
+		/* Job ID が無効なら動作しない。*/
+		if (m_workerJobId == 0)
+			return;
+
+		/* ワーカー Job の完了を待つ（DF の IsJobDone ポーリングと同じ）。*/
+		while (!nsJob::JobQueue::GetInstance().IsJobDone(m_workerJobId))
+			std::this_thread::yield();
 	}
 
 
@@ -28,17 +41,38 @@ namespace nsApp
 		/* 進捗率を初期化する。*/
 		m_progressRate = 0;
 
+		/* 成功フラグを初期化する。*/
+		m_isSuccess = false;
+
 		/* エラーメッセージを初期化する。*/
 		SetErrorMessage("");
 
 		/* ワーカースレッドでロード処理を開始する。*/
-		m_future = std::async(std::launch::async, [this]()
-			{
-				/* ワーカースレッドでロード処理を実行する。*/
-				return LoadOnWorkerThread();
-			});
+		m_workerJobId =
+			nsJob::JobQueue::GetInstance()
+			.EnqueueWorker(
+				[this]()
+				{
+					/* ワーカースレッドの処理結果を取得する際に例外が発生する可能性があるため、try-catchブロックで囲む。*/
+					try
+					{
+						/* ワーカースレッドでロード処理を実行する。*/
+						m_isSuccess = LoadOnWorkerThread();
+					}
+					catch (const std::exception& e)
+					{
+						SetErrorMessage(e.what());
+						m_isSuccess = false;
+					}
+					catch (...)
+					{
+						SetErrorMessage("Unknown async load error.");
+						m_isSuccess = false;
+					}
+				})
+			.GetId();
 
-		return true;
+		return m_workerJobId != 0;
 	}
 
 
@@ -47,34 +81,13 @@ namespace nsApp
 		if (m_state == EnState::enLoading)
 		{
 			/* ワーカースレッドの処理が完了しているかを確認する。*/
-			auto status = m_future.wait_for(std::chrono::milliseconds(0));
-
-			/* ワーカースレッドの処理がまだ完了していない場合は、更新を続ける。*/
-			if (status != std::future_status::ready)
+			if (!nsJob::JobQueue::GetInstance().IsJobDone(m_workerJobId))
 				return;
 
-			/* ワーカースレッドの処理が完了した場合は、結果を取得する。*/
-			m_isSuccess = false;
+			/* Job ID をリセットする。*/
+			m_workerJobId = 0;
 
-			/* ワーカースレッドの処理結果を取得する際に例外が発生する可能性があるため、try-catchブロックで囲む。*/
-			try
-			{
-				/* ワーカースレッドの処理結果を取得する。*/
-				m_isSuccess = m_future.get();
-			}
-			catch (const std::exception& e)
-			{
-				SetErrorMessage(e.what());
-				m_state = EnState::enFailed;
-				return;
-			}
-			catch (...)
-			{
-				SetErrorMessage("Unknown async load error.");
-				m_state = EnState::enFailed;
-				return;
-			}
-
+			/* ワーカースレッドの処理が完了した場合は、結果を確認する。*/
 			if (!m_isSuccess)
 			{
 				if (GetErrorMessage().empty())

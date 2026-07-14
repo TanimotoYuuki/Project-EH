@@ -236,6 +236,7 @@
     <ClCompile Include="Src\Actor\Character\NPC\Threat\BossMeleeThreatProvider.cpp" />
     <ClCompile Include="Src\Actor\Character\NPC\Movement\NPCMovementController.cpp" />
     <ClCompile Include="Src\Actor\Character\Player\Component\Damage\PlayerDamageInvincibilitySystem.cpp" />
+    <ClCompile Include="Src\AsyncLoad\JobQueue.cpp" />
     <ClCompile Include="Src\UI\GuardGage\GuardGageUIManager.cpp" />
     <ClCompile Include="Src\UI\GuardGage\GuardGaugeUI.cpp" />
     <ClCompile Include="Src\Actor\Character\Player\Component\Guard\PlayerGuardSystem.cpp" />
@@ -411,6 +412,8 @@
     <ClInclude Include="Src\Actor\Character\NPC\Threat\IThreatZone.h" />
     <ClInclude Include="Src\Actor\Character\Player\Component\Damage\DamageInvincibilityParameter.h" />
     <ClInclude Include="Src\Actor\Character\Player\Component\Damage\PlayerDamageInvincibilitySystem.h" />
+    <ClInclude Include="Src\AsyncLoad\JobHandle.h" />
+    <ClInclude Include="Src\AsyncLoad\JobQueue.h" />
     <ClInclude Include="Src\UI\GuardGage\GuardGageUIManager.h" />
     <ClInclude Include="Src\UI\GuardGage\GuardGaugeUI.h" />
     <ClInclude Include="Src\Actor\Character\Player\Component\Guard\PlayerGuardSystem.h" />

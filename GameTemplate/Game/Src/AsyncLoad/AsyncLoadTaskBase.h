@@ -7,8 +7,8 @@
  * @date   2026/06/03
  */
 
-#include <future>
 #include <atomic>
+#include <cstdint>
 #include <string>
 #include <mutex>
 
@@ -25,11 +25,11 @@ namespace nsApp
 	 */
 	enum class EnState : uint8_t
 	{
-		enIdle,
-		enLoading,
-		enFinalize,
-		enCompleted,
-		enFailed,
+		enIdle,			//! < タスクが開始されていない状態。
+		enLoading,		//! < タスクが実行中の状態。
+		enFinalize,		//! < タスクが完了し、結果の処理が必要な状態。
+		enCompleted,    //! < タスクが正常に完了した状態。
+		enFailed,	    //! < タスクが失敗した状態。
 		enInitialize,   //! 初期化用。
 	};
 
@@ -58,16 +58,9 @@ namespace nsApp
 
 		/**
 		 * @brief 非同期ロードの完了を待つ。
+		 * @note  DF と同じく Job ID で完了待ちする。実装は .cpp。
 		 */
-		inline void Wait()
-		{
-			/* タスクが未完了なら動作しない。*/
-			if (!m_future.valid())
-				return;
-
-			/* 実態をセット。*/
-			m_future.wait();
-		}
+		void Wait();
 
 
 	public:
@@ -122,7 +115,7 @@ namespace nsApp
 		inline EnState GetState() const
 		{
 			return m_state;
-		} 
+		}
 
 		/**
 		 * @brief エラーメッセージを取得する。
@@ -149,7 +142,7 @@ namespace nsApp
 		virtual bool FinalizeOnMainThread()
 		{
 			return true;
-		}	
+		}
 
 		/**
 		 * @brief 進捗率を設定する。
@@ -182,7 +175,7 @@ namespace nsApp
 
 
 	private:
-		std::future<bool> m_future;					   //! ワーカースレッドでのロード処理の結果を保持するためのfutureオブジェクト。
+		uint64_t m_workerJobId = 0;					   //! ワーカー Job の ID（DF と同様。0 なら無効）。
 		std::atomic<int> m_progressRate{ 0 };		   //! 進捗率を整数で表現するための変数。0 ～ 100の範囲で使用。
 		std::string m_errorMessage;					   //! ロード中のエラーメッセージ。
 
