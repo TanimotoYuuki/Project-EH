@@ -17,7 +17,7 @@ namespace nsApp
 		void NPCEvadeState::Enter()
 		{
 			/* m_owner を NPCBrain にキャストする。*/
-			m_brain = static_cast<NPCBrain*>(m_owner);
+			m_brain = static_cast<NPCBrain *>(m_owner);
 			if (m_brain == nullptr)
 				return;
 
@@ -34,7 +34,6 @@ namespace nsApp
 			ClearMoveInput();
 		}
 
-
 		void NPCEvadeState::Update()
 		{
 			/* 早期リターン。*/
@@ -42,7 +41,7 @@ namespace nsApp
 				return;
 
 			/* 優先度 Help > Evade > Chase。*/
-			auto* helpTarget = m_brain->GetHelpTarget();
+			auto *helpTarget = m_brain->GetHelpTarget();
 			if (m_brain->ShouldRespondToHelp())
 			{
 				/* 助ける対象が死亡している場合は、助ける対象をクリアする。*/
@@ -71,26 +70,32 @@ namespace nsApp
 			MoveEvadeDirection();
 		}
 
-
 		void NPCEvadeState::Exit()
 		{
+			/*破棄処理等でBrain側の参照が切られている可能性があるため、使用前に取得する。*/
+			if (m_brain != nullptr)
+			{
+				m_vInput = m_brain->GetVirtualInputAdapter();
+			}
+
 			/* 回避状態を抜けるときは方向ロックをリセットする。*/
 			ResetLockedDirection();
 
-			/* 回避状態を抜けるときは移動入力をクリアする。*/
-			ClearMoveInput();
+			/* ブレインとコンポーネントがない場合は移動入力をクリアできないため、ここで終了する。*/
+			if (m_brain != nullptr && m_vInput != nullptr)
+			{
+				ClearMoveInput();
+			}
 			m_brain = nullptr;
 			m_body = nullptr;
 			m_vInput = nullptr;
 		}
-
 
 		void NPCEvadeState::ClearMoveInput()
 		{
 			/* 移動入力をクリアする。*/
 			NPCMovementController::Stop(m_vInput);
 		}
-
 
 		void NPCEvadeState::ResetLockedDirection()
 		{
@@ -99,7 +104,6 @@ namespace nsApp
 			m_directionLockTimer = 0;
 			m_hasLockedDirection = false;
 		}
-
 
 		void NPCEvadeState::MoveEvadeDirection()
 		{

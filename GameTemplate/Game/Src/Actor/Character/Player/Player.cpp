@@ -34,19 +34,20 @@
 
 namespace
 {
-	const auto CHARACON_RADIUS = 12.5f;                 //! キャラクターコントローラーの半径。
-	const auto CHARACON_HEIGHT = 30.0f;                 //! キャラクターコントローラーの高さ。
-	const auto WEAPON_HIT_RADIUS = 40.0f;               //! 武器の当たり判定の半径。
-	const auto ANGLE_Y = 90.0f;                         //! プレイヤーの初期角度。
-	const auto CHARACTER_SCALE = 0.5f;                  //! プレイヤーのスケール。
+	const auto CHARACON_RADIUS = 12.5f;	  //! キャラクターコントローラーの半径。
+	const auto CHARACON_HEIGHT = 30.0f;	  //! キャラクターコントローラーの高さ。
+	const auto WEAPON_HIT_RADIUS = 40.0f; //! 武器の当たり判定の半径。
+	const auto ANGLE_Y = 90.0f;			  //! プレイヤーの初期角度。
+	const auto CHARACTER_SCALE = 0.5f;	  //! プレイヤーのスケール。
 
-	const Vector3 POS = Vector3(0.0f, 100.0f, 0.0f);    //! プレイヤーの初期座標。
+	const Vector3 POS = Vector3(0.0f, 100.0f, 0.0f); //! プレイヤーの初期座標。
 
 	/* カメラクランプ。*/
-	constexpr float BATTLE_MIN_X = -300.0f;				//! カメラのクランプ範囲（最小X）
-	constexpr float BATTLE_MAX_X = 260.0f;				//! カメラのクランプ範囲（最大X）
-	constexpr float BATTLE_MIN_Z = -100.0f;				//! カメラのクランプ範囲（最小Z）
-	constexpr float BATTLE_MAX_Z = 100.0f;;				//! カメラのクランプ範囲（最大Z）
+	constexpr float BATTLE_MIN_X = -300.0f; //! カメラのクランプ範囲（最小X）
+	constexpr float BATTLE_MAX_X = 260.0f;	//! カメラのクランプ範囲（最大X）
+	constexpr float BATTLE_MIN_Z = -100.0f; //! カメラのクランプ範囲（最小Z）
+	constexpr float BATTLE_MAX_Z = 100.0f;
+	; //! カメラのクランプ範囲（最大Z）
 
 	/**
 	 * @brief 値を最小値と最大値の範囲内にクランプする関数。
@@ -55,7 +56,7 @@ namespace
 	 * @param maxValue 最大値。
 	 * @return クランプされた値。
 	 */
-	auto ClampValue(float value, float minValue, float maxValue)
+	auto Clamp(float value, float minValue, float maxValue) -> float
 	{
 		if (value < minValue)
 			return minValue;
@@ -73,11 +74,11 @@ namespace nsApp
 	{
 		Player::~Player()
 		{
-			/* NPCの脳を削除する。*/
-			if (m_brain != nullptr)
-				delete m_brain;
+			if (m_stateMachine != nullptr)
+			{
+				m_stateMachine->ChangeState(nullptr);
+			}
 		}
-
 
 		bool Player::Start()
 		{
@@ -89,9 +90,9 @@ namespace nsApp
 
 			/* モデルの種類/アニメーションの種類/アニメーションの数をセットする。*/
 			m_model.LoadCharacterModel(
-				m_modelType,                               //! モデルの種類。
-				m_playerAnimation.GetAnimatiocClip(),      //! アニメーションの種類。
-				m_playerAnimation.GetAnimationClips()      //! アニメーションの数。
+				m_modelType,						  //! モデルの種類。
+				m_playerAnimation.GetAnimatiocClip(), //! アニメーションの種類。
+				m_playerAnimation.GetAnimationClips() //! アニメーションの数。
 			);
 
 			/* モデルの大きさをセットする。*/
@@ -107,11 +108,11 @@ namespace nsApp
 			/* ステートを生成する。*/
 			RegisterState();
 
-			/* 
+			/*
 				ローディング中は当たり判定を作らない。
 				2026/06/20追記: 出撃時のクラッシュの原因となっていました。
 			*/
-			if(nsScene::SceneLoader::GetInstance() ->GetCurrentSceneID() != IScene::enSceneID_Select)
+			if (nsScene::SceneLoader::GetInstance()->GetCurrentSceneID() != IScene::enSceneID_Select)
 				m_characterController.Init(CHARACON_RADIUS, CHARACON_HEIGHT, m_currentPosition);
 
 			m_model.SettRotation(m_angle * m_postureOffset);
@@ -133,7 +134,6 @@ namespace nsApp
 			m_stateMachine->ChangeState(m_stateFactory[PlayerStateID::enIdle]());
 			return true;
 		}
-
 
 		void Player::Update()
 		{
@@ -171,13 +171,13 @@ namespace nsApp
 				return;
 
 			/* 開始演出中（GO! まで）は動かない。*/
-			if (auto* startDir = FindGO<nsGame::GameStartDirection>("gameStartDirection"))
+			if (auto *startDir = FindGO<nsGame::GameStartDirection>("gameStartDirection"))
 			{
 				if (!startDir->IsDirectionFinished())
 				{
 					if (m_brain != nullptr && m_isNpcControlled)
 					{
-						auto* vInput = m_brain->GetVirtualInputAdapter();
+						auto *vInput = m_brain->GetVirtualInputAdapter();
 						if (vInput != nullptr)
 							vInput->Reset();
 					}
@@ -188,8 +188,6 @@ namespace nsApp
 					return;
 				}
 			}
-
-
 
 			/*選択シーンではないとき。*/
 			if (nsApp::nsScene::SceneLoader::GetInstance()->GetCurrentSceneID() != nsApp::IScene::enSceneID_Select)
@@ -204,7 +202,7 @@ namespace nsApp
 				else
 					m_playerInput.SetInputEnable(true);
 			}
-			else/*選択シーンでは操作を受け付けないようにする。*/
+			else /*選択シーンでは操作を受け付けないようにする。*/
 				m_playerInput.SetInputEnable(false);
 
 			/* NPC 操作キャラだけ Brain を動かす。*/
@@ -220,7 +218,6 @@ namespace nsApp
 			if (IsDeath())
 			{
 				m_playerInput.SetInputEnable(false);
-				m_stateMachine->Update();
 				m_model.SettRotation(m_angle * m_postureOffset);
 				m_model.SetPosition(m_currentPosition);
 				m_model.Update();
@@ -253,18 +250,16 @@ namespace nsApp
 			m_weaponHitDetection.Update(m_model.GetWeaponPosition());
 		}
 
-
-		void Player::Render(RenderContext& rc)
+		void Player::Render(RenderContext &rc)
 		{
 			/* 描画。*/
 			ICharacter::Render(rc);
 		}
 
-
 		void Player::InitAttackStatus()
 		{
 			/* TSVから武器種別ごとのステータスを取得。*/
-			const auto& param = PlayerStatusParameterTable::GetParameter(m_currentWeapon);
+			const auto &param = PlayerStatusParameterTable::GetParameter(m_currentWeapon);
 			m_characterStatus.attack.normalDamage = param.normalDamage;
 			m_characterStatus.attack.criticalRate = 0.05f;
 			m_characterStatus.attack.criticalDamage = param.criticalDamage;
@@ -286,17 +281,17 @@ namespace nsApp
 			m_damageInvincibilitySystem.Initialize(m_currentWeapon);
 		}
 
-
 		void Player::ComputeSlipThrough()
 		{
 			// 自分の剛体ができているか確認。
-			auto* myBody = m_characterController.GetRigidBody()->GetBody();
-			if (myBody == nullptr) return;
+			auto *myBody = m_characterController.GetRigidBody()->GetBody();
+			if (myBody == nullptr)
+				return;
 
 			// 検索する全プレイヤーの名前リスト
-			const char* playerNames[] = { "player1", "player2", "player3", "player4" };
+			const char *playerNames[] = {"player1", "player2", "player3", "player4"};
 
-			for (const char* name : playerNames)
+			for (const char *name : playerNames)
 			{
 				auto otherPlayer = FindGO<nsActor::Player>(name);
 
@@ -305,7 +300,7 @@ namespace nsApp
 					continue;
 
 				// 相手の剛体を取得
-				auto* otherBody = otherPlayer->GetCharacterController().GetRigidBody()->GetBody();
+				auto *otherBody = otherPlayer->GetCharacterController().GetRigidBody()->GetBody();
 
 				// 相手の剛体も確実に存在していれば設定
 				if (otherBody != nullptr)
@@ -319,8 +314,7 @@ namespace nsApp
 			m_isIgnorePlayerSet = true;
 		}
 
-
-		Vector3 Player::ClampBattleAreaMoveVector(const Vector3& moveVector, float frameTime) const
+		Vector3 Player::ClampBattleAreaMoveVector(const Vector3 &moveVector, float frameTime) const
 		{
 			Vector3 currentPos = m_currentPosition;
 
@@ -350,8 +344,7 @@ namespace nsApp
 			return Vector3::Zero;
 		}
 
-
-		void Player::MoveWithBattleClamp(const Vector3& moveVector, float frameTime)
+		void Player::MoveWithBattleClamp(const Vector3 &moveVector, float frameTime)
 		{
 			Vector3 fixedMoveVector = ClampBattleAreaMoveVector(moveVector, frameTime);
 
@@ -360,7 +353,6 @@ namespace nsApp
 			// キャラコンの結果をPlayer本体の座標へ反映する。
 			SetPosition(m_characterController.GetPosition());
 		}
-
 
 		void Player::CheckDeth()
 		{
@@ -385,7 +377,6 @@ namespace nsApp
 			/* Dethステートに遷移。*/
 			m_stateMachine->ChangeState(new nsState::PlayerDethState(deathPosition));
 
-
 			/* 死亡時の処理。*/
 			/* 入力をオフ。*/
 			m_playerInput.SetInputEnable(false);
@@ -399,12 +390,10 @@ namespace nsApp
 			ResetSubWeapon();
 		}
 
-
-		void Player::SetLoadingPreviewTransform(const Vector3& position, float angleY, const Vector3& scale)
+		void Player::SetLoadingPreviewTransform(const Vector3 &position, float angleY, const Vector3 &scale)
 		{
 			/* ローディング表示用の座標を同期する。*/
 			m_currentPosition = position;
-
 
 			/* ローディング表示用の回転を同期する。*/
 			m_angle = Quaternion::Identity;
@@ -429,18 +418,16 @@ namespace nsApp
 			m_model.UpdateWorldOnly();
 		}
 
-
 		void Player::PlayBasicAnimation(CharacterBasicAnimationList state)
 		{
 			int animIndex = m_playerAnimation.GetBasicAnimationIndex(state);
 			m_model.PlayAnimation(animIndex, 0.2f);
 		}
 
-
 		void Player::PlayWeaponAnimation(AttackType attack)
 		{
 			/* 攻撃アニメーションの数を取得。*/
-			animIndex = m_playerAnimation.GetAttackAnimationIndex(attack);
+			auto animIndex = m_playerAnimation.GetAttackAnimationIndex(attack);
 			/* 攻撃アニメーションはボタンを押した瞬間に切り替わってほしいため補完割合を低めに設定。*/
 			m_model.PlayAnimation(animIndex, 0.0f);
 
@@ -450,7 +437,6 @@ namespace nsApp
 			if (soundManager != nullptr && reinterpret_cast<uint8_t>(soundManager) != 0xFFFFFFFFFFFFFFFF)
 				m_currentWeaponSE = soundManager->GetSEList().PlayAttackSE(m_currentWeapon, attack);
 		}
-
 
 		void Player::ReceiveHelp()
 		{
@@ -464,15 +450,14 @@ namespace nsApp
 			m_characterStatus.hp.currentHP = m_characterStatus.hp.maxHP;
 
 			/* 蘇生直後に HPBarUI を満タン同期する。*/
-			if (auto* characterHP = FindGO<nsGame::CharacterHP>("characterHP"))
+			if (auto *characterHP = FindGO<nsGame::CharacterHP>("characterHP"))
 				characterHP->SyncPlayerHP(this);
 
 			/* 起き上がりステート（PlayerGetUpState）へ強制移行。*/
 			m_stateMachine->ChangeState(m_stateFactory[PlayerStateID::enGetUp]());
 		}
 
-
-		bool Player::TryBeginHelpToTarget(nsActor::Player* target)
+		bool Player::TryBeginHelpToTarget(nsActor::Player *target)
 		{
 			/* NPC 以外、または救助対象が無い場合は開始しない。*/
 			if (m_brain == nullptr || target == nullptr)
@@ -495,7 +480,7 @@ namespace nsApp
 				return true;
 
 			/* 救助ステートへ直接遷移する。*/
-			auto* helpState = static_cast<nsState::PlayerReBoneState*>(m_stateFactory[PlayerStateID::enHelp]());
+			auto *helpState = static_cast<nsState::PlayerReBoneState *>(m_stateFactory[PlayerStateID::enHelp]());
 			helpState->SetTargetCharacter(target);
 
 			m_playerStateID = PlayerStateID::enHelp;
@@ -504,7 +489,6 @@ namespace nsApp
 
 			return true;
 		}
-
 
 		bool Player::TryBeginHeelMagic()
 		{
@@ -539,40 +523,45 @@ namespace nsApp
 			return true;
 		}
 
-
-		nsActor::Player* Player::SearchCharacter()
+		nsActor::Player *Player::SearchCharacter()
 		{
 			return ResourceUtility::SearchNearestDownCharacter(this, 120.0f);
 		}
 
-
 		void Player::RegisterState()
 		{
 			/* 待機状態。*/
-			m_stateFactory[PlayerStateID::enIdle] = []() { return new nsState::PlayerIdleState(); };
+			m_stateFactory[PlayerStateID::enIdle] = []()
+			{ return new nsState::PlayerIdleState(); };
 
 			/* 歩行状態。*/
-			m_stateFactory[PlayerStateID::enWalk] = []() { return new nsState::PlayerWalkState(); };
+			m_stateFactory[PlayerStateID::enWalk] = []()
+			{ return new nsState::PlayerWalkState(); };
 
 			/* ジャンプ状態。*/
-			m_stateFactory[PlayerStateID::enJump] = []() { return new nsState::PlayerJumpState(); };
+			m_stateFactory[PlayerStateID::enJump] = []()
+			{ return new nsState::PlayerJumpState(); };
 
 			/* 走り状態。*/
-			m_stateFactory[PlayerStateID::enRun] = []() { return new nsState::PlayerRunState(); };
+			m_stateFactory[PlayerStateID::enRun] = []()
+			{ return new nsState::PlayerRunState(); };
 
 			/* ダメージ状態。*/
-			m_stateFactory[PlayerStateID::enHit] = []() { return new nsState::PlayerHitState(); };
+			m_stateFactory[PlayerStateID::enHit] = []()
+			{ return new nsState::PlayerHitState(); };
 
 			/* ガード状態。*/
-			m_stateFactory[PlayerStateID::enGuard] = []() { return new nsState::PlayerGuardState(); };
+			m_stateFactory[PlayerStateID::enGuard] = []()
+			{ return new nsState::PlayerGuardState(); };
 
 			/* 復活状態。*/
-			m_stateFactory[PlayerStateID::enHelp] = []() { return new nsState::PlayerReBoneState(); };
+			m_stateFactory[PlayerStateID::enHelp] = []()
+			{ return new nsState::PlayerReBoneState(); };
 
 			/* 助けられ状態。*/
-			m_stateFactory[PlayerStateID::enGetUp] = []() { return new nsState::PlayerGetUpState(); };
+			m_stateFactory[PlayerStateID::enGetUp] = []()
+			{ return new nsState::PlayerGetUpState(); };
 		}
-
 
 		void Player::ForceBlowAway(float knockbackVelocity, float dirX)
 		{
@@ -592,21 +581,18 @@ namespace nsApp
 			if (IsInKnockBackState())
 				return;
 
-
 			/* ノックバック状態に遷移する。*/
-			auto* hitState = static_cast<nsState::PlayerHitState*>( m_stateFactory[PlayerStateID::enHit]());
+			auto *hitState = static_cast<nsState::PlayerHitState *>(m_stateFactory[PlayerStateID::enHit]());
 
 			/* ノックバックの初速をセットする。*/
 			hitState->SetKnockBackVelocity(knockbackVelocity);
 			hitState->SetKnockBackSpeed(Vector3(dirX * 100.0f, 50.0f, 0.0f));
 			hitState->SetHitTimer(90);
-			hitState->SetGetUpFlag(false);  
+			hitState->SetGetUpFlag(false);
 			m_playerStateID = PlayerStateID::enHit;
 			m_currentStateID = static_cast<uint8_t>(PlayerStateID::enHit);
 			m_stateMachine->ChangeState(hitState);
-
 		}
-
 
 		void Player::ForceGetUp()
 		{
@@ -621,11 +607,18 @@ namespace nsApp
 			m_stateMachine->ChangeState(m_stateFactory[PlayerStateID::enIdle]());
 		}
 
-
 		void Player::NotifyReturnedFromKnockBack()
 		{
 			m_playerStateID = PlayerStateID::enIdle;
 			m_currentStateID = static_cast<uint8_t>(PlayerStateID::enIdle);
+		}
+
+		void Player::ForceChangeToIdleState()
+		{
+			if (m_stateMachine != nullptr)
+			{
+				m_stateMachine->ChangeState(new nsState::PlayerIdleState());
+			}
 		}
 	}
 }

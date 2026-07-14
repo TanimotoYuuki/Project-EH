@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "SoundLister.h"
 
-
 namespace nsApp
 {
 	namespace nsSound
@@ -16,9 +15,11 @@ namespace nsApp
 
 		void SoundLister::Update()
 		{
+			/*SEの再生時間を管理して、寿命が来たら片す。*/
+			m_seList.Update(g_gameTime->GetFrameDeltaTime());
 			/* BGMとSEの音量の割合を考慮した計算処理。*/
-			//m_bgmList.CalcVolume(m_bgmVolumeRate, m_masterVolumeRate);
-			//m_seList.CalcVolume(m_seVolumeRate, m_masterVolumeRate);
+			// m_bgmList.CalcVolume(m_bgmVolumeRate, m_masterVolumeRate);
+			// m_seList.CalcVolume(m_seVolumeRate, m_masterVolumeRate);
 		}
 
 		void SoundLister::InitSound()
