@@ -21,6 +21,7 @@
 #include "Src/Actor/Stage/BackGround.h"
 #include "Src/Actor/Character/Player/Component/PlayerGenerator.h"
 #include "Src/Actor/Character/Player/InputSystem/PlayerControlerHub.h"
+#include "Src/Actor/Character/NPC/State/BasicState/NPCIdleState.h"
 
 #include "Src/Actor/Character/Common/Damage/DamageIndicatorPool.h"
 #include "Src/Actor/Character/Common/Damage/DamageProcessor.h"
@@ -53,14 +54,13 @@ namespace nsApp
 	{
 		Game2::~Game2()
 		{
-			/*[最重要]　GPUが現在の描画命令を全て終えるのを同期して待つ。
-			これにより、GPUが使用中のメモリをCPU側でフライング破棄してDevice Removedを起こすのを防ぐ。*/
+			/* [最重要] GPUが現在の描画命令を全て終えるのを同期して待つ。 */
 			if (g_graphicsEngine != nullptr)
 			{
 				g_graphicsEngine->WaitDraw();
 			}
 
-			/*あとは安全になった状態で各グラフィクスリリースやオブジェクトを解体。*/
+			/* --- 1. UIやマネージャー系のクリア --- */
 			if (m_reboneGaugeUIManager != nullptr)
 			{
 				m_reboneGaugeUIManager->ClearPlayers();
@@ -78,40 +78,126 @@ namespace nsApp
 			if (m_soundLister != nullptr)
 			{
 				m_soundLister->GetBGMList().StopBGM();
+				m_soundLister->GetSEList().Clear();
+				DeleteGO(m_soundLister);
 				m_soundLister = nullptr;
 			}
 
-			/*ステージデータお及び背景・カメラの削除。*/
+			/* --- 2. 依存関係の強い【カメラ】をキャラクターより「先」に安全に削除 --- */
+			// キャラクター(Player/Boss)のメモリが消える前にカメラを消すことで、カメラ破棄時のヌルポ参照を防ぐ
+			if (m_camera != nullptr)
+			{
+				m_camera = nullptr; // 必ずnullptrにする
+			}
+
+			/* --- 3. ステージデータ及び背景の削除 --- */
 			nsApp::nsStage::LoadStageData::GetInstance().ChangeStage(nsApp::nsStage::StageID::Invalid);
-			DeleteGO(m_backGround);
-			DeleteGO(m_camera);
 
-			/*各演出・UIのインスタンスを削除。*/
-			DeleteGO(m_gameClearDirection);
-			DeleteGO(m_gameTimeUpDirection);
-			DeleteGO(m_gameOverDirection);
-			DeleteGO(m_gameEndSelect);
-			DeleteGO(m_commentaryUIManager);
-			DeleteGO(m_pause);
+			if (m_backGround != nullptr)
+			{
+				DeleteGO(m_backGround);
+				m_backGround = nullptr;
+			}
 
-			m_commentaryUIManager = nullptr;
+			/* --- 4. 各演出・UI・システムインスタンスの削除（安全のためnullptrチェックと初期化を徹底） --- */
+			if (m_gameClearDirection != nullptr)
+			{
+				DeleteGO(m_gameClearDirection);
+				m_gameClearDirection = nullptr;
+			}
+			if (m_gameTimeUpDirection != nullptr)
+			{
+				DeleteGO(m_gameTimeUpDirection);
+				m_gameTimeUpDirection = nullptr;
+			}
+			if (m_gameOverDirection != nullptr)
+			{
+				DeleteGO(m_gameOverDirection);
+				m_gameOverDirection = nullptr;
+			}
+			if (m_gameEndSelect != nullptr)
+			{
+				DeleteGO(m_gameEndSelect);
+				m_gameEndSelect = nullptr;
+			}
+			if (m_commentaryUIManager != nullptr)
+			{
+				DeleteGO(m_commentaryUIManager);
+				m_commentaryUIManager = nullptr;
+			}
+			if (m_pause != nullptr)
+			{
+				DeleteGO(m_pause);
+				m_pause = nullptr;
+			}
+			if (m_gameStartDirection != nullptr)
+			{
+				DeleteGO(m_gameStartDirection);
+				m_gameStartDirection = nullptr;
+			}
+			if (m_characterHP != nullptr)
+			{
+				DeleteGO(m_characterHP);
+				m_characterHP = nullptr;
+			}
+			if (m_gameTimeLimit != nullptr)
+			{
+				DeleteGO(m_gameTimeLimit);
+				m_gameTimeLimit = nullptr;
+			}
+
+			/* --- 5. キャラクター(Player/NPC)のクリーンアップと削除 --- */
+			for (auto *player : m_players)
+			{
+				if (player == nullptr)
+					continue;
+
+				/* Player自身のステートをIdleへ。 */
+				player->ForceChangeToIdleState();
+
+				/* NPCのステートもIdleへ。 */
+				if (player->GetBrain() != nullptr)
+				{
+					player->GetBrain()->ChangeState(new nsState::NPCIdleState());
+				}
+			}
 
 			for (auto *player : m_players)
 			{
-				DeleteGO(player);
+				if (player != nullptr)
+				{
+					if (player->GetBrain() != nullptr)
+					{
+						// 先に参照を切る。
+						player->GetBrain()->SetVirtualInputAdapter(nullptr);
+					}
+					DeleteGO(player);
+				}
 			}
 			m_players.clear();
 			m_player = nullptr;
 
-			DeleteGO(m_boss);
+			/* --- 6. ボスの削除 --- */
+			if (m_boss != nullptr)
+			{
+				DeleteGO(m_boss);
+				m_boss = nullptr;
+			}
 
+			/* --- 7. その他のプール・コントローラー類の削除 --- */
 			DamageProcessor::SetDamageIndicatorPool(nullptr);
-			DeleteGO(m_damageIndicatorPool);
-			m_damageIndicatorPool = nullptr;
+			if (m_damageIndicatorPool != nullptr)
+			{
+				DeleteGO(m_damageIndicatorPool);
+				m_damageIndicatorPool = nullptr;
+			}
 
 			delete m_generator;
+			m_generator = nullptr;
 			delete m_playerHub;
+			m_playerHub = nullptr;
 			delete m_bossPhaseController;
+			m_bossPhaseController = nullptr;
 		}
 
 		bool Game2::Start()
@@ -149,10 +235,34 @@ namespace nsApp
 				/* ポーズ画面を表示していないとき。 */
 				if (!m_pause->IsActive())
 				{
+					/*タイムアップ演出がすでに生成されている場合はすべてスキップする。*/
+					if (m_gameTimeUpDirection != nullptr)
+					{
+						if (m_gameEndSelect == nullptr)
+						{
+							if (m_gameTimeUpDirection->IsDirectionFinished())
+							{
+								m_gameTimeUpDirection->Deactivate();
+								m_gameEndSelect = NewGO<GameEndSelect>(2, "gameEndSelect");
+							}
+						}
+
+						nsApp::nsStage::LoadStageData::GetInstance().Update();
+
+						if (m_reboneGaugeUIManager != nullptr)
+						{
+							m_reboneGaugeUIManager->Update();
+						}
+						if (m_guardGaugeUIManager != nullptr)
+						{
+							m_guardGaugeUIManager->Update();
+						}
+						return;
+					}
+
 					/* 演出が出ていないときのみ入力を受け付ける。 */
 					if (m_gameClearDirection == nullptr &&
-						m_gameOverDirection == nullptr &&
-						m_gameTimeUpDirection == nullptr)
+						m_gameOverDirection == nullptr)
 					{
 						/* Selectボタンでポーズ画面表示。 */
 						if (g_pad[0]->IsTrigger(enButtonSelect))
@@ -195,6 +305,12 @@ namespace nsApp
 							m_gameClearDirection = NewGO<GameClearDirection>(2, "gameClearDirection");
 							m_characterHP->Deactivate();
 							m_gameTimeLimit->Deactivate();
+
+							/*クリアした瞬間にカメラを安全な状態に切り替える。*/
+							if (m_camera != nullptr)
+							{
+								m_camera->ChangeToLoading();
+							}
 						}
 					}
 
@@ -206,17 +322,30 @@ namespace nsApp
 							m_gameTimeUpDirection = NewGO<GameTimeUpDirection>(2, "gameTimeUpDirection");
 							m_characterHP->Deactivate();
 							m_gameTimeLimit->Deactivate();
-						}
-					}
-					else
-					{
-						if (m_gameEndSelect == nullptr)
-						{
-							if (m_gameTimeUpDirection->IsDirectionFinished())
+
+							/*タイムアップした瞬間に、カメラを安全な状態にする。*/
+							if (m_camera != nullptr)
 							{
-								m_gameTimeUpDirection->Deactivate();
-								m_gameEndSelect = NewGO<GameEndSelect>(2, "gameEndSelect");
+								m_camera->ChangeToLoading();
 							}
+
+							/*タイムアップした瞬間にNPCのBrainとVirtualInputの接続を切る。*/
+							for (auto *player : m_players)
+							{
+								if (player != nullptr)
+								{
+									if (player->GetBrain() != nullptr)
+									{
+										player->GetBrain()->SetVirtualInputAdapter(nullptr);
+										player->Deactivate();
+									}
+								}
+							}
+							if (m_boss != nullptr)
+							{
+								m_boss->Deactivate();
+							}
+							return; /*タイムアップを検知したフレームはここで抜ける。*/
 						}
 					}
 
@@ -238,6 +367,12 @@ namespace nsApp
 							{
 								m_gameOverDirection->Deactivate();
 								m_gameEndSelect = NewGO<GameEndSelect>(2, "gameEndSelect");
+
+								/*ゲームオーバー演出が終了し、選択画面が出た時点でカメラを安全にする。*/
+								if (m_camera != nullptr)
+								{
+									m_camera->ChangeToLoading();
+								}
 							}
 						}
 					}

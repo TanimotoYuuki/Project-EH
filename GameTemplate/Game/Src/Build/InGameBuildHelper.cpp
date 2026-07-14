@@ -93,8 +93,6 @@ namespace nsApp
 		m_buildFunctions.push_back([this]()
 								   { RegisterPlayersToGuardGauge(); });
 		m_buildFunctions.push_back([this]()
-								   { BuildPlayerHub(); });
-		m_buildFunctions.push_back([this]()
 								   { BuildBoss(); });
 		m_buildFunctions.push_back([this]()
 								   { BuildCharacterHP(); });

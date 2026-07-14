@@ -32,7 +32,6 @@ namespace nsApp
 			DeleteGO(m_option);
 		}
 
-
 		bool TitleScene::Start()
 		{
 			m_titleBackGround = NewGO<TitleBackGround>(0, "titleBackGround");
@@ -43,10 +42,8 @@ namespace nsApp
 			for (int i = 0; i < nsOption::Option::EnGaugeUI::enGaugeUI_Num; i++)
 				m_option->SetVolumeRate((nsOption::Option::EnGaugeUI)i, GetVolumeRate(i));
 
-
 			return true;
 		}
-
 
 		void TitleScene::Update()
 		{
@@ -70,7 +67,7 @@ namespace nsApp
 						/*フェード処理が終わったら選択シーンに遷移する。*/
 						if (nsApp::nsFade::Fade::GetInstance()->IsEnd())
 						{
-							auto* loader = nsApp::nsScene::SceneLoader::GetInstance();
+							auto *loader = nsApp::nsScene::SceneLoader::GetInstance();
 							loader->SetLoadingDestination(nsScene::toSelect);
 							loader->ChangeScene(IScene::enSceneID_Loading);
 						}
@@ -192,41 +189,40 @@ namespace nsApp
 
 			if (g_camera3D != nullptr)
 			{
-				g_camera3D->SetPosition({ 0.0f, 100.0f, -200.0f });
-				g_camera3D->SetTarget({ 0.0f, 50.0f, 0.0f });
+				g_camera3D->SetPosition({0.0f, 100.0f, -200.0f});
+				g_camera3D->SetTarget({0.0f, 50.0f, 0.0f});
 			}
 
-			auto* camera = FindGO<Camera>("camera");
+			auto *camera = FindGO<Camera>("camera");
 			if (camera != nullptr)
 				DeleteGO(camera);
 
 			return true;
 		}
 
-
 		/*更新処理。*/
 		void SelectScene::Update()
 		{
 			/*インスタンスがnullptrの場合は取得する。*/
-			if (m_questSelect == nullptr)/*クエスト選択。*/
+			if (m_questSelect == nullptr) /*クエスト選択。*/
 			{
 				m_questSelect = m_select->GetQuestSelectInstance();
 				return;
 			}
 
-			if (m_memberSelect == nullptr)/*メンバー選択。*/
+			if (m_memberSelect == nullptr) /*メンバー選択。*/
 			{
 				m_memberSelect = m_select->GetMemberSelectInstance();
 				return;
 			}
 
-			if (m_roleSelect == nullptr)/*役割選択。*/
+			if (m_roleSelect == nullptr) /*役割選択。*/
 			{
 				m_roleSelect = m_select->GetRoleSelectInstance();
 				return;
 			}
 
-			if (m_confirmationSelect == nullptr)/*確認選択。*/
+			if (m_confirmationSelect == nullptr) /*確認選択。*/
 			{
 				m_confirmationSelect = m_select->GetConfirmationSelectInstance();
 				return;
@@ -251,8 +247,7 @@ namespace nsApp
 					for (int j = 0; j < nsApp::nsOption::Option::EnGaugeUI::enGaugeUI_Num; j++)
 						SetVolumeRate(j, m_option->GetVolumeRate((nsApp::nsOption::Option::EnGaugeUI)j));
 
-
-					auto* loader = nsScene::SceneLoader::GetInstance();
+					auto *loader = nsScene::SceneLoader::GetInstance();
 					loader->SetLoadingDestination(nsScene::toInGame);
 					loader->ChangeScene(IScene::enSceneID_Loading);
 					return;
@@ -332,9 +327,7 @@ namespace nsApp
 
 						/*選択したときの演出UIアニメーションが終わっていたら確認選択画面を表示する。*/
 						if (m_memberSelect->IsEndSelectEndDirectionUIAnimation(
-							nsApp::nsSelect::MemberSelect::EnSelectDirectionUIAnimationSprite::enSelectDirectionUIAnimationSprite_DeployTextUI
-						)
-							)
+								nsApp::nsSelect::MemberSelect::EnSelectDirectionUIAnimationSprite::enSelectDirectionUIAnimationSprite_DeployTextUI))
 						{
 							m_memberSelect->DisableDrawingButtonAndTextUI();
 							m_confirmationSelect->Activate();
@@ -516,25 +509,22 @@ namespace nsApp
 			}
 
 			/* 選択シーン中（ボス選択・メンバー選択）select.wav */
-			auto* sound = FindGO<nsSound::SoundLister>("SoundManager");
+			auto *sound = FindGO<nsSound::SoundLister>("SoundManager");
 			if (sound == nullptr)
 			{
 				sound = NewGO<nsSound::SoundLister>(0, "SoundManager");
 				sound->InitSound();
 			}
-			if (!m_confirmationSelect->IsActive()
-				&& !m_howToPlay->IsActive()
-				&& !m_option->IsActive())
+			if (!m_confirmationSelect->IsActive() && !m_howToPlay->IsActive() && !m_option->IsActive())
 			{
 				sound->GetBGMList().PlayBGM(nsSound::BGM_ID::Select, 1.0f);
 			}
 			else
 			{
 				sound->GetBGMList().StopBGM();
-			}	
+			}
+		}
 	}
-	}
-
 
 	namespace nsGame
 	{
@@ -564,12 +554,11 @@ namespace nsApp
 			return true;
 		}
 
-
 		/*更新処理。*/
 		void InGameScene::Update()
 		{
 			auto soundListers = FindGOs<nsSound::SoundLister>("SoundManager");
-			for (const auto& soundLister : soundListers)
+			for (const auto &soundLister : soundListers)
 			{
 				soundLister->SetBGMVolumeRate(GetVolumeRate(0));
 				soundLister->SetSEVolumeRate(GetVolumeRate(1));
@@ -604,7 +593,7 @@ namespace nsApp
 							/*フェード処理が終わったらローディングシーンに遷移する。*/
 							if (nsApp::nsFade::Fade::GetInstance()->IsEnd())
 							{
-								auto* loader = nsApp::nsScene::SceneLoader::GetInstance();
+								auto *loader = nsApp::nsScene::SceneLoader::GetInstance();
 								loader->SetLoadingDestination(nsScene::toInGame);
 								loader->ChangeScene(nsApp::IScene::EnSceneID::enSceneID_Loading);
 							}
@@ -622,8 +611,8 @@ namespace nsApp
 					/*ポーズ画面で選択できていなければ以下の処理しない。*/
 					if (!m_pause->DidSelect())
 					{
-						m_confirmationSelect->Deactivate(); 
-						return; 
+						m_confirmationSelect->Deactivate();
+						return;
 					}
 
 					/*ポーズ画面で「ゲームを続ける」と「操作方法」以外を選択できている状態。*/
@@ -713,31 +702,41 @@ namespace nsApp
 			if (m_game2->GetGameTimeUpDirectionInstance() != nullptr ||
 				m_game2->GetGameOverDirectionInstance() != nullptr)
 			{
-				/*ゲーム終了選択用のインスタンスがnullptrの場合は取得する。*/
+				/*ゲーム終了選択用のインスタンスでnullptrの場合は取得する。*/
 				if (m_gameEndSelect == nullptr)
 				{
 					m_gameEndSelect = m_game2->GetGameEndSelectInstance();
+					// 【修正】ここで取得したフレームは、まだ選択されていないので安全にreturnして良い
+					if (m_gameEndSelect == nullptr)
+						return;
+				}
+
+				// 【修正】決定したかどうかのフラグや選択項目を、オブジェクトが消える前にローカル変数等で安全にハンドリングする
+				if (!m_gameEndSelect->DidSelect())
+				{
 					return;
 				}
 
-				/*ゲーム終了選択画面で選択できていなければ以下の処理しない。*/
-				if (!m_gameEndSelect->DidSelect()) { return; }
+				// 現在の選択を取得
+				auto currentSelect = m_gameEndSelect->GetCurrentSelect();
 
+				// 完全に非アクティブ化し、ポインタをクリアして二度と触らないようにする
 				m_gameEndSelect->Deactivate();
+				m_gameEndSelect = nullptr;
 
 				/*ゲーム終了選択画面でリトライを選択できている状態。*/
-				if (m_gameEndSelect->GetCurrentSelect() == nsApp::GameEndSelect::enSelect_Retry)
+				if (currentSelect == nsApp::GameEndSelect::enSelect_Retry)
 				{
 					/*フェード処理が終わったらローディングシーンに遷移する。*/
 					if (nsApp::nsFade::Fade::GetInstance()->IsEnd())
 					{
-						auto* loader = nsApp::nsScene::SceneLoader::GetInstance();
+						auto *loader = nsApp::nsScene::SceneLoader::GetInstance();
 						loader->SetLoadingDestination(nsScene::toInGame);
 						loader->ChangeScene(nsApp::IScene::EnSceneID::enSceneID_Loading);
 					}
 				}
 				/*ゲーム終了選択画面でクエスト選択に戻るを選択できている状態。*/
-				else if (m_gameEndSelect->GetCurrentSelect() == nsApp::GameEndSelect::enSelect_QuestSelect)
+				else if (currentSelect == nsApp::GameEndSelect::enSelect_QuestSelect)
 				{
 					/*フェード処理が終わったら選択シーンに遷移する。*/
 					if (nsApp::nsFade::Fade::GetInstance()->IsEnd())
@@ -745,6 +744,7 @@ namespace nsApp
 						nsApp::nsScene::SceneLoader::GetInstance()->ChangeScene(nsApp::IScene::EnSceneID::enSceneID_Select);
 					}
 				}
+				return; // 決定フレームはここで処理を終える
 			}
 		}
 	}
@@ -771,7 +771,7 @@ namespace nsApp
 		void ResultScene::Update()
 		{
 			auto soundListers = FindGOs<nsSound::SoundLister>("SoundManager");
-			for (const auto& soundLister : soundListers)
+			for (const auto &soundLister : soundListers)
 			{
 				soundLister->SetBGMVolumeRate(GetVolumeRate(0));
 				soundLister->SetSEVolumeRate(GetVolumeRate(1));
@@ -779,7 +779,10 @@ namespace nsApp
 			}
 
 			/*リザルト画面で選択できていなければ処理しない。*/
-			if (!m_result->DidSelect()) { return; }
+			if (!m_result->DidSelect())
+			{
+				return;
+			}
 
 			/*ゲーム終了選択用のインスタンスでnullptrの場合は取得する。*/
 			if (m_gameEndSelect == nullptr)
@@ -789,7 +792,10 @@ namespace nsApp
 			}
 
 			/*ゲーム終了選択画面で選択できていなければ処理しない。*/
-			if (!m_gameEndSelect->DidSelect()) { return; }
+			if (!m_gameEndSelect->DidSelect())
+			{
+				return;
+			}
 
 			m_gameEndSelect->Deactivate();
 
@@ -799,7 +805,7 @@ namespace nsApp
 				/*フェード処理が終わったらローディングシーンに遷移する。*/
 				if (nsApp::nsFade::Fade::GetInstance()->IsEnd())
 				{
-					auto* loader = nsApp::nsScene::SceneLoader::GetInstance();
+					auto *loader = nsApp::nsScene::SceneLoader::GetInstance();
 					loader->SetLoadingDestination(nsScene::toInGame);
 					loader->ChangeScene(nsApp::IScene::EnSceneID::enSceneID_Loading);
 				}
@@ -815,7 +821,6 @@ namespace nsApp
 			}
 		}
 	}
-
 
 	namespace nsLoading
 	{
@@ -847,7 +852,6 @@ namespace nsApp
 			return true;
 		}
 
-
 		void LoadingScene::Update()
 		{
 			/* ローディング処理を更新する。*/
@@ -869,7 +873,6 @@ namespace nsApp
 				return;
 			}
 
-
 			/* ローディングに成功した場合。*/
 			if (m_loadingSceneController.IsCompleted())
 			{
@@ -879,7 +882,7 @@ namespace nsApp
 					m_isChangesScene = true;
 
 					/* クラスを取得。*/
-					auto* loader = nsScene::SceneLoader::GetInstance();
+					auto *loader = nsScene::SceneLoader::GetInstance();
 
 					if (loader->GetLoadingDestination() == toSelect)
 						/* Selectへ遷移。*/
@@ -893,32 +896,29 @@ namespace nsApp
 			}
 		}
 
-
-		void LoadingScene::Render(RenderContext& rc)
+		void LoadingScene::Render(RenderContext &rc)
 		{
 			/* 描画。*/
 			m_loadingSceneController.Render(rc);
 		}
 	}
 
-
 	namespace nsScene
 	{
-		SceneLoader* SceneLoader::m_instance = nullptr;/*シングルトンインスタンスの初期化。*/
+		SceneLoader *SceneLoader::m_instance = nullptr; /*シングルトンインスタンスの初期化。*/
 
 		/*開始処理。*/
 		bool SceneLoader::Start()
 		{
-			m_instance->GetInstance()->ChangeScene(IScene::EnSceneID::enSceneID_Title);/*シーンの切り替え(デフォルトはタイトルシーン)。*/
+			m_instance->GetInstance()->ChangeScene(IScene::EnSceneID::enSceneID_Title); /*シーンの切り替え(デフォルトはタイトルシーン)。*/
 			return true;
 		}
-
 
 		/*更新処理*/
 		void SceneLoader::Update()
 		{
 			if (m_changeSceneID == IScene::enSceneID_None)
-				return;/*切り替えるシーンがなければ処理しない。*/
+				return; /*切り替えるシーンがなければ処理しない。*/
 
 			/*シーン用のインスタンスに現在進行中のシーンがあれば破棄する。*/
 			if (m_currentScene)
@@ -955,15 +955,14 @@ namespace nsApp
 			/*新しくシーンを生成する処理。*/
 			switch (m_changeSceneID)
 			{
-			case IScene::enSceneID_Title:/*タイトルシーン。*/
+			case IScene::enSceneID_Title: /*タイトルシーン。*/
 				m_currentSceneID = IScene::enSceneID_Title;
 				m_currentScene = NewGO<nsTitle::TitleScene>(0, "titleScene");
 				break;
-			case IScene::enSceneID_Select:/*クエスト選択シーン。*/
+			case IScene::enSceneID_Select: /*クエスト選択シーン。*/
 				m_currentSceneID = IScene::enSceneID_Select;
 				m_currentScene = NewGO<nsSelect::SelectScene>(0, "selectScene");
 				break;
-
 
 			case IScene::enSceneID_Loading:
 			{
@@ -982,7 +981,7 @@ namespace nsApp
 				break;
 			}
 
-			case IScene::enSceneID_InGame:/*インゲームシーン。*/
+			case IScene::enSceneID_InGame: /*インゲームシーン。*/
 				m_currentSceneID = IScene::enSceneID_InGame;
 				m_currentScene = NewGO<nsGame::InGameScene>(0, "inGameScene");
 				m_currentScene->SetBossType(m_bossType);
@@ -992,7 +991,7 @@ namespace nsApp
 					m_currentScene->SetCharacterRole(i, m_characterRole[i]);
 				}
 				break;
-			case IScene::enSceneID_Result:/*リザルトシーン。*/
+			case IScene::enSceneID_Result: /*リザルトシーン。*/
 				m_currentSceneID = IScene::enSceneID_Result;
 				m_currentScene = NewGO<nsResult::ResultScene>(0, "resultScene");
 				m_currentScene->SetBossType(m_bossType);
@@ -1029,7 +1028,6 @@ namespace nsApp
 					m_isPlayerControle[k] = true;
 				else
 					m_isPlayerControle[k] = false;
-
 			}
 			/*シーンを切り替えたらIDをデフォルトに戻す。*/
 			m_changeSceneID = IScene::enSceneID_None;
