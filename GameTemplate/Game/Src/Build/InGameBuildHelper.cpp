@@ -31,13 +31,11 @@ namespace
 	const auto INIT_CHARACTER_POSITION_PLAYER4 = Vector3(50.0f, INIT_CHARACTER_POSITION_Y, INIT_CHARACTER_POSITION_Z);
 }
 
-
 namespace nsApp
 {
 	using namespace nsStage;
 
-
-	void InGameBuildHelper::Initialize(const InGameBuildRequest& request)
+	void InGameBuildHelper::Initialize(const InGameBuildRequest &request)
 	{
 		/* 生成に必要な情報を保存する。*/
 		m_request = request;
@@ -56,37 +54,59 @@ namespace nsApp
 		InitializeBuildFunctions();
 	}
 
-
 	void InGameBuildHelper::InitializeBuildFunctions()
 	{
 		/* 生成関数の初期化。*/
 		m_buildFunctions.clear();
 
 		/* 生成関数の追加。*/
-		m_buildFunctions.push_back([this]() { BuildRandom(); });
-		m_buildFunctions.push_back([this]() { BuildSound(); });
-		m_buildFunctions.push_back([this]() { BuildStage(); });
-		m_buildFunctions.push_back([this]() { BuildBackGround(); });
-		m_buildFunctions.push_back([this]() { BuildCamera(); });
-		m_buildFunctions.push_back([this]() { BuildDamagePool(); });
-		m_buildFunctions.push_back([this]() { BuildCommentaryUI(); });
-		m_buildFunctions.push_back([this]() { BuildPlayerGenerator(); });
-		m_buildFunctions.push_back([this]() { CreatePartyData(); });
-		m_buildFunctions.push_back([this]() { SpawnPlayer(0); });
-		m_buildFunctions.push_back([this]() { SpawnPlayer(1); });
-		m_buildFunctions.push_back([this]() { SpawnPlayer(2); });
-		m_buildFunctions.push_back([this]() { SpawnPlayer(3); });
-		m_buildFunctions.push_back([this]() { RegisterPlayersToReboneGauge(); });
-		m_buildFunctions.push_back([this]() { BuildGuardGaugeUI(); });
-		m_buildFunctions.push_back([this]() { RegisterPlayersToGuardGauge(); });
-		m_buildFunctions.push_back([this]() { BuildBoss(); });
-		m_buildFunctions.push_back([this]() { BuildCharacterHP(); });
-		m_buildFunctions.push_back([this]() { BuildGameTimeLimit(); });
-		m_buildFunctions.push_back([this]() { BuildGameStartDirection(); });
-		m_buildFunctions.push_back([this]() { BuildPause(); });
-		m_buildFunctions.push_back([this]() { FinishBuild(); });
+		m_buildFunctions.push_back([this]()
+								   { BuildRandom(); });
+		m_buildFunctions.push_back([this]()
+								   { BuildSound(); });
+		m_buildFunctions.push_back([this]()
+								   { BuildStage(); });
+		m_buildFunctions.push_back([this]()
+								   { BuildBackGround(); });
+		m_buildFunctions.push_back([this]()
+								   { BuildCamera(); });
+		m_buildFunctions.push_back([this]()
+								   { BuildDamagePool(); });
+		m_buildFunctions.push_back([this]()
+								   { BuildCommentaryUI(); });
+		m_buildFunctions.push_back([this]()
+								   { BuildPlayerGenerator(); });
+		m_buildFunctions.push_back([this]()
+								   { CreatePartyData(); });
+		m_buildFunctions.push_back([this]()
+								   { SpawnPlayer(0); });
+		m_buildFunctions.push_back([this]()
+								   { SpawnPlayer(1); });
+		m_buildFunctions.push_back([this]()
+								   { SpawnPlayer(2); });
+		m_buildFunctions.push_back([this]()
+								   { SpawnPlayer(3); });
+		m_buildFunctions.push_back([this]()
+								   { RegisterPlayersToReboneGauge(); });
+		m_buildFunctions.push_back([this]()
+								   { BuildGuardGaugeUI(); });
+		m_buildFunctions.push_back([this]()
+								   { RegisterPlayersToGuardGauge(); });
+		m_buildFunctions.push_back([this]()
+								   { BuildPlayerHub(); });
+		m_buildFunctions.push_back([this]()
+								   { BuildBoss(); });
+		m_buildFunctions.push_back([this]()
+								   { BuildCharacterHP(); });
+		m_buildFunctions.push_back([this]()
+								   { BuildGameTimeLimit(); });
+		m_buildFunctions.push_back([this]()
+								   { BuildGameStartDirection(); });
+		m_buildFunctions.push_back([this]()
+								   { BuildPause(); });
+		m_buildFunctions.push_back([this]()
+								   { FinishBuild(); });
 	}
-
 
 	void InGameBuildHelper::ExecuteNextBuildFunction()
 	{
@@ -108,13 +128,11 @@ namespace nsApp
 		++m_currentBuildIndex;
 	}
 
-
 	void InGameBuildHelper::BuildRandom()
 	{
 		/* 乱数の初期化。*/
 		srand(static_cast<unsigned int>(time(nullptr)));
 	}
-
 
 	void InGameBuildHelper::BuildSound()
 	{
@@ -135,20 +153,17 @@ namespace nsApp
 		m_result.soundLister->GetBGMList().PlayBGM(nsSound::BGM_ID::Stage1, 1.0f);
 	}
 
-
 	void InGameBuildHelper::BuildStage()
 	{
 		/* ステージ1に切り替える。*/
 		LoadStageData::GetInstance().ChangeStage(StageID::stage1);
 	}
 
-
 	void InGameBuildHelper::BuildBackGround()
 	{
 		/* 背景の生成。*/
 		m_result.backGround = NewGO<BackGround>(0, "BackGround");
 	}
-
 
 	void InGameBuildHelper::BuildCamera()
 	{
@@ -158,7 +173,6 @@ namespace nsApp
 			m_result.camera = NewGO<Camera>(0, "camera");
 	}
 
-
 	void InGameBuildHelper::BuildDamagePool()
 	{
 		/* ダメージインジケーターのプールの生成。*/
@@ -167,7 +181,6 @@ namespace nsApp
 		/* ダメージインジケーターのプールをDamageProcessorに設定する。*/
 		DamageProcessor::SetDamageIndicatorPool(m_result.damageIndicatorPool);
 	}
-
 
 	void InGameBuildHelper::BuildCommentaryUI()
 	{
@@ -185,13 +198,11 @@ namespace nsApp
 			m_result.commentaryUIManager->Deactivate();
 	}
 
-
 	void InGameBuildHelper::BuildPlayerGenerator()
 	{
 		/* PlayerGeneratorの生成。*/
 		m_result.generator = new PlayerGenerator();
 	}
-
 
 	void InGameBuildHelper::CreatePartyData()
 	{
@@ -212,34 +223,24 @@ namespace nsApp
 
 		/* パーティーデータの作成。*/
 		m_partyData =
-		{
 			{
-				"player1",
-				static_cast<WeaponType>(m_request.characterRole[0]),
-				m_controllerType[0],
-				INIT_CHARACTER_POSITION_PLAYER1
-			},
-			{
-				"player2",
-				static_cast<WeaponType>(m_request.characterRole[1]),
-				m_controllerType[1],
-				INIT_CHARACTER_POSITION_PLAYER2
-			},
-			{
-				"player3",
-				static_cast<WeaponType>(m_request.characterRole[2]),
-				m_controllerType[2],
-				INIT_CHARACTER_POSITION_PLAYER3
-			},
-			{
-				"player4",
-				static_cast<WeaponType>(m_request.characterRole[3]),
-				m_controllerType[3],
-				INIT_CHARACTER_POSITION_PLAYER4
-			}
-		};
+				{"player1",
+				 static_cast<WeaponType>(m_request.characterRole[0]),
+				 m_controllerType[0],
+				 INIT_CHARACTER_POSITION_PLAYER1},
+				{"player2",
+				 static_cast<WeaponType>(m_request.characterRole[1]),
+				 m_controllerType[1],
+				 INIT_CHARACTER_POSITION_PLAYER2},
+				{"player3",
+				 static_cast<WeaponType>(m_request.characterRole[2]),
+				 m_controllerType[2],
+				 INIT_CHARACTER_POSITION_PLAYER3},
+				{"player4",
+				 static_cast<WeaponType>(m_request.characterRole[3]),
+				 m_controllerType[3],
+				 INIT_CHARACTER_POSITION_PLAYER4}};
 	}
-
 
 	void InGameBuildHelper::SpawnPlayer(int playerIndex)
 	{
@@ -252,7 +253,7 @@ namespace nsApp
 			return;
 
 		/* プレイヤーの生成。*/
-		nsActor::Player* player = m_result.generator->SpawnPlayer(m_partyData[playerIndex]);
+		nsActor::Player *player = m_result.generator->SpawnPlayer(m_partyData[playerIndex]);
 
 		/* プレイヤーの生成に失敗した。*/
 		if (player == nullptr)
@@ -269,7 +270,6 @@ namespace nsApp
 		player->Deactivate();
 	}
 
-
 	void InGameBuildHelper::RegisterPlayersToReboneGauge()
 	{
 		/* リボーンゲージUIが生成されていない場合は登録しない。*/
@@ -277,10 +277,9 @@ namespace nsApp
 			return;
 
 		/* 生成済みのプレイヤーをリボーンゲージUIに登録する。*/
-		for (auto* player : m_players)
+		for (auto *player : m_players)
 			m_result.reboneGaugeUIManager->RegisterPlayer(player);
 	}
-
 
 	void InGameBuildHelper::BuildGuardGaugeUI()
 	{
@@ -292,7 +291,6 @@ namespace nsApp
 			m_result.guardGaugeUIManager->Init();
 	}
 
-
 	void InGameBuildHelper::RegisterPlayersToGuardGauge()
 	{
 		/* ガードゲージUIが生成されていない場合は登録しない。*/
@@ -300,10 +298,9 @@ namespace nsApp
 			return;
 
 		/* 生成済みのプレイヤーをガードゲージUIに登録する。*/
-		for (auto* player : m_players)
+		for (auto *player : m_players)
 			m_result.guardGaugeUIManager->RegisterPlayer(player);
 	}
-
 
 	void InGameBuildHelper::BuildPlayerHub()
 	{
@@ -313,7 +310,6 @@ namespace nsApp
 		/* PlayerHubの初期化。*/
 		m_result.playerHub->Initialize(m_players, m_partyData);
 	}
-
 
 	void InGameBuildHelper::BuildBoss()
 	{
@@ -336,7 +332,6 @@ namespace nsApp
 		m_result.boss->Deactivate();
 	}
 
-
 	void InGameBuildHelper::BuildCharacterHP()
 	{
 		/* キャラクターHPの生成。*/
@@ -354,7 +349,6 @@ namespace nsApp
 		m_result.characterHP->Deactivate();
 	}
 
-
 	void InGameBuildHelper::BuildGameTimeLimit()
 	{
 		/* ゲーム制限時間の生成。*/
@@ -371,7 +365,6 @@ namespace nsApp
 		m_result.gameTimeLimit->Deactivate();
 	}
 
-
 	void InGameBuildHelper::BuildGameStartDirection()
 	{
 		/* ゲーム開始演出の生成。*/
@@ -383,7 +376,6 @@ namespace nsApp
 			m_result.gameStartDirection->Deactivate();
 	}
 
-
 	void InGameBuildHelper::BuildPause()
 	{
 		/* ポーズ画面の生成。*/
@@ -393,7 +385,6 @@ namespace nsApp
 		if (m_result.pause != nullptr)
 			m_result.pause->Deactivate();
 	}
-
 
 	void InGameBuildHelper::FinishBuild()
 	{
@@ -406,7 +397,6 @@ namespace nsApp
 		/* 生成完了。*/
 		m_isFinished = true;
 	}
-
 
 	float InGameBuildHelper::GetProgress() const
 	{

@@ -126,7 +126,7 @@ namespace nsApp
 
             if (isRedDragon && m_isRetreat)
             {
-                moveDir = toTarget * -1.0f;
+                moveDir = toTarget * 1.0f;
             }
             else if (m_isSideStep)
             {
