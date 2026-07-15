@@ -696,6 +696,12 @@
     <ClCompile Include="Src\Actor\Stage\StageLoadContext.cpp">
       <Filter>Src\Actor\Stage</Filter>
     </ClCompile>
+    <ClCompile Include="Src\AsyncLoad\CharacterAsyncLoadTask.cpp">
+      <Filter>Src\AsyncLoad</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Character\Common\CharacterLoadContext.cpp">
+      <Filter>Src\Actor\Character\Common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -1272,6 +1278,12 @@
     </ClInclude>
     <ClInclude Include="Src\Actor\Stage\StageLoadContext.h">
       <Filter>Src\Actor\Stage</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\AsyncLoad\CharacterAsyncLoadTask.h">
+      <Filter>Src\AsyncLoad</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Common\CharacterLoadContext.h">
+      <Filter>Src\Actor\Character\Common</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

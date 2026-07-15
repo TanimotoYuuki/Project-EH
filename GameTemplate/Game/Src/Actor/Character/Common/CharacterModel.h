@@ -237,6 +237,20 @@ namespace nsApp
 			return m_offsetPosition;
 		}
 
+		/**
+		 * @brief モデル種別からファイルパスを取得する。
+	     * @param type キャラ／ボス／武器の種別。
+		 * @return 登録済みパス。未登録なら空文字。
+		 * @note  先読み（CharacterLoadContext）からも同じ表を参照するために使う。
+		 */
+		inline std::string GetModelFilePath(CharacterModelType type) const
+		{
+			auto it = m_filePathList.find(type);
+			if (it == m_filePathList.end())
+				return {};
+			return it->second;
+		}
+
 
 	private:
 		std::unordered_map<CharacterModelType, std::string> m_filePathList;		              //! モデルIDからファイルパスを文字列に変化。
