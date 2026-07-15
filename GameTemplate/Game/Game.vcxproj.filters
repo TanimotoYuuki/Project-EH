@@ -690,6 +690,12 @@
     <ClCompile Include="Src\AsyncLoad\JobQueue.cpp">
       <Filter>Src\AsyncLoad</Filter>
     </ClCompile>
+    <ClCompile Include="Src\AsyncLoad\StageAsyncLoadTask.cpp">
+      <Filter>Src\AsyncLoad</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\Actor\Stage\StageLoadContext.cpp">
+      <Filter>Src\Actor\Stage</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -1260,6 +1266,12 @@
     </ClInclude>
     <ClInclude Include="Src\AsyncLoad\JobQueue.h">
       <Filter>Src\AsyncLoad</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\AsyncLoad\StageAsyncLoadTask.h">
+      <Filter>Src\AsyncLoad</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Stage\StageLoadContext.h">
+      <Filter>Src\Actor\Stage</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -2,6 +2,8 @@
 #include "LoadingSceneController.h"
 
 #include "Src/AsyncLoad/ParameterAsyncLoadTask.h"
+#include "Src/AsyncLoad/StageAsyncLoadTask.h"
+
 #include "Src/AsyncLoad/JobQueue.h"
 #include "Src/Camera/Camera.h"
 #include "Game2.h"
@@ -73,8 +75,10 @@ namespace nsApp
 
 			/* 非同期ロードタスクを追加して開始 */
 			m_asyncLoadManager.AddTask(std::make_unique<ParameterAsyncLoadTask>());
+			m_asyncLoadManager.AddTask(std::make_unique<StageAsyncLoadTask>());
 			m_asyncLoadManager.Start();
 		}
+
 
 		void LoadingSceneController::Update()
 		{
@@ -126,6 +130,7 @@ namespace nsApp
 			}
 		}
 
+
 		void LoadingSceneController::UpdateInGameBuild()
 		{
 			/* InGame構築が完了している場合は処理しない */
@@ -143,6 +148,7 @@ namespace nsApp
 			if (m_inGameBuildHelper->IsFinished())
 				m_isInGameBuildFinished = true;
 		}
+
 
 		float LoadingSceneController::GetTotalProgress() const
 		{
