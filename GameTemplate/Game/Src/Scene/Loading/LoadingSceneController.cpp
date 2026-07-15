@@ -33,6 +33,9 @@ namespace nsApp
 			delete m_inGameBuildHelper;
 			m_inGameBuildHelper = nullptr;
 
+			/* 非同期ロードの完了を待ってから、JobQueueをとめる。*/
+			m_asyncLoadManager.Clear();
+
 			/* JobQueueを終了する。*/
 			nsJob::JobQueue::GetInstance().Shutdown();
 		}
@@ -111,6 +114,7 @@ namespace nsApp
 			/* ランナーをプログレスに合わせて更新 */
 			m_runnerModel.Update(GetTotalProgress());
 
+			/* 遷移準備完了判定 */
 			if (IsTransitionReadyToGame())
 			{
 				/* 遷移準備完了判定 */
@@ -160,11 +164,13 @@ namespace nsApp
 			return asyncProgress * 0.5f + buildProgress * 0.5f;
 		}
 
+
 		void LoadingSceneController::SetupRunnerMoveRange()
 		{
 			/* ランナーの移動範囲を設定する */
 			m_runnerModel.SetMoveRange(START, END);
 		}
+
 
 		Vector3 LoadingSceneController::ConvertLoadingUIToWorld(float uiX, float uiY) const
 		{
@@ -188,6 +194,7 @@ namespace nsApp
 			return Vector3(worldX, worldY, worldZ);
 		}
 
+
 		Vector3 LoadingSceneController::GetRunnerWorldPosition(float progress) const
 		{
 			/* クリップ */
@@ -202,6 +209,7 @@ namespace nsApp
 				RUNNER_PROGRESS_START.y + (RUNNER_PROGRESS_END.y - RUNNER_PROGRESS_START.y) * progress,
 				RUNNER_PROGRESS_START.z + (RUNNER_PROGRESS_END.z - RUNNER_PROGRESS_START.z) * progress);
 		}
+
 
 		void LoadingSceneController::KeepLoadingCamera()
 		{
@@ -220,6 +228,7 @@ namespace nsApp
 			m_camera->ChangeToLoading();
 		}
 
+
 		void LoadingSceneController::ChangeToBattleCamera()
 		{
 			/* カメラを戦闘用に切り替える */
@@ -236,6 +245,7 @@ namespace nsApp
 			/* カメラを戦闘用に切り替える */
 			m_camera->ChangeToBattle();
 		}
+
 
 		bool LoadingSceneController::IsTransitionReadyToGame() const
 		{
@@ -265,6 +275,7 @@ namespace nsApp
 
 			return true;
 		}
+
 
 		void LoadingSceneController::ExecuteGameTransition()
 		{
@@ -303,6 +314,7 @@ namespace nsApp
 			m_inGameBuildHelper = nullptr;
 			m_isTransitionReady = true;
 		}
+
 
 		void LoadingSceneController::Render(RenderContext &rc)
 		{

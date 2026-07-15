@@ -176,15 +176,13 @@ namespace nsApp
 
 	private:
 		uint64_t m_workerJobId = 0;					   //! ワーカー Job の ID（DF と同様。0 なら無効）。
+		uint64_t m_mainJobId = 0;					   //! メイン Job の ID（Finalize 用。0 なら無効）。
 		std::atomic<int> m_progressRate{ 0 };		   //! 進捗率を整数で表現するための変数。0 ～ 100の範囲で使用。
 		std::string m_errorMessage;					   //! ロード中のエラーメッセージ。
-
 		EnState m_state = EnState::enInitialize;	   //! タスクの現在の状態。     
-
 		mutable std::mutex m_errorMutex;			   //! エラーメッセージへのアクセスを保護するためのミューテックス。
-
 		float m_clampProgress = 0.0f;				   //! 進捗率を0.0f ～ 1.0fに収めるための値。
-
+		bool m_isMainFinalizeEnqueued = false;		   //! Finalize 用 Main Job を積んだか。
 		bool m_isSuccess = false;					   //! ロード処理の成功フラグ。
 	};
 }

@@ -15,13 +15,33 @@ namespace nsApp
 
 	void AsyncLoadTaskBase::Wait()
 	{
-		/* Job ID が無効なら動作しない。*/
-		if (m_workerJobId == 0)
-			return;
+		/* JobQueue のインスタンスを取得する。*/
+		auto& jobQuece = nsJob::JobQueue::GetInstance();
 
-		/* ワーカー Job の完了を待つ（DF の IsJobDone ポーリングと同じ）。*/
-		while (!nsJob::JobQueue::GetInstance().IsJobDone(m_workerJobId))
-			std::this_thread::yield();
+		/* メインスレッド Job の完了を待つ。*/
+		if (m_workerJobId != 0)
+		{
+			/* メインスレッド Job の完了を待つ。*/
+			while (!jobQuece.IsJobDone(m_workerJobId))
+				std::this_thread::yield();
+
+			/* Job ID をリセットする。*/
+			m_workerJobId = 0;
+		}
+
+		/* ワーカースレッド Job の完了を待つ。*/
+		if (m_mainJobId != 0)
+		{
+			/* ワーカースレッド Job の完了を待つ。*/
+			while (!jobQuece.IsJobDone(m_mainJobId))
+			{
+				jobQuece.PumpMain();
+				std::this_thread::yield();
+			}
+
+			/* Job ID をリセットする。*/
+			m_mainJobId = 0;
+		}
 	}
 
 
@@ -43,6 +63,10 @@ namespace nsApp
 
 		/* 成功フラグを初期化する。*/
 		m_isSuccess = false;
+
+		/* Job ID を初期化する。*/
+		m_mainJobId = 0;
+		m_isMainFinalizeEnqueued = false;
 
 		/* エラーメッセージを初期化する。*/
 		SetErrorMessage("");
@@ -100,10 +124,31 @@ namespace nsApp
 			m_state = EnState::enFinalize;
 		}
 
+
 		if (m_state == EnState::enFinalize)
 		{
-			/* メインスレッドでの最終処理を実行する。*/
-			m_isSuccess = FinalizeOnMainThread();
+			auto& jobQueue = nsJob::JobQueue::GetInstance();
+
+			/* Phase 1: Finalize を Main Job として 1 回だけ積む。*/
+			if (!m_isMainFinalizeEnqueued)
+			{
+				m_isMainFinalizeEnqueued = true;
+				m_mainJobId = jobQueue
+					.EnqueueMain(
+						[this]()
+						{
+							/* メインスレッドでの最終処理を実行する。*/
+							m_isSuccess = FinalizeOnMainThread();
+						})
+					.GetId();
+				return;
+			}
+
+			/* Phase 2: Main Job 完了を待つ。*/
+			if (!jobQueue.IsJobDone(m_mainJobId))
+				return;
+
+			m_mainJobId = 0;
 
 			if (!m_isSuccess)
 			{
