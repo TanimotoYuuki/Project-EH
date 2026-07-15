@@ -3,14 +3,19 @@
 /**
  * @file   StageLoadContext.h
  * @brief  ステージモデルのワーカー先読み結果をメインスレッドへ渡す。
- * @note   第1段はファイルバイナリの先読みのみ。Initialize は従来どおりパスから行う。
+ * @note   第2段は Worker で TkmFile::Load、Main でバンク登録する。
+ *         Initialize は従来どおりパス指定のまま（Model::Init がバンク命中）。
  */
 
 #include <mutex>
 #include <string>
-#include <vector>
 
 #include "Src/Actor/Stage/StageData.h"
+
+namespace nsK2EngineLow
+{
+	class TkmFile;
+}
 
 namespace nsApp
 {
@@ -26,14 +31,23 @@ namespace nsApp
 			/**
 			 * @brief 先読み結果を破棄する。
 			 * @note  ロード開始時に呼ぶ。
+			 *        バンク未登録の TkmFile のみ delete する。
 			 */
 			static void Reset();
 
 			/**
 			 * @brief ワーカースレッドでステージモデルを先読みする。
 			 * @param stageID 先読み対象のステージID。
+			 * @note  TkmFile::Load まで行い、バンク登録はしない（Main 側で行う）。
 			 */
 			static void PrepareOnWorker(StageID stageID);
+
+			/**
+			 * @brief 先読みした TkmFile をリソースバンクへ登録する。
+			 * @note  メインスレッド（FinalizeOnMainThread）から呼ぶ。
+			 *        登録後の所有権はバンク側になる。
+			 */
+			static void RegisterToBankOnMain();
 
 			/**
 			 * @brief 先読みが成功したか。
@@ -47,18 +61,13 @@ namespace nsApp
 			 */
 			static std::string GetModelPath();
 
-			/**
-			 * @brief 先読みしたバイナリを取得する。
-			 * @return モデルバイナリ（第1段では参照用。Initialize では未使用）。
-			 */
-			static const std::vector<char>& GetModelBuffer();
-
 
 		private:
 			static std::mutex mutex_;					//! 共有データの排他制御。
-			static std::vector<char> modelBuffer_;		//! 先読みしたモデルバイナリ。
+			static nsK2EngineLow::TkmFile* tkmFile_;	//! Worker が Load した TkmFile。登録後はバンクが所有。
 			static std::string modelPath_;				//! 先読みしたモデルパス。
 			static bool isReady_;						//! 先読み成功フラグ。
+			static bool isRegistered_;					//! バンク登録済みフラグ（Reset 時の二重解放防止）。
 		};
 	} // namespace nsStage
 } // namespace nsApp

@@ -28,6 +28,7 @@ namespace nsApp
 	bool StageAsyncLoadTask::FinalizeOnMainThread()
 	{
 		/* 第1段では Main 側の追加確定処理は行わない。*/
-		return true;
+		nsStage::StageLoadContext::RegisterToBankOnMain();
+		return nsStage::StageLoadContext::IsReady();
 	}
 }
