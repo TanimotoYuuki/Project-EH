@@ -95,6 +95,14 @@ namespace nsApp
 		 */
 		void LoadAnimation(WeaponType weaponType);
 
+		/**
+	     * @brief 指定武器のアニメーションファイルパス一覧を取得する。
+		 * @param weaponType 武器タイプ。
+		 * @return .tka パス一覧（Load はしない）。
+		 * @note  先読み（AnimationLoadContext）用。Initialize の登録表をソースにする。
+		 */
+		std::vector<std::string> CollectAnimationFilePaths(WeaponType weaponType);
+
 		
 	/* ゲッター。*/
 	public:

@@ -5,6 +5,31 @@ namespace nsApp
 {
 	namespace nsActor
 	{
+		std::vector<std::string> BossAnimation::CollectAnimationFilePaths(const char* type)
+		{
+			/* アニメーションの種類をセット。*/
+			m_type = type;
+
+			/* すべてのアニメーションパスを収集する。*/
+			std::vector<std::string> paths;
+			paths.reserve(static_cast<size_t>(BossAnimationID::Max));
+
+			for (int i = 0; i < static_cast<int>(BossAnimationID::Max); ++i)
+			{
+				/* アニメーションID(列挙)を経由してファイルパスを取得する。*/
+				std::string path = GetPath(static_cast<BossAnimationID>(i));
+
+				/* Init と同じく、無いファイルは Idle にフォールバックする。*/
+				if (!PathFileExistsA(path.c_str()))
+					path = GetPath(BossAnimationID::Idle);
+
+				paths.push_back(std::move(path));
+			}
+
+			return paths;
+		}
+
+
 		/* アニメーションのパスを取得。*/
 		std::string BossAnimation::GetAnimName(BossAnimationID id)
 		{
@@ -111,7 +136,6 @@ namespace nsApp
 					m_clips[i].Load(path.c_str());
 					m_clips[i].BuildKeyFramesAndAnimationEvents();
 
-					//    ` F b N1:  {   Ƀ  [ h ł  Ă  邩 m F
 					if (m_clips[i].GetKeyFramePtrListArray().empty())
 					{
 						OutputDebugStringA(("ERROR: Load failed but file exists: " + path + "\n").c_str());
@@ -119,7 +143,6 @@ namespace nsApp
 				}
 				else
 				{
-					//    ` F b N2:  t @ C     Ȃ  ꍇ AIdle     [ h
 					std::string idlePath = GetPath(BossAnimationID::Idle);
 					m_clips[i].Load(idlePath.c_str());
 					m_clips[i].BuildKeyFramesAndAnimationEvents();
@@ -129,7 +152,7 @@ namespace nsApp
 			}
 		}
 
-		/* Đ  B*/
+
 		void BossAnimation::PlayAnimation(BossAnimationID id, ModelRender &model)
 		{
 			model.PlayAnimation((int)id, 0.2f);

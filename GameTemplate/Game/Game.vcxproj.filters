@@ -702,6 +702,12 @@
     <ClCompile Include="Src\Actor\Character\Common\CharacterLoadContext.cpp">
       <Filter>Src\Actor\Character\Common</Filter>
     </ClCompile>
+    <ClCompile Include="Src\Actor\Character\Common\AnimationLoadContext.cpp">
+      <Filter>Src\Actor\Character\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\AsyncLoad\AnimationAsyncLoadTask.cpp">
+      <Filter>Src\AsyncLoad</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
@@ -1284,6 +1290,12 @@
     </ClInclude>
     <ClInclude Include="Src\Actor\Character\Common\CharacterLoadContext.h">
       <Filter>Src\Actor\Character\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\Actor\Character\Common\AnimationLoadContext.h">
+      <Filter>Src\Actor\Character\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="Src\AsyncLoad\AnimationAsyncLoadTask.h">
+      <Filter>Src\AsyncLoad</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

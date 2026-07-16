@@ -359,4 +359,27 @@ namespace nsApp
 				m_attackIndexMap[pair.first] = SetAnimationClip(pair.second, false);
 		}
 	}
+
+
+	std::vector<std::string> CharacterAnimation::CollectAnimationFilePaths(WeaponType weaponType)
+	{
+		/* パス登録表を構築する（AnimationClip::Load はしない）。*/
+		Initialize(weaponType);
+
+		std::vector<std::string> paths;
+		paths.reserve(m_basicAnimationFilePathList.size() + 16);
+
+		/* 基本動作。*/
+		for (const auto& pair : m_basicAnimationFilePathList)
+			paths.push_back(pair.second);
+
+		/* 武器攻撃。*/
+		if (m_weaponDataList.count(weaponType) > 0)
+		{
+			for (const auto& pair : m_weaponDataList[weaponType].weaponAnimationList)
+				paths.push_back(pair.second);
+		}
+
+		return paths;
+	}
 }

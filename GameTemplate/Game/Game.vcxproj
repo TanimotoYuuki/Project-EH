@@ -224,6 +224,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BossFlyState.cpp" />
+    <ClCompile Include="Src\Actor\Character\Common\AnimationLoadContext.cpp" />
     <ClCompile Include="Src\Actor\Character\Common\CharacterLoadContext.cpp" />
     <ClCompile Include="Src\Actor\Character\NPC\Brain\NPCSupportMind.cpp" />
     <ClCompile Include="Src\Actor\Character\NPC\Brain\NPCLocomotonMind.cpp" />
@@ -238,6 +239,7 @@
     <ClCompile Include="Src\Actor\Character\NPC\Movement\NPCMovementController.cpp" />
     <ClCompile Include="Src\Actor\Character\Player\Component\Damage\PlayerDamageInvincibilitySystem.cpp" />
     <ClCompile Include="Src\Actor\Stage\StageLoadContext.cpp" />
+    <ClCompile Include="Src\AsyncLoad\AnimationAsyncLoadTask.cpp" />
     <ClCompile Include="Src\AsyncLoad\CharacterAsyncLoadTask.cpp" />
     <ClCompile Include="Src\AsyncLoad\JobQueue.cpp" />
     <ClCompile Include="Src\AsyncLoad\StageAsyncLoadTask.cpp" />
@@ -395,6 +397,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BossFlyState.h" />
+    <ClInclude Include="Src\Actor\Character\Common\AnimationLoadContext.h" />
     <ClInclude Include="Src\Actor\Character\Common\CharacterLoadContext.h" />
     <ClInclude Include="Src\Actor\Character\NPC\Brain\NPCSupportMind.h" />
     <ClInclude Include="Src\Actor\Character\NPC\Brain\NPCLocomotonMind.h" />
@@ -418,6 +421,7 @@
     <ClInclude Include="Src\Actor\Character\Player\Component\Damage\DamageInvincibilityParameter.h" />
     <ClInclude Include="Src\Actor\Character\Player\Component\Damage\PlayerDamageInvincibilitySystem.h" />
     <ClInclude Include="Src\Actor\Stage\StageLoadContext.h" />
+    <ClInclude Include="Src\AsyncLoad\AnimationAsyncLoadTask.h" />
     <ClInclude Include="Src\AsyncLoad\CharacterAsyncLoadTask.h" />
     <ClInclude Include="Src\AsyncLoad\JobHandle.h" />
     <ClInclude Include="Src\AsyncLoad\JobQueue.h" />
