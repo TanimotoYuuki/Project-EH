@@ -34,6 +34,13 @@ namespace nsApp
 		 */
 		bool FinalizeOnMainThread() override;
 
+		/**
+		 * @brief アニメ先読みはファイル数が多いので重めにする。
+		 */
+		float GetWeight() const override
+		{
+			return 1.0f;
+		}
 
 	private:
 		ParameterSystem m_parameterSystem; //! パラメーターシステム。

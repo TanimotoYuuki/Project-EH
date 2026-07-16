@@ -37,5 +37,13 @@ namespace nsApp
 		 * @return 登録に成功した場合は true。
 		 */
 		bool FinalizeOnMainThread() override;
+
+		/**
+		 * @brief アニメ先読みはファイル数が多いので重めにする。
+		 */
+		float GetWeight() const override
+		{
+			return 0.5f;
+		}
 	};
 }

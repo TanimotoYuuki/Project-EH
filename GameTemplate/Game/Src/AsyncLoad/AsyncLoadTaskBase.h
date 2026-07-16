@@ -109,6 +109,16 @@ namespace nsApp
 		}
 
 		/**
+		 * @brief 全体進捗に対する重みを取得する。
+		 * @return 1.0f が基準。大きいほどゲージへの影響が強い。
+		 * @note  AsyncLoadManager::GetProgress で加重平均に使う。
+		 */
+		virtual float GetWeight() const
+		{
+			return 1.0f;
+		}
+
+		/**
 		 * @brief 現在の状態を取得する。
 		 * @return 現在の状態。
 		 */

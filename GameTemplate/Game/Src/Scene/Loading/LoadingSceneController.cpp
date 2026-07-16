@@ -114,14 +114,17 @@ namespace nsApp
 				UpdateInGameBuild();
 			}
 
+			/* 実進捗を一度だけ取る。*/
+			const float totalProgress = GetTotalProgress();
+
 			/* プログレスバーを更新 */
-			m_loadingProgressUI.Update(GetTotalProgress());
+			m_loadingProgressUI.Update(totalProgress);
 
 			/* テキストを更新。*/
 			m_loadingTextUI.Update(g_gameTime->GetFrameDeltaTime());
 
 			/* ランナーをプログレスに合わせて更新 */
-			m_runnerModel.Update(GetTotalProgress());
+			m_runnerModel.Update(m_loadingProgressUI.GetDisplayProgress());
 
 			/* 遷移準備完了判定 */
 			if (IsTransitionReadyToGame())
@@ -157,10 +160,10 @@ namespace nsApp
 
 		float LoadingSceneController::GetTotalProgress() const
 		{
-			/* 非同期ロードの進捗を取得 */
+			/* 非同期ロードの進捗を取得する。*/
 			float asyncProgress = m_asyncLoadManager.GetProgress();
 
-			/* 遷移先がInGameでない場合は非同期ロードの進捗のみを返す */
+			/* 遷移先が Select の場合は非同期ロードの進捗のみ。*/
 			if (m_destination == toSelect)
 				return asyncProgress;
 
@@ -168,11 +171,22 @@ namespace nsApp
 
 			if (m_inGameBuildHelper != nullptr)
 				buildProgress = m_inGameBuildHelper->GetProgress();
-
 			else if (m_isInGameBuildFinished)
 				buildProgress = 1.0f;
 
-			return asyncProgress * 0.5f + buildProgress * 0.5f;
+			/* 実ロード進捗（async と InGame 構築を半々）。*/
+			const float contentProgress = asyncProgress * 0.5f + buildProgress * 0.5f;
+
+			/*
+				最低表示フレームに合わせた時間進捗。
+				先読みが速すぎて実進捗が先に 1.0 になっても、
+				ゲージが最初から満タンに見えないようにする。
+			*/
+			const float t = static_cast<float>(m_loadingFrame) / static_cast<float>(MIN_LOADING_FRAME);
+			const float timeProgress = (t < 0.0f) ? 0.0f : (t > 1.0f) ? 1.0f : t;
+
+			/* 実進捗と時間進捗の小さい方を表示する。*/
+			return (contentProgress < timeProgress) ? contentProgress : timeProgress;
 		}
 
 

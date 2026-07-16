@@ -87,20 +87,8 @@ namespace nsApp
 				return;
 
 			/* 受け取った進捗を 0.0f～1.0f にクリップ */
-			m_nextTargetProgress = Clamp01(progress);
-
-			/* ターゲット進捗を更新（前進のみ、後戻りしない） */
-			if (m_nextTargetProgress > m_targetProgress)
-				m_targetProgress = m_nextTargetProgress;
-
-			/* ランナーの進捗をスムーズに追従させる */
-			m_runnerProgress += (m_targetProgress - m_runnerProgress) * RUNNER_FOLLOW_SPEED;
-
-			/* 完了判定の処理（スナップ） */
-			if (m_targetProgress >= RUNNER_COMPLETE_THRESHOLD && m_runnerProgress >= RUNNER_COMPLETE_THRESHOLD)
-				m_runnerProgress = 1.0f;
-
-			/* 現在の進捗を記録 */
+			m_runnerProgress = Clamp01(progress);
+			m_targetProgress = m_runnerProgress;
 			m_progress = m_runnerProgress;
 
 			/* 進捗に基づいて位置を更新 */

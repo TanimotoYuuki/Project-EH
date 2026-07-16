@@ -35,5 +35,13 @@ namespace nsApp
 		 * @note   第1段では追加処理なし（BuildStage が従来どおり Initialize する）。
 		 */
 		bool FinalizeOnMainThread() override;
+
+		/**
+		 * @brief アニメ先読みはファイル数が多いので重めにする。
+		 */
+		float GetWeight() const override
+		{
+			return 2.0f;
+		}
 	};
 }

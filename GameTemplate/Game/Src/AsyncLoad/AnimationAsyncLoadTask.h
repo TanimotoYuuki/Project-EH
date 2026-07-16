@@ -44,6 +44,13 @@ namespace nsApp
 		 */
 		bool FinalizeOnMainThread() override;
 
+		/**
+		 * @brief アニメ先読みはファイル数が多いので重めにする。
+		 */
+		float GetWeight() const override
+		{
+			return 4.0f;
+		}
 
 	private:
 		InGameBuildRequest m_request;	//! 先読み対象を決めるリクエスト。

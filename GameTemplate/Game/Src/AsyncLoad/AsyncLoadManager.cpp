@@ -131,28 +131,30 @@ namespace nsApp
 		if (m_taskList.empty())
 			return 0.0f;
 
-		/* タスクリスト内の全てのタスクの進捗率を合計する。*/
-		float totalProgress = 0.0f;
-		int validTaskCount = 0;
+		float weightedProgress = 0.0f;
+		float totalWeight = 0.0f;
 
-		/* タスクリスト内の全てのタスクの進捗率を合計する。*/
 		for (const auto& task : m_taskList)
 		{
 			/* タスクが無いなら処理をしない。*/
 			if (task == nullptr)
 				continue;
 
-			/* タスクの進捗率を合計する。*/
-			totalProgress += task->GetProgress();
-			++validTaskCount;
+			const float weight = task->GetWeight();
+			if (weight <= 0.0f)
+				continue;
+
+			/* 重み付きで進捗を積算する。*/
+			weightedProgress += task->GetProgress() * weight;
+			totalWeight += weight;
 		}
 
-		/* 有効なタスクがない場合は、進捗率を0.0fとみなす。*/
-		if(validTaskCount <= 0)
+		/* 有効な重みが無い場合は 0。*/
+		if (totalWeight <= 0.0f)
 			return 0.0f;
 
-		/* タスクの平均進捗率を計算して返す。*/
-		return totalProgress / static_cast<float>(validTaskCount);
+		/* 加重平均を返す。*/
+		return weightedProgress / totalWeight;
 	}
 
 
