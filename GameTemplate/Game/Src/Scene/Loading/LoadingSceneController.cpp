@@ -5,6 +5,7 @@
 #include "Src/AsyncLoad/StageAsyncLoadTask.h"
 #include "Src/AsyncLoad/CharacterAsyncLoadTask.h"
 #include "Src/AsyncLoad/AnimationAsyncLoadTask.h"
+#include "Src/AsyncLoad/EffectAsyncLoadTask.h"
 #include "Src/AsyncLoad/JobQueue.h"
 #include "Src/Camera/Camera.h"
 #include "Game2.h"
@@ -79,6 +80,7 @@ namespace nsApp
 			m_asyncLoadManager.AddTask(std::make_unique<StageAsyncLoadTask>());
 			m_asyncLoadManager.AddTask(std::make_unique<CharacterAsyncLoadTask>(request));
 			m_asyncLoadManager.AddTask(std::make_unique<AnimationAsyncLoadTask>(request));
+			m_asyncLoadManager.AddTask(std::make_unique<EffectAsyncLoadTask>());
 			m_asyncLoadManager.Start();
 		}
 
