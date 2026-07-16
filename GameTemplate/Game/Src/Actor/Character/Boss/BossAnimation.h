@@ -54,6 +54,15 @@ namespace nsApp
 				return m_clips;
 			}
 
+			/**
+			 * @brief ボスタイプ名のアニメーションパス一覧を取得する。
+			 * @param type BossTypeToString と同じ名前（例: "GrayDragon"）。
+			 * @return .tka パス一覧（Load はしない）。
+			 * @note  先読み（AnimationLoadContext）用。
+			  */
+			std::vector<std::string> CollectAnimationFilePaths(const char* type);
+
+
 		private:
 			AnimationClip m_clips[(int)BossAnimationID::Max];
 
