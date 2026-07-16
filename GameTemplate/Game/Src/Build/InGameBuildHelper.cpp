@@ -60,50 +60,29 @@ namespace nsApp
 		m_buildFunctions.clear();
 
 		/* 生成関数の追加。*/
-		m_buildFunctions.push_back([this]()
-								   { BuildRandom(); });
-		m_buildFunctions.push_back([this]()
-								   { BuildSound(); });
-		m_buildFunctions.push_back([this]()
-								   { BuildStage(); });
-		m_buildFunctions.push_back([this]()
-								   { BuildBackGround(); });
-		m_buildFunctions.push_back([this]()
-								   { BuildCamera(); });
-		m_buildFunctions.push_back([this]()
-								   { BuildDamagePool(); });
-		m_buildFunctions.push_back([this]()
-								   { BuildCommentaryUI(); });
-		m_buildFunctions.push_back([this]()
-								   { BuildPlayerGenerator(); });
-		m_buildFunctions.push_back([this]()
-								   { CreatePartyData(); });
-		m_buildFunctions.push_back([this]()
-								   { SpawnPlayer(0); });
-		m_buildFunctions.push_back([this]()
-								   { SpawnPlayer(1); });
-		m_buildFunctions.push_back([this]()
-								   { SpawnPlayer(2); });
-		m_buildFunctions.push_back([this]()
-								   { SpawnPlayer(3); });
-		m_buildFunctions.push_back([this]()
-								   { RegisterPlayersToReboneGauge(); });
-		m_buildFunctions.push_back([this]()
-								   { BuildGuardGaugeUI(); });
-		m_buildFunctions.push_back([this]()
-								   { RegisterPlayersToGuardGauge(); });
-		m_buildFunctions.push_back([this]()
-								   { BuildBoss(); });
-		m_buildFunctions.push_back([this]()
-								   { BuildCharacterHP(); });
-		m_buildFunctions.push_back([this]()
-								   { BuildGameTimeLimit(); });
-		m_buildFunctions.push_back([this]()
-								   { BuildGameStartDirection(); });
-		m_buildFunctions.push_back([this]()
-								   { BuildPause(); });
-		m_buildFunctions.push_back([this]()
-								   { FinishBuild(); });
+		m_buildFunctions.push_back([this](){ BuildRandom(); });
+		m_buildFunctions.push_back([this](){ BuildSound(); });
+		m_buildFunctions.push_back([this](){ BuildStage(); });
+		m_buildFunctions.push_back([this](){ BuildBackGround(); });
+		m_buildFunctions.push_back([this](){ BuildCamera(); });
+		m_buildFunctions.push_back([this](){ BuildDamagePool(); });
+		m_buildFunctions.push_back([this](){ BuildCommentaryUI(); });
+		m_buildFunctions.push_back([this](){ BuildPlayerGenerator(); });
+		m_buildFunctions.push_back([this](){ CreatePartyData(); });
+		m_buildFunctions.push_back([this](){ SpawnPlayer(0); });
+		m_buildFunctions.push_back([this](){ SpawnPlayer(1); });
+		m_buildFunctions.push_back([this](){ SpawnPlayer(2); });
+		m_buildFunctions.push_back([this](){ SpawnPlayer(3); });
+		m_buildFunctions.push_back([this](){ RegisterPlayersToReboneGauge(); });
+		m_buildFunctions.push_back([this](){ BuildGuardGaugeUI(); });
+		m_buildFunctions.push_back([this](){ RegisterPlayersToGuardGauge(); });
+		m_buildFunctions.push_back([this](){ BuildPlayerHub(); });
+		m_buildFunctions.push_back([this](){ BuildBoss(); });
+		m_buildFunctions.push_back([this](){ BuildCharacterHP(); });
+		m_buildFunctions.push_back([this](){ BuildGameTimeLimit(); });
+		m_buildFunctions.push_back([this](){ BuildGameStartDirection(); });
+		m_buildFunctions.push_back([this](){ BuildPause(); });
+		m_buildFunctions.push_back([this](){ FinishBuild(); });
 	}
 
 	void InGameBuildHelper::ExecuteNextBuildFunction()
@@ -237,7 +216,8 @@ namespace nsApp
 				{"player4",
 				 static_cast<WeaponType>(m_request.characterRole[3]),
 				 m_controllerType[3],
-				 INIT_CHARACTER_POSITION_PLAYER4}};
+				 INIT_CHARACTER_POSITION_PLAYER4}
+			};
 	}
 
 	void InGameBuildHelper::SpawnPlayer(int playerIndex)
@@ -311,8 +291,6 @@ namespace nsApp
 
 	void InGameBuildHelper::BuildBoss()
 	{
-		nsAI::BossParameterTable::LoadTSVFile("Assets/Parameter/BossType.tsv");
-
 		/* ボスの生成。*/
 		m_result.boss = NewGO<nsActor::Boss>(0, "boss");
 
